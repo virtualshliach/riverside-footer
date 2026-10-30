@@ -1,0 +1,7 @@
+{
+  "name": "footer-code-tools",
+  "private": true,
+  "description": "Tests for the hosted footer loaders and projects",
+  "scripts": { "test": "node test.js" },
+  "devDependencies": { "jsdom": "^24.1.0" }
+}
