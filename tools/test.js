@@ -147,9 +147,10 @@ var SITES = {
     ['cf-top', 'cf-event', 'cf-directions', 'cf-partners', 'cf-about', 'cf-news', 'cf-guide', 'cf-share'].forEach(function (id) {
       ok(r.d.getElementById(id), 'section #' + id);
     });
-    ok(r.d.querySelectorAll('#cf-guide .cf-gc').length === 3, 'guide falls back to fixed links when import fails');
+    var gTitles = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc h3'), function (h) { return h.textContent; });
+    ok(gTitles.join('|') === 'What Is Chanukah?|How to Light the Menorah|How to Celebrate Chanukah|Dreidel, Latkes and Doughnuts', 'four guide cards (' + gTitles.join('|') + ')');
     var gImgs = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
-    ok(gImgs.join(',') === 'g-guide.jpg,g-light.jpg,g-celebrate.jpg', 'guide cards use our event photos, matched to their titles (' + gImgs.join(',') + ')');
+    ok(gImgs.join(',') === 'g-guide.jpg,g-light.jpg,g-celebrate.jpg,g-dreidel.jpg', 'guide cards use our event photos (' + gImgs.join(',') + ')');
     ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 9, 'nine guide photos are in the repo');
     var hv = r.d.querySelector('#cf-top .cf-vid video');
     ok(hv && hv.getAttribute('src') === PAGES_BASE + 'festival-hero.mp4', 'hero video points at festival-hero.mp4 in this repo (' + (hv && hv.getAttribute('src')) + ')');
@@ -211,40 +212,24 @@ var SITES = {
     ok(/@chanukahfestival/.test(r.d.querySelector('.cf-foot').textContent), 'footer shows @chanukahfestival');
 
     console.log('riverside: Chanukah guide pop-up');
-    var ART = function (title, extra) { return '<html><body><h1>' + title + '</h1><div itemprop="articleBody"><p>__FILL__</p>' + (extra || '') + '</div></body></html>'; };
-    var GP = {
-      '/holidays/chanukah/default_cdo/jewish/Hanukkah.htm': '<html><body><h1>Chanukah</h1><main>' +
-        '<a href="/article.asp?aid=1001">What Is Chanukah?</a> <a href="/article.asp?aid=1002">How to Light the Menorah</a> ' +
-        '<a href="/article.asp?aid=1003">How to Celebrate Chanukah</a> <a href="/article.asp?aid=1004">Chanukah Food Guide</a></main></body></html>',
-      '/article.asp?aid=1001': ART('What Is Chanukah?', '<p><a href="https://www.chabad.org/library/article_cdo/aid/2000/jewish/The-Story.htm">Read the story</a> and <a href="https://example.com/x">elsewhere</a></p>'),
-      '/library/article_cdo/aid/2000/jewish/The-Story.htm': ART('The Story of Chanukah')
-    };
-    Object.keys(GP).forEach(function (k) { GP[k] = GP[k].replace('__FILL__', 'Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. '); });
-    var gr = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm', { pages: GP, wait: 900 });
-    ok(gr.d.querySelectorAll('#cf-guide .cf-gc').length === 4, 'four guide cards imported from the site (' + gr.d.querySelectorAll('#cf-guide .cf-gc').length + ')');
+    var gr = r;
     function gclick(el) { el.dispatchEvent(new gr.w.MouseEvent('click', { bubbles: true, cancelable: true })); }
-    gclick(gr.d.querySelector('#cf-guide .cf-gc'));
-    await wait(200);
+    gclick(gr.d.querySelectorAll('#cf-guide .cf-gc')[1]);
     var rd = gr.d.querySelector('.cf-rd');
-    ok(rd && rd.querySelector('h1').textContent === 'What Is Chanukah?' && /festival of light/.test(rd.querySelector('.cf-rd-body').textContent), 'card opens its article in a pop-up');
-    ok(rd.querySelector('.cf-rd-bk').style.display === 'none', 'no Back button on the first article');
-    var ext = [].filter.call(rd.querySelectorAll('.cf-rd-body a'), function (a) { return /example\.com/.test(a.href); })[0];
-    ok(ext && ext.getAttribute('target') === '_blank', 'a link to another website opens in a new tab');
-    gclick([].filter.call(rd.querySelectorAll('.cf-rd-body a'), function (a) { return /The-Story/.test(a.href); })[0]);
-    await wait(200);
-    ok(gr.d.querySelectorAll('.cf-rd').length === 1 && rd.querySelector('h1').textContent === 'The Story of Chanukah', 'a Chabad.org article link opens inside the same pop-up');
-    ok(rd.querySelector('.cf-rd-bk').style.display === '', 'Back button appears');
-    gclick(rd.querySelector('.cf-rd-bk'));
-    await wait(200);
-    ok(rd.querySelector('h1').textContent === 'What Is Chanukah?', 'Back returns to the previous article');
+    ok(rd && rd.querySelector('h1').textContent === 'How to Light the Menorah' && /shamash/.test(rd.querySelector('.cf-rd-body').textContent), 'card opens its article in a pop-up');
+    ok(rd.querySelectorAll('.cf-rd-body a').length === 0 && !/fetch/.test(r.logs.join(' ')), 'no links inside the guide and nothing loaded from other pages');
+    gclick(rd.querySelector('.cf-rd-next'));
+    ok(rd.querySelector('h1').textContent === 'How to Celebrate Chanukah', 'Next goes to the next article in the same pop-up');
+    gclick(rd.querySelector('.cf-rd-prev'));
+    ok(rd.querySelector('h1').textContent === 'How to Light the Menorah', 'Back goes to the previous article');
+    ok(gr.d.querySelectorAll('.cf-rd').length === 1, 'only one pop-up open');
     gr.d.dispatchEvent(new gr.w.KeyboardEvent('keydown', { key: 'Escape' }));
     ok(!gr.d.querySelector('.cf-rd'), 'Escape closes the guide pop-up');
-    gclick(gr.d.querySelector('#cf-guide .cf-gmore a'));
-    await wait(200);
-    ok(gr.d.querySelectorAll('.cf-rd .cf-rd-li').length === 4, 'Explore the full guide opens the guide list in the pop-up');
-    gclick(gr.d.querySelectorAll('.cf-rd .cf-rd-li')[2]);
-    await wait(200);
-    ok(gr.d.querySelector('.cf-rd h1').textContent && gr.d.querySelector('.cf-rd .cf-rd-bk').style.display === '', 'picking from the list opens that article, with Back');
+    gclick(gr.d.querySelectorAll('#cf-guide .cf-gc')[3]);
+    rd = gr.d.querySelector('.cf-rd');
+    ok(rd.querySelector('.cf-rd-next').style.display === 'none' && rd.querySelector('.cf-rd-prev').style.display === '', 'last article has Back but no Next');
+    gclick(rd.querySelectorAll('.cf-rd-foot .cf-btn')[2]);
+    ok(!gr.d.querySelector('.cf-rd'), 'Back to the festival closes it');
 
     console.log('riverside: donate pop-up against a live-shaped form');
     var DPAGE = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm';

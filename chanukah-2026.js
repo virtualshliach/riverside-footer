@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-02i';
+  var VERSION = 'cf26-2026-11-02j';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -99,32 +99,74 @@
         url: 'https://www.nbclosangeles.com/holidays/riversides-annual-hanukkah-festival-to-go-mobile-amid-covid-19-restrictions/2481846/' , img: 'news-nbc.jpg' }
     ],
 
-    /* ---- Chanukah guide imported from the site's syndicated section ---- */
+    /* ---- Chanukah guide ----
+       Written into this page (not loaded from another page), so it always shows and
+       visitors stay on the festival page. Each card opens its article in a pop-up.
+       To change the wording, edit the text here. Plain HTML: p, h3, ul/li, ol/li, b. */
     GUIDE: {
-      source: '/holidays/chanukah/default_cdo/jewish/Hanukkah.htm',
-      max: 9,
-      reader: true,
-      /* Photos from our own festivals, used on the guide cards instead of the
-         imported pictures. Each photo is used once; a card gets the first unused
-         photo whose words match its title, otherwise the next unused one. */
-      photos: [
-        { img: 'g-light.jpg',     match: 'light|menorah|candle|kindl|bless' },
-        { img: 'g-guide.jpg',     match: 'guide|what is|story|history|about' },
-        { img: 'g-celebrate.jpg', match: 'celebrat|party|danc|joy|custom|tradition' },
-        { img: 'g-food.jpg',      match: 'food|latke|donut|recipe|sufgan|cook|oil' },
-        { img: 'g-dreidel.jpg',   match: 'dreidel|game|spin' },
-        { img: 'g-kids.jpg',      match: 'kid|child|craft|gift|gelt' },
-        { img: 'g-family.jpg',    match: 'family|home|women|mother' },
-        { img: 'g-friends.jpg',   match: '' },
-        { img: 'g-robot.jpg',     match: '' }
-      ],
-      fallback: [
-        { title: 'Chanukah Guide', text: 'What Chanukah is, its story, its customs and how to celebrate at home.',
-          url: '/holidays/chanukah/default_cdo/jewish/Hanukkah.htm' },
-        { title: 'How to Light the Menorah', text: 'Who lights, where to place the menorah, when to light and the blessings.',
-          url: '/article.asp?aid=603798' },
-        { title: 'How to Celebrate Chanukah', text: 'A step-by-step guide to the eight nights, from the menorah to dreidel and latkes.',
-          url: '/article.asp?aid=103902' }
+      articles: [
+        { title: 'What Is Chanukah?', img: 'g-guide.jpg',
+          text: 'The story of the Maccabees, the Temple and the little jar of oil that lasted eight days.',
+          html:
+            '<p>Chanukah is the eight-day Festival of Lights. It begins on the 25th of the Hebrew month of Kislev, and in 2026 it runs from Friday evening, December 4 through Saturday night, December 12.</p>' +
+            '<h3>The story</h3>' +
+            '<p>More than 2,100 years ago, the Land of Israel was ruled by the Syrian-Greek empire. Its king tried to force the Jewish people to give up the Torah and its commandments, and the Holy Temple in Jerusalem was taken over and defiled.</p>' +
+            '<p>A small band of Jews, led by Judah the Maccabee and his brothers, stood up against one of the strongest armies in the world. Against all odds, the few defeated the many, and they returned to Jerusalem to rededicate the Temple.</p>' +
+            '<p>They wanted to light the Temple’s menorah, but found only one small jar of pure olive oil, enough for a single day. They lit it anyway, and the oil burned for eight days, until new pure oil could be prepared.</p>' +
+            '<h3>Why we celebrate</h3>' +
+            '<p>To remember these miracles, we light a menorah every night of Chanukah, adding one more light each night until all eight are burning. The message of Chanukah is that a little light pushes away a lot of darkness, and that it’s always worth adding one more good deed.</p>' },
+
+        { title: 'How to Light the Menorah', img: 'g-light.jpg',
+          text: 'Where to place it, when to light, the order of the candles and the blessings.',
+          html:
+            '<h3>What you need</h3>' +
+            '<p>A menorah with eight lights in a straight row, plus a ninth light, the <b>shamash</b> (helper candle), set a little higher or apart. Olive oil is ideal; candles are fine. The lights must be large enough to burn at least 30 minutes after nightfall.</p>' +
+            '<h3>Where</h3>' +
+            '<p>Place the menorah where it can be seen from outside: in a window facing the street, or in a doorway, on the side opposite the mezuzah. Every member of the family, including children, can light their own menorah.</p>' +
+            '<h3>When</h3>' +
+            '<ul><li><b>Sunday through Thursday:</b> light in the evening after sunset.</li>' +
+            '<li><b>Friday:</b> light before the Shabbat candles, before sunset, using bigger candles that will last until after dark.</li>' +
+            '<li><b>Saturday night:</b> light after Shabbat ends.</li></ul>' +
+            '<h3>Setting up the candles</h3>' +
+            '<p>On the first night, place one candle at the far right of the menorah. Each night add one more candle to the left of the one before. Always light the newest (leftmost) candle first, then move to the right.</p>' +
+            '<h3>Lighting</h3>' +
+            '<ol><li>Light the shamash.</li><li>Holding the shamash, say the blessings below.</li><li>Light the candles, newest first, moving left to right.</li><li>Put the shamash in its place.</li></ol>' +
+            '<h3>The blessings</h3>' +
+            '<p><b>1.</b> Ba-ruch a-tah A-do-nai E-lo-hei-nu me-lech ha-o-lam a-sher ki-de-sha-nu be-mitz-vo-tav ve-tzi-va-nu le-had-lik ner Cha-nu-kah.</p>' +
+            '<p><em>Blessed are You, L-rd our G-d, King of the universe, who has made us holy with His commandments, and commanded us to kindle the Chanukah light.</em></p>' +
+            '<p><b>2.</b> Ba-ruch a-tah A-do-nai E-lo-hei-nu me-lech ha-o-lam she-a-sah ni-sim la-a-vo-tei-nu ba-ya-mim ha-hem bi-z’man ha-zeh.</p>' +
+            '<p><em>Blessed are You, L-rd our G-d, King of the universe, who performed miracles for our fathers in those days, at this time.</em></p>' +
+            '<p><b>3. First night only:</b> Ba-ruch a-tah A-do-nai E-lo-hei-nu me-lech ha-o-lam she-he-che-ya-nu ve-ki-ye-ma-nu ve-hi-gi-a-nu liz-man ha-zeh.</p>' +
+            '<p><em>Blessed are You, L-rd our G-d, King of the universe, who has granted us life, sustained us, and brought us to this time.</em></p>' +
+            '<h3>After lighting</h3>' +
+            '<p>Stay near the menorah and enjoy the lights. They are only for looking at, not for reading or other work. It’s a great time to sing Chanukah songs together.</p>' },
+
+        { title: 'How to Celebrate Chanukah', img: 'g-celebrate.jpg',
+          text: 'Customs for all eight nights: gelt, special prayers, foods and sharing the light.',
+          html:
+            '<ul>' +
+            '<li><b>Light the menorah every night,</b> adding one candle each night, and gather the whole family around it.</li>' +
+            '<li><b>Share the light.</b> Put your menorah where others can see it, and join a public menorah lighting, like the Chanukah Festival at the Riverside County Historic Courthouse.</li>' +
+            '<li><b>Chanukah gelt.</b> It’s a custom to give children (and grown-ups) gifts of money during Chanukah, and to encourage them to give some of it to charity.</li>' +
+            '<li><b>Special prayers.</b> “Al Hanisim,” thanking G-d for the miracles, is added to the daily prayers and to the Grace After Meals. The joyful Hallel prayer is said each morning.</li>' +
+            '<li><b>Foods fried in oil,</b> like latkes (potato pancakes) and sufganiyot (jelly doughnuts), remind us of the miracle of the oil. Many also eat dairy foods.</li>' +
+            '<li><b>Play dreidel</b> with family and friends.</li>' +
+            '<li><b>Give charity</b> and add in acts of kindness each day of Chanukah.</li>' +
+            '<li><b>Friday night:</b> light the menorah before the Shabbat candles.</li>' +
+            '</ul>' },
+
+        { title: 'Dreidel, Latkes and Doughnuts', img: 'g-dreidel.jpg',
+          text: 'How to play dreidel, and the Chanukah foods that remind us of the miracle of the oil.',
+          html:
+            '<h3>The dreidel</h3>' +
+            '<p>A dreidel is a four-sided spinning top. Each side has a Hebrew letter: <b>Nun, Gimmel, Hei, Shin</b>. Together they stand for <em>Nes Gadol Hayah Sham</em>, “A great miracle happened there.” (In Israel the last letter is <b>Pei</b>, for <em>Po</em>, “here.”)</p>' +
+            '<h3>How to play</h3>' +
+            '<ol><li>Everyone starts with the same number of coins, nuts or candies, and puts one in the middle (the pot).</li>' +
+            '<li>Take turns spinning the dreidel. When it falls:' +
+            '<ul><li><b>Nun:</b> nothing happens.</li><li><b>Gimmel:</b> take the whole pot.</li><li><b>Hei:</b> take half the pot.</li><li><b>Shin:</b> put one in.</li></ul></li>' +
+            '<li>When the pot is empty, everyone puts one in again. Play until one person has everything, or until the latkes are ready!</li></ol>' +
+            '<h3>Chanukah foods</h3>' +
+            '<p>Because the miracle of Chanukah happened with oil, it’s a custom to eat foods fried in oil. The favorites are <b>latkes</b>, crispy potato pancakes served with applesauce or sour cream, and <b>sufganiyot</b>, jelly doughnuts dusted with powdered sugar. Come taste both at the Chanukah Festival!</p>' }
       ]
     },
     NIGHTS: [
@@ -599,7 +641,7 @@
       '#cf26 .cf-nt em{display:block;font-style:normal;font-size:.7rem;color:' + GOLD + ';margin-top:4px;line-height:1.25;font-weight:600}',
       '#cf26 .cf-nnote{color:' + MUTED + ';font-size:.9rem;margin-top:14px}',
       '#cf26 .cf-gintro{color:' + MUTED + ';margin-top:30px;max-width:70ch}',
-      '#cf26 .cf-ggrid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:26px}',
+      '#cf26 .cf-ggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px}',
       '@media (max-width:900px){#cf26 .cf-ggrid{grid-template-columns:repeat(2,1fr)}}',
       '@media (max-width:560px){#cf26 .cf-ggrid{grid-template-columns:1fr}}',
       '#cf26 .cf-gc{display:flex;flex-direction:column;text-align:left;border-radius:18px;overflow:hidden;background:' + PANEL + ';border:1px solid rgba(255,255,255,.07);text-decoration:none;transition:transform .25s ease,border-color .25s ease;width:100%}',
@@ -609,7 +651,6 @@
       '#cf26 .cf-gc-b{padding:18px 20px 20px}',
       '#cf26 .cf-gc h3{font-family:' + DISP + ';color:#fff;font-size:1.08rem;line-height:1.3}',
       '#cf26 .cf-gc p{color:' + MUTED + ';font-size:.88rem;margin-top:6px}',
-      '#cf26 .cf-gmore{margin-top:28px;text-align:center}',
       '#cf26 .cf-skel{height:240px;border-radius:18px;background:linear-gradient(90deg,' + PANEL + ',#18404f,' + PANEL + ');background-size:200% 100%;animation:cf26sk 1.4s linear infinite}',
       '@keyframes cf26sk{from{background-position:200% 0}to{background-position:0 0}}',
 
@@ -622,15 +663,11 @@
       '#cf26 .cf-rd-body p{margin:0 0 1em}',
       '#cf26 .cf-rd-body h2,#cf26 .cf-rd-body h3{font-family:' + DISP + ';color:' + NAVY + ';margin:1.3em 0 .5em;line-height:1.25}',
       '#cf26 .cf-rd-body img{height:auto;margin:1em auto;border-radius:10px}',
-      '#cf26 .cf-rd-body a{color:#0e7f80}',
-      '#cf26 .cf-rd-body iframe{max-width:100%}',
-      '#cf26 .cf-rd-bk{display:inline-block;margin:-26px 0 14px;padding:6px 12px;border-radius:999px;background:#f0ebe0;color:' + NAVY + ';font-weight:600;font-size:.88rem}',
-      '#cf26 .cf-rd-list{display:grid;gap:10px;margin-top:6px}',
-      '#cf26 .cf-rd-li{display:flex;gap:14px;align-items:center;padding:10px;border:1px solid #e7dfcf;border-radius:14px;text-decoration:none;color:#1d2b30 !important;background:#fff}',
-      '#cf26 .cf-rd-li:hover{border-color:#0e7f80}',
-      '#cf26 .cf-rd-li img{width:84px;height:64px;object-fit:cover;border-radius:10px;margin:0;flex:none}',
-      '#cf26 .cf-rd-li b{display:block;font-family:' + DISP + ';color:' + NAVY + ';font-size:1.02rem;line-height:1.3}',
-      '#cf26 .cf-rd-li small{display:block;color:#5a6a70;font-size:.86rem;line-height:1.45;margin-top:3px}',
+      '#cf26 .cf-rd-body ul,#cf26 .cf-rd-body ol{margin:0 0 1em;padding-left:1.4em}',
+      '#cf26 .cf-rd-body li{margin:0 0 .5em}',
+      '#cf26 .cf-rd-body li ul{margin:.5em 0 0}',
+      '#cf26 .cf-rd-body ul{list-style:disc}#cf26 .cf-rd-body ol{list-style:decimal}',
+      '#cf26 .cf-rd-body em{color:#4a5d64}',
       '#cf26 .cf-rd-foot{margin-top:26px;padding-top:18px;border-top:1px solid #e7dfcf;display:flex;gap:12px;flex-wrap:wrap}',
 
       /* share band + footer */
@@ -690,7 +727,6 @@
       uncover();
       startCountdown();
       reveal();
-      loadGuide();
       document.addEventListener('click', closeMenus);
       if (/^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
       else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
@@ -1587,8 +1623,7 @@
     return s;
   }
 
-  /* ---------- guide (imported) ---------- */
-  var guideGrid = null, guideIntro = null;
+  /* ---------- Chanukah guide ---------- */
   function buildGuide() {
     var s = section('guide', 'cf-alt');
     var w = el('div', 'cf-wrap');
@@ -1606,176 +1641,24 @@
     w.appendChild(nights);
     w.appendChild(el('p', 'cf-nnote cf-center', CFG.NIGHTS_NOTE));
 
-    guideIntro = el('p', 'cf-gintro');
-    guideIntro.style.display = 'none';
-    guideGrid = el('div', 'cf-ggrid');
-    for (var k = 0; k < 3; k++) guideGrid.appendChild(el('div', 'cf-skel'));
-    var more = el('div', 'cf-gmore');
-    var moreA = link('cf-btn cf-ghost', CFG.GUIDE.source, 'Explore the full Chanukah guide');
-    moreA.addEventListener('click', function (e) {
-      if (!CFG.GUIDE.reader || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
-      e.preventDefault();
-      openReader({ url: abs(CFG.GUIDE.source), title: 'Chanukah Guide' });
+    var grid = el('div', 'cf-ggrid');
+    CFG.GUIDE.articles.forEach(function (it, i) {
+      var a = el('button', 'cf-gc cf-reveal in');
+      a.type = 'button';
+      a.style.transitionDelay = (i % 4 * 0.06) + 's';
+      var im = document.createElement('img');
+      im.className = 'cf-gc-img'; im.src = asset(it.img); im.alt = ''; im.loading = 'lazy';
+      im.onerror = function () { this.parentNode.replaceChild(placeholderArt(), this); };
+      a.appendChild(im);
+      var b = el('div', 'cf-gc-b');
+      add(b, el('h3', null, it.title), el('p', null, it.text));
+      a.appendChild(b);
+      a.addEventListener('click', function () { openReader(i); });
+      grid.appendChild(a);
     });
-    more.appendChild(moreA);
-    add(w, guideIntro, guideGrid, more);
+    w.appendChild(grid);
     s.appendChild(w);
     return s;
-  }
-
-  function loadGuide() {
-    if (!window.fetch || !window.DOMParser) return renderGuide(CFG.GUIDE.fallback);
-    fetch(CFG.GUIDE.source, { credentials: 'same-origin' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-      .then(function (html) {
-        var doc = new DOMParser().parseFromString(html, 'text/html');
-        var res = extractGuide(doc, abs(CFG.GUIDE.source));
-        if (res.items.length < 3) throw new Error('only ' + res.items.length + ' guide items');
-        if (res.intro) { guideIntro.textContent = res.intro; guideIntro.style.display = 'block'; }
-        renderGuide(res.items);
-        if (window.console) console.log('Chanukah Festival: imported ' + res.items.length + ' guide items');
-      })
-      .catch(function (e) {
-        if (window.console) console.warn('Chanukah Festival: guide import fell back', e);
-        renderGuide(CFG.GUIDE.fallback);
-      });
-  }
-
-  var ARTICLE_RE = /(article_cdo|article\.aspx?|\/aid\/\d+|default_cdo|\/holidays\/)/i;
-  function extractGuide(doc, baseUrl) {
-    var scopes = ['[itemprop="articleBody"]', '#co_content_container .co_body', '#ContentBody',
-      '#co_content_container', '#chabad_body_content', '#content_page', 'main', 'body'];
-    var NOISE = '#navigation,.chabad_navigator_bar,header,footer,nav,.page-tools-sidebar,.breadcrumbs,.breadcrumb,.footer,.cco_templateless_template,#chabad_head,script,style';
-    var scope = null, anchors = [];
-    for (var i = 0; i < scopes.length; i++) {
-      var sc = doc.querySelector(scopes[i]);
-      if (!sc) continue;
-      var as = qualifying(sc);
-      if (as.length >= 3) { scope = sc; anchors = as; break; }
-    }
-    function qualifying(sc) {
-      var out = [], list = sc.querySelectorAll('a[href]');
-      for (var j = 0; j < list.length; j++) {
-        var a = list[j];
-        if (a.closest && a.closest(NOISE)) continue;
-        var raw = a.getAttribute('href') || '';
-        if (/^(#|javascript:|mailto:|tel:)/i.test(raw)) continue;
-        var u;
-        try { u = new URL(raw, baseUrl); } catch (e) { continue; }
-        if (!/(^|\.)(chabad\.org|jewishriverside\.com|chanukahfestival\.org)$/i.test(u.hostname) &&
-            u.hostname !== window.location.hostname) continue;
-        if (!ARTICLE_RE.test(u.pathname + u.search)) continue;
-        if (stripHash(u.href) === stripHash(baseUrl)) continue;
-        out.push({ a: a, u: u });
-      }
-      return out;
-    }
-    var seen = {}, items = [];
-    anchors.forEach(function (x) {
-      var key = aidKey(x.u);
-      var title = clean(x.a.textContent) || clean((x.a.querySelector('img') || {}).alt || '') || clean(x.a.getAttribute('title') || '');
-      if (seen[key]) {
-        var prev = seen[key];
-        if (!prev.img) prev.img = findImg(x.a, baseUrl);
-        if ((!prev.title || prev.title.length < 4) && title.length >= 4) prev.title = title;
-        return;
-      }
-      if (/^(read more|more|click here|continue|\u00bb|\u203a)$/i.test(title)) title = '';
-      var it = { url: localize(x.u), title: title, img: findImg(x.a, baseUrl), text: '' };
-      it.text = findText(x.a, title);
-      seen[key] = it;
-      items.push(it);
-    });
-    items = items.filter(function (it) { return it.title && it.title.length >= 4 && it.title.length <= 140; });
-    items = items.slice(0, CFG.GUIDE.max);
-
-    var intro = '';
-    var paras = (scope || doc).querySelectorAll('p,div,span');
-    for (var p = 0; p < paras.length && p < 400; p++) {
-      var tx = clean(paras[p].textContent);
-      if (/Chanukah begins|Hanukkah begins/i.test(tx) && tx.length < 260) { intro = tx; break; }
-    }
-    return { items: items, intro: intro };
-  }
-  function stripHash(h) { return String(h).split('#')[0]; }
-  function aidKey(u) {
-    var m = /\/aid\/(\d+)/i.exec(u.pathname) || /[?\x26]aid=(\d+)/i.exec(u.search);
-    return m ? 'aid' + m[1] : u.pathname.toLowerCase();
-  }
-  function localize(u) {
-    if (/(^|\.)chabad\.org$/i.test(u.hostname)) return window.location.origin + u.pathname + u.search;
-    return u.href;
-  }
-  function clean(s) { return String(s || '').replace(/\s+/g, ' ').trim(); }
-  function imgSrc(img, base) {
-    var s = img.getAttribute('data-src') || img.getAttribute('data-original') || img.getAttribute('data-lazy-src') || img.getAttribute('src') || '';
-    if (!s || /spacer\.gif|blank\.gif|pixel/i.test(s) || /^data:/i.test(s)) return '';
-    var w = parseInt(img.getAttribute('width') || '0', 10);
-    if (w && w < 40) return '';
-    try { return new URL(s, base).href; } catch (e) { return ''; }
-  }
-  function findImg(a, base) {
-    var img = a.querySelector('img');
-    if (img && imgSrc(img, base)) return imgSrc(img, base);
-    var n = a.parentNode;
-    for (var d = 0; d < 3 && n && n.querySelectorAll; d++, n = n.parentNode) {
-      if (n.querySelectorAll('a[href]').length > 3) break;
-      var im = n.querySelector('img');
-      if (im && imgSrc(im, base)) return imgSrc(im, base);
-    }
-    return '';
-  }
-  function findText(a, title) {
-    var n = a.parentNode;
-    for (var d = 0; d < 3 && n && n.querySelectorAll; d++, n = n.parentNode) {
-      if (n.querySelectorAll('a[href]').length > 3) break;
-      var t = clean(n.textContent).replace(title, '').trim();
-      if (t.length > 25) return t.length > 170 ? t.slice(0, 165).replace(/\s+\S*$/, '') + '\u2026' : t;
-    }
-    return '';
-  }
-
-  function pickPhotos(items) {
-    var pool = (CFG.GUIDE.photos || []).slice();
-    var used = {};
-    function take(test) {
-      for (var i = 0; i < pool.length; i++) {
-        if (!used[i] && test(pool[i])) { used[i] = true; return asset(pool[i].img); }
-      }
-      return '';
-    }
-    var out = items.map(function (it) {
-      var t = String(it.title || '').toLowerCase();
-      return take(function (ph) { return ph.match && new RegExp(ph.match, 'i').test(t); });
-    });
-    return out.map(function (ph) { return ph || take(function () { return true; }); });
-  }
-
-  function renderGuide(items) {
-    guideGrid.innerHTML = '';
-    var photos = pickPhotos(items);
-    items.forEach(function (it, i) {
-      var a = link('cf-gc cf-reveal in', it.url, null);
-      a.style.transitionDelay = (i % 3 * 0.06) + 's';
-      var src = photos[i] || it.img;
-      if (src) {
-        var im = document.createElement('img');
-        im.className = 'cf-gc-img'; im.src = src; im.alt = ''; im.loading = 'lazy';
-        im.onerror = function () { this.parentNode.replaceChild(placeholderArt(), this); };
-        a.appendChild(im);
-      } else {
-        a.appendChild(placeholderArt());
-      }
-      var b = el('div', 'cf-gc-b');
-      add(b, el('h3', null, it.title), it.text ? el('p', null, it.text) : null);
-      a.appendChild(b);
-      if (CFG.GUIDE.reader) a.addEventListener('click', function (e) {
-        if (e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
-        e.preventDefault();
-        openReader(it);
-      });
-      guideGrid.appendChild(a);
-    });
   }
   function placeholderArt() {
     var p = el('div', 'cf-gc-ph');
@@ -1783,181 +1666,61 @@
     return p;
   }
 
-  /* ---------- article reader ----------
-     Shows Chanukah articles from the site inside one pop-up, restyled to this page.
-     Links to other Chanukah / Chabad.org articles open in the same pop-up (with a Back
-     button); anything else opens in a new tab. The visitor never leaves this page. */
+  /* ---------- guide pop-up ----------
+     One article at a time, with "Next" so visitors can read through the whole guide
+     without leaving the page. No outside links. */
   var lastFocus = null;
-  var READER = null;
-  function inReader(u) {
-    var x;
-    try { x = new URL(u, window.location.href); } catch (e) { return null; }
-    if (!/^https?:$/.test(x.protocol)) return null;
-    var ours = x.hostname === window.location.hostname || /(^|\.)(chabad\.org|jewishriverside\.com|chanukahfestival\.org)$/i.test(x.hostname);
-    if (!ours) return null;
-    if (!/(article_cdo|article\.aspx?|\/aid\/\d+|default_cdo|\/holidays\/|\/library\/|\/multimedia\/)/i.test(x.pathname + x.search)) return null;
-    if (/\.(pdf|jpe?g|png|gif|mp3|mp4|zip)$/i.test(x.pathname)) return null;
-    if (/(^|\.)chabad\.org$/i.test(x.hostname)) return window.location.origin + x.pathname + x.search;
-    if (x.hostname !== window.location.hostname) return null;   /* other sites of ours: no cross-site fetch */
-    return x.href.split('#')[0];
-  }
-  function openReader(it) {
-    if (READER) { READER.go(it.url, it.title, false); return; }
+  function openReader(idx) {
+    var list = CFG.GUIDE.articles;
     lastFocus = document.activeElement;
     var ov = el('div', 'cf-rd');
     ov.setAttribute('role', 'dialog');
     ov.setAttribute('aria-modal', 'true');
-    ov.setAttribute('aria-label', 'Chanukah guide');
     var box = el('div', 'cf-rd-box');
     var x = el('button', 'cf-rd-x');
     x.type = 'button';
     x.setAttribute('aria-label', 'Close');
     x.appendChild(icon('x'));
-    var bk = el('button', 'cf-rd-bk', '← Back');
-    bk.type = 'button';
     var h = el('h1');
     var body = el('div', 'cf-rd-body');
     var foot = el('div', 'cf-rd-foot');
-    var close2 = el('button', 'cf-btn cf-ghost', 'Back to the festival');
-    close2.style.color = NAVY;
-    close2.style.borderColor = 'rgba(15,41,54,.3)';
-    close2.type = 'button';
-    add(foot, close2);
-    add(box, x, bk, h, body, foot);
+    var prev = el('button', 'cf-btn cf-ghost cf-rd-prev'); prev.type = 'button';
+    var next = el('button', 'cf-btn cf-teal cf-rd-next'); next.type = 'button';
+    var done = el('button', 'cf-btn cf-ghost', 'Back to the festival'); done.type = 'button';
+    [prev, done].forEach(function (b) { b.style.color = NAVY; b.style.borderColor = 'rgba(15,41,54,.3)'; });
+    add(foot, prev, next, done);
+    add(box, x, h, body, foot);
     ov.appendChild(box);
     root.appendChild(ov);
     document.documentElement.style.overflow = 'hidden';
     x.focus();
 
-    var stack = [], seq = 0;
+    function show(n) {
+      idx = n;
+      var it = list[n];
+      ov.setAttribute('aria-label', it.title);
+      h.textContent = it.title;
+      body.innerHTML = it.html;
+      prev.style.display = n > 0 ? '' : 'none';
+      prev.textContent = n > 0 ? '← ' + list[n - 1].title : '';
+      next.style.display = n < list.length - 1 ? '' : 'none';
+      next.textContent = n < list.length - 1 ? 'Next: ' + list[n + 1].title + ' →' : '';
+      ov.scrollTop = 0;
+    }
     function close() {
-      seq++;
       if (ov.parentNode) ov.parentNode.removeChild(ov);
       document.documentElement.style.overflow = '';
       document.removeEventListener('keydown', onKey);
-      READER = null;
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
     function onKey(e) { if (e.key === 'Escape') close(); }
+    prev.addEventListener('click', function () { show(idx - 1); });
+    next.addEventListener('click', function () { show(idx + 1); });
     x.addEventListener('click', close);
-    close2.addEventListener('click', close);
+    done.addEventListener('click', close);
     ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
     document.addEventListener('keydown', onKey);
-    bk.addEventListener('click', function () {
-      if (stack.length < 2) return;
-      stack.pop();
-      var prev = stack[stack.length - 1];
-      load(prev.url, prev.title);
-    });
-    body.addEventListener('click', function (e) {
-      var a = e.target.closest ? e.target.closest('a[href]') : null;
-      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
-      var u = inReader(a.href);
-      if (!u) return;                      /* not a Chanukah article: opens in a new tab */
-      e.preventDefault();
-      go(u, clean(a.textContent), true);
-    });
-
-    function go(url, title, push) {
-      if (!push) stack = [];
-      stack.push({ url: url, title: title || '' });
-      load(url, title);
-    }
-    function load(url, title) {
-      var my = ++seq;
-      bk.style.display = stack.length > 1 ? '' : 'none';
-      h.textContent = title || '';
-      body.innerHTML = '';
-      body.appendChild(el('div', 'cf-skel'));
-      body.appendChild(el('div', 'cf-skel'));
-      ov.scrollTop = 0;
-      if (!window.fetch || !window.DOMParser) return failed(url);
-      fetch(url, { credentials: 'same-origin' })
-        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-        .then(function (html) {
-          if (my !== seq) return;
-          var doc = new DOMParser().parseFromString(html, 'text/html');
-          var art = extractArticle(doc, url);
-          if (art && clean(art.body.textContent).length >= 200) {
-            if (art.title) h.textContent = art.title;
-            body.innerHTML = '';
-            body.appendChild(art.body);
-            return;
-          }
-          var idx = extractGuide(doc, url);          /* a section page: show its articles as a list */
-          if (idx.items.length) {
-            var t = doc.querySelector('.article-header__title,h1');
-            if (t && clean(t.textContent)) h.textContent = clean(t.textContent);
-            body.innerHTML = '';
-            if (idx.intro) body.appendChild(el('p', null, idx.intro));
-            var ul = el('div', 'cf-rd-list');
-            idx.items.forEach(function (i2) {
-              var a = link('cf-rd-li', i2.url, null);
-              if (i2.img) { var im = document.createElement('img'); im.src = i2.img; im.alt = ''; im.loading = 'lazy'; im.onerror = function () { this.parentNode.removeChild(this); }; a.appendChild(im); }
-              var tb = el('span');
-              add(tb, el('b', null, i2.title), i2.text ? el('small', null, i2.text) : null);
-              a.appendChild(tb);
-              ul.appendChild(a);
-            });
-            body.appendChild(ul);
-            return;
-          }
-          throw new Error('nothing to show');
-        })
-        .catch(function (e) {
-          if (my !== seq) return;
-          if (window.console) console.warn('Chanukah Festival: reader could not show', url, e);
-          failed(url);
-        });
-    }
-    function failed(url) {
-      body.innerHTML = '';
-      body.appendChild(el('p', null, 'Sorry, this page can’t be shown here.'));
-      var o = link('cf-btn cf-teal', url, 'Open it in a new tab', true);
-      o.appendChild(icon('ext'));
-      body.appendChild(o);
-    }
-    READER = { go: go };
-    go(it.url, it.title, false);
-  }
-
-  function extractArticle(doc, base) {
-    var sel = ['[itemprop="articleBody"]', '.article-body', '.co_body #ContentBody', '#co_content_container .co_body', '#ContentBody'];
-    var src = null;
-    for (var i = 0; i < sel.length; i++) {
-      var n = doc.querySelector(sel[i]);
-      if (n && clean(n.textContent).length > 200) { src = n; break; }
-    }
-    if (!src) return null;
-    var titleEl = doc.querySelector('.article-header__title,h1');
-    var out = document.createElement('div');
-    out.innerHTML = src.innerHTML;
-    var kill = out.querySelectorAll('script,style,link,meta,noscript,form,input,button,select,textarea,object,embed,.page-tools,.co_comments,#comments');
-    for (var k = kill.length - 1; k >= 0; k--) kill[k].parentNode.removeChild(kill[k]);
-    var frames = out.querySelectorAll('iframe');
-    for (var f = frames.length - 1; f >= 0; f--) {
-      var fs = frames[f].getAttribute('src') || '';
-      if (!/^https:\/\/([a-z0-9-]+\.)*(chabad\.org|youtube\.com|youtube-nocookie\.com|vimeo\.com|jwplayer\.com)\//i.test(fs)) frames[f].parentNode.removeChild(frames[f]);
-    }
-    var all = out.querySelectorAll('*');
-    for (var a = 0; a < all.length; a++) {
-      var node = all[a], attrs = node.attributes;
-      for (var b = attrs.length - 1; b >= 0; b--) {
-        var nm = attrs[b].name.toLowerCase();
-        if (nm.indexOf('on') === 0 || nm === 'style' || nm === 'class' || nm === 'id' || nm === 'width' || nm === 'height') node.removeAttribute(attrs[b].name);
-      }
-      if (node.tagName === 'A') {
-        var hr = node.getAttribute('href') || '';
-        if (/^\s*javascript:/i.test(hr)) node.removeAttribute('href');
-        else if (hr) { try { node.setAttribute('href', new URL(hr, base).href); } catch (e) {} node.setAttribute('target', '_blank'); node.setAttribute('rel', 'noopener'); }
-      }
-      if (node.tagName === 'IMG') {
-        var s = imgSrc(node, base);
-        if (s) { node.setAttribute('src', s); node.setAttribute('loading', 'lazy'); }
-        else node.parentNode.removeChild(node);
-      }
-    }
-    return { title: titleEl ? clean(titleEl.textContent) : '', body: out };
+    show(idx);
   }
 
   /* ---------- share ---------- */
@@ -2072,7 +1835,7 @@
     for (var j = 0; j < els.length; j++) io.observe(els[j]);
   }
 
-  window.CF26 = { version: VERSION, config: CFG, extractGuide: extractGuide, extractArticle: extractArticle };
+  window.CF26 = { version: VERSION, config: CFG };
 
   /* Start last, after every helper above is defined. Hosted files can arrive after
      the page has finished loading, when readyState is already past 'loading'. */
