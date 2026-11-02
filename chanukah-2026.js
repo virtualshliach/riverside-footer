@@ -6,7 +6,19 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-10-16b';
+  var VERSION = 'cf26-2026-11-02i';
+  var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
+  if (!SELF_SRC) {
+    var ss = document.getElementsByTagName('script');
+    for (var si = ss.length - 1; si >= 0; si--) {
+      if (/\/chanukah-2026\.js(\?|$)/.test(ss[si].src)) { SELF_SRC = ss[si].src; break; }
+    }
+  }
+  var ASSET_BASE = SELF_SRC ? SELF_SRC.split('?')[0].replace(/[^\/]+$/, '') : '';
+  function asset(name) {
+    var pv = window.CF26_PREVIEW_ASSETS;
+    return (pv && typeof pv.base === 'string' ? pv.base : ASSET_BASE) + name;
+  }
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -37,11 +49,12 @@
       mapQuery: 'Riverside Historic Courthouse, 4050 Main St, Riverside, CA 92501'
     },
 
+    /* Photos from past festivals; files live next to this one in the repo. */
     highlights: [
-      { icon: 'menorah', title: 'Grand Menorah Lighting', text: 'The lighting of Riverside\u2019s Menorah, the largest in the region, on the courthouse steps.' },
-      { icon: 'food',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
-      { icon: 'music',   title: 'Live Music',             text: 'Holiday music and dancing in the heart of downtown.' },
-      { icon: 'family',  title: 'Fun for the Whole Family', text: 'Children\u2019s crafts, activities and entertainment.' }
+      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'The lighting of Riverside\u2019s Menorah, the largest in the region, on the courthouse steps.' },
+      { img: 'hl-food.jpg',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
+      { img: 'hl-music.jpg',   title: 'Live Music',             text: 'Holiday music and dancing in the heart of downtown.' },
+      { img: 'hl-family.jpg',  title: 'Fun for the Whole Family', text: 'Children\u2019s crafts, activities and entertainment.' }
     ],
     accessNote: 'ASL Interpreter on site',
 
@@ -55,54 +68,35 @@
       { big: '#1', small: 'largest menorah in the region' }
     ],
 
-    /* ---- Sponsors / donors. Tiers with no names are hidden unless
-       showOpenSlot is true, which adds a "your name here" card. ---- */
-    SPONSOR_INTRO: 'This free community celebration is made possible by the generosity of our sponsors and partners.',
-    SPONSORS: [
-      { tier: 'Grand Menorah Sponsors', size: 'xl', showOpenSlot: true, names: [] },
-      { tier: 'Festival Sponsors',      size: 'lg', showOpenSlot: true, names: [] },
-      { tier: 'Candle Sponsors',        size: 'md', showOpenSlot: false, names: [] },
-      { tier: 'Friends of the Festival', size: 'sm', showOpenSlot: false, names: [] },
-      { tier: 'Community Partners', size: 'lg', showOpenSlot: false, names: [
-        { name: 'City of Riverside' },
-        { name: 'Riverside Downtown Partnership' },
-        { name: 'Karen Spiegel', sub: 'Riverside County Supervisor, District 2' },
-        { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation' },
-        { name: 'Chabad of UCR' }
-      ] }
+    /* ---- Community partners shown on the page ---- */
+    PARTNERS_INTRO: 'Thank you to our community partners for helping bring this celebration to Riverside.',
+    PARTNERS: [
+      { name: 'City of Riverside' },
+      { name: 'Riverside Downtown Partnership' },
+      { name: 'Karen Spiegel', sub: 'Riverside County Supervisor, District 2' },
+      { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation' },
+      { name: 'Chabad of UCR' }
     ],
-    SPONSOR_CTA: 'Become a sponsor',
 
-    /* ---- Optional RSVP. Leave url empty to hide the section. ---- */
-    RSVP: {
-      enabled: true,
-      url: '',
-      title: 'Let us know you\u2019re coming',
-      text: 'RSVP is optional \u2014 the festival is free and open to everyone. It just helps us plan food and seating.',
-      button: 'RSVP now'
-    },
-
+    /* img: thumbnail in this repo. NBC's own photo is a stock image from elsewhere,
+       so its card shows our festival photo instead. */
     NEWS: [
       { outlet: 'Riverside County Supervisor, District 2', date: 'Dec 22, 2025',
         title: 'Chanukah Festival Celebrated at Riverside Historic Courthouse',
         blurb: 'Supervisor Spiegel\u2019s office recaps last year\u2019s festival: families downtown for the menorah lighting, music and activities, with photos.',
-        url: 'https://rivcodistrict2.org/node/11701' },
-      { outlet: 'City of Riverside', date: 'Dec 30, 2024',
-        title: 'Chanukah Festival \u2014 20th Annual',
-        blurb: 'The City lists the festival on its official events calendar in front of the Historic Courthouse.',
-        url: 'https://riversideca.gov/calendar/event/chanukah-festival-2' },
+        url: 'https://rivcodistrict2.org/node/11701', img: 'news-2025.jpg' },
       { outlet: 'Raincross Gazette', date: 'Nov 30, 2023',
         title: '19th Annual Chanukah Festival to light up Riverside Historic Courthouse',
         blurb: 'A preview of the courthouse-steps celebration and its message of unity, noting record turnout the year before.',
-        url: 'https://www.raincrossgazette.com/19th-annual-chanukah-festival-to-light-up-riverside-historic-courthouse' },
+        url: 'https://www.raincrossgazette.com/19th-annual-chanukah-festival-to-light-up-riverside-historic-courthouse' , img: 'news-raincross.jpg' },
       { outlet: 'Riverside County Supervisor, District 2', date: 'Dec 13, 2023',
         title: '19th Annual Chanukah Festival and the Menorah Lighting',
         blurb: 'Supervisor Spiegel joins the community for the menorah lighting before the courthouse.',
-        url: 'https://rivcodistrict2.org/node/3936' },
+        url: 'https://rivcodistrict2.org/node/3936', img: 'news-2023.jpg' },
       { outlet: 'NBC Los Angeles', date: 'Dec 2020',
         title: 'Riverside\u2019s Annual Hanukkah Festival to Go Mobile Amid COVID-19 Restrictions',
         blurb: 'How the festival kept the lights on during the pandemic with a drive-in celebration.',
-        url: 'https://www.nbclosangeles.com/holidays/riversides-annual-hanukkah-festival-to-go-mobile-amid-covid-19-restrictions/2481846/' }
+        url: 'https://www.nbclosangeles.com/holidays/riversides-annual-hanukkah-festival-to-go-mobile-amid-covid-19-restrictions/2481846/' , img: 'news-nbc.jpg' }
     ],
 
     /* ---- Chanukah guide imported from the site's syndicated section ---- */
@@ -110,6 +104,20 @@
       source: '/holidays/chanukah/default_cdo/jewish/Hanukkah.htm',
       max: 9,
       reader: true,
+      /* Photos from our own festivals, used on the guide cards instead of the
+         imported pictures. Each photo is used once; a card gets the first unused
+         photo whose words match its title, otherwise the next unused one. */
+      photos: [
+        { img: 'g-light.jpg',     match: 'light|menorah|candle|kindl|bless' },
+        { img: 'g-guide.jpg',     match: 'guide|what is|story|history|about' },
+        { img: 'g-celebrate.jpg', match: 'celebrat|party|danc|joy|custom|tradition' },
+        { img: 'g-food.jpg',      match: 'food|latke|donut|recipe|sufgan|cook|oil' },
+        { img: 'g-dreidel.jpg',   match: 'dreidel|game|spin' },
+        { img: 'g-kids.jpg',      match: 'kid|child|craft|gift|gelt' },
+        { img: 'g-family.jpg',    match: 'family|home|women|mother' },
+        { img: 'g-friends.jpg',   match: '' },
+        { img: 'g-robot.jpg',     match: '' }
+      ],
       fallback: [
         { title: 'Chanukah Guide', text: 'What Chanukah is, its story, its customs and how to celebrate at home.',
           url: '/holidays/chanukah/default_cdo/jewish/Hanukkah.htm' },
@@ -134,11 +142,61 @@
     SHARE: {
       url: 'https://www.jewishriverside.com/templates/section_cdo/aid/4949424/jewish/Chanukah-Festival-2026.htm',
       text: 'Join us for the 22nd Annual Chanukah Festival \u2014 Mon. Dec 7, 6\u20138 PM at the Riverside County Historic Courthouse. Free admission, all are welcome!',
-      instagram: 'https://www.instagram.com/jewishriverside/'
+      /* the festival's own social pages (not Jewish Riverside's or the shul's) */
+      facebook: 'https://www.facebook.com/chanukahfestival/',
+      instagram: 'https://www.instagram.com/chanukahfestival/',
+      igHandle: '@chanukahfestival',
+      /* paste the Facebook event link here once it exists; Follow on Facebook then goes to the event */
+      facebookEvent: ''
     },
+
+    /* Looping highlight video behind the title. Files live next to this one in the repo. */
+    HERO: { video: 'festival-hero.mp4', poster: 'festival-hero-poster.jpg' },
 
     FLYER: '/media/images/1389/dEvL13899225.png',
     DONATE_URL: '/article.asp?aid=4194665',
+
+    /* Donation pop-up. Field ids from the ChabadOne form on this page (mapped Nov 2 2026). */
+    DONATE: {
+      amounts: [18, 36, 72, 180, 360, 1000],
+      country: 'United States',
+      F: {
+        first: 'first_1', last: 'last_1', email: 'input_3', phone: 'input_6_full',
+        addr1: 'input_5_addr_line1', addr2: 'input_5_addr_line2', city: 'input_5_city',
+        state: 'input_5_state', zip: 'input_5_postal', country: 'input_5_country',
+        amount: 'input_7', monthly: 'input_9', optin: 'input_4', submit: 'input_2',
+        bAddr: 'input_10_addr_line1', bCity: 'input_10_city', bState: 'input_10_state',
+        bZip: 'input_10_postal', bCountry: 'input_10_country',
+        ccName: 'input_10_cc_nameOnCard', ccNum: 'input_10_cc_number', ccCvv: 'input_10_cc_ccv',
+        ccMon: 'input_10_cc_exp_month', ccYear: 'input_10_cc_exp_year'
+      }
+    },
+
+    /* Top menu. Each item scrolls to a section of this page; Donate opens a pop-up. */
+    MENU: [
+      ['event', 'Event Info'],
+      ['directions', 'Directions & Parking'],
+      ['news', 'In the News'],
+      ['guide', 'Chanukah Guide']
+    ],
+
+    /* Parking for the Directions & Parking section. City garages within about a
+       10-minute walk of the courthouse, closest first. Rates from the City of
+       Riverside parking page (riversideca.gov/publicworks/parking, Nov 2026).
+       Walking times are approximate. Empty list = the parking box is hidden. */
+    PARKING: [
+      { name: 'City garage', addr: '3901 Orange St', walk: '4 min' },
+      { name: 'City garage', addr: '3851 Orange St', walk: '5 min' },
+      { name: 'City garage', addr: '3743 Orange St', walk: '6 min' },
+      { name: 'City garage', addr: '3750 Market St', walk: '7 min' },
+      { name: 'City garage', addr: '3601 Market St', walk: '10 min' }
+    ],
+    PARKING_NOTES: [
+      'City garages are open 24 hours: $1.25 per 30 minutes, $20 daily maximum.',
+      'The first 60 minutes in a City garage are free with the Park Riverside app.',
+      'Street meters are $1.50 per 30 minutes until 7 PM on weekdays, and free after 7 PM.',
+      'Arrive early: the festival draws a big crowd and the closest spaces fill first.'
+    ],
     PHONE: '951-222-2005',
     EMAIL: 'info@jewishriverside.com',
     WEB: 'www.ChanukahFestival.org'
@@ -272,7 +330,9 @@
 
   function css() {
     return [
-      'html.cf26-on #chabad_body_page,html.cf26-on .cco_templateless_template,html.cf26-on .page-tools-sidebar,html.cf26-on #BodyContainer{display:none !important}',
+      'html.cf26-on .cco_templateless_template,html.cf26-on .page-tools-sidebar,html.cf26-on #BodyContainer{display:none !important}',
+      /* the native page holds the donation form: park it off-screen, never display:none */
+      'html.cf26-on .cco_templatelates_content{position:absolute !important;left:-10000px !important;top:0 !important;width:760px !important}',
       'html.cf26-on,html.cf26-on body{background:' + NAVY + ' !important;margin:0}',
       '#cf26{background:' + NAVY + ';color:' + INK + ';font-family:' + BODY + ';font-size:17px;line-height:1.6;text-align:left;-webkit-font-smoothing:antialiased;overflow-x:hidden}',
       '#cf26 *{box-sizing:border-box}',
@@ -312,11 +372,90 @@
       '#cf26 .cf-links a{color:' + MUTED + ';text-decoration:none;font-size:.84rem;font-weight:600;padding:8px 11px;border-radius:999px;white-space:nowrap}',
       '#cf26 .cf-links a:hover{color:#fff;background:rgba(255,255,255,.06)}',
       '#cf26 .cf-nav .cf-btn{padding:9px 18px;font-size:.84rem}',
-      '@media (max-width:860px){#cf26 .cf-links{display:none}#cf26 .cf-nav .cf-btn{margin-left:auto}}',
+      '#cf26 .cf-burger{display:none;width:42px;height:42px;border-radius:10px;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid rgba(255,255,255,.18)}',
+      '#cf26 .cf-burger i{display:block;width:20px;height:2px;border-radius:2px;background:#fff;transition:transform .25s ease,opacity .2s ease}',
+      '#cf26 .cf-burger.open i:nth-child(1){transform:translateY(7px) rotate(45deg)}',
+      '#cf26 .cf-burger.open i:nth-child(2){opacity:0}',
+      '#cf26 .cf-burger.open i:nth-child(3){transform:translateY(-7px) rotate(-45deg)}',
+      '#cf26 .cf-mmenu{display:none}',
+      '@media (max-width:860px){#cf26 .cf-links,#cf26 .cf-nav .cf-don{display:none}#cf26 .cf-burger{display:flex;margin-left:auto}' +
+        '#cf26 .cf-mmenu.open{display:flex;flex-direction:column;padding:8px 16px 18px;border-top:1px solid rgba(255,255,255,.07);background:rgba(10,31,42,.98)}' +
+        '#cf26 .cf-mmenu a{color:#fff;text-decoration:none;font-weight:600;font-size:1.05rem;padding:14px 4px;border-bottom:1px solid rgba(255,255,255,.07)}' +
+        '#cf26 .cf-mmenu .cf-btn{margin-top:16px;padding:14px 20px;font-size:1rem}}',
+      '#cf26 .cf-dm{position:fixed;inset:0;z-index:2147482500;background:rgba(5,15,20,.72);display:flex;align-items:center;justify-content:center;padding:3vh 14px}',
+      '#cf26 .cf-dm-box{display:flex;flex-direction:column;width:100%;max-width:760px;height:min(92vh,900px);background:#fff;color:' + DEEP + ';border-radius:20px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.5)}',
+      '#cf26 .cf-dm-hd{display:flex;align-items:center;gap:14px;padding:16px 18px 14px 22px;background:' + NAVY + ';color:#fff}',
+      '#cf26 .cf-dm-hd b{display:block;font-family:' + DISP + ';font-size:1.2rem}',
+      '#cf26 .cf-dm-hd span{display:block;font-size:.85rem;color:' + MUTED + '}',
+      '#cf26 .cf-dm-x{margin-left:auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);color:#fff;font-size:20px;flex:none}',
+      '@media (max-width:620px){#cf26 .cf-dm{padding:0}#cf26 .cf-dm-box{height:100%;max-width:none;border-radius:0}}',
+      '#cf26 .cf-dm{transition:opacity .2s ease}',
+      '#cf26 .cf-dm.cf-dm-off{visibility:hidden;pointer-events:none;opacity:0}',
+      '#cf26 .cf-dm-steps{display:flex;gap:6px;padding:12px 22px;border-bottom:1px solid #e6eef0;background:#f6fafb}',
+      '#cf26 .cf-dm-st{display:flex;align-items:center;gap:8px;flex:1;font-size:.82rem;font-weight:600;color:#7a8d93}',
+      '#cf26 .cf-dm-st i{font-style:normal;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e2ebee;color:#4a5d64;font-size:.78rem;flex:none}',
+      '#cf26 .cf-dm-st.on{color:' + DEEP + '}',
+      '#cf26 .cf-dm-st.on i{background:' + GOLD + ';color:' + DEEP + '}',
+      '#cf26 .cf-dm-st.done i{background:' + TEAL + ';color:#fff}',
+      '@media (max-width:480px){#cf26 .cf-dm-st span{display:none}#cf26 .cf-dm-st.on span{display:inline}}',
+      '#cf26 .cf-dm-body{flex:1;min-height:0;overflow-y:auto;padding:20px 22px 24px}',
+      '#cf26 .cf-dm-pane h3{font-family:' + DISP + ';font-size:1.3rem;color:' + NAVY + ';margin-bottom:14px}',
+      '#cf26 .cf-dm-err:empty{display:none}',
+      '#cf26 .cf-dm-err{background:#fdecea;color:#8a1f12;border:1px solid #f4c4bd;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.9rem}',
+      '#cf26 .cf-dm-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}',
+      '#cf26 .cf-chip{padding:16px 8px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:700;font-size:1.1rem}',
+      '#cf26 .cf-chip:hover{border-color:' + TEAL + '}',
+      '#cf26 .cf-chip.on{border-color:' + GOLD + ';background:#fff8e6;box-shadow:0 0 0 2px ' + GOLD + '}',
+      '#cf26 .cf-dm-other{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:700;color:' + NAVY + '}',
+      '#cf26 .cf-dm-other .cf-in{flex:1}',
+      '#cf26 .cf-dm-tick{display:flex;align-items:center;gap:10px;margin-top:14px;font-size:.95rem;color:' + NAVY + ';cursor:pointer}',
+      '#cf26 .cf-dm-tick input{width:20px;height:20px;accent-color:' + TEAL + ';flex:none}',
+      '#cf26 .cf-dm-grid{display:flex;flex-wrap:wrap;gap:12px}',
+      '#cf26 .cf-dm-bill{margin-top:12px}',
+      '#cf26 .cf-fld{display:flex;flex-direction:column;gap:5px;flex:1 1 100%;min-width:0}',
+      '#cf26 .cf-fld.half{flex:1 1 calc(50% - 6px)}',
+      '#cf26 .cf-fld.third{flex:1 1 calc(33.33% - 8px)}',
+      '#cf26 .cf-fld span{font-size:.78rem;font-weight:700;color:#4a5d64;letter-spacing:.02em}',
+      '#cf26 .cf-in{width:100%;padding:12px 13px;font:inherit;font-size:1rem;color:' + NAVY + ';background:#fff;border:1.5px solid #d5e2e6;border-radius:10px}',
+      '#cf26 .cf-in:focus{outline:none;border-color:' + TEAL + '}',
+      '#cf26 .cf-dm-sum3{font-weight:700;color:' + NAVY + ';background:#f6fafb;border-radius:10px;padding:10px 14px;margin-bottom:14px}',
+      '#cf26 .cf-dm-secure{font-size:.8rem;color:#6b7f86;margin-top:14px}',
+      '#cf26 .cf-dm-ft{display:flex;align-items:center;gap:12px;padding:12px 18px;border-top:1px solid #e6eef0}',
+      '#cf26 .cf-dm-ft .cf-ghost{color:' + NAVY + ';border-color:#cfdde1}',
+      '#cf26 .cf-dm-sum{flex:1;text-align:center;font-weight:700;color:' + NAVY + ';font-size:.95rem}',
+      '#cf26 .cf-dm-ft .cf-btn[disabled]{opacity:.6;cursor:wait;transform:none}',
+      '#cf26 .cf-dm-done{text-align:center;padding:30px 10px}',
+      '#cf26 .cf-dm-done p{color:#4a5d64;margin:8px 0}',
+      '#cf26 .cf-dm-done .cf-btn{margin-top:18px}',
+      '#cf26 .cf-dm-ok{width:64px;height:64px;border-radius:50%;background:' + TEAL + ';color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}',
+      '#cf26 .cf-ev1{grid-template-columns:1fr;max-width:760px;margin-left:auto;margin-right:auto}',
+      '#cf26 .cf-park{margin-top:6px;padding:14px 0 4px;border-top:1px solid rgba(255,255,255,.07)}',
+      '#cf26 .cf-park ul{margin:12px 0 0;padding-left:20px;color:' + MUTED + ';font-size:.92rem}',
+      '#cf26 .cf-plist{display:grid;gap:8px;margin-top:8px}',
+      '#cf26 .cf-prow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);text-decoration:none;color:' + INK + '}',
+      '#cf26 .cf-prow:hover{border-color:rgba(26,204,206,.45)}',
+      '#cf26 .cf-prow .cf-ic{color:' + TEAL + ';font-size:18px}',
+      '#cf26 .cf-prow div{flex:1;min-width:0}',
+      '#cf26 .cf-prow b{display:block;font-weight:700;color:#fff;font-size:.95rem}',
+      '#cf26 .cf-prow span{display:block;font-size:.8rem;color:' + MUTED + '}',
+      '#cf26 .cf-prow em{font-style:normal;font-size:.78rem;font-weight:700;color:' + DEEP + ';background:' + GOLD + ';border-radius:999px;padding:4px 10px;white-space:nowrap}',
+      '#cf26 .cf-park li{margin:4px 0}',
 
       /* hero */
-      '#cf26 .cf-hero{position:relative;padding:30px 0 64px;text-align:center;background:radial-gradient(ellipse 60% 45% at 50% 58%,rgba(26,204,206,.10),rgba(15,41,54,0) 70%),' + NAVY + '}',
-      '#cf26 .cf-bh{position:absolute;top:14px;left:20px;font-size:.78rem;color:' + MUTED + ';font-family:' + DISP + '}',
+      '#cf26 .cf-hero{position:relative;text-align:center;background:' + NAVY + '}',
+      '#cf26 .cf-vid{position:relative;overflow:hidden;min-height:clamp(440px,74vh,720px);display:flex;align-items:center;justify-content:center;background:' + DEEP + '}',
+      '#cf26 .cf-vid video,#cf26 .cf-vid .cf-vposter{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;max-width:none}',
+      '#cf26 .cf-vid:after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(ellipse 75% 60% at 50% 48%,rgba(10,31,42,.62),rgba(10,31,42,.34) 75%),linear-gradient(180deg,rgba(15,41,54,.55) 0%,rgba(15,41,54,0) 22%,rgba(15,41,54,0) 70%,' + NAVY + ' 100%)}',
+      '#cf26 .cf-vtext{position:relative;z-index:1;padding:56px 20px 70px;width:100%}',
+      '#cf26 .cf-vtext .cf-t1,#cf26 .cf-vtext .cf-annual b{filter:drop-shadow(0 3px 14px rgba(0,0,0,.55))}',
+      '#cf26 .cf-vtext .cf-t2,#cf26 .cf-vtext .cf-invite{text-shadow:0 3px 18px rgba(0,0,0,.6)}',
+      '#cf26 .cf-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}',
+      '#cf26 .cf-tag{background:' + GOLD + ';color:' + DEEP + ';font-family:' + SCRIPT + ';font-size:clamp(1.05rem,2.4vw,1.5rem);padding:7px 18px;line-height:1.2;border-radius:4px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
+      '#cf26 .cf-vbtn{position:absolute;right:16px;bottom:16px;z-index:2;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(10,31,42,.55);color:#fff;border:1px solid rgba(255,255,255,.35);font-size:18px}',
+      '#cf26 .cf-vbtn:hover{background:rgba(10,31,42,.8)}',
+      '#cf26 .cf-info{padding:6px 0 64px}',
+      '@media (max-width:620px){#cf26 .cf-vid{min-height:clamp(380px,62vh,560px)}#cf26 .cf-vtext{padding:44px 16px 56px}}',
+      '#cf26 .cf-bh{position:absolute;top:12px;left:18px;z-index:1;font-size:.78rem;color:rgba(255,255,255,.8);font-family:' + DISP + '}',
       '#cf26 .cf-invite{font-size:clamp(.9rem,2vw,1.08rem);font-weight:600;color:#fff;letter-spacing:.02em;margin:18px 0 8px}',
       '#cf26 .cf-annual{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:2px}',
       '#cf26 .cf-annual i{display:block;height:3px;width:min(160px,16vw);background:rgba(255,255,255,.85);border-radius:2px}',
@@ -324,19 +463,10 @@
       '#cf26 .cf-annual sup{font-size:.5em;vertical-align:super}',
       '#cf26 .cf-t1{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.02em;background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent}',
       '#cf26 .cf-t2{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.04em;color:#fff}',
-      '#cf26 .cf-stage{position:relative;max-width:820px;margin:16px auto 0}',
-      '#cf26 .cf-menorah{display:block;width:min(560px,82%);height:auto;margin:0 auto}',
-      '#cf26 .cf-flame{opacity:0;transform-box:fill-box;transform-origin:50% 100%;animation:cf26light .5s ease forwards,cf26flicker 2.6s ease-in-out infinite}',
-      '@keyframes cf26light{from{opacity:0;transform:scale(.2)}to{opacity:1;transform:scale(1)}}',
-      '@keyframes cf26flicker{0%,100%{transform:scale(1) rotate(0)}30%{transform:scale(1.05,.95) rotate(-2deg)}60%{transform:scale(.96,1.05) rotate(2deg)}}',
-      '#cf26 .cf-ribbon{position:absolute;top:44%;background:' + GOLD + ';color:' + DEEP + ';font-family:' + SCRIPT + ';font-size:clamp(1rem,2.6vw,1.7rem);padding:10px 22px;line-height:1.2;box-shadow:0 10px 26px rgba(0,0,0,.25)}',
-      '#cf26 .cf-ribbon.l{left:-4px;clip-path:polygon(0 0,100% 0,92% 50%,100% 100%,0 100%)}',
-      '#cf26 .cf-ribbon.r{right:-4px;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,8% 50%)}',
-      '@media (max-width:620px){#cf26 .cf-ribbon,#cf26 .cf-ribbon.l,#cf26 .cf-ribbon.r{position:static;display:inline-block;margin:12px 3px 0;clip-path:none;border-radius:4px;font-size:1rem;padding:7px 12px}#cf26 .cf-when{font-size:clamp(1.6rem,7.4vw,2.4rem)}#cf26 .cf-when .cf-sep{display:none}#cf26 .cf-when .cf-tm{display:block}#cf26 .cf-invite{padding:0 18px}}',
-      '#cf26 .cf-base{height:3px;max-width:880px;margin:0 auto;background:rgba(255,255,255,.9);border-radius:2px}',
-      '#cf26 .cf-venue{font-family:' + DISP + ';color:' + GOLD + ';text-transform:uppercase;font-size:clamp(1.05rem,2.8vw,1.75rem);letter-spacing:.02em;margin-top:26px;line-height:1.2}',
+      '@media (max-width:620px){#cf26 .cf-when{font-size:clamp(1.6rem,7.4vw,2.4rem)}#cf26 .cf-when .cf-sep{display:none}#cf26 .cf-when .cf-tm{display:block}#cf26 .cf-invite{padding:0 18px}}',
+      '#cf26 .cf-venue{font-family:' + DISP + ';color:' + GOLD + ';text-transform:uppercase;font-size:clamp(1.05rem,2.8vw,1.75rem);letter-spacing:.02em;margin-top:18px;line-height:1.2}',
       '#cf26 .cf-addr{font-family:' + DISP + ';color:#fff;font-size:clamp(1rem,2.3vw,1.4rem)}',
-      '#cf26 .cf-when{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.9rem,6vw,3.6rem);line-height:1.1;margin-top:16px;background:linear-gradient(90deg,' + GOLD + ' 0%,' + GREEN + ' 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase}',
+      '#cf26 .cf-when{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.9rem,6vw,3.6rem);line-height:1.1;margin-top:0;background:linear-gradient(90deg,' + GOLD + ' 0%,' + GREEN + ' 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase}',
       '#cf26 .cf-night{font-family:' + DISP + ';color:#fff;font-size:clamp(1rem,2.3vw,1.35rem)}',
       '#cf26 .cf-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}',
       '#cf26 .cf-calwrap{position:relative;display:inline-block}',
@@ -366,10 +496,13 @@
       '#cf26 .cf-hl{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}',
       '@media (max-width:900px){#cf26 .cf-hl{grid-template-columns:repeat(2,1fr)}}',
       '@media (max-width:360px){#cf26 .cf-hl{grid-template-columns:1fr}}',
-      '@media (max-width:480px){#cf26 .cf-hl-card{padding:20px 16px}#cf26 .cf-hl-card h3{font-size:1rem}#cf26 .cf-hl-card p{font-size:.85rem}}',
-      '#cf26 .cf-hl-card{background:' + PANEL + ';border:1px solid rgba(255,255,255,.07);border-radius:18px;padding:26px 22px;transition:transform .25s ease,border-color .25s ease}',
+      '@media (max-width:480px){#cf26 .cf-hl-card .cf-hl-bd{padding:12px 12px 14px}#cf26 .cf-hl-card h3{font-size:1rem}#cf26 .cf-hl-card p{font-size:.85rem}}',
+      '#cf26 .cf-hl-card{background:' + PANEL + ';border:1px solid rgba(255,255,255,.07);border-radius:18px;overflow:hidden;transition:transform .25s ease,border-color .25s ease}',
+      '#cf26 .cf-hl-ph{aspect-ratio:4/3;max-width:100%;overflow:hidden;background:' + DEEP + '}',
+      '#cf26 .cf-hl-ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}',
+      '#cf26 .cf-hl-card:hover .cf-hl-ph img{transform:scale(1.05)}',
+      '#cf26 .cf-hl-bd{padding:18px 20px 22px}',
       '#cf26 .cf-hl-card:hover{transform:translateY(-4px);border-color:rgba(26,204,206,.45)}',
-      '#cf26 .cf-hl-ic{width:52px;height:52px;border-radius:14px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(26,204,206,.18),rgba(235,190,77,.18));color:' + GOLD + ';margin-bottom:16px;font-size:26px}',
       '#cf26 .cf-hl-card h3{font-family:' + DISP + ';color:#fff;font-size:1.15rem;line-height:1.25;margin-bottom:6px}',
       '#cf26 .cf-hl-card p{color:' + MUTED + ';font-size:.93rem}',
       '#cf26 .cf-asl{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border-radius:999px;border:1px solid rgba(76,189,159,.45);color:' + GREEN + ';font-family:' + SCRIPT + ';font-size:1.3rem}',
@@ -386,7 +519,8 @@
       '#cf26 .cf-map{position:relative;min-height:340px;background:' + DEEP + '}',
       '#cf26 .cf-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.85)}',
       '#cf26 .cf-map-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:' + MUTED + ';text-align:center;padding:20px}',
-      '#cf26 .cf-flyer{display:flex;gap:22px;align-items:center;margin-top:28px;padding:18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.14)}',
+      '#cf26 .cf-flysec{background:' + DEEP + ';padding:40px 0 0}',
+      '#cf26 .cf-flyer{display:flex;gap:22px;align-items:center;margin-top:0;padding:18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.14)}',
       '#cf26 .cf-flyer img{width:92px;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.35)}',
       '#cf26 .cf-flyer b{display:block;color:#fff;font-family:' + DISP + ';font-size:1.1rem}',
       '#cf26 .cf-flyer span{color:' + MUTED + ';font-size:.9rem}',
@@ -422,11 +556,6 @@
       '#cf26 .cf-spcta{margin-top:44px;display:flex;flex-direction:column;align-items:center;gap:10px}',
       '#cf26 .cf-spcta p{color:' + MUTED + ';font-size:.92rem}',
 
-      /* rsvp */
-      '#cf26 .cf-rsvp{position:relative;overflow:hidden;border-radius:26px;padding:48px 40px;background:linear-gradient(120deg,rgba(26,204,206,.16),rgba(76,189,159,.08) 50%,rgba(235,190,77,.18)),' + PANEL + ';border:1px solid rgba(255,255,255,.08);display:flex;gap:30px;align-items:center;justify-content:space-between;flex-wrap:wrap}',
-      '#cf26 .cf-rsvp .cf-h2{margin-bottom:8px}',
-      '#cf26 .cf-pill{display:inline-block;font-size:.7rem;letter-spacing:.18em;text-transform:uppercase;font-weight:700;color:' + DEEP + ';background:' + GREEN + ';padding:5px 12px;border-radius:999px;margin-bottom:14px}',
-      '#cf26 .cf-pending{font-size:.8rem;color:' + GOLD + ';margin-top:10px}',
 
       /* about */
       '#cf26 .cf-about{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center}',
@@ -440,18 +569,19 @@
       '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem}',
 
       /* news */
-      '#cf26 .cf-news{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:40px}',
+      '#cf26 .cf-news{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}',
       '@media (max-width:900px){#cf26 .cf-news{grid-template-columns:repeat(2,1fr)}}',
       '@media (max-width:560px){#cf26 .cf-news{grid-template-columns:1fr}}',
-      '#cf26 .cf-nc{display:flex;flex-direction:column;background:#fff;color:' + DEEP + ';border-radius:18px;padding:24px 22px 20px;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;min-height:230px}',
+      '#cf26 .cf-nc{display:flex;flex-direction:column;background:#fff;color:' + DEEP + ';border-radius:18px;overflow:hidden;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;min-height:230px}',
+      '#cf26 .cf-nc-ph{aspect-ratio:16/10;max-width:100%;overflow:hidden;background:' + DEEP + '}',
+      '#cf26 .cf-nc-ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}',
+      '#cf26 .cf-nc:hover .cf-nc-ph img{transform:scale(1.05)}',
+      '#cf26 .cf-nc-bd{display:flex;flex-direction:column;flex:1;padding:18px 20px 18px}',
       '#cf26 .cf-nc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35)}',
-      '#cf26 .cf-nc.feat{grid-column:span 2;background:linear-gradient(135deg,#fffaf0,#ffffff)}',
-      '@media (max-width:560px){#cf26 .cf-nc.feat{grid-column:auto}}',
-      '#cf26 .cf-nc-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:14px}',
+      '#cf26 .cf-nc-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px;margin-bottom:10px}',
       '#cf26 .cf-nc-out{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#0e7f80}',
       '#cf26 .cf-nc-date{font-size:.78rem;color:#6b7f86;white-space:nowrap}',
-      '#cf26 .cf-nc h3{font-family:' + DISP + ';font-size:1.15rem;line-height:1.3;margin-bottom:10px}',
-      '#cf26 .cf-nc.feat h3{font-size:1.55rem}',
+      '#cf26 .cf-nc h3{font-family:' + DISP + ';font-size:1.08rem;line-height:1.3;margin-bottom:8px}',
       '#cf26 .cf-nc p{font-size:.9rem;color:#4a5d64;flex:1}',
       '#cf26 .cf-nc-go{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-weight:700;font-size:.85rem;color:#b07d0a}',
 
@@ -494,11 +624,20 @@
       '#cf26 .cf-rd-body img{height:auto;margin:1em auto;border-radius:10px}',
       '#cf26 .cf-rd-body a{color:#0e7f80}',
       '#cf26 .cf-rd-body iframe{max-width:100%}',
+      '#cf26 .cf-rd-bk{display:inline-block;margin:-26px 0 14px;padding:6px 12px;border-radius:999px;background:#f0ebe0;color:' + NAVY + ';font-weight:600;font-size:.88rem}',
+      '#cf26 .cf-rd-list{display:grid;gap:10px;margin-top:6px}',
+      '#cf26 .cf-rd-li{display:flex;gap:14px;align-items:center;padding:10px;border:1px solid #e7dfcf;border-radius:14px;text-decoration:none;color:#1d2b30 !important;background:#fff}',
+      '#cf26 .cf-rd-li:hover{border-color:#0e7f80}',
+      '#cf26 .cf-rd-li img{width:84px;height:64px;object-fit:cover;border-radius:10px;margin:0;flex:none}',
+      '#cf26 .cf-rd-li b{display:block;font-family:' + DISP + ';color:' + NAVY + ';font-size:1.02rem;line-height:1.3}',
+      '#cf26 .cf-rd-li small{display:block;color:#5a6a70;font-size:.86rem;line-height:1.45;margin-top:3px}',
       '#cf26 .cf-rd-foot{margin-top:26px;padding-top:18px;border-top:1px solid #e7dfcf;display:flex;gap:12px;flex-wrap:wrap}',
 
       /* share band + footer */
       '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(235,190,77,.55),rgba(235,190,77,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:70px 0}',
       '#cf26 .cf-sharebtns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}',
+      '#cf26 .cf-follow{margin-top:14px}',
+      '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
       '#cf26 .cf-fb{background:#1877f2;color:#fff}',
       '#cf26 .cf-ig{background:linear-gradient(45deg,#f9a63a,#e1306c 50%,#833ab4);color:#fff}',
       '#cf26 .cf-pop{max-width:460px;margin:22px auto 0;background:#fff;color:' + DEEP + ';border-radius:16px;padding:20px;text-align:center;display:none}',
@@ -516,8 +655,8 @@
       '#cf26 .cf-toast.show{opacity:1;transform:translate(-50%,0)}',
       '#cf26 .cf-reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}',
       '#cf26 .cf-reveal.in{opacity:1;transform:none}',
-      '@media (max-width:620px){#cf26 .cf-sec{padding:60px 0}#cf26 .cf-rsvp{padding:34px 24px}#cf26 .cf-ev-info{padding:26px 22px}}',
-      '@media (prefers-reduced-motion:reduce){#cf26 .cf-flame{animation:none;opacity:1}#cf26 .cf-marq-in{animation:none}#cf26 .cf-reveal{opacity:1;transform:none;transition:none}#cf26 .cf-skel{animation:none}}'
+      '@media (max-width:620px){#cf26 .cf-sec{padding:60px 0}#cf26 .cf-ev-info{padding:26px 22px}}',
+      '@media (prefers-reduced-motion:reduce){#cf26 .cf-marq-in{animation:none}#cf26 .cf-reveal{opacity:1;transform:none;transition:none}#cf26 .cf-skel{animation:none}}'
     ].join('\n');
   }
 
@@ -540,8 +679,8 @@
       root.id = 'cf26';
       add(root,
         buildNav(), buildHero(), buildCountdown(), buildMarquee(),
-        buildEvent(), buildSponsors(), buildRsvp(), buildAbout(),
-        buildNews(), buildGuide(), buildShare(), buildFooter());
+        buildEvent(), buildDirections(), buildPartners(), buildAbout(),
+        buildNews(), buildGuide(), buildShare(), buildFlyer(), buildFooter());
 
       var host = document.querySelector('.cco_templatelates_content') || document.body;
       if (host === document.body) document.body.insertBefore(root, document.body.firstChild);
@@ -553,6 +692,11 @@
       reveal();
       loadGuide();
       document.addEventListener('click', closeMenus);
+      if (/^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
+      else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
+        var hid = location.hash.slice(1);
+        setTimeout(function () { goTo(hid); }, 400);
+      }
       if (window.console) console.log('Chanukah Festival ' + VERSION + ': footer payload executing');
     } catch (err) {
       if (window.console) console.error('Chanukah Festival ' + VERSION + ' failed', err);
@@ -582,9 +726,6 @@
       lead ? el('p', 'cf-lead', lead) : null, el('div', 'cf-rule'));
     return d;
   }
-  function rsvpOn() {
-    return CFG.RSVP.enabled && (CFG.RSVP.url || PREVIEW) && !eventOver();
-  }
   function eventOver() { return Date.now() > Date.parse(CFG.event.endUTC); }
 
   /* ---------- nav ---------- */
@@ -594,67 +735,560 @@
     var w = el('div', 'cf-wrap');
     var b = el('a', 'cf-brand');
     b.href = '#cf-top';
+    b.addEventListener('click', function (e) { e.preventDefault(); goTo('top'); });
     add(b, el('span', null, 'Chanukah'), document.createTextNode(' Festival'));
+
+    function menuLinks(box, onPick) {
+      CFG.MENU.forEach(function (it) {
+        var a = link(null, '#cf-' + it[0], it[1]);
+        a.addEventListener('click', function (e) { e.preventDefault(); if (onPick) onPick(); goTo(it[0]); });
+        box.appendChild(a);
+      });
+    }
+
     var ls = el('div', 'cf-links');
-    var items = [['event', 'Event'], ['sponsors', 'Sponsors']];
-    if (rsvpOn()) items.push(['rsvp', 'RSVP']);
-    items.push(['about', 'About'], ['news', 'In the News'], ['guide', 'Chanukah Guide']);
-    items.forEach(function (it) { ls.appendChild(link(null, '#cf-' + it[0], it[1])); });
-    var d = link('cf-btn cf-gold', CFG.DONATE_URL, 'Donate');
-    add(w, b, ls, d);
-    n.appendChild(w);
+    menuLinks(ls);
+    var d = el('button', 'cf-btn cf-gold cf-don', 'Donate');
+    d.type = 'button';
+    d.addEventListener('click', openDonate);
+
+    /* phone menu */
+    var tg = el('button', 'cf-burger');
+    tg.type = 'button';
+    tg.setAttribute('aria-label', 'Menu');
+    tg.setAttribute('aria-expanded', 'false');
+    tg.setAttribute('aria-controls', 'cf-mmenu');
+    add(tg, el('i'), el('i'), el('i'));
+    var mm = el('div', 'cf-mmenu');
+    mm.id = 'cf-mmenu';
+    function setOpen(o) {
+      mm.className = o ? 'cf-mmenu open' : 'cf-mmenu';
+      tg.className = o ? 'cf-burger open' : 'cf-burger';
+      tg.setAttribute('aria-expanded', o ? 'true' : 'false');
+    }
+    menuLinks(mm, function () { setOpen(false); });
+    var md = el('button', 'cf-btn cf-gold', 'Donate');
+    md.type = 'button';
+    md.addEventListener('click', function () { setOpen(false); openDonate(); });
+    mm.appendChild(md);
+    tg.addEventListener('click', function (e) { e.stopPropagation(); setOpen(mm.className.indexOf('open') < 0); });
+    document.addEventListener('click', function (e) { if (!n.contains(e.target)) setOpen(false); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
+
+    add(w, b, ls, d, tg);
+    add(n, w, mm);
     return n;
   }
 
-  /* ---------- hero ---------- */
-  function menorahSVG() {
-    var cx = 300, top = 110, sw = 15;
-    var paths = [];
-    for (var i = 1; i <= 4; i++) {
-      var dx = i * 64, yb = 168 + i * 40, yc = yb + i * 30;
-      paths.push('M' + (cx - dx) + ' ' + top + 'V' + yb + 'L' + cx + ' ' + yc + 'L' + (cx + dx) + ' ' + yb + 'V' + top);
-    }
-    var flames = '';
-    var order = [0, 4, 3, 2, 1, 5, 6, 7, 8];
-    for (var k = 0; k < 9; k++) {
-      var x = cx + (k - 4) * 64;
-      var y = k === 4 ? 70 : top - 6;
-      var delay = (0.35 + order.indexOf(k) * 0.22).toFixed(2);
-      flames += '<g class="cf-flame" style="animation-delay:' + delay + 's,' + (Number(delay) + 0.5).toFixed(2) + 's">' +
-        '<ellipse cx="' + x + '" cy="' + (y - 16) + '" rx="22" ry="26" fill="url(#cf26glow)"/>' +
-        '<path d="M' + x + ' ' + (y - 34) + 'C' + (x + 9) + ' ' + (y - 20) + ' ' + (x + 10) + ' ' + (y - 8) + ' ' + x + ' ' + y +
-        'C' + (x - 10) + ' ' + (y - 8) + ' ' + (x - 9) + ' ' + (y - 20) + ' ' + x + ' ' + (y - 34) + 'Z" fill="#ffffff"/>' +
-        '<path d="M' + x + ' ' + (y - 16) + 'C' + (x + 4) + ' ' + (y - 9) + ' ' + (x + 4) + ' ' + (y - 4) + ' ' + x + ' ' + (y - 1) +
-        'C' + (x - 4) + ' ' + (y - 4) + ' ' + (x - 4) + ' ' + (y - 9) + ' ' + x + ' ' + (y - 16) + 'Z" fill="' + GOLD + '"/></g>';
-    }
-    return '<svg class="cf-menorah" viewBox="0 0 600 560" role="img" aria-label="A lit Chanukah menorah">' +
-      '<defs><linearGradient id="cf26mg" x1="0" y1="90" x2="0" y2="520" gradientUnits="userSpaceOnUse">' +
-      '<stop offset="0" stop-color="' + TEAL + '"/><stop offset=".55" stop-color="' + GREEN + '"/><stop offset="1" stop-color="' + GOLD + '"/></linearGradient>' +
-      '<radialGradient id="cf26glow"><stop offset="0" stop-color="#ffffff" stop-opacity=".7"/><stop offset=".45" stop-color="' + GOLD + '" stop-opacity=".25"/><stop offset="1" stop-color="' + GOLD + '" stop-opacity="0"/></radialGradient></defs>' +
-      '<g fill="none" stroke="url(#cf26mg)" stroke-width="' + sw + '" stroke-linejoin="miter">' +
-      '<path d="M' + cx + ' 76V560"/>' +
-      paths.map(function (p) { return '<path d="' + p + '"/>'; }).join('') +
-      '</g>' + flames + '</svg>';
+  /* scroll to a section of this page, below the sticky menu */
+  function goTo(id) {
+    var t = document.getElementById('cf-' + id);
+    if (!t) return;
+    var nav = root.querySelector('.cf-nav');
+    var off = nav ? nav.offsetHeight : 0;
+    var y = t.getBoundingClientRect().top + window.pageYOffset - (id === 'top' ? 0 : off);
+    try { window.scrollTo({ top: y, behavior: 'smooth' }); } catch (e) { window.scrollTo(0, y); }
+    try { history.replaceState(null, '', '#' + id); } catch (e) {}
   }
 
+  /* ---------- donate pop-up ---------- */
+  /* Our own three steps, writing into the ChabadOne form on this page, following the
+     proven submit sequence (project notes: ChabadOne-Proven-Submit-Sequence,
+     Footer-Build-Gates rules 10-31, and the Sukkot build on this site):
+     - details write through as the donor types; setNative no-ops when unchanged
+     - the card is written LAST, read back and re-applied before the click
+     - one real click on #input_2 in the same tick; never gate on the (invisible) reCAPTCHA
+     - .form-validation-error = refused; submit button gone = success */
+  function donateButton(label) {
+    var b = el('button', 'cf-btn cf-gold', label);
+    b.type = 'button';
+    b.addEventListener('click', openDonate);
+    return b;
+  }
+  var DM = null;
+  function nativeForm() { return document.getElementById(CFG.AID); }
+  function $id(id) { return document.getElementById(id); }
+  function fire(e, types) { types.forEach(function (t) { try { e.dispatchEvent(new Event(t, { bubbles: true })); } catch (x) {} }); }
+  function setNative(id, v) {
+    var e = $id(id); if (!e) return false;
+    var val = v == null ? '' : String(v);
+    if (e.tagName === 'SELECT') return setSelect(id, val);
+    if (String(e.value) === val) return true;          /* no-op when unchanged */
+    e.value = val;
+    fire(e, ['input', 'change', 'keyup', 'blur']);
+    return true;
+  }
+  /* match by value, then padded/unpadded number, then visible text; never a bare .value */
+  function setSelect(id, want) {
+    var e = $id(id); if (!e || !e.options) return false;
+    want = String(want == null ? '' : want).trim();
+    var n = parseInt(want, 10);
+    var alt = /^\d+$/.test(want) ? [String(n), ('0' + n).slice(-2)] : [];
+    for (var pass = 0; pass < 3; pass++) {
+      for (var i = 0; i < e.options.length; i++) {
+        var o = e.options[i];
+        var hit = pass === 0 ? o.value === want : pass === 1 ? alt.indexOf(o.value) > -1 : (o.text || '').trim() === want;
+        if (hit) {
+          if (e.selectedIndex !== i) { e.selectedIndex = i; fire(e, ['input', 'change', 'blur']); }
+          return true;
+        }
+      }
+    }
+    if (window.console) console.warn('[cf26] no option', want, 'in', id);
+    return false;
+  }
+  function setChecked(id, on) {
+    var e = $id(id); if (!e) return false;
+    if (!!e.checked !== !!on) e.click();
+    return true;
+  }
+  function money(n) { return '$' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
+
+  function openDonate() {
+    var form = nativeForm();
+    if (!form || !$id(CFG.DONATE.F.submit)) { window.open(CFG.DONATE_URL, '_blank'); return; }
+    if (!DM) DM = buildDonate(form);
+    DM.ov.className = 'cf-dm';
+    document.documentElement.style.overflow = 'hidden';
+    DM.x.focus();
+    try { history.replaceState(null, '', '#donate'); } catch (e) {}
+  }
+  function closeDonate() {
+    if (!DM || DM.ov.className.indexOf('cf-dm-off') > -1) return;
+    if (DM.busy()) return;
+    DM.ov.className = 'cf-dm cf-dm-off';
+    document.documentElement.style.overflow = '';
+    try { history.replaceState(null, '', location.pathname + location.search); } catch (e) {}
+  }
+
+  function buildDonate(form) {
+    var D = CFG.DONATE, F = D.F;
+    var st = { step: 1, amount: 0, monthly: false, busy: false };
+    var ov = el('div', 'cf-dm cf-dm-off');
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-modal', 'true');
+    ov.setAttribute('aria-label', 'Donate');
+    var box = el('div', 'cf-dm-box');
+
+    var hd = el('div', 'cf-dm-hd');
+    var x = el('button', 'cf-dm-x'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.appendChild(icon('x'));
+    var ht = el('div');
+    add(ht, el('b', null, 'Support the Chanukah Festival'), el('span', null, 'Your gift keeps the festival free for the whole community.'));
+    add(hd, ht, x);
+
+    var steps = el('div', 'cf-dm-steps');
+    var stepEls = ['Amount', 'Your details', 'Payment'].map(function (t, i) {
+      var s2 = el('div', 'cf-dm-st');
+      add(s2, el('i', null, String(i + 1)), el('span', null, t));
+      steps.appendChild(s2);
+      return s2;
+    });
+
+    var body = el('div', 'cf-dm-body');
+    var err = el('div', 'cf-dm-err'); err.setAttribute('role', 'alert');
+
+    var inputs = {};
+    function field(key, label, type, opts) {
+      opts = opts || {};
+      var w = el('label', 'cf-fld' + (opts.half ? ' half' : '') + (opts.third ? ' third' : ''));
+      var i;
+      if (opts.mirror) {                      /* mirror the platform's own options exactly */
+        i = document.createElement('select');
+        var src = $id(opts.mirror);
+        if (src && src.options) for (var k = 0; k < src.options.length; k++) {
+          var o = document.createElement('option');
+          o.value = src.options[k].value; o.textContent = src.options[k].textContent;
+          i.appendChild(o);
+        }
+      } else {
+        i = document.createElement('input');
+        i.type = type || 'text';
+      }
+      i.id = 'cf-dm-' + key; i.className = 'cf-in';
+      if (opts.ac) i.setAttribute('autocomplete', opts.ac);
+      if (opts.im) i.setAttribute('inputmode', opts.im);
+      add(w, el('span', null, label + (opts.req ? ' *' : '')), i);
+      inputs[key] = { el: i, req: !!opts.req, label: label };
+      /* write through as the donor types (the card is written last, at submit) */
+      if (opts.native) {
+        i.addEventListener('input', function () { setNative(opts.native, i.value.trim()); });
+      }
+      return w;
+    }
+    function v(k) { return inputs[k] ? inputs[k].el.value.trim() : ''; }
+    function tick(id, label, checked) {
+      var w = el('label', 'cf-dm-tick');
+      var c = document.createElement('input'); c.type = 'checkbox'; c.id = id; c.checked = !!checked;
+      add(w, c, el('span', null, label));
+      return { w: w, c: c };
+    }
+
+    /* step 1: amount */
+    var p1 = el('div', 'cf-dm-pane');
+    p1.appendChild(el('h3', null, 'Choose your gift'));
+    var chips = el('div', 'cf-dm-chips');
+    var other = document.createElement('input');
+    other.type = 'number'; other.min = '1'; other.step = '1'; other.setAttribute('inputmode', 'decimal');
+    other.className = 'cf-in'; other.id = 'cf-dm-other'; other.placeholder = 'Other amount';
+    function pickAmt(a, btn) {
+      st.amount = a;
+      [].forEach.call(chips.querySelectorAll('button'), function (b) { b.className = 'cf-chip' + (b === btn ? ' on' : ''); });
+      if (btn) other.value = '';
+      sumLine();
+    }
+    D.amounts.forEach(function (a) {
+      var b = el('button', 'cf-chip', money(a)); b.type = 'button';
+      b.addEventListener('click', function () { pickAmt(a, b); });
+      chips.appendChild(b);
+    });
+    other.addEventListener('input', function () { pickAmt(parseFloat(other.value) || 0, null); });
+    var oth = el('label', 'cf-dm-other');
+    add(oth, el('span', null, '$'), other);
+    var mon = tick('cf-dm-monthly', 'Make this a monthly gift', false);
+    mon.c.addEventListener('change', function () { st.monthly = mon.c.checked; sumLine(); });
+    add(p1, chips, oth, mon.w);
+
+    /* step 2: details */
+    var p2 = el('div', 'cf-dm-pane');
+    p2.appendChild(el('h3', null, 'Your details'));
+    var g2 = el('div', 'cf-dm-grid');
+    add(g2,
+      field('first', 'First name', 'text', { req: true, half: true, ac: 'given-name', native: F.first }),
+      field('last', 'Last name', 'text', { req: true, half: true, ac: 'family-name', native: F.last }),
+      field('email', 'Email', 'email', { req: true, ac: 'email', native: F.email }),
+      field('phone', 'Phone', 'tel', { ac: 'tel', native: F.phone }),
+      field('addr1', 'Street address', 'text', { req: true, ac: 'address-line1', native: F.addr1 }),
+      field('addr2', 'Apt, suite (optional)', 'text', { ac: 'address-line2', native: F.addr2 }),
+      field('city', 'City', 'text', { req: true, third: true, ac: 'address-level2', native: F.city }),
+      field('state', 'State', 'text', { req: true, third: true, ac: 'address-level1', native: F.state }),
+      field('zip', 'ZIP code', 'text', { req: true, third: true, ac: 'postal-code', im: 'numeric', native: F.zip }));
+    p2.appendChild(g2);
+
+    /* step 3: card */
+    var p3 = el('div', 'cf-dm-pane');
+    p3.appendChild(el('h3', null, 'Payment'));
+    var sum3 = el('div', 'cf-dm-sum3');
+    var g3 = el('div', 'cf-dm-grid');
+    add(g3,
+      field('ccName', 'Name on card', 'text', { req: true, ac: 'cc-name' }),
+      field('ccNum', 'Card number', 'text', { req: true, ac: 'cc-number', im: 'numeric' }),
+      field('ccMon', 'Exp. month', null, { req: true, third: true, ac: 'cc-exp-month', mirror: F.ccMon }),
+      field('ccYear', 'Exp. year', null, { req: true, third: true, ac: 'cc-exp-year', mirror: F.ccYear }),
+      field('ccCvv', 'Security code', 'text', { req: true, third: true, ac: 'cc-csc', im: 'numeric' }));
+    var same = tick('cf-dm-same', 'Billing address is the same as my address', true);
+    var gb = el('div', 'cf-dm-grid cf-dm-bill');
+    add(gb,
+      field('bAddr', 'Billing street address', 'text', { ac: 'billing address-line1' }),
+      field('bCity', 'City', 'text', { third: true, ac: 'billing address-level2' }),
+      field('bState', 'State', 'text', { third: true, ac: 'billing address-level1' }),
+      field('bZip', 'ZIP code', 'text', { third: true, ac: 'billing postal-code', im: 'numeric' }));
+    gb.style.display = 'none';
+    same.c.addEventListener('change', function () { gb.style.display = same.c.checked ? 'none' : ''; });
+    var optNative = $id(F.optin);
+    var opt = tick('cf-dm-optin', 'Send me news and updates by email', optNative ? optNative.checked : false);
+    var secure = el('p', 'cf-dm-secure', 'Payments are processed securely through our ChabadOne donation form. We accept Visa, MasterCard, American Express and Discover.');
+    add(p3, sum3, g3, same.w, gb, opt.w, secure);
+
+    var p4 = el('div', 'cf-dm-pane cf-dm-done');
+    var panes = [p1, p2, p3, p4];
+    add(body, err, p1, p2, p3, p4);
+
+    var ft = el('div', 'cf-dm-ft');
+    var back = el('button', 'cf-btn cf-ghost cf-dm-back', 'Back'); back.type = 'button';
+    var sumEl = el('div', 'cf-dm-sum');
+    var next = el('button', 'cf-btn cf-gold cf-dm-next', 'Continue'); next.type = 'button';
+    add(ft, back, sumEl, next);
+    add(box, hd, steps, body, ft);
+    ov.appendChild(box);
+    root.appendChild(ov);
+
+    function sumLine() {
+      var t = st.amount > 0 ? money(st.amount) + (st.monthly ? ' monthly' : ' one-time') : '';
+      sumEl.textContent = t;
+      sum3.textContent = t ? 'Your gift: ' + t : '';
+      if (st.step === 3 && !st.busy) next.textContent = st.amount > 0 ? 'Donate ' + money(st.amount) + (st.monthly ? ' a month' : '') : 'Donate';
+    }
+    function show(n) {
+      st.step = n;
+      panes.forEach(function (p, i) { p.style.display = i === n - 1 ? 'block' : 'none'; });
+      stepEls.forEach(function (e, i) { e.className = 'cf-dm-st' + (i + 1 === n ? ' on' : i + 1 < n ? ' done' : ''); });
+      steps.style.display = n === 4 ? 'none' : '';
+      back.style.visibility = n > 1 && n < 4 ? 'visible' : 'hidden';
+      next.style.display = n === 4 ? 'none' : '';
+      next.textContent = 'Continue';
+      err.textContent = '';
+      sumLine();
+      body.scrollTop = 0;
+    }
+    function fail(msg) { err.textContent = msg; body.scrollTop = 0; }
+    function need(keys) {
+      for (var i = 0; i < keys.length; i++) {
+        var f = inputs[keys[i]];
+        if (f.req && !f.el.value.trim()) { fail('Please fill in ' + f.label.toLowerCase() + '.'); f.el.focus(); return false; }
+      }
+      return true;
+    }
+
+    /* every non-card native field */
+    function commitDetails() {
+      setNative(F.first, v('first')); setNative(F.last, v('last'));
+      setNative(F.email, v('email')); setNative(F.phone, v('phone'));
+      setNative(F.addr1, v('addr1')); setNative(F.addr2, v('addr2'));
+      setNative(F.city, v('city')); setNative(F.state, v('state')); setNative(F.zip, v('zip'));
+      setSelect(F.country, D.country);
+      setNative(F.amount, String(st.amount));
+      setChecked(F.monthly, st.monthly);
+      setChecked(F.optin, opt.c.checked);
+      var sm = same.c.checked;
+      setNative(F.bAddr, sm ? (v('addr1') + (v('addr2') ? ' ' + v('addr2') : '')) : v('bAddr'));
+      setNative(F.bCity, sm ? v('city') : v('bCity'));
+      setNative(F.bState, sm ? v('state') : v('bState'));
+      setNative(F.bZip, sm ? v('zip') : v('bZip'));
+      setSelect(F.bCountry, D.country);
+    }
+    var CARD = ['ccName', 'ccNum', 'ccCvv', 'ccMon', 'ccYear'];
+    function cardWant(k) { return k === 'ccNum' ? v(k).replace(/\D/g, '') : v(k); }
+    function writeCard() { CARD.forEach(function (k) { setNative(F[k], cardWant(k)); }); }
+    function cardMismatch() {
+      return CARD.filter(function (k) { var e = $id(F[k]); return !e || String(e.value) !== cardWant(k); });
+    }
+
+    next.addEventListener('click', function () {
+      if (st.busy) return;
+      if (st.step === 1) {
+        if (!(st.amount > 0)) { fail('Please choose an amount or enter your own.'); return; }
+        setNative(F.amount, String(st.amount));
+        setChecked(F.monthly, st.monthly);
+        show(2); return;
+      }
+      if (st.step === 2) {
+        if (!need(['first', 'last', 'email', 'addr1', 'city', 'state', 'zip'])) return;
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v('email'))) { fail('Please check your email address.'); inputs.email.el.focus(); return; }
+        commitDetails();
+        if (!v('ccName')) inputs.ccName.el.value = (v('first') + ' ' + v('last')).trim();
+        show(3); return;
+      }
+      if (st.step === 3) submitDonation();
+    });
+    back.addEventListener('click', function () { if (!st.busy && st.step > 1) show(st.step - 1); });
+    x.addEventListener('click', closeDonate);
+    ov.addEventListener('click', function (e) { if (e.target === ov) closeDonate(); });
+    document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeDonate(); });
+
+    /* ---- submit ---- */
+    var DECLINE = /transaction has been declined|error creating your recurring payment|duplicate of subscription|unable to charge|there are errors on the form|Error - E\d{5}|card number is invalid|has expired|insufficient funds/i;
+    function clearErrors() {
+      [].forEach.call(form.querySelectorAll('.form-error-message, .form-error-js, .form-button-error'), function (e) {
+        if (e.parentNode) e.parentNode.removeChild(e);
+      });
+      err.textContent = '';
+    }
+    function nativeErrorText() {
+      var bits = [];
+      [].forEach.call(form.querySelectorAll('.form-error-message, .form-error-js, .form-button-error'), function (e) {
+        var t = (e.innerText || e.textContent || '').trim(); if (t) bits.push(t);
+      });
+      return bits.join(' ');
+    }
+    function release(msg) {
+      st.busy = false;
+      next.removeAttribute('disabled');
+      back.style.visibility = 'visible';
+      sumLine();
+      if (msg) fail(msg);
+      try { if (window.grecaptcha && grecaptcha.reset) grecaptcha.reset(); } catch (e) {}
+    }
+    function submitDonation() {
+      if (!need(['ccName', 'ccNum', 'ccMon', 'ccYear', 'ccCvv'])) return;
+      if (!same.c.checked && !(v('bAddr') && v('bCity') && v('bState') && v('bZip'))) { fail('Please fill in your billing address.'); return; }
+      var btn = $id(F.submit);
+      if (!btn) { fail('The donation form did not load. Please refresh the page and try again.'); return; }
+      clearErrors();                                   /* stale decline text must not judge this attempt */
+      try {
+        commitDetails();                               /* everything else first */
+        writeCard();                                   /* the card LAST */
+        for (var t = 0; t < 3 && cardMismatch().length; t++) writeCard();
+        var bad = cardMismatch();
+        if (bad.length && window.console) console.warn('[cf26] card fields not accepted by the form:', bad);
+      } catch (e) { if (window.console) console.error('[cf26] commit failed', e); }
+      st.busy = true;
+      next.setAttribute('disabled', 'disabled');
+      next.textContent = 'Processing…';
+      back.style.visibility = 'hidden';
+      btn.click();                                     /* one real click, same tick */
+      watchCaptchaChallenge();
+      setTimeout(checkValidation, 450);
+      setTimeout(checkValidation, 1400);
+      watchOutcome();
+    }
+    function checkValidation() {
+      if (!st.busy) return;
+      var bad = form.querySelectorAll('.form-validation-error');
+      if (!bad.length) return;
+      var ids = [].map.call(bad, function (f) { return f.id; }).filter(Boolean);
+      if (window.console) console.warn('[cf26] form refused, required fields:', ids);
+      var onCard = ids.some(function (id) { return /_cc_/.test(id); });
+      release(onCard ? 'Please check your card details.' : 'Please check your details on the previous step.');
+    }
+    function watchCaptchaChallenge() {
+      var n = 0;
+      var t = setInterval(function () {
+        if (++n > 120 || !st.busy) { clearInterval(t); return; }
+        var fr = document.querySelectorAll('iframe[src*="bframe"], iframe[title*="challenge"]');
+        for (var i = 0; i < fr.length; i++) {
+          var b = fr[i];
+          while (b.parentElement && b.parentElement !== document.body) b = b.parentElement;
+          if (b.parentElement === document.body) b.style.setProperty('z-index', '2147483000', 'important');
+        }
+      }, 250);
+    }
+    function watchOutcome() {
+      var started = Date.now();
+      var poll = setInterval(function () {
+        if (!st.busy) { clearInterval(poll); return; }
+        var gone = !document.body.contains(form) || !document.body.contains($id(F.submit));
+        if (gone) { clearInterval(poll); st.busy = false; thanks(); return; }
+        if (Date.now() - started > 2200) {
+          var txt = nativeErrorText();
+          if (txt && DECLINE.test(txt)) { clearInterval(poll); release(txt.slice(0, 220)); return; }
+        }
+        if (Date.now() - started > 90000) {
+          clearInterval(poll);
+          release('We did not get an answer from the payment system. Please check your email for a receipt before trying again.');
+        }
+      }, 400);
+    }
+    function thanks() {
+      p4.innerHTML = '';
+      var done = el('button', 'cf-btn cf-gold', 'Back to the festival'); done.type = 'button';
+      done.addEventListener('click', closeDonate);
+      add(p4, el('div', 'cf-dm-ok', '✓'), el('h3', null, 'Thank you!'),
+        el('p', null, 'Your ' + (st.monthly ? 'monthly ' : '') + 'gift of ' + money(st.amount) + ' helps keep the Chanukah Festival free for everyone.'),
+        el('p', null, 'A receipt is on its way to ' + v('email') + '.'), done);
+      ['ccNum', 'ccCvv'].forEach(function (k) { inputs[k].el.value = ''; });
+      show(4);
+    }
+
+    show(1);
+    return { ov: ov, x: x, busy: function () { return st.busy; } };
+  }
+
+  function evRow(ic, a, b) {
+    var r = el('div', 'cf-ev-row');
+    var t = el('div');
+    add(t, el('b', null, a), el('span', null, b));
+    add(r, icon(ic), t);
+    return r;
+  }
+
+  /* ---------- directions & parking ---------- */
+  function buildDirections() {
+    var s = section('directions', 'cf-alt');
+    var w = el('div', 'cf-wrap');
+    w.appendChild(heading('Getting there', 'Directions & Parking', null, true));
+    var ev = el('div', 'cf-ev cf-reveal');
+    var info = el('div', 'cf-ev-info');
+    add(info, evRow('pin', CFG.event.venue, CFG.event.street + ' ' + CFG.event.cityLine));
+    if (CFG.PARKING.length) {
+      var pk = el('div', 'cf-park');
+      pk.appendChild(el('div', 'cf-kicker', 'Parking nearby'));
+      var list = el('div', 'cf-plist');
+      CFG.PARKING.forEach(function (g) {
+        var a = link('cf-prow', 'https://www.google.com/maps/dir/?' + qs({ api: '1', destination: g.addr + ', Riverside, CA 92501' }), null, true);
+        var t = el('div');
+        add(t, el('b', null, g.addr), el('span', null, g.name));
+        add(a, icon('pin'), t, el('em', null, g.walk + ' walk'));
+        list.appendChild(a);
+      });
+      pk.appendChild(list);
+      var ul = el('ul');
+      (CFG.PARKING_NOTES || []).forEach(function (line) { ul.appendChild(el('li', null, line)); });
+      pk.appendChild(ul);
+      info.appendChild(pk);
+    }
+    var btns = el('div', 'cf-ev-btns');
+    var g = link('cf-btn cf-teal', directionsUrl(), 'Google Maps', true);
+    g.insertBefore(icon('pin'), g.firstChild);
+    var ap = link('cf-btn cf-ghost', 'https://maps.apple.com/?' + qs({ daddr: CFG.event.mapQuery }), 'Apple Maps', true);
+    ap.insertBefore(icon('pin'), ap.firstChild);
+    add(btns, g, ap);
+    info.appendChild(btns);
+
+    var map = el('div', 'cf-map');
+    var fb = el('div', 'cf-map-fb');
+    add(fb, icon('pin'), el('b', null, CFG.event.venue), el('span', null, CFG.event.street + ' ' + CFG.event.cityLine));
+    map.appendChild(fb);
+    var fr = document.createElement('iframe');
+    fr.title = 'Map to ' + CFG.event.venue;
+    fr.loading = 'lazy';
+    fr.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
+    fr.src = CFG.event.mapEmbed;
+    map.appendChild(fr);
+    add(ev, info, map);
+    w.appendChild(ev);
+    s.appendChild(w);
+    return s;
+  }
+
+  /* ---------- hero ---------- */
   function buildHero() {
     var h = el('header', 'cf-hero');
     h.id = 'cf-top';
-    var w = el('div', 'cf-wrap');
+
+    /* video band with the title on top */
+    var band = el('div', 'cf-vid');
+    var vidSrc = asset(CFG.HERO.video);
+    var posterSrc = asset(CFG.HERO.poster);
+    var still = !!(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    var v = document.createElement('video');
+    v.muted = true; v.defaultMuted = true; v.loop = true; v.playsInline = true;
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('loop', '');
+    v.setAttribute('preload', still ? 'none' : 'auto');
+    v.setAttribute('aria-hidden', 'true');
+    v.poster = posterSrc;
+    if (!still) v.autoplay = true;
+    v.src = vidSrc;
+    band.appendChild(v);
+
+    var btn = el('button', 'cf-vbtn');
+    btn.type = 'button';
+    function setBtn() {
+      var playing = !v.paused;
+      btn.textContent = playing ? '\u275a\u275a' : '\u25b6';
+      btn.setAttribute('aria-label', playing ? 'Pause background video' : 'Play background video');
+    }
+    btn.addEventListener('click', function () { if (v.paused) v.play(); else v.pause(); });
+    v.addEventListener('play', setBtn);
+    v.addEventListener('pause', setBtn);
+    if (!still) {
+      var tryPlay = function () { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); };
+      v.addEventListener('canplay', tryPlay, { once: true });
+    }
+    setBtn();
+    band.appendChild(btn);
+
+    var txt = el('div', 'cf-vtext');
     var ann = el('div', 'cf-annual');
     var b = el('b');
     add(b, document.createTextNode(CFG.edition), el('sup', null, CFG.editionSuffix), document.createTextNode(' Annual'));
     add(ann, el('i'), b, el('i'));
+    var tags = el('div', 'cf-tags');
+    add(tags, el('span', 'cf-tag', 'Free Admission!'), el('span', 'cf-tag', 'All Are Welcome!'));
+    add(txt,
+      el('p', 'cf-invite', CFG.host + ' Invites You To Our'),
+      ann,
+      el('h1', 'cf-t1', 'Chanukah'.toUpperCase()),
+      el('div', 'cf-t2', 'FESTIVAL'),
+      tags);
+    band.appendChild(txt);
+    band.appendChild(el('div', 'cf-bh', 'B\u201dH'));
 
-    var stage = el('div', 'cf-stage');
-    stage.innerHTML = menorahSVG();
-    add(stage, el('div', 'cf-ribbon l', 'Free Admission!'), el('div', 'cf-ribbon r', 'All Are Welcome!'));
-
+    /* date, place and buttons under the video */
     var ctas = el('div', 'cf-ctas');
-    if (rsvpOn()) ctas.appendChild(link('cf-btn cf-gold', '#cf-rsvp', CFG.RSVP.button));
-    ctas.appendChild(calendarButton('cf-btn ' + (rsvpOn() ? 'cf-ghost' : 'cf-gold')));
-    var dir = link('cf-btn cf-ghost', directionsUrl(), 'Directions', true);
+    ctas.appendChild(calendarButton('cf-btn cf-gold'));
+    var dir = link('cf-btn cf-ghost', '#cf-directions', 'Directions & Parking');
     dir.insertBefore(icon('pin'), dir.firstChild);
+    dir.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
     ctas.appendChild(dir);
     var sh = el('button', 'cf-btn cf-ghost', 'Share');
     sh.type = 'button';
@@ -665,20 +1299,15 @@
     });
     ctas.appendChild(sh);
 
-    add(w,
-      el('div', 'cf-bh', 'B\u201dH'),
-      el('p', 'cf-invite', CFG.host + ' Invites You To Our'),
-      ann,
-      el('h1', 'cf-t1', 'Chanukah'.toUpperCase()),
-      el('div', 'cf-t2', 'FESTIVAL'),
-      stage,
-      el('div', 'cf-base'),
-      el('div', 'cf-venue', CFG.event.venue),
-      el('div', 'cf-addr', CFG.event.street + ' Riverside, CA'),
+    var info = el('div', 'cf-wrap cf-info');
+    add(info,
       whenLine(),
       el('div', 'cf-night', CFG.event.nightLine),
+      el('div', 'cf-venue', CFG.event.venue),
+      el('div', 'cf-addr', CFG.event.street + ' Riverside, CA'),
       ctas);
-    h.appendChild(w);
+
+    add(h, band, info);
     return h;
   }
 
@@ -799,15 +1428,13 @@
 
   /* ---------- sponsor marquee ---------- */
   function allSponsorNames() {
-    var out = [];
-    CFG.SPONSORS.forEach(function (t) { t.names.forEach(function (n) { out.push(T(n.name)); }); });
-    return out;
+    return CFG.PARTNERS.map(function (n) { return T(n.name); });
   }
   function buildMarquee() {
     var names = allSponsorNames();
     if (!names.length) return null;
     var m = el('div', 'cf-marq');
-    m.setAttribute('aria-label', 'Thank you to our sponsors and partners');
+    m.setAttribute('aria-label', 'Thank you to our community partners');
     var inner = el('div', 'cf-marq-in');
     var reps = Math.max(2, Math.ceil(12 / names.length)) * 2;
     for (var r = 0; r < reps; r++) {
@@ -829,9 +1456,13 @@
     CFG.highlights.forEach(function (x, i) {
       var c = el('div', 'cf-hl-card cf-reveal');
       c.style.transitionDelay = (i * 0.08) + 's';
-      var ic = el('div', 'cf-hl-ic');
-      ic.appendChild(icon(x.icon));
-      add(c, ic, el('h3', null, x.title), el('p', null, x.text));
+      var ph = el('div', 'cf-hl-ph');
+      var im = document.createElement('img');
+      im.src = asset(x.img); im.alt = T(x.title); im.loading = 'lazy';
+      ph.appendChild(im);
+      var bd = el('div', 'cf-hl-bd');
+      add(bd, el('h3', null, x.title), el('p', null, x.text));
+      add(c, ph, bd);
       hl.appendChild(c);
     });
     w.appendChild(hl);
@@ -843,112 +1474,66 @@
       w.appendChild(asl);
     }
 
-    var ev = el('div', 'cf-ev cf-reveal');
+    var ev = el('div', 'cf-ev cf-ev1 cf-reveal');
     var info = el('div', 'cf-ev-info');
-    function row(ic, a, b) {
-      var r = el('div', 'cf-ev-row');
-      var t = el('div');
-      add(t, el('b', null, a), el('span', null, b));
-      add(r, icon(ic), t);
-      return r;
-    }
     add(info,
       el('div', 'cf-kicker', 'Event details'),
-      row('cal', 'Monday, December 7, 2026', CFG.event.nightLine),
-      row('clock', '6:00 \u2013 8:00 PM', 'Menorah lighting during the evening'),
-      row('pin', CFG.event.venue, CFG.event.street + ' ' + CFG.event.cityLine));
+      evRow('cal', 'Monday, December 7, 2026', CFG.event.nightLine),
+      evRow('clock', '6:00 \u2013 8:00 PM', 'Menorah lighting during the evening'),
+      evRow('pin', CFG.event.venue, CFG.event.street + ' ' + CFG.event.cityLine));
     var btns = el('div', 'cf-ev-btns');
-    var dr = link('cf-btn cf-teal', directionsUrl(), 'Get directions', true);
-    dr.insertBefore(icon('pin'), dr.firstChild);
-    add(btns, dr, calendarButton('cf-btn cf-ghost'));
+    var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & parking');
+    dp.insertBefore(icon('pin'), dp.firstChild);
+    dp.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
+    add(btns, calendarButton('cf-btn cf-ghost'), dp);
     info.appendChild(btns);
-
-    var map = el('div', 'cf-map');
-    var fb = el('div', 'cf-map-fb');
-    add(fb, icon('pin'), el('b', null, CFG.event.venue), el('span', null, CFG.event.street + ' ' + CFG.event.cityLine));
-    map.appendChild(fb);
-    var fr = document.createElement('iframe');
-    fr.title = 'Map to ' + CFG.event.venue;
-    fr.loading = 'lazy';
-    fr.setAttribute('referrerpolicy', 'no-referrer-when-downgrade');
-    fr.src = CFG.event.mapEmbed;
-    map.appendChild(fr);
-    add(ev, info, map);
+    ev.appendChild(info);
     w.appendChild(ev);
 
-    if (CFG.FLYER) {
-      var fl = el('div', 'cf-flyer cf-reveal');
-      var im = document.createElement('img');
-      im.src = CFG.FLYER; im.alt = 'Chanukah Festival 2026 flyer'; im.loading = 'lazy';
-      var tx = el('div');
-      add(tx, el('b', null, 'Download the flyer'), el('span', null, 'Print it, post it, send it to a friend.'));
-      var dl = link('cf-btn cf-ghost', CFG.FLYER, 'Download', true);
-      dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.png');
-      dl.insertBefore(icon('dl'), dl.firstChild);
-      add(fl, im, tx, dl);
-      w.appendChild(fl);
-    }
+    s.appendChild(w);
+    return s;
+  }
+
+  /* ---------- flyer download (last thing before the footer) ---------- */
+  function buildFlyer() {
+    if (!CFG.FLYER) return null;
+    var s = el('section', 'cf-flysec');
+    var w = el('div', 'cf-wrap');
+    var fl = el('div', 'cf-flyer cf-reveal');
+    var im = document.createElement('img');
+    im.src = CFG.FLYER; im.alt = 'Chanukah Festival 2026 flyer'; im.loading = 'lazy';
+    var tx = el('div');
+    add(tx, el('b', null, 'Download the flyer'), el('span', null, 'Print it, post it, send it to a friend.'));
+    var dl = link('cf-btn cf-ghost', CFG.FLYER, 'Download', true);
+    dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.png');
+    dl.insertBefore(icon('dl'), dl.firstChild);
+    add(fl, im, tx, dl);
+    w.appendChild(fl);
     s.appendChild(w);
     return s;
   }
 
   /* ---------- sponsors ---------- */
-  function buildSponsors() {
-    var s = section('sponsors', 'cf-spons');
+  function buildPartners() {
+    if (!CFG.PARTNERS.length) return null;
+    var s = section('partners', 'cf-spons');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('With gratitude', 'Our Sponsors', CFG.SPONSOR_INTRO, true));
-    var any = false;
-    CFG.SPONSORS.forEach(function (t) {
-      if (!t.names.length && !t.showOpenSlot) return;
-      any = true;
-      var tier = el('div', 'cf-tier cf-reveal cf-' + (t.size || 'md'));
-      var hd = el('div', 'cf-tier-h');
-      add(hd, el('h3', null, t.tier), t.amount ? el('small', null, t.amount) : null, el('i'));
-      var g = el('div', 'cf-sgrid');
-      t.names.forEach(function (n) {
-        var c = el(n.url ? 'a' : 'div', 'cf-sp');
-        if (n.url) { c.href = n.url; c.target = '_blank'; c.rel = 'noopener'; }
-        if (n.logo) {
-          var im = document.createElement('img');
-          im.src = n.logo; im.alt = T(n.name); im.loading = 'lazy';
-          c.appendChild(im);
-          if (!n.showName) { c.appendChild(el('span', null, n.sub || '')); g.appendChild(c); return; }
-        }
-        add(c, el('b', null, n.name), n.sub ? el('span', null, n.sub) : null);
-        g.appendChild(c);
-      });
-      if (t.showOpenSlot && !eventOver()) {
-        var o = link('cf-sp open', CFG.DONATE_URL, null);
-        add(o, el('b', null, 'Your name here'), el('span', null, 'Join this tier \u2192'));
-        g.appendChild(o);
+    w.appendChild(heading('With gratitude', 'Community Partners', CFG.PARTNERS_INTRO, true));
+    var g = el('div', 'cf-sgrid cf-reveal');
+    CFG.PARTNERS.forEach(function (n) {
+      var c = el(n.url ? 'a' : 'div', 'cf-sp');
+      if (n.url) { c.href = n.url; c.target = '_blank'; c.rel = 'noopener'; }
+      if (n.logo) {
+        var im = document.createElement('img');
+        im.src = n.logo; im.alt = T(n.name); im.loading = 'lazy';
+        c.appendChild(im);
       }
-      add(tier, hd, g);
-      w.appendChild(tier);
+      add(c, el('b', null, n.name), n.sub ? el('span', null, n.sub) : null);
+      g.appendChild(c);
     });
-    if (!any) return null;
-    var cta = el('div', 'cf-spcta cf-reveal');
-    var b = link('cf-btn cf-gold', CFG.DONATE_URL, CFG.SPONSOR_CTA);
-    b.insertBefore(icon('heart'), b.firstChild);
-    add(cta, b, el('p', null, 'Every gift helps keep the festival free for the whole community.'));
-    w.appendChild(cta);
-    s.appendChild(w);
-    return s;
-  }
-
-  /* ---------- rsvp ---------- */
-  function buildRsvp() {
-    if (!rsvpOn()) return null;
-    var s = section('rsvp');
-    var w = el('div', 'cf-wrap');
-    var box = el('div', 'cf-rsvp cf-reveal');
-    var t = el('div');
-    add(t, el('span', 'cf-pill', 'Optional'), el('h2', 'cf-h2', CFG.RSVP.title), el('p', 'cf-lead', CFG.RSVP.text));
-    var r = el('div');
-    var b = link('cf-btn cf-gold', CFG.RSVP.url || '#cf-rsvp', CFG.RSVP.button);
-    r.appendChild(b);
-    if (!CFG.RSVP.url) r.appendChild(el('div', 'cf-pending', 'Preview only \u2014 set RSVP.url to the RSVP form link.'));
-    add(box, t, r);
-    w.appendChild(box);
+    var tier = el('div', 'cf-tier cf-lg');
+    tier.appendChild(g);
+    w.appendChild(tier);
     s.appendChild(w);
     return s;
   }
@@ -979,13 +1564,22 @@
     w.appendChild(heading('Press', 'In the News', 'Coverage of the festival over the years.', true));
     var g = el('div', 'cf-news');
     CFG.NEWS.forEach(function (n, i) {
-      var a = link('cf-nc cf-reveal' + (i === 0 ? ' feat' : ''), n.url, null, true);
-      a.style.transitionDelay = (i % 3 * 0.08) + 's';
+      var a = link('cf-nc cf-reveal', n.url, null, true);
+      a.style.transitionDelay = (i % 4 * 0.08) + 's';
+      if (n.img) {
+        var ph = el('div', 'cf-nc-ph');
+        var im = document.createElement('img');
+        im.src = asset(n.img); im.alt = ''; im.loading = 'lazy';
+        ph.appendChild(im);
+        a.appendChild(ph);
+      }
+      var bd = el('div', 'cf-nc-bd');
       var top = el('div', 'cf-nc-top');
       add(top, el('span', 'cf-nc-out', n.outlet), el('span', 'cf-nc-date', n.date));
       var go = el('span', 'cf-nc-go', 'Read');
       go.appendChild(icon('ext'));
-      add(a, top, el('h3', null, n.title), n.blurb ? el('p', null, n.blurb) : null, go);
+      add(bd, top, el('h3', null, n.title), n.blurb ? el('p', null, n.blurb) : null, go);
+      a.appendChild(bd);
       g.appendChild(a);
     });
     w.appendChild(g);
@@ -1017,7 +1611,13 @@
     guideGrid = el('div', 'cf-ggrid');
     for (var k = 0; k < 3; k++) guideGrid.appendChild(el('div', 'cf-skel'));
     var more = el('div', 'cf-gmore');
-    more.appendChild(link('cf-btn cf-ghost', CFG.GUIDE.source, 'Explore the full Chanukah guide'));
+    var moreA = link('cf-btn cf-ghost', CFG.GUIDE.source, 'Explore the full Chanukah guide');
+    moreA.addEventListener('click', function (e) {
+      if (!CFG.GUIDE.reader || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      e.preventDefault();
+      openReader({ url: abs(CFG.GUIDE.source), title: 'Chanukah Guide' });
+    });
+    more.appendChild(moreA);
     add(w, guideIntro, guideGrid, more);
     s.appendChild(w);
     return s;
@@ -1135,14 +1735,32 @@
     return '';
   }
 
+  function pickPhotos(items) {
+    var pool = (CFG.GUIDE.photos || []).slice();
+    var used = {};
+    function take(test) {
+      for (var i = 0; i < pool.length; i++) {
+        if (!used[i] && test(pool[i])) { used[i] = true; return asset(pool[i].img); }
+      }
+      return '';
+    }
+    var out = items.map(function (it) {
+      var t = String(it.title || '').toLowerCase();
+      return take(function (ph) { return ph.match && new RegExp(ph.match, 'i').test(t); });
+    });
+    return out.map(function (ph) { return ph || take(function () { return true; }); });
+  }
+
   function renderGuide(items) {
     guideGrid.innerHTML = '';
+    var photos = pickPhotos(items);
     items.forEach(function (it, i) {
       var a = link('cf-gc cf-reveal in', it.url, null);
       a.style.transitionDelay = (i % 3 * 0.06) + 's';
-      if (it.img) {
+      var src = photos[i] || it.img;
+      if (src) {
         var im = document.createElement('img');
-        im.className = 'cf-gc-img'; im.src = it.img; im.alt = ''; im.loading = 'lazy';
+        im.className = 'cf-gc-img'; im.src = src; im.alt = ''; im.loading = 'lazy';
         im.onerror = function () { this.parentNode.replaceChild(placeholderArt(), this); };
         a.appendChild(im);
       } else {
@@ -1165,62 +1783,142 @@
     return p;
   }
 
-  /* ---------- article reader (imports the syndicated article) ---------- */
+  /* ---------- article reader ----------
+     Shows Chanukah articles from the site inside one pop-up, restyled to this page.
+     Links to other Chanukah / Chabad.org articles open in the same pop-up (with a Back
+     button); anything else opens in a new tab. The visitor never leaves this page. */
   var lastFocus = null;
+  var READER = null;
+  function inReader(u) {
+    var x;
+    try { x = new URL(u, window.location.href); } catch (e) { return null; }
+    if (!/^https?:$/.test(x.protocol)) return null;
+    var ours = x.hostname === window.location.hostname || /(^|\.)(chabad\.org|jewishriverside\.com|chanukahfestival\.org)$/i.test(x.hostname);
+    if (!ours) return null;
+    if (!/(article_cdo|article\.aspx?|\/aid\/\d+|default_cdo|\/holidays\/|\/library\/|\/multimedia\/)/i.test(x.pathname + x.search)) return null;
+    if (/\.(pdf|jpe?g|png|gif|mp3|mp4|zip)$/i.test(x.pathname)) return null;
+    if (/(^|\.)chabad\.org$/i.test(x.hostname)) return window.location.origin + x.pathname + x.search;
+    if (x.hostname !== window.location.hostname) return null;   /* other sites of ours: no cross-site fetch */
+    return x.href.split('#')[0];
+  }
   function openReader(it) {
+    if (READER) { READER.go(it.url, it.title, false); return; }
     lastFocus = document.activeElement;
     var ov = el('div', 'cf-rd');
     ov.setAttribute('role', 'dialog');
     ov.setAttribute('aria-modal', 'true');
-    ov.setAttribute('aria-label', T(it.title));
+    ov.setAttribute('aria-label', 'Chanukah guide');
     var box = el('div', 'cf-rd-box');
     var x = el('button', 'cf-rd-x');
     x.type = 'button';
     x.setAttribute('aria-label', 'Close');
     x.appendChild(icon('x'));
-    var h = el('h1', null, it.title);
+    var bk = el('button', 'cf-rd-bk', '← Back');
+    bk.type = 'button';
+    var h = el('h1');
     var body = el('div', 'cf-rd-body');
-    body.appendChild(el('div', 'cf-skel'));
     var foot = el('div', 'cf-rd-foot');
-    var full = link('cf-btn cf-teal', it.url, 'Open the full page', true);
-    full.appendChild(icon('ext'));
-    var back = el('button', 'cf-btn cf-ghost', 'Back to the festival');
-    back.style.color = NAVY;
-    back.style.borderColor = 'rgba(15,41,54,.3)';
-    back.type = 'button';
-    add(foot, full, back);
-    add(box, x, h, body, foot);
+    var close2 = el('button', 'cf-btn cf-ghost', 'Back to the festival');
+    close2.style.color = NAVY;
+    close2.style.borderColor = 'rgba(15,41,54,.3)';
+    close2.type = 'button';
+    add(foot, close2);
+    add(box, x, bk, h, body, foot);
     ov.appendChild(box);
     root.appendChild(ov);
     document.documentElement.style.overflow = 'hidden';
     x.focus();
 
+    var stack = [], seq = 0;
     function close() {
+      seq++;
       if (ov.parentNode) ov.parentNode.removeChild(ov);
       document.documentElement.style.overflow = '';
       document.removeEventListener('keydown', onKey);
+      READER = null;
       if (lastFocus && lastFocus.focus) lastFocus.focus();
     }
     function onKey(e) { if (e.key === 'Escape') close(); }
     x.addEventListener('click', close);
-    back.addEventListener('click', close);
+    close2.addEventListener('click', close);
     ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
     document.addEventListener('keydown', onKey);
+    bk.addEventListener('click', function () {
+      if (stack.length < 2) return;
+      stack.pop();
+      var prev = stack[stack.length - 1];
+      load(prev.url, prev.title);
+    });
+    body.addEventListener('click', function (e) {
+      var a = e.target.closest ? e.target.closest('a[href]') : null;
+      if (!a || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+      var u = inReader(a.href);
+      if (!u) return;                      /* not a Chanukah article: opens in a new tab */
+      e.preventDefault();
+      go(u, clean(a.textContent), true);
+    });
 
-    fetch(it.url, { credentials: 'same-origin' })
-      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
-      .then(function (html) {
-        var doc = new DOMParser().parseFromString(html, 'text/html');
-        var art = extractArticle(doc, it.url);
-        if (!art || clean(art.body.textContent).length < 200) throw new Error('no article body');
-        if (art.title) h.textContent = art.title;
-        body.innerHTML = '';
-        body.appendChild(art.body);
-      })
-      .catch(function () {
-        close();
-        window.location.href = it.url;
-      });
+    function go(url, title, push) {
+      if (!push) stack = [];
+      stack.push({ url: url, title: title || '' });
+      load(url, title);
+    }
+    function load(url, title) {
+      var my = ++seq;
+      bk.style.display = stack.length > 1 ? '' : 'none';
+      h.textContent = title || '';
+      body.innerHTML = '';
+      body.appendChild(el('div', 'cf-skel'));
+      body.appendChild(el('div', 'cf-skel'));
+      ov.scrollTop = 0;
+      if (!window.fetch || !window.DOMParser) return failed(url);
+      fetch(url, { credentials: 'same-origin' })
+        .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.text(); })
+        .then(function (html) {
+          if (my !== seq) return;
+          var doc = new DOMParser().parseFromString(html, 'text/html');
+          var art = extractArticle(doc, url);
+          if (art && clean(art.body.textContent).length >= 200) {
+            if (art.title) h.textContent = art.title;
+            body.innerHTML = '';
+            body.appendChild(art.body);
+            return;
+          }
+          var idx = extractGuide(doc, url);          /* a section page: show its articles as a list */
+          if (idx.items.length) {
+            var t = doc.querySelector('.article-header__title,h1');
+            if (t && clean(t.textContent)) h.textContent = clean(t.textContent);
+            body.innerHTML = '';
+            if (idx.intro) body.appendChild(el('p', null, idx.intro));
+            var ul = el('div', 'cf-rd-list');
+            idx.items.forEach(function (i2) {
+              var a = link('cf-rd-li', i2.url, null);
+              if (i2.img) { var im = document.createElement('img'); im.src = i2.img; im.alt = ''; im.loading = 'lazy'; im.onerror = function () { this.parentNode.removeChild(this); }; a.appendChild(im); }
+              var tb = el('span');
+              add(tb, el('b', null, i2.title), i2.text ? el('small', null, i2.text) : null);
+              a.appendChild(tb);
+              ul.appendChild(a);
+            });
+            body.appendChild(ul);
+            return;
+          }
+          throw new Error('nothing to show');
+        })
+        .catch(function (e) {
+          if (my !== seq) return;
+          if (window.console) console.warn('Chanukah Festival: reader could not show', url, e);
+          failed(url);
+        });
+    }
+    function failed(url) {
+      body.innerHTML = '';
+      body.appendChild(el('p', null, 'Sorry, this page can’t be shown here.'));
+      var o = link('cf-btn cf-teal', url, 'Open it in a new tab', true);
+      o.appendChild(icon('ext'));
+      body.appendChild(o);
+    }
+    READER = { go: go };
+    go(it.url, it.title, false);
   }
 
   function extractArticle(doc, base) {
@@ -1288,13 +1986,21 @@
     var dl = link('cf-btn cf-gold', CFG.FLYER, 'Download the flyer', true);
     dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.png');
     dl.insertBefore(icon('dl'), dl.firstChild);
-    var follow = link('cf-btn cf-ghost', CFG.SHARE.instagram, 'Open Instagram', true);
+    var follow = link('cf-btn cf-ghost', CFG.SHARE.instagram, 'Open ' + CFG.SHARE.igHandle, true);
     follow.insertBefore(icon('ig'), follow.firstChild);
     add(popBtns, dl, follow);
     add(pop, popP, popBtns);
 
     ig.addEventListener('click', function () { shareInstagram(pop, popP); });
-    add(w, row, pop);
+
+    var frow = el('div', 'cf-sharebtns cf-follow');
+    var ffb = link('cf-btn cf-ghost', CFG.SHARE.facebookEvent || CFG.SHARE.facebook,
+      CFG.SHARE.facebookEvent ? 'Join the Facebook event' : 'Follow on Facebook', true);
+    ffb.insertBefore(icon('fb'), ffb.firstChild);
+    var fig = link('cf-btn cf-ghost', CFG.SHARE.instagram, 'Follow on Instagram', true);
+    fig.insertBefore(icon('ig'), fig.firstChild);
+    add(frow, ffb, fig);
+    add(w, row, frow, pop);
     s.appendChild(w);
     return s;
   }
@@ -1334,11 +2040,13 @@
     ph.insertBefore(icon('phone'), ph.firstChild);
     var em = link(null, 'mailto:' + CFG.EMAIL, CFG.EMAIL);
     em.insertBefore(icon('mail'), em.firstChild);
-    var ig = link(null, CFG.SHARE.instagram, '@jewishriverside', true);
+    var ig = link(null, CFG.SHARE.instagram, CFG.SHARE.igHandle, true);
     ig.insertBefore(icon('ig'), ig.firstChild);
-    add(l, ph, em, ig);
+    var fbl = link(null, CFG.SHARE.facebookEvent || CFG.SHARE.facebook, 'Chanukah Festival on Facebook', true);
+    fbl.insertBefore(icon('fb'), fbl.firstChild);
+    add(l, ph, em, ig, fbl);
     add(w, el('b', null, 'Questions? We\u2019d love to help.'), l,
-      link('cf-btn cf-gold', CFG.DONATE_URL, 'Support the festival'),
+      donateButton('Support the festival'),
       el('small', null, CFG.host + ' \u2022 Riverside, CA \u2022 ' + CFG.WEB));
     var back = link(null, 'https://www.jewishriverside.com', '\u2190 Back to ' + CFG.host);
     back.style.display = 'inline-block';

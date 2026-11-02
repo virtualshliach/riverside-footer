@@ -51,7 +51,12 @@ function load(site, url, opts) {
       w.console.warn = function () { logs.push('warn ' + [].join.call(arguments, ' ')); };
       w.console.log = function () { logs.push([].join.call(arguments, ' ')); };
       w.addEventListener('error', function (e) { errors.push(e.message); });
-      w.fetch = function () { return Promise.reject(new Error('offline in tests')); };
+      w.fetch = function (u) {
+        var key = String(u).replace(/^https?:\/\/[^/]+/, '');
+        if (opts.pages && opts.pages[key] != null) return Promise.resolve({ ok: true, status: 200, text: function () { return Promise.resolve(opts.pages[key]); } });
+        if (opts.pages) (opts.fetched = opts.fetched || []).push(key);
+        return Promise.reject(new Error('offline in tests'));
+      };
     }
   });
   return wait(opts.wait || 600).then(function () {
@@ -60,6 +65,72 @@ function load(site, url, opts) {
 }
 function projectRequests(r) {
   return r.requests.filter(function (u) { return u.indexOf(PAGES_BASE) === 0 && !/\/footer\.js$/.test(u); });
+}
+
+
+/* A live-shaped stub of the ChabadOne donation form on page 7553387, built from the field
+   map taken on the live page (Nov 2 2026). Behaves like the platform:
+   - invisible reCAPTCHA: empty wrapper, never needs a click
+   - hidden cc_type input
+   - the expiry selects are REBUILT (selection lost) whenever the amount changes
+   - the click is refused (.form-validation-error) when a required field is empty
+   - success removes the form (AJAX); window.__decline shows the decline wording instead */
+function donateShell(opts) {
+  opts = opts || {};
+  var months = '<option value=""></option>' + [1,2,3,4,5,6,7,8,9,10,11,12].map(function (m) { return '<option value="' + m + '">' + m + ' - M</option>'; }).join('');
+  var years = '<option value=""></option>' + [2026,2027,2028,2029,2030].map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
+  var countries = '<option value="">Please Select</option><option value="United States">United States</option><option value="Canada">Canada</option>';
+  return '<!doctype html><html><head><title>t</title></head><body>' +
+  '<div class="cco_templateless_template"><a href="//www.JewishRiverside.com">Back</a></div>' +
+  '<div class="cco_templatelates_content"><div id="cco_body"><div id="co_content_container"><article><div id="formContainer">' +
+  '<form id="7553387" class="userform-form"><ul>' +
+  '<li id="id_1"><input id="first_1"><input id="last_1"></li>' +
+  '<li id="id_3"><input id="input_3" type="email"></li>' +
+  '<li id="id_5"><input id="input_5_addr_line1"><input id="input_5_addr_line2"><input id="input_5_city"><input id="input_5_state"><input id="input_5_postal"><select id="input_5_country">' + countries + '</select></li>' +
+  '<li id="id_6"><input id="input_6_full" type="tel"></li>' +
+  '<li id="id_7"><input id="input_7" type="number"></li>' +
+  '<li id="id_8"><div class="form-input" id="total_amount">$0.00</div></li>' +
+  '<li id="id_9"><input id="input_9" type="checkbox" value="Monthly"></li>' +
+  '<li id="id_10"><input type="hidden" id="input_10_cc_type"><input id="input_10_cc_number"><input id="input_10_cc_ccv"><input id="input_10_cc_nameOnCard">' +
+  '<select id="input_10_cc_exp_month">' + months + '</select><select id="input_10_cc_exp_year">' + years + '</select>' +
+  '<table><tr class="billing_address"><td><input id="input_10_addr_line1"><input id="input_10_city"><input id="input_10_state"><input id="input_10_postal"><select id="input_10_country">' + countries + '</select></td></tr></table></li>' +
+  '<li id="id_4"><input id="input_4" type="checkbox" value="true"></li>' +
+  '<li id="id_2"><button type="button" id="input_2" class="form-submit-button">Submit</button></li>' +
+  '</ul><div><div class="js-recaptcha-wrapper"></div></div><input type="hidden" name="cdo-captcha-response" value=""></form>' +
+  '</div></article></div></div></div><div id="BodyContainer">Powered by</div>' +
+  '<script>(function(){var f=document.getElementById("7553387");window.__clicks=0;window.__submitted=null;' +
+  'var mo=document.getElementById("input_10_cc_exp_month").innerHTML,yo=document.getElementById("input_10_cc_exp_year").innerHTML;' +
+  'document.getElementById("input_7").addEventListener("change",function(){document.getElementById("total_amount").textContent="$"+(+this.value||0).toFixed(2);' +
+  'document.getElementById("input_10_cc_exp_month").innerHTML=mo;document.getElementById("input_10_cc_exp_year").innerHTML=yo;window.__rebuilds=(window.__rebuilds||0)+1;});' +
+  'document.getElementById("input_2").addEventListener("click",function(){window.__clicks++;' +
+  '[].forEach.call(f.querySelectorAll(".form-validation-error"),function(e){e.classList.remove("form-validation-error");});' +
+  'var req=["first_1","last_1","input_3","input_7","input_10_cc_number","input_10_cc_ccv","input_10_cc_nameOnCard","input_10_cc_exp_month","input_10_cc_exp_year"];var bad=0;' +
+  'req.forEach(function(id){var e=document.getElementById(id);if(!e.value){e.classList.add("form-validation-error");bad++;}});' +
+  'var cn=document.getElementById("input_10_cc_number");if(cn.value&&cn.value.length<13){cn.classList.add("form-validation-error");bad++;}if(bad)return;' +
+  'var vals={};[].forEach.call(f.querySelectorAll("input,select"),function(e){if(e.id)vals[e.id]=e.type==="checkbox"?e.checked:e.value;});window.__submitted=vals;' +
+  'setTimeout(function(){if(window.__decline){var d=document.createElement("div");d.className="form-error-message";d.textContent="This transaction has been declined.";f.appendChild(d);window.__decline=false;}' +
+  'else{document.getElementById("formContainer").innerHTML="<p>Thank you</p>";}},300);});})();</script>';
+}
+
+async function donateFlow(r, card) {
+  var d = r.d, w = r.w;
+  function click(el) { el.dispatchEvent(new w.MouseEvent('click', { bubbles: true, cancelable: true })); }
+  function type(id, val) { var e = d.getElementById(id); e.value = val; e.dispatchEvent(new w.Event('input', { bubbles: true })); e.dispatchEvent(new w.Event('change', { bubbles: true })); }
+  click(d.querySelector('.cf-nav .cf-don'));
+  var chips = d.querySelectorAll('.cf-dm .cf-chip');
+  click(chips[3]);                                              /* $180 */
+  var mon = d.getElementById('cf-dm-monthly'); mon.checked = true; mon.dispatchEvent(new w.Event('change', { bubbles: true }));
+  click(d.querySelector('.cf-dm-next'));
+  type('cf-dm-first', 'Test'); type('cf-dm-last', 'Donor'); type('cf-dm-email', 'test@example.com');
+  type('cf-dm-phone', '9515550100'); type('cf-dm-addr1', '1 Main St'); type('cf-dm-city', 'Riverside');
+  type('cf-dm-state', 'CA'); type('cf-dm-zip', '92501');
+  click(d.querySelector('.cf-dm-next'));
+  if (card) {
+    type('cf-dm-ccNum', card === true ? '4111 1111 1111 1111' : card); type('cf-dm-ccCvv', '123');
+    type('cf-dm-ccMon', '7'); type('cf-dm-ccYear', '2028');
+  }
+  click(d.querySelector('.cf-dm-next'));
+  await wait(1700);
 }
 
 var SITES = {
@@ -73,10 +144,43 @@ var SITES = {
     ok(r.errors.length === 0, 'no console errors ' + (r.errors.length ? JSON.stringify(r.errors) : ''));
     ok(r.logs.some(function (l) { return /\[riverside-footer\].*aid 7553387 -> chanukah-2026\.js/.test(l); }), 'loader log line');
     ok(r.logs.some(function (l) { return /footer payload executing/.test(l); }), 'project log line');
-    ['cf-top', 'cf-event', 'cf-sponsors', 'cf-about', 'cf-news', 'cf-guide', 'cf-share'].forEach(function (id) {
+    ['cf-top', 'cf-event', 'cf-directions', 'cf-partners', 'cf-about', 'cf-news', 'cf-guide', 'cf-share'].forEach(function (id) {
       ok(r.d.getElementById(id), 'section #' + id);
     });
     ok(r.d.querySelectorAll('#cf-guide .cf-gc').length === 3, 'guide falls back to fixed links when import fails');
+    var gImgs = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
+    ok(gImgs.join(',') === 'g-guide.jpg,g-light.jpg,g-celebrate.jpg', 'guide cards use our event photos, matched to their titles (' + gImgs.join(',') + ')');
+    ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 9, 'nine guide photos are in the repo');
+    var hv = r.d.querySelector('#cf-top .cf-vid video');
+    ok(hv && hv.getAttribute('src') === PAGES_BASE + 'festival-hero.mp4', 'hero video points at festival-hero.mp4 in this repo (' + (hv && hv.getAttribute('src')) + ')');
+    ok(hv && hv.muted && hv.hasAttribute('playsinline') && hv.loop, 'hero video is muted, loops and plays inline');
+    ok(hv && hv.poster === PAGES_BASE + 'festival-hero-poster.jpg', 'hero has a still image while the video loads');
+    ok(fs.existsSync(path.join(ROOT, 'festival-hero.mp4')) && fs.existsSync(path.join(ROOT, 'festival-hero-poster.jpg')), 'video and still are in the repo');
+    ok(!r.d.getElementById('cf-rsvp') && !/rsvp/i.test(r.d.getElementById('cf26').textContent), 'no RSVP anywhere on the page');
+    ok(!/become a sponsor|your name here|grand menorah sponsors|festival sponsors/i.test(r.d.getElementById('cf26').textContent), 'no sponsor tiers or sponsor button');
+    ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 5, 'the five community partners are shown');
+    var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
+    ok(nImgs.length === 4 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');
+    ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
+    var kids = [].slice.call(r.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
+    ok(kids[kids.length - 2] === 'cf-flysec' && kids[kids.length - 1] === 'cf-foot', 'flyer download sits right before the footer (' + kids.slice(-3).join(' > ') + ')');
+    ok(!r.d.querySelector('#cf-event .cf-flyer'), 'flyer no longer in the event section');
+    var menu = [].map.call(r.d.querySelectorAll('.cf-links a'), function (a) { return a.textContent + '>' + a.getAttribute('href'); });
+    ok(menu.join('|') === 'Event Info>#cf-event|Directions & Parking>#cf-directions|In the News>#cf-news|Chanukah Guide>#cf-guide', 'menu items in order (' + menu.join('|') + ')');
+    ok(menu.every(function (m) { return r.d.getElementById(m.split('>#')[1]); }), 'every menu item has a section to go to');
+    var mm = [].map.call(r.d.querySelectorAll('#cf-mmenu a, #cf-mmenu button'), function (a) { return a.textContent; });
+    ok(mm.join('|') === 'Event Info|Directions & Parking|In the News|Chanukah Guide|Donate', 'phone menu has the same items plus Donate (' + mm.join('|') + ')');
+    var burger = r.d.querySelector('.cf-burger');
+    burger.dispatchEvent(new r.w.MouseEvent('click', { bubbles: true }));
+    ok(/open/.test(r.d.getElementById('cf-mmenu').className), 'menu button opens the phone menu');
+    r.d.querySelector('#cf-mmenu a').dispatchEvent(new r.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+    ok(!/open/.test(r.d.getElementById('cf-mmenu').className), 'picking an item closes the phone menu');
+    ok(r.d.querySelector('#cf-directions iframe') && r.d.querySelectorAll('#cf-directions .cf-ev-btns a').length === 2, 'directions section has the map and two map buttons');
+    ok(r.d.querySelectorAll('#cf-directions .cf-prow').length === 5 && /\$1\.25 per 30 minutes/.test(r.d.getElementById('cf-directions').textContent), 'parking: five nearby garages and the rates');
+    var hlImgs = [].map.call(r.d.querySelectorAll('#cf-event .cf-hl-card img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
+    ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music.jpg,hl-family.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
+    ok(hlImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'all four card photos are in the repo');
+    ok(/FESTIVAL/.test(r.d.querySelector('#cf-top .cf-vtext').textContent) && /22/.test(r.d.querySelector('#cf-top .cf-vtext .cf-annual').textContent), 'title sits on top of the video');
 
     var r2 = await load('riverside', 'https://www.jewishriverside.com/article.asp?aid=' + DRAFT);
     ok(r2.d.getElementById('cf26'), 'article.asp?aid= form renders');
@@ -97,6 +201,94 @@ var SITES = {
     ok(sk.d.querySelectorAll('#hh26 .hh-tile').length >= 6, 'Sukkot tiles present (' + sk.d.querySelectorAll('#hh26 .hh-tile').length + ')');
     var skr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7457011/jewish/Sukkot.htm', { wait: 300 });
     ok(projectRequests(skr).length === 1 && !skr.errors.length, 'Sukkot code also loads on its thank-you page');
+
+    console.log('riverside: social links go to the festival pages');
+    var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
+    ok(shareA.some(function (t) { return t === 'Follow on Facebook>https://www.facebook.com/chanukahfestival/'; }), 'Follow on Facebook goes to the festival page');
+    ok(shareA.some(function (t) { return t === 'Follow on Instagram>https://www.instagram.com/chanukahfestival/'; }), 'Follow on Instagram goes to the festival account');
+    var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');
+    ok(!/instagram\.com\/jewishriverside|facebook\.com\/jewishriverside/i.test(allA), 'no links to the Jewish Riverside social pages');
+    ok(/@chanukahfestival/.test(r.d.querySelector('.cf-foot').textContent), 'footer shows @chanukahfestival');
+
+    console.log('riverside: Chanukah guide pop-up');
+    var ART = function (title, extra) { return '<html><body><h1>' + title + '</h1><div itemprop="articleBody"><p>__FILL__</p>' + (extra || '') + '</div></body></html>'; };
+    var GP = {
+      '/holidays/chanukah/default_cdo/jewish/Hanukkah.htm': '<html><body><h1>Chanukah</h1><main>' +
+        '<a href="/article.asp?aid=1001">What Is Chanukah?</a> <a href="/article.asp?aid=1002">How to Light the Menorah</a> ' +
+        '<a href="/article.asp?aid=1003">How to Celebrate Chanukah</a> <a href="/article.asp?aid=1004">Chanukah Food Guide</a></main></body></html>',
+      '/article.asp?aid=1001': ART('What Is Chanukah?', '<p><a href="https://www.chabad.org/library/article_cdo/aid/2000/jewish/The-Story.htm">Read the story</a> and <a href="https://example.com/x">elsewhere</a></p>'),
+      '/library/article_cdo/aid/2000/jewish/The-Story.htm': ART('The Story of Chanukah')
+    };
+    Object.keys(GP).forEach(function (k) { GP[k] = GP[k].replace('__FILL__', 'Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. Chanukah is the eight-day festival of light. '); });
+    var gr = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm', { pages: GP, wait: 900 });
+    ok(gr.d.querySelectorAll('#cf-guide .cf-gc').length === 4, 'four guide cards imported from the site (' + gr.d.querySelectorAll('#cf-guide .cf-gc').length + ')');
+    function gclick(el) { el.dispatchEvent(new gr.w.MouseEvent('click', { bubbles: true, cancelable: true })); }
+    gclick(gr.d.querySelector('#cf-guide .cf-gc'));
+    await wait(200);
+    var rd = gr.d.querySelector('.cf-rd');
+    ok(rd && rd.querySelector('h1').textContent === 'What Is Chanukah?' && /festival of light/.test(rd.querySelector('.cf-rd-body').textContent), 'card opens its article in a pop-up');
+    ok(rd.querySelector('.cf-rd-bk').style.display === 'none', 'no Back button on the first article');
+    var ext = [].filter.call(rd.querySelectorAll('.cf-rd-body a'), function (a) { return /example\.com/.test(a.href); })[0];
+    ok(ext && ext.getAttribute('target') === '_blank', 'a link to another website opens in a new tab');
+    gclick([].filter.call(rd.querySelectorAll('.cf-rd-body a'), function (a) { return /The-Story/.test(a.href); })[0]);
+    await wait(200);
+    ok(gr.d.querySelectorAll('.cf-rd').length === 1 && rd.querySelector('h1').textContent === 'The Story of Chanukah', 'a Chabad.org article link opens inside the same pop-up');
+    ok(rd.querySelector('.cf-rd-bk').style.display === '', 'Back button appears');
+    gclick(rd.querySelector('.cf-rd-bk'));
+    await wait(200);
+    ok(rd.querySelector('h1').textContent === 'What Is Chanukah?', 'Back returns to the previous article');
+    gr.d.dispatchEvent(new gr.w.KeyboardEvent('keydown', { key: 'Escape' }));
+    ok(!gr.d.querySelector('.cf-rd'), 'Escape closes the guide pop-up');
+    gclick(gr.d.querySelector('#cf-guide .cf-gmore a'));
+    await wait(200);
+    ok(gr.d.querySelectorAll('.cf-rd .cf-rd-li').length === 4, 'Explore the full guide opens the guide list in the pop-up');
+    gclick(gr.d.querySelectorAll('.cf-rd .cf-rd-li')[2]);
+    await wait(200);
+    ok(gr.d.querySelector('.cf-rd h1').textContent && gr.d.querySelector('.cf-rd .cf-rd-bk').style.display === '', 'picking from the list opens that article, with Back');
+
+    console.log('riverside: donate pop-up against a live-shaped form');
+    var DPAGE = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm';
+    var dz = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    ok(dz.d.getElementById('cf26') && dz.errors.length === 0, 'page renders with the form present, no errors ' + JSON.stringify(dz.errors));
+    ok(dz.d.getElementById('7553387') && dz.d.getElementById('7553387').closest('.cco_templatelates_content'), 'native form left in place (not moved)');
+    var css = dz.d.getElementById('cf26-style').textContent;
+    ok(/\.cco_templatelates_content\{position:absolute !important;left:-10000px/.test(css) && !/\.cco_templatelates_content[^{]*\{display:none/.test(css), 'native page parked off-screen, never display:none');
+    await donateFlow(dz, false);
+    ok(dz.w.__clicks === 0 && /card/i.test(dz.d.querySelector('.cf-dm-err').textContent), 'card left empty: stopped in the pop-up, form not touched (' + dz.d.querySelector('.cf-dm-err').textContent + ')');
+    var dv = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    await donateFlow(dv, '4111');
+    ok(dv.w.__clicks === 1, 'form refuses the card: native submit clicked once (' + dv.w.__clicks + ')');
+    ok(/card details/i.test(dv.d.querySelector('.cf-dm-err').textContent), 'form refuses the card: donor told to check card details (' + dv.d.querySelector('.cf-dm-err').textContent + ')');
+    ok(!dv.d.querySelector('.cf-dm-next').disabled, 'form refuses the card: button released for a retry');
+
+    var dg = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    await donateFlow(dg, true);
+    var sub = dg.w.__submitted || {};
+    ok(dg.w.__clicks === 1, 'card gift: native submit clicked exactly once (' + dg.w.__clicks + ')');
+    ok(sub.input_7 === '180' && sub.input_9 === true, 'card gift: amount 180 and monthly box ticked');
+    ok(sub.first_1 === 'Test' && sub.last_1 === 'Donor' && sub.input_3 === 'test@example.com' && sub.input_6_full === '9515550100', 'card gift: name, email, phone written');
+    ok(sub.input_5_addr_line1 === '1 Main St' && sub.input_5_city === 'Riverside' && sub.input_5_state === 'CA' && sub.input_5_postal === '92501' && sub.input_5_country === 'United States', 'card gift: address written');
+    ok(sub.input_10_addr_line1 === '1 Main St' && sub.input_10_postal === '92501' && sub.input_10_country === 'United States', 'card gift: billing address copied');
+    ok(sub.input_10_cc_number === '4111111111111111' && sub.input_10_cc_ccv === '123' && sub.input_10_cc_nameOnCard === 'Test Donor', 'card gift: card number, code, name written');
+    ok(sub.input_10_cc_exp_month === '7' && sub.input_10_cc_exp_year === '2028', 'card gift: expiry survived the form rebuilding its dropdowns (' + sub.input_10_cc_exp_month + '/' + sub.input_10_cc_exp_year + ')');
+    ok(sub.input_10_cc_type === '', 'card gift: hidden card type left to the platform');
+    await wait(600);
+    ok(/Thank you/.test(dg.d.querySelector('.cf-dm-done').textContent) && /\$180/.test(dg.d.querySelector('.cf-dm-done').textContent), 'card gift: thank-you shown when the form completes');
+
+    var dd = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    dd.w.__decline = true;
+    await donateFlow(dd, true);
+    await wait(1500);
+    ok(/declined/i.test(dd.d.querySelector('.cf-dm-err').textContent), 'decline: the decline message is shown (' + dd.d.querySelector('.cf-dm-err').textContent + ')');
+    ok(!dd.d.querySelector('.cf-dm-next').disabled, 'decline: button released');
+    dd.d.querySelector('.cf-dm-next').dispatchEvent(new dd.w.MouseEvent('click', { bubbles: true }));
+    await wait(1200);
+    ok(dd.w.__clicks === 2 && /Thank you/.test(dd.d.querySelector('.cf-dm-done').textContent), 'retry after a decline: stale decline text cleared, second attempt succeeds');
+
+    var nf = await load('riverside', DPAGE, { wait: 400 });
+    var opened = null; nf.w.open = function (u) { opened = u; };
+    nf.d.querySelector('.cf-nav .cf-don').dispatchEvent(new nf.w.MouseEvent('click', { bubbles: true }));
+    ok(opened === '/article.asp?aid=4194665' && !nf.d.querySelector('.cf-dm'), 'no form on the page: Donate opens the donate page instead');
 
     console.log('riverside: pages that must load nothing');
     var quiet = [
