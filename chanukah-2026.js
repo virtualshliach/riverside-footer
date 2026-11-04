@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-02j';
+  var VERSION = 'cf26-2026-11-04b';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -407,7 +407,8 @@
       /* nav */
       '#cf26 .cf-nav{position:sticky;top:0;z-index:50;background:rgba(10,31,42,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}',
       '#cf26 .cf-nav .cf-wrap{display:flex;align-items:center;gap:18px;height:60px}',
-      '#cf26 .cf-brand{font-family:' + DISP + ';font-weight:700;color:#fff;text-decoration:none;font-size:1.05rem;letter-spacing:.04em;white-space:nowrap}',
+      '#cf26 .cf-brand{font-family:' + DISP + ';font-weight:700;color:#fff;text-decoration:none;font-size:1.4rem;letter-spacing:.04em;white-space:nowrap}',
+      '@media (max-width:420px){#cf26 .cf-brand{font-size:1.2rem}}',
       '#cf26 .cf-brand span{background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent}',
       '#cf26 .cf-links{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}',
       '#cf26 .cf-links::-webkit-scrollbar{display:none}',
@@ -476,6 +477,18 @@
       '#cf26 .cf-plist{display:grid;gap:8px;margin-top:8px}',
       '#cf26 .cf-prow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);text-decoration:none;color:' + INK + '}',
       '#cf26 .cf-prow:hover{border-color:rgba(26,204,206,.45)}',
+      '#cf26 button.cf-prow{width:100%;text-align:left;font:inherit;cursor:pointer}',
+      '#cf26 .cf-pitem.open .cf-prow{border-color:rgba(26,204,206,.6);border-bottom-left-radius:0;border-bottom-right-radius:0}',
+      '#cf26 .cf-pchev{font-style:normal;color:' + TEAL + ';font-size:14px;transition:transform .25s ease}',
+      '#cf26 .cf-pitem.open .cf-pchev{transform:rotate(180deg)}',
+      '#cf26 .cf-ptray{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}',
+      '#cf26 .cf-pitem.open .cf-ptray{grid-template-rows:1fr}',
+      '#cf26 .cf-ptray-in{overflow:hidden;display:grid;grid-template-columns:1fr 1fr;gap:14px;padding:0 12px;background:rgba(26,204,206,.07);border:0 solid rgba(26,204,206,.6);border-top:0;border-radius:0 0 12px 12px}',
+      '#cf26 .cf-pitem.open .cf-ptray-in{padding:12px;border-width:0 1px 1px}',
+      '#cf26 .cf-pcol{display:flex;flex-direction:column;gap:8px;min-width:0}',
+      '#cf26 .cf-pcol small{font-size:.76rem;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:' + MUTED + '}',
+      '#cf26 .cf-pcol .cf-btn{justify-content:center;font-size:.86rem;padding:10px 14px;width:100%}',
+      '@media (max-width:520px){#cf26 .cf-ptray-in{grid-template-columns:1fr}}',
       '#cf26 .cf-prow .cf-ic{color:' + TEAL + ';font-size:18px}',
       '#cf26 .cf-prow div{flex:1;min-width:0}',
       '#cf26 .cf-prow b{display:block;font-weight:700;color:#fff;font-size:.95rem}',
@@ -493,8 +506,6 @@
       '#cf26 .cf-vtext .cf-t2,#cf26 .cf-vtext .cf-invite{text-shadow:0 3px 18px rgba(0,0,0,.6)}',
       '#cf26 .cf-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}',
       '#cf26 .cf-tag{background:' + GOLD + ';color:' + DEEP + ';font-family:' + SCRIPT + ';font-size:clamp(1.05rem,2.4vw,1.5rem);padding:7px 18px;line-height:1.2;border-radius:4px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
-      '#cf26 .cf-vbtn{position:absolute;right:16px;bottom:16px;z-index:2;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(10,31,42,.55);color:#fff;border:1px solid rgba(255,255,255,.35);font-size:18px}',
-      '#cf26 .cf-vbtn:hover{background:rgba(10,31,42,.8)}',
       '#cf26 .cf-info{padding:6px 0 64px}',
       '@media (max-width:620px){#cf26 .cf-vid{min-height:clamp(380px,62vh,560px)}#cf26 .cf-vtext{padding:44px 16px 56px}}',
       '#cf26 .cf-bh{position:absolute;top:12px;left:18px;z-index:1;font-size:.78rem;color:rgba(255,255,255,.8);font-family:' + DISP + '}',
@@ -724,6 +735,8 @@
       else host.parentNode.insertBefore(root, host);
 
       document.documentElement.className += ' cf26-on';
+      hideTopBar();
+      if (window.addEventListener) window.addEventListener('load', hideTopBar);
       uncover();
       startCountdown();
       reveal();
@@ -741,6 +754,15 @@
       document.documentElement.className = document.documentElement.className.replace(' cf26-on', '');
       uncover();
     }
+  }
+
+  /* The platform's "Back to ..." bar has inline !important styles, so a stylesheet can't
+     hide it; overwrite its inline display instead. It's a link bar, not a form. */
+  function hideTopBar() {
+    [].forEach.call(document.querySelectorAll('.cco_templateless_template'), function (e) {
+      if (e.closest && e.closest('#cf26')) return;
+      e.style.setProperty('display', 'none', 'important');
+    });
   }
 
   function loadFonts() {
@@ -1229,12 +1251,43 @@
       var pk = el('div', 'cf-park');
       pk.appendChild(el('div', 'cf-kicker', 'Parking nearby'));
       var list = el('div', 'cf-plist');
-      CFG.PARKING.forEach(function (g) {
-        var a = link('cf-prow', 'https://www.google.com/maps/dir/?' + qs({ api: '1', destination: g.addr + ', Riverside, CA 92501' }), null, true);
+      var venueAddr = CFG.event.mapQuery;
+      CFG.PARKING.forEach(function (g, i) {
+        var item = el('div', 'cf-pitem');
+        var a = el('button', 'cf-prow');
+        a.type = 'button';
+        a.setAttribute('aria-expanded', 'false');
+        a.setAttribute('aria-controls', 'cf-ptray-' + i);
         var t = el('div');
         add(t, el('b', null, g.addr), el('span', null, g.name));
-        add(a, icon('pin'), t, el('em', null, g.walk + ' walk'));
-        list.appendChild(a);
+        add(a, icon('pin'), t, el('em', null, g.walk + ' walk'), el('i', 'cf-pchev', '▾'));
+        var tray = el('div', 'cf-ptray');
+        tray.id = 'cf-ptray-' + i;
+        var gAddr = g.addr + ', Riverside, CA 92501';
+        function mapBtn(cls, href, label) {
+          var m = link('cf-btn ' + cls, href, label, true);
+          m.insertBefore(icon('pin'), m.firstChild);
+          return m;
+        }
+        var c1 = el('div', 'cf-pcol'), c2 = el('div', 'cf-pcol');
+        add(c1, el('small', null, 'Drive to the garage'),
+          mapBtn('cf-teal', 'https://www.google.com/maps/dir/?' + qs({ api: '1', destination: gAddr }), 'Google Maps'),
+          mapBtn('cf-ghost', 'https://maps.apple.com/?' + qs({ daddr: gAddr }), 'Apple Maps'));
+        add(c2, el('small', null, 'Walk to the courthouse'),
+          mapBtn('cf-teal', 'https://www.google.com/maps/dir/?' + qs({ api: '1', origin: gAddr, destination: venueAddr, travelmode: 'walking' }), 'Google Maps'),
+          mapBtn('cf-ghost', 'https://maps.apple.com/?' + qs({ saddr: gAddr, daddr: venueAddr, dirflg: 'w' }), 'Apple Maps'));
+        var inner = el('div', 'cf-ptray-in');
+        add(inner, c1, c2);
+        tray.appendChild(inner);
+        a.addEventListener('click', function () {
+          var open = item.className.indexOf(' open') < 0;
+          [].forEach.call(list.querySelectorAll('.cf-pitem.open'), function (o) {
+            o.className = 'cf-pitem'; o.querySelector('.cf-prow').setAttribute('aria-expanded', 'false');
+          });
+          if (open) { item.className = 'cf-pitem open'; a.setAttribute('aria-expanded', 'true'); }
+        });
+        add(item, a, tray);
+        list.appendChild(item);
       });
       pk.appendChild(list);
       var ul = el('ul');
@@ -1242,13 +1295,6 @@
       pk.appendChild(ul);
       info.appendChild(pk);
     }
-    var btns = el('div', 'cf-ev-btns');
-    var g = link('cf-btn cf-teal', directionsUrl(), 'Google Maps', true);
-    g.insertBefore(icon('pin'), g.firstChild);
-    var ap = link('cf-btn cf-ghost', 'https://maps.apple.com/?' + qs({ daddr: CFG.event.mapQuery }), 'Apple Maps', true);
-    ap.insertBefore(icon('pin'), ap.firstChild);
-    add(btns, g, ap);
-    info.appendChild(btns);
 
     var map = el('div', 'cf-map');
     var fb = el('div', 'cf-map-fb');
@@ -1286,22 +1332,10 @@
     v.src = vidSrc;
     band.appendChild(v);
 
-    var btn = el('button', 'cf-vbtn');
-    btn.type = 'button';
-    function setBtn() {
-      var playing = !v.paused;
-      btn.textContent = playing ? '\u275a\u275a' : '\u25b6';
-      btn.setAttribute('aria-label', playing ? 'Pause background video' : 'Play background video');
-    }
-    btn.addEventListener('click', function () { if (v.paused) v.play(); else v.pause(); });
-    v.addEventListener('play', setBtn);
-    v.addEventListener('pause', setBtn);
     if (!still) {
       var tryPlay = function () { var pr = v.play(); if (pr && pr.catch) pr.catch(function () {}); };
       v.addEventListener('canplay', tryPlay, { once: true });
     }
-    setBtn();
-    band.appendChild(btn);
 
     var txt = el('div', 'cf-vtext');
     var ann = el('div', 'cf-annual');
@@ -1322,10 +1356,6 @@
     /* date, place and buttons under the video */
     var ctas = el('div', 'cf-ctas');
     ctas.appendChild(calendarButton('cf-btn cf-gold'));
-    var dir = link('cf-btn cf-ghost', '#cf-directions', 'Directions & Parking');
-    dir.insertBefore(icon('pin'), dir.firstChild);
-    dir.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
-    ctas.appendChild(dir);
     var sh = el('button', 'cf-btn cf-ghost', 'Share');
     sh.type = 'button';
     sh.insertBefore(icon('share'), sh.firstChild);
@@ -1521,7 +1551,7 @@
     var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & parking');
     dp.insertBefore(icon('pin'), dp.firstChild);
     dp.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
-    add(btns, calendarButton('cf-btn cf-ghost'), dp);
+    add(btns, dp);
     info.appendChild(btns);
     ev.appendChild(info);
     w.appendChild(ev);

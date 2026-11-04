@@ -35,7 +35,7 @@ function makeLoader(requests) {
 }
 
 var SHELL = '<!doctype html><html><head><title>t</title></head><body class="cco_templateless_page">' +
-  '<div class="cco_templateless_template"><a href="//www.JewishRiverside.com">Back</a></div>' +
+  '<div class="cco_templateless_template" style="display:block !important;height:30px!important"><a href="//www.JewishRiverside.com">Back</a></div>' +
   '<div class="cco_templatelates_content"><div id="chabad_body_page"><div id="navigation">nav</div>' +
   '<div id="co_content_container">native</div></div></div><div id="BodyContainer">Powered by</div>';
 
@@ -81,7 +81,7 @@ function donateShell(opts) {
   var years = '<option value=""></option>' + [2026,2027,2028,2029,2030].map(function (y) { return '<option value="' + y + '">' + y + '</option>'; }).join('');
   var countries = '<option value="">Please Select</option><option value="United States">United States</option><option value="Canada">Canada</option>';
   return '<!doctype html><html><head><title>t</title></head><body>' +
-  '<div class="cco_templateless_template"><a href="//www.JewishRiverside.com">Back</a></div>' +
+  '<div class="cco_templateless_template" style="display:block !important;height:30px!important"><a href="//www.JewishRiverside.com">Back</a></div>' +
   '<div class="cco_templatelates_content"><div id="cco_body"><div id="co_content_container"><article><div id="formContainer">' +
   '<form id="7553387" class="userform-form"><ul>' +
   '<li id="id_1"><input id="first_1"><input id="last_1"></li>' +
@@ -176,7 +176,21 @@ var SITES = {
     ok(/open/.test(r.d.getElementById('cf-mmenu').className), 'menu button opens the phone menu');
     r.d.querySelector('#cf-mmenu a').dispatchEvent(new r.w.MouseEvent('click', { bubbles: true, cancelable: true }));
     ok(!/open/.test(r.d.getElementById('cf-mmenu').className), 'picking an item closes the phone menu');
-    ok(r.d.querySelector('#cf-directions iframe') && r.d.querySelectorAll('#cf-directions .cf-ev-btns a').length === 2, 'directions section has the map and two map buttons');
+    ok(r.d.querySelector('#cf-directions iframe') && !r.d.querySelector('#cf-directions .cf-ev-btns'), 'directions section has the map, no separate map buttons');
+    ok(r.d.querySelector('.cco_templateless_template').style.getPropertyValue('display') === 'none' && r.d.querySelector('.cco_templateless_template').style.getPropertyPriority('display') === 'important', 'the platform\'s "Back to" bar is hidden despite its inline !important');
+    var heroBtns = [].map.call(r.d.querySelectorAll('.cf-ctas .cf-btn'), function (b) { return b.textContent.trim(); });
+    ok(heroBtns.join('|') === 'Add to Calendar|Share', 'top buttons: Add to Calendar and Share only (' + heroBtns.join('|') + ')');
+    var evBtns = [].map.call(r.d.querySelectorAll('#cf-event .cf-ev-btns .cf-btn'), function (b) { return b.textContent.trim(); });
+    ok(evBtns.join('|') === 'Directions & parking', 'event details: Directions & parking only (' + evBtns.join('|') + ')');
+    var row = r.d.querySelectorAll('#cf-directions .cf-prow')[0], item = row.parentNode;
+    ok(item.querySelectorAll('.cf-ptray a').length === 4 && item.className === 'cf-pitem', 'each garage has a closed tray with four direction buttons');
+    row.dispatchEvent(new r.w.MouseEvent('click', { bubbles: true }));
+    var tl = [].map.call(item.querySelectorAll('.cf-ptray a'), function (a) { return a.href; });
+    ok(/cf-pitem open/.test(item.className) && /google\.com\/maps\/dir\/.*destination=3901%20Orange/.test(tl[0]) && /maps\.apple\.com\/\?daddr=3901%20Orange/.test(tl[1]), 'tapping a garage opens its tray: directions to the garage (Google, Apple)');
+    ok(/origin=3901%20Orange.*destination=Riverside%20Historic%20Courthouse.*travelmode=walking/.test(tl[2]) && /saddr=3901%20Orange.*daddr=Riverside%20Historic%20Courthouse.*dirflg=w/.test(tl[3]), 'and walking directions from the garage to the courthouse (Google, Apple)');
+    var row2 = r.d.querySelectorAll('#cf-directions .cf-prow')[1];
+    row2.dispatchEvent(new r.w.MouseEvent('click', { bubbles: true }));
+    ok(item.className === 'cf-pitem' && /open/.test(row2.parentNode.className), 'opening another garage closes the first');
     ok(r.d.querySelectorAll('#cf-directions .cf-prow').length === 5 && /\$1\.25 per 30 minutes/.test(r.d.getElementById('cf-directions').textContent), 'parking: five nearby garages and the rates');
     var hlImgs = [].map.call(r.d.querySelectorAll('#cf-event .cf-hl-card img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music.jpg,hl-family.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
