@@ -131,7 +131,6 @@
     },
 
     about: [
-      'Chabad Jewish Community Center of Riverside founded the Chanukah Festival in 2005 as a gift to the whole city, and has organized it every year since.',
       'The festival has grown into one of the premier holiday celebrations in the Inland Empire, sharing Chanukah\u2019s universal message, embracing cultural diversity, and promoting understanding. Each year, the festival is graced by the participation of many elected officials and civic leaders. It is a meaningful evening not only for the Jewish community but for the community at large.'
     ],
     stats: [
@@ -140,14 +139,25 @@
     ],
 
     /* ---- Community partners shown on the page ---- */
-    PARTNERS_INTRO: 'Thank you to our community partners for helping bring this celebration to Riverside.',
+    PARTNERS_INTRO: 'Thank you to our partners for helping light up Riverside.',
+    /* Order per brief (Nov 5). Add logo: 'file.png' per partner once all logo files are in the repo. */
     PARTNERS: [
+      { name: 'Chabad at UCR' },
+      { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation' },
+      { name: 'Karen Spiegel', sub: 'Riverside County Supervisor, District 2' },
       { name: 'City of Riverside' },
       { name: 'Riverside Downtown Partnership' },
-      { name: 'Karen Spiegel', sub: 'Riverside County Supervisor, District 2' },
-      { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation' },
-      { name: 'Chabad of UCR' }
+      { name: 'Jose Medina', sub: 'Riverside County Supervisor, District 1' }
     ],
+    ORGANIZER: {
+      logo: 'chabad-jcc-logo-white-gold.png',
+      caption: 'Founded and organized by Chabad Jewish Community Center of Riverside, celebrating with Riverside since 2005.'
+    },
+    /* Who we are card. MISSION: paste the line from JewishRiverside.com (left as TBA, not invented). */
+    WHO: {
+      mission: '[Mission line from JewishRiverside.com: TBA]',
+      explore: 'https://www.jewishriverside.com'
+    },
 
     /* img: thumbnail in this repo. NBC's own photo is a stock image from elsewhere,
        so its card shows our festival photo instead. */
@@ -241,14 +251,14 @@
       ]
     },
     NIGHTS: [
-      { n: 1, day: 'Fri', date: 'Dec 4', note: 'Light before Shabbat candles' },
-      { n: 2, day: 'Sat', date: 'Dec 5', note: 'Light after Shabbat ends' },
+      { n: 1, day: 'Fri', date: 'Dec 4', note: 'Before Shabbat' },
+      { n: 2, day: 'Sat', date: 'Dec 5', note: 'After Shabbat' },
       { n: 3, day: 'Sun', date: 'Dec 6', note: '' },
-      { n: 4, day: 'Mon', date: 'Dec 7', note: 'Festival night!', star: true },
+      { n: 4, day: 'Mon', date: 'Dec 7', note: 'Festival!', star: true },
       { n: 5, day: 'Tue', date: 'Dec 8', note: '' },
       { n: 6, day: 'Wed', date: 'Dec 9', note: '' },
       { n: 7, day: 'Thu', date: 'Dec 10', note: '' },
-      { n: 8, day: 'Fri', date: 'Dec 11', note: 'Light before Shabbat candles' }
+      { n: 8, day: 'Fri', date: 'Dec 11', note: 'Before Shabbat' }
     ],
     NIGHTS_NOTE: 'Chanukah 2026 begins Friday evening, December 4, and ends at nightfall on Saturday, December 12.',
 
@@ -441,7 +451,7 @@
      STYLES - plain color values only (no custom properties)
      ===================================================================== */
   var NAVY = '#0f2730', DEEP = '#0b1f27', PANEL = '#133442', TEAL = '#3cc7b4',
-      GREEN = '#4cbd9f', GOLD = '#e9b949', INK = '#e9f1f3', MUTED = '#a9c0c7';
+      GREEN = '#4cbd9f', GOLD = '#e9b949', INK = '#e9f1f3', MUTED = '#c9d6da';
   var DISP = '"Arvo","Rockwell","Roboto Slab",Georgia,serif';
   var SCRIPT = '"Kaushan Script","Brush Script MT",cursive';
   var BODY = '"Montserrat","Helvetica Neue",Arial,sans-serif';
@@ -550,7 +560,7 @@
       '#cf26 .cf-dm-ok{width:64px;height:64px;border-radius:50%;background:' + TEAL + ';color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}',
       '#cf26 .cf-ev1{grid-template-columns:1fr;max-width:760px;margin-left:auto;margin-right:auto}',
       '#cf26 .cf-park{margin-top:6px;padding:14px 0 4px;border-top:1px solid rgba(255,255,255,.07)}',
-      '#cf26 .cf-park ul{margin:12px 0 0;padding-left:20px;color:' + MUTED + ';font-size:.92rem}',
+      '#cf26 .cf-park ul{margin:12px 0 0;padding-left:20px;color:' + MUTED + ';font-size:.95rem}',
       '#cf26 .cf-plist{display:grid;gap:8px;margin-top:8px}',
       '#cf26 .cf-prow{display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:12px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);text-decoration:none;color:' + INK + '}',
       '#cf26 .cf-prow:hover{border-color:rgba(26,204,206,.45)}',
@@ -648,7 +658,7 @@
       '#cf26 .cf-hl-bd{padding:18px 20px 22px}',
       '#cf26 .cf-hl-card:hover{transform:translateY(-4px);border-color:rgba(26,204,206,.45)}',
       '#cf26 .cf-hl-card h3{font-family:' + DISP + ';color:#fff;font-size:1.15rem;line-height:1.25;margin-bottom:6px}',
-      '#cf26 .cf-hl-card p{color:' + MUTED + ';font-size:.93rem}',
+      '#cf26 .cf-hl-card p{color:' + MUTED + ';font-size:.95rem}',
       '#cf26 .cf-asl{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border-radius:999px;border:1px solid rgba(60,199,180,.45);color:' + TEAL + ';font-family:' + BODY + ';font-weight:600;font-size:1rem}',
       /* schedule */
       '#cf26 .cf-sched{list-style:none;margin:6px 0 0;padding:0}',
@@ -726,14 +736,31 @@
       '#cf26 .cf-tier-h small{color:' + MUTED + ';font-size:.85rem;white-space:nowrap}',
       '#cf26 .cf-tier-h i{flex:1;height:1px;background:linear-gradient(90deg,rgba(233,185,73,.5),rgba(233,185,73,0))}',
       '#cf26 .cf-sgrid{display:grid;gap:14px}',
+      '#cf26 .cf-org{display:flex;flex-direction:column;align-items:center;text-align:center}',
+      '#cf26 .cf-org .cf-kicker{margin-bottom:18px}',
+      '#cf26 .cf-org-logo img{width:min(320px,70vw);height:auto}',
+      '#cf26 .cf-org p{color:' + MUTED + ';max-width:46ch;margin-top:16px;font-size:1rem}',
+      '#cf26 .cf-partners-h{margin-top:56px}',
+      '#cf26 .cf-partners-h h3{font-family:' + DISP + ';color:' + GOLD + ';font-size:1.2rem}',
+      '#cf26 .cf-partners-h p{color:' + MUTED + ';font-size:.95rem;margin-top:6px}',
+      '#cf26 .cf-spons .cf-tier{margin-top:24px}',
+      /* six partners: 3 + 3, then 2 columns on phones; never one alone */
+      '#cf26 .cf-lg .cf-sgrid{grid-template-columns:repeat(3,minmax(0,1fr))}',
+      '@media (max-width:640px){#cf26 .cf-lg .cf-sgrid{grid-template-columns:repeat(2,minmax(0,1fr))}#cf26 .cf-lg .cf-sp b{font-size:1.05rem}}',
+      /* who we are */
+      '#cf26 .cf-who{max-width:760px;margin:0 auto;text-align:center;background:' + PANEL + ';border:1px solid rgba(255,255,255,.08);border-radius:22px;padding:34px 30px}',
+      '#cf26 .cf-who h2{font-family:' + DISP + ';color:#fff;font-size:clamp(1.5rem,3.4vw,2rem);margin-bottom:10px}',
+      '#cf26 .cf-who p{color:' + MUTED + ';font-size:1.02rem}',
+      '#cf26 .cf-who-btns{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:20px}',
+      '#cf26 .cf-who-btns .cf-btn{height:48px;padding:0 22px;font-size:.9rem}',
+      '@media (max-width:600px){#cf26 .cf-who{padding:26px 18px}#cf26 .cf-who-btns{display:grid;grid-template-columns:1fr}}',
       '#cf26 .cf-xl .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}',
-      '#cf26 .cf-lg .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}',
       '#cf26 .cf-md .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}',
       '#cf26 .cf-sm .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}',
       '#cf26 .cf-sp{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.22);padding:22px 16px;min-height:96px;text-decoration:none}',
       '#cf26 .cf-sp img{max-height:64px;width:auto;margin-bottom:10px}',
       '#cf26 .cf-sp b{font-family:' + DISP + ';color:#fff;line-height:1.2}',
-      '#cf26 .cf-sp span{color:' + MUTED + ';font-size:.82rem;margin-top:4px;line-height:1.35}',
+      '#cf26 .cf-sp span{color:' + MUTED + ';font-size:.95rem;margin-top:4px;line-height:1.35}',
       '#cf26 .cf-xl .cf-sp{min-height:150px;padding:30px 22px;background:linear-gradient(160deg,rgba(233,185,73,.16),rgba(26,204,206,.08)),' + PANEL + ';border-color:rgba(233,185,73,.5)}',
       '#cf26 .cf-xl .cf-sp b{font-size:1.6rem}',
       '#cf26 .cf-lg .cf-sp b{font-size:1.25rem}',
@@ -763,18 +790,18 @@
       '#cf26 .cf-news{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}',
       '@media (max-width:900px){#cf26 .cf-news{grid-template-columns:repeat(2,1fr)}}',
       '@media (max-width:560px){#cf26 .cf-news{grid-template-columns:1fr}}',
-      '#cf26 .cf-nc{display:flex;flex-direction:column;background:#fff;color:' + DEEP + ';border-radius:18px;overflow:hidden;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;min-height:230px}',
+      '#cf26 .cf-nc{display:flex;flex-direction:column;background:' + PANEL + ';border:1px solid rgba(255,255,255,.08);color:#fff;border-radius:18px;overflow:hidden;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;min-height:230px}',
       '#cf26 .cf-nc-ph{aspect-ratio:16/10;max-width:100%;overflow:hidden;background:' + DEEP + '}',
       '#cf26 .cf-nc-ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}',
       '#cf26 .cf-nc:hover .cf-nc-ph img{transform:scale(1.05)}',
       '#cf26 .cf-nc-bd{display:flex;flex-direction:column;flex:1;padding:18px 20px 18px}',
       '#cf26 .cf-nc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35)}',
       '#cf26 .cf-nc-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px;margin-bottom:10px}',
-      '#cf26 .cf-nc-out{font-size:.7rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#0e7f80}',
-      '#cf26 .cf-nc-date{font-size:.78rem;color:#6b7f86;white-space:nowrap}',
-      '#cf26 .cf-nc h3{font-family:' + DISP + ';font-size:1.08rem;line-height:1.3;margin-bottom:8px}',
-      '#cf26 .cf-nc p{font-size:.9rem;color:#4a5d64;flex:1}',
-      '#cf26 .cf-nc-go{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-weight:700;font-size:.85rem;color:#b07d0a}',
+      '#cf26 .cf-nc-out{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:' + TEAL + '}',
+      '#cf26 .cf-nc-date{font-size:.8rem;color:' + MUTED + ';white-space:nowrap}',
+      '#cf26 .cf-nc h3{font-family:' + DISP + ';color:#fff;font-size:1.08rem;line-height:1.3;margin-bottom:8px}',
+      '#cf26 .cf-nc p{font-size:.95rem;color:' + MUTED + ';flex:1}',
+      '#cf26 .cf-nc-go{display:inline-flex;align-items:center;gap:6px;margin-top:16px;font-weight:700;font-size:.85rem;color:' + GOLD + '}',
 
       /* guide */
       '#cf26 .cf-nights{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:36px}',
@@ -788,7 +815,7 @@
       '#cf26 .cf-nt b{display:block;font-family:' + DISP + ';color:#fff;font-size:1rem}',
       '#cf26 .cf-nt span{display:block;font-size:.78rem;color:' + MUTED + '}',
       '#cf26 .cf-nt em{display:block;font-style:normal;font-size:.7rem;color:' + GOLD + ';margin-top:4px;line-height:1.25;font-weight:600}',
-      '#cf26 .cf-nnote{color:' + MUTED + ';font-size:.9rem;margin-top:14px}',
+      '#cf26 .cf-nnote{color:' + MUTED + ';font-size:.95rem;margin-top:14px}',
       '#cf26 .cf-gintro{color:' + MUTED + ';margin-top:30px;max-width:70ch}',
       '#cf26 .cf-ggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:26px}',
       '@media (max-width:900px){#cf26 .cf-ggrid{grid-template-columns:repeat(2,1fr)}}',
@@ -848,6 +875,8 @@
       '#cf26 .cf-foot-l{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;margin:10px 0 22px}',
       '#cf26 .cf-foot-l a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:' + INK + '}',
       '#cf26 .cf-foot-l a:hover{color:' + GOLD + '}',
+      '#cf26 .cf-soc{display:inline-flex;align-items:center;gap:10px;color:' + INK + '}',
+      '#cf26 .cf-soc a .cf-ic{width:1.3em;height:1.3em}',
       '#cf26 .cf-foot small{display:block;font-size:.74rem;opacity:.7;margin-top:14px}',
       '#cf26 .cf-toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:' + GOLD + ';color:' + DEEP + ';font-weight:700;padding:12px 20px;border-radius:999px;z-index:2147482600;transition:all .3s ease;max-width:90vw;text-align:center;font-size:.9rem}',
       '#cf26 .cf-toast.show{opacity:1;transform:translate(-50%,0)}',
@@ -878,7 +907,7 @@
       add(root,
         buildNav(), buildHero(), buildCountdown(), buildMarquee(),
         buildEvent(), buildDirections(), buildPartners(), buildAbout(),
-        buildNews(), buildGuide(), buildShare(), buildFlyer(), buildFooter());
+        buildNews(), buildGuide(), buildWho(), buildShare(), buildFlyer(), buildFooter());
 
       var host = document.querySelector('.cco_templatelates_content') || document.body;
       if (host === document.body) document.body.insertBefore(root, document.body.firstChild);
@@ -1396,7 +1425,7 @@
     w.appendChild(heading('Getting there', 'Directions & Parking', null, true));
     var ev = el('div', 'cf-ev cf-reveal');
     var info = el('div', 'cf-ev-info');
-    add(info, evRow('pin', CFG.event.venue, CFG.event.street + ' ' + CFG.event.cityLine));
+    add(info, evRow('pin', CFG.event.venue, CFG.event.street + ', ' + CFG.event.cityLine));
     if (CFG.PARKING.length) {
       var pk = el('div', 'cf-park');
       pk.appendChild(el('div', 'cf-kicker', 'Parking nearby'));
@@ -1448,7 +1477,7 @@
 
     var map = el('div', 'cf-map');
     var fb = el('div', 'cf-map-fb');
-    add(fb, icon('pin'), el('b', null, CFG.event.venue), el('span', null, CFG.event.street + ' ' + CFG.event.cityLine));
+    add(fb, icon('pin'), el('b', null, CFG.event.venue), el('span', null, CFG.event.street + ', ' + CFG.event.cityLine));
     map.appendChild(fb);
     var fr = document.createElement('iframe');
     fr.title = 'Map to ' + CFG.event.venue;
@@ -1844,7 +1873,17 @@
     if (!CFG.PARTNERS.length) return null;
     var s = section('partners', 'cf-spons');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('With gratitude', 'Community Partners', CFG.PARTNERS_INTRO, true));
+    var org = el('div', 'cf-org cf-reveal');
+    org.appendChild(el('div', 'cf-kicker', 'Organized by'));
+    var lg = document.createElement('img');
+    lg.src = asset(CFG.ORGANIZER.logo); lg.alt = CFG.host; lg.width = 400; lg.height = 146; lg.loading = 'lazy';
+    var la = link('cf-org-logo', CFG.hostUrl, null, true);
+    la.appendChild(lg);
+    add(org, la, el('p', null, CFG.ORGANIZER.caption));
+    w.appendChild(org);
+    var ph = el('div', 'cf-center cf-partners-h');
+    add(ph, el('h3', null, 'Together with our community partners'), el('p', null, CFG.PARTNERS_INTRO));
+    w.appendChild(ph);
     var g = el('div', 'cf-sgrid cf-reveal');
     CFG.PARTNERS.forEach(function (n) {
       var c = el(n.url ? 'a' : 'div', 'cf-sp');
@@ -1869,7 +1908,7 @@
     var s = section('about', 'cf-alt');
     var w = el('div', 'cf-wrap cf-about');
     var l = el('div', 'cf-reveal');
-    l.appendChild(heading('About the festival', 'A Riverside tradition since 2005'));
+    l.appendChild(heading('About the festival', 'More than a menorah lighting'));
     CFG.about.forEach(function (p) { l.appendChild(el('p', null, p)); });
     var r = el('div', 'cf-stats cf-reveal');
     CFG.stats.forEach(function (x) {
@@ -2102,6 +2141,21 @@
     return s;
   }
 
+  /* ---------- who we are ---------- */
+  function buildWho() {
+    var s = section('who', 'cf-alt');
+    var w = el('div', 'cf-wrap');
+    var c = el('div', 'cf-who cf-reveal');
+    var b = el('div', 'cf-who-btns');
+    var ex = link('cf-btn cf-ghost', CFG.WHO.explore, 'Explore More', true);
+    var ml = link('cf-btn cf-ghost', CFG.WHO.explore, 'Join Our Mailing List', true);
+    add(b, ex, ml);
+    add(c, el('h2', null, 'Who We Are'), el('p', null, CFG.WHO.mission), b);
+    w.appendChild(c);
+    s.appendChild(w);
+    return s;
+  }
+
   /* ---------- footer ---------- */
   function buildFooter() {
     var f = el('footer', 'cf-foot');
@@ -2111,19 +2165,19 @@
     ph.insertBefore(icon('phone'), ph.firstChild);
     var em = link(null, 'mailto:' + CFG.EMAIL, CFG.EMAIL);
     em.insertBefore(icon('mail'), em.firstChild);
-    var ig = link(null, CFG.SHARE.instagram, CFG.SHARE.igHandle, true);
-    ig.insertBefore(icon('ig'), ig.firstChild);
-    var fbl = link(null, CFG.SHARE.facebookEvent || CFG.SHARE.facebook, 'Chanukah Festival on Facebook', true);
-    fbl.insertBefore(icon('fb'), fbl.firstChild);
-    add(l, ph, em, ig, fbl);
+    /* same handle on both networks: two icon links, one label */
+    var soc = el('span', 'cf-soc');
+    var ig = link(null, CFG.SHARE.instagram, null, true);
+    ig.setAttribute('aria-label', 'Instagram ' + CFG.SHARE.igHandle);
+    ig.appendChild(icon('ig'));
+    var fbl = link(null, CFG.SHARE.facebook, null, true);
+    fbl.setAttribute('aria-label', 'Facebook ' + CFG.SHARE.igHandle);
+    fbl.appendChild(icon('fb'));
+    add(soc, ig, fbl, el('span', null, CFG.SHARE.igHandle));
+    add(l, ph, em, soc);
     add(w, el('b', null, 'Questions? We\u2019d love to help.'), l,
       donateButton('Support the Festival'),
-      el('small', null, 'Organized by ' + CFG.host + ' since 2005 \u2022 ' + CFG.WEB));
-    var back = link(null, 'https://www.jewishriverside.com', 'Visit JewishRiverside.com \u2192');
-    back.style.display = 'inline-block';
-    back.style.marginTop = '10px';
-    back.style.fontSize = '.82rem';
-    w.appendChild(back);
+      el('small', null, '\u00a9 2026 ' + CFG.host + ' \u2022 ' + CFG.WEB));
     f.appendChild(w);
     return f;
   }

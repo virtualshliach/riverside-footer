@@ -161,7 +161,9 @@ var SITES = {
     ok(!r.d.getElementById('cf-rsvp') && rsvp.length === 1 && rsvp[0].href === 'https://www.facebook.com/events/1651125113077350/',
       'one RSVP button, to the Facebook event (brief Nov 5)');
     ok(!/become a sponsor|your name here|grand menorah sponsors|festival sponsors/i.test(r.d.getElementById('cf26').textContent), 'no sponsor tiers or sponsor button');
-    ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 5, 'the five community partners are shown');
+    ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 6, 'the six community partners are shown (brief Nov 5)');
+    ok(/Chabad at UCR/.test(r.d.getElementById('cf-partners').textContent) && !/Chabad of UCR/.test(r.d.getElementById('cf26').textContent), 'written as Chabad at UCR');
+    ok(fs.existsSync(path.join(ROOT, 'chabad-jcc-logo-white-gold.png')), 'organizer logo is in the repo');
     var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(nImgs.length === 4 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');
     ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
