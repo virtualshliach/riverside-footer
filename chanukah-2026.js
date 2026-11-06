@@ -105,7 +105,7 @@
     /* Kids Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
-      intro: 'Kids ages 4–12 design and build a unique menorah at home. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
+      intro: 'Kids ages 4–12 build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
       facts: ['Register by Dec 4', 'Drop off 5:45–6:15 PM at table #15', 'Winners announced 7:45–8 PM'],
       how: [
         'Register by Friday, Dec 4.',
