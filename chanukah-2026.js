@@ -117,8 +117,8 @@
         'Winners are announced between 7:45 and 8 PM. Please pick up your menorah before you leave.'
       ],
       prizes: [
-        'Best Menorah: the festival trophy, awarded every year.',
-        'Runners-up: a $50 and a $25 Amazon gift card.',
+        'Best Menorah wins the festival trophy, awarded every year.',
+        'Great prizes for the runners-up, announced at the festival.',
         'Every child who enters gets a Chanukah gift.'
       ],
       rules: [
