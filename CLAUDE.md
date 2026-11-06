@@ -21,7 +21,7 @@ who owns this repository.
 | File | Page | Status |
 |---|---|---|
 | `sukkot-5787.js` | 7457011 Sukkot & Simchat Torah | Past event, **stays on** |
-| `chanukah-2026.js` | 7553387 Chanukah Festival 2026 | **Draft**. Live page will be 4949424 |
+| `chanukah-2026.js` | 4949424 Chanukah Festival 2026 (also chanukahfestival.org) | **Live** |
 
 ## Making a change
 
@@ -59,9 +59,9 @@ aligned, on this site or in a ChabadOne form:
 - **Past events stay on.** Never remove a page from `PAGES` unless the person asks to
   turn that page off.
 - **Drafts** point at a draft page id. Switch to the live id only when asked to go live.
-  Chanukah go-live: in `chanukah-2026.js` set `CFG.AID` to `'4949424'` and
-  `BRAND_HOSTS` to `['chanukahfestival.org']`; in `footer.js` move the `PAGES` entry to
-  `'4949424'` and add `'chanukahfestival.org': '4949424'` to `HOSTS`.
+  Chanukah went live Nov 6 2026 on 4949424. Page 4949424 has no donation form yet, so
+  Donate opens the regular donate page; once the form is added there, check its field ids
+  on the live page before relying on the pop-up.
 - Keep the page id in a project's CFG and its `PAGES` key the same.
 - The loader only loads `^[a-z0-9-]+\.js$` files from this repository. Never add code
   that loads a script URL taken from the page, the address bar or anywhere else.

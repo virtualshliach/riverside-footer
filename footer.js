@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-06a';
+  var V = '2026-11-06b';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -16,15 +16,15 @@
     /* Sukkot & Simchat Torah 5787. Holiday is over; stays on so the page keeps its design.
        onResponse: it also shows the confirmation on the form's thank-you page. */
     '7457011': { file: 'sukkot-5787.js', cover: '#F5EBDF', coverId: 'hh26-cover', onResponse: true },
-    /* Chanukah Festival 2026 - DRAFT page. At go-live move to '4949424'. */
-    '7553387': { file: 'chanukah-2026.js', cover: '#0f2936', coverId: 'cf26-cover' },
+    /* Chanukah Festival 2026 - LIVE page (draft was 7553387). */
+    '4949424': { file: 'chanukah-2026.js', cover: '#0f2936', coverId: 'cf26-cover' },
     /* Join Our Mailing List form: California as the default state. */
     '5333083': { file: 'mailing-list.js' }
   };
 
   /* domain roots that should load a project without an aid in the URL */
   var HOSTS = {
-    /* 'chanukahfestival.org': '4949424' */
+    'chanukahfestival.org': '4949424'
   };
 
   var href = window.location.href;

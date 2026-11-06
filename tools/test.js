@@ -68,7 +68,7 @@ function projectRequests(r) {
 }
 
 
-/* A live-shaped stub of the ChabadOne donation form on page 7553387, built from the field
+/* A live-shaped stub of the ChabadOne donation form (taken from draft page 7553387), built from the field
    map taken on the live page (Nov 2 2026). Behaves like the platform:
    - invisible reCAPTCHA: empty wrapper, never needs a click
    - hidden cc_type input
@@ -83,7 +83,7 @@ function donateShell(opts) {
   return '<!doctype html><html><head><title>t</title></head><body>' +
   '<div class="cco_templateless_template" style="display:block !important;height:30px!important"><a href="//www.JewishRiverside.com">Back</a></div>' +
   '<div class="cco_templatelates_content"><div id="cco_body"><div id="co_content_container"><article><div id="formContainer">' +
-  '<form id="7553387" class="userform-form"><ul>' +
+  '<form id="4949424" class="userform-form"><ul>' +
   '<li id="id_1"><input id="first_1"><input id="last_1"></li>' +
   '<li id="id_3"><input id="input_3" type="email"></li>' +
   '<li id="id_5"><input id="input_5_addr_line1"><input id="input_5_addr_line2"><input id="input_5_city"><input id="input_5_state"><input id="input_5_postal"><select id="input_5_country">' + countries + '</select></li>' +
@@ -98,7 +98,7 @@ function donateShell(opts) {
   '<li id="id_2"><button type="button" id="input_2" class="form-submit-button">Submit</button></li>' +
   '</ul><div><div class="js-recaptcha-wrapper"></div></div><input type="hidden" name="cdo-captcha-response" value=""></form>' +
   '</div></article></div></div></div><div id="BodyContainer">Powered by</div>' +
-  '<script>(function(){var f=document.getElementById("7553387");window.__clicks=0;window.__submitted=null;' +
+  '<script>(function(){var f=document.getElementById("4949424");window.__clicks=0;window.__submitted=null;' +
   'var mo=document.getElementById("input_10_cc_exp_month").innerHTML,yo=document.getElementById("input_10_cc_exp_year").innerHTML;' +
   'document.getElementById("input_7").addEventListener("change",function(){document.getElementById("total_amount").textContent="$"+(+this.value||0).toFixed(2);' +
   'document.getElementById("input_10_cc_exp_month").innerHTML=mo;document.getElementById("input_10_cc_exp_year").innerHTML=yo;window.__rebuilds=(window.__rebuilds||0)+1;});' +
@@ -135,14 +135,14 @@ async function donateFlow(r, card) {
 
 var SITES = {
   riverside: async function () {
-    var DRAFT = '7553387';
+    var DRAFT = '4949424';
     console.log('riverside: draft Chanukah page');
     var r = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm');
     ok(projectRequests(r).length === 1 && /riverside-footer\/chanukah-2026\.js\?v=/.test(projectRequests(r)[0]), 'loader fetched chanukah-2026.js with version stamp');
     ok(r.d.getElementById('cf26'), 'template rendered');
     ok(!r.d.getElementById('cf26-cover'), 'cover removed after render');
     ok(r.errors.length === 0, 'no console errors ' + (r.errors.length ? JSON.stringify(r.errors) : ''));
-    ok(r.logs.some(function (l) { return /\[riverside-footer\].*aid 7553387 -> chanukah-2026\.js/.test(l); }), 'loader log line');
+    ok(r.logs.some(function (l) { return /\[riverside-footer\].*aid 4949424 -> chanukah-2026\.js/.test(l); }), 'loader log line');
     ok(r.logs.some(function (l) { return /footer payload executing/.test(l); }), 'project log line');
     ['cf-top', 'cf-event', 'cf-directions', 'cf-partners', 'cf-about', 'cf-news', 'cf-guide', 'cf-share'].forEach(function (id) {
       ok(r.d.getElementById(id), 'section #' + id);
@@ -249,7 +249,7 @@ var SITES = {
     var DPAGE = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm';
     var dz = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
     ok(dz.d.getElementById('cf26') && dz.errors.length === 0, 'page renders with the form present, no errors ' + JSON.stringify(dz.errors));
-    ok(dz.d.getElementById('7553387') && dz.d.getElementById('7553387').closest('.cco_templatelates_content'), 'native form left in place (not moved)');
+    ok(dz.d.getElementById('4949424') && dz.d.getElementById('4949424').closest('.cco_templatelates_content'), 'native form left in place (not moved)');
     var css = dz.d.getElementById('cf26-style').textContent;
     ok(/\.cco_templatelates_content\{position:absolute !important;left:-10000px/.test(css) && !/\.cco_templatelates_content[^{]*\{display:none/.test(css), 'native page parked off-screen, never display:none');
     await donateFlow(dz, false);
@@ -289,14 +289,16 @@ var SITES = {
     nf.d.querySelector('.cf-nav .cf-don').dispatchEvent(new nf.w.MouseEvent('click', { bubbles: true }));
     ok(opened === '/article.asp?aid=4194665' && !nf.d.querySelector('.cf-dm'), 'no form on the page: Donate opens the donate page instead');
 
+    var bd = await load('riverside', 'https://chanukahfestival.org/', { wait: 500 });
+    ok(bd.d.getElementById('cf26'), 'chanukahfestival.org shows the festival site');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],
-      ['https://www.jewishriverside.com/templates/section_cdo/aid/4949424/jewish/Chanukah-Festival-2026.htm', 'live festival page (not yet switched)'],
+      ['https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm', 'old draft page'],
       ['https://www.jewishriverside.com/article.asp?aid=4194665', 'donate page'],
       ['https://www.jewishriverside.com/article.asp?aid=75533870', 'look-alike aid'],
-      ['https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/' + DRAFT, 'response page'],
-      ['https://chanukahfestival.org/', 'brand domain (off during draft)']
+      ['https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/' + DRAFT, 'response page']
     ];
     for (var i = 0; i < quiet.length; i++) {
       var q = await load('riverside', quiet[i][0], { wait: 250 });

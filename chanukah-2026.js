@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-04b';
+  var VERSION = 'cf26-2026-11-06a';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -28,9 +28,9 @@
      CONFIG - everything an editor should need to touch lives here
      ===================================================================== */
   var CFG = {
-    /* DRAFT: 7553387. At go-live set AID to '4949424' and BRAND_HOSTS to ['chanukahfestival.org']. */
-    AID: '7553387',
-    BRAND_HOSTS: [],
+    /* LIVE since Nov 6 2026 (draft was 7553387). */
+    AID: '4949424',
+    BRAND_HOSTS: ['chanukahfestival.org'],
 
     edition: '22',
     editionSuffix: 'nd',
