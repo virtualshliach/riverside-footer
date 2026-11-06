@@ -183,7 +183,7 @@ var SITES = {
     var heroBtns = [].map.call(r.d.querySelectorAll('.cf-ctas .cf-btn'), function (b) { return b.textContent.trim(); });
     ok(heroBtns.join('|') === 'Add to Calendar|Share|RSVP on Facebook', 'top buttons: Add to Calendar, Share, RSVP on Facebook (' + heroBtns.join('|') + ')');
     var evBtns = [].map.call(r.d.querySelectorAll('#cf-event .cf-ev-btns .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(evBtns.join('|') === 'Directions & parking', 'event details: Directions & parking only (' + evBtns.join('|') + ')');
+    ok(evBtns.join('|') === 'Directions & Parking', 'event details: Directions & Parking only (' + evBtns.join('|') + ')');
     var row = r.d.querySelectorAll('#cf-directions .cf-prow')[0], item = row.parentNode;
     ok(item.querySelectorAll('.cf-ptray a').length === 4 && item.className === 'cf-pitem', 'each garage has a closed tray with four direction buttons');
     row.dispatchEvent(new r.w.MouseEvent('click', { bubbles: true }));

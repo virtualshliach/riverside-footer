@@ -710,6 +710,11 @@
       '#cf26 .cf-fb{background:#1877f2;color:#fff}',
       '#cf26 .cf-wa{background:#25d366;color:#0b1f27}',
       '#cf26 .cf-sharebtns .cf-btn{height:50px;padding:0 22px}',
+      /* one button style in the share set; each brand keeps its color on the icon */
+      '#cf26 .cf-sharebtns .cf-wa,#cf26 .cf-sharebtns .cf-fb,#cf26 .cf-sharebtns .cf-ig{background:rgba(255,255,255,.04);color:#fff;border:1.5px solid rgba(255,255,255,.35);box-shadow:none}',
+      '#cf26 .cf-sharebtns .cf-ghost{background:rgba(255,255,255,.04);border-width:1.5px}',
+      '#cf26 .cf-sharebtns .cf-ic{width:1.35em;height:1.35em}',
+      '#cf26 .cf-sharebtns .cf-wa .cf-ic{color:#25d366}#cf26 .cf-sharebtns .cf-fb .cf-ic{color:#4f9bff}#cf26 .cf-sharebtns .cf-ig .cf-ic{color:#f06fa3}#cf26 .cf-sharebtns .cf-ghost .cf-ic{color:' + TEAL + '}#cf26 .cf-sharebtns .cf-native .cf-ic{color:' + DEEP + '}',
       '#cf26 .cf-sharenote{margin-top:16px;font-size:.95rem;color:#C9D6DA;min-height:1.5em}',
       '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 10px;font-size:.9rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
       '#cf26 .cf-ig{background:linear-gradient(45deg,#f9a63a,#e1306c 50%,#833ab4);color:#fff}',
@@ -1243,7 +1248,7 @@
     }
     function thanks() {
       p4.innerHTML = '';
-      var done = el('button', 'cf-btn cf-gold', 'Back to the festival'); done.type = 'button';
+      var done = el('button', 'cf-btn cf-gold', 'Back to the Festival'); done.type = 'button';
       done.addEventListener('click', closeDonate);
       add(p4, el('div', 'cf-dm-ok', '✓'), el('h3', null, 'Thank you!'),
         el('p', null, 'Your ' + (st.monthly ? 'monthly ' : '') + 'gift of ' + money(st.amount) + ' helps keep the Chanukah Festival free for everyone.'),
@@ -1600,7 +1605,7 @@
       evRow('clock', '6:00 \u2013 8:00 PM', 'Menorah lighting during the evening'),
       evRow('pin', CFG.event.venue, CFG.event.street + ' ' + CFG.event.cityLine));
     var btns = el('div', 'cf-ev-btns');
-    var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & parking');
+    var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & Parking');
     dp.insertBefore(icon('pin'), dp.firstChild);
     dp.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
     add(btns, dp);
@@ -1621,7 +1626,7 @@
     var im = document.createElement('img');
     im.src = CFG.FLYER; im.alt = 'Chanukah Festival 2026 flyer'; im.loading = 'lazy';
     var tx = el('div');
-    add(tx, el('b', null, 'Download the flyer'), el('span', null, 'Print it, post it, send it to a friend.'));
+    add(tx, el('b', null, 'Download the Flyer'), el('span', null, 'Print it, post it, send it to a friend.'));
     var dl = link('cf-btn cf-ghost', CFG.FLYER, 'Download', true);
     dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.png');
     dl.insertBefore(icon('dl'), dl.firstChild);
@@ -1768,7 +1773,7 @@
     var foot = el('div', 'cf-rd-foot');
     var prev = el('button', 'cf-btn cf-ghost cf-rd-prev'); prev.type = 'button';
     var next = el('button', 'cf-btn cf-teal cf-rd-next'); next.type = 'button';
-    var done = el('button', 'cf-btn cf-ghost', 'Back to the festival'); done.type = 'button';
+    var done = el('button', 'cf-btn cf-ghost', 'Back to the Festival'); done.type = 'button';
     [prev, done].forEach(function (b) { b.style.color = NAVY; b.style.borderColor = 'rgba(15,41,54,.3)'; });
     add(foot, prev, next, done);
     add(box, x, h, body, foot);
@@ -1837,7 +1842,7 @@
     var wa = link('cf-btn cf-wa', 'https://wa.me/?' + qs({ text: body('whatsapp') }), 'WhatsApp', true);
     wa.insertBefore(icon('wa'), wa.firstChild);
     wa.addEventListener('click', function () { track('whatsapp'); });
-    var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text message');
+    var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text Message');
     sms.insertBefore(icon('chat'), sms.firstChild);
     sms.addEventListener('click', function (e) {
       track('sms');
@@ -1851,7 +1856,7 @@
       track('email');
       if (PREVIEW) { e.preventDefault(); say('On the real site this opens your email app (Gmail works too) with the invitation filled in.'); }
     });
-    var cp = el('button', 'cf-btn cf-ghost', 'Copy link');
+    var cp = el('button', 'cf-btn cf-ghost', 'Copy Link');
     cp.type = 'button';
     cp.insertBefore(icon('link'), cp.firstChild);
     cp.addEventListener('click', function () {
@@ -1906,7 +1911,7 @@
     fbl.insertBefore(icon('fb'), fbl.firstChild);
     add(l, ph, em, ig, fbl);
     add(w, el('b', null, 'Questions? We\u2019d love to help.'), l,
-      donateButton('Support the festival'),
+      donateButton('Support the Festival'),
       el('small', null, CFG.host + ' \u2022 Riverside, CA \u2022 ' + CFG.WEB));
     var back = link(null, 'https://www.jewishriverside.com', '\u2190 Back to ' + CFG.host);
     back.style.display = 'inline-block';
