@@ -224,6 +224,11 @@ var SITES = {
     var skr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7457011/jewish/Sukkot.htm', { wait: 300 });
     ok(projectRequests(skr).length === 1 && !skr.errors.length, 'Sukkot code also loads on its thank-you page');
 
+    var ld = r.d.getElementById('cf26-ld');
+    var ldj = null; try { ldj = JSON.parse(ld.textContent); } catch (e) {}
+    ok(ldj && ldj['@type'] === 'Event' && /2026-12-07T18:00/.test(ldj.startDate) && ldj.location.name === 'Riverside Historic Courthouse' && ldj.isAccessibleForFree === true, 'schema.org Event data: date, place, free');
+    ok(!r.requests.some(function (u) { return /googletagmanager/.test(u); }) && !r.w.gtag, 'analytics stays off until a GA4 ID is set');
+
     console.log('riverside: Kids Menorah Contest thank-you page');
     /* the platform's confirmation as set in ChabadOne (Nov 6): a div with a headline and three lines */
     var MC_NATIVE = '<div id="mc-native"><h2>You\u2019re registered for the Kids Menorah Contest!</h2><p><b>Drop-off:</b> Monday, Dec 7, 5:45\u20136:15 PM at the Menorah Contest table (#15 on the festival map)</p>' +

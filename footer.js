@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-06d';
+  var V = '2026-11-06e';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -28,6 +28,11 @@
   var HOSTS = {
     /* 'chanukahfestival.org': '4949424' */
   };
+
+  /* Google Analytics 4 for the pages listed above. OFF until a measurement ID is filled in
+     (format G-XXXXXXXXXX, from the GA4 property Rabbi Fuss chooses). Project files already send
+     share_click / cta_click events through window.gtag; with this empty they send nothing. */
+  var GA4_ID = '';
 
   var href = window.location.href;
   var isResponse = href.indexOf('ArticleCcoResponse') > -1;
@@ -71,6 +76,17 @@
   function uncover() {
     var el = document.getElementById(coverId);
     if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  if (/^G-[A-Z0-9]{4,}$/.test(GA4_ID) && !window.gtag) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA4_ID, { page_title: document.title, anonymize_ip: true });
+    var ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+    (document.head || document.documentElement).appendChild(ga);
   }
 
   var s = document.createElement('script');

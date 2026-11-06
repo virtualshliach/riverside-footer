@@ -929,6 +929,54 @@
      ===================================================================== */
   var root;
 
+
+  /* ---------- analytics: one listener classifies the main buttons (sends only when GA4 is on) ---------- */
+  function ctaLabel(a) {
+    var h = (a.getAttribute('href') || '').toLowerCase(), c = ' ' + (a.className || '') + ' ';
+    if (/calendar\.google|\.ics|data:text\/calendar/.test(h)) return /google/.test(h) ? 'calendar_google' : 'calendar_ics';
+    if (/facebook\.com\/events/.test(h)) return 'rsvp_facebook';
+    if (/7606745/.test(h)) return 'register_contest';
+    if (/donate|#donate/.test(h) || / cf-donate /.test(c)) return 'donate';
+    if (/festival-map-2026\.pdf/.test(h)) return 'map_pdf';
+    if (/festival-map/.test(h)) return 'map_open';
+    if (/flyer/.test(h)) return 'flyer_download';
+    if (/maps\.google|google\.com\/maps|maps\.apple/.test(h)) return 'directions';
+    if (/5333083|mailing/i.test(h)) return 'mailing_list';
+    if (/jewishriverside\.com\/?(5201495)?$/.test(h.replace(/[?#].*$/, ''))) return 'explore_chabad';
+    return null;
+  }
+  function trackClicks() {
+    document.addEventListener('click', function (e) {
+      var a = e.target && e.target.closest ? e.target.closest('#cf26 a') : null;
+      if (!a) return;
+      var label = ctaLabel(a);
+      if (label) { try { if (window.gtag) window.gtag('event', 'cta_click', { label: label, page: 'festival' }); } catch (x) {} }
+    }, true);
+  }
+
+  /* ---------- schema.org Event (Google can show date, place and "free" in search) ---------- */
+  function addEventData() {
+    if (document.getElementById('cf26-ld')) return;
+    var data = {
+      '@context': 'https://schema.org', '@type': 'Event',
+      name: '22nd Annual Chanukah Festival',
+      startDate: '2026-12-07T18:00:00-08:00', endDate: '2026-12-07T20:00:00-08:00',
+      eventStatus: 'https://schema.org/EventScheduled',
+      eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+      location: { '@type': 'Place', name: 'Riverside Historic Courthouse',
+        address: { '@type': 'PostalAddress', streetAddress: '4050 Main St.', addressLocality: 'Riverside', addressRegion: 'CA', postalCode: '92501', addressCountry: 'US' } },
+      image: [asset('share-1200x628.jpg')],
+      description: 'Grand Menorah Lighting, live music, latkes, donuts and kids’ activities at the Riverside Historic Courthouse. Free and open to all.',
+      isAccessibleForFree: true,
+      offers: { '@type': 'Offer', price: '0', priceCurrency: 'USD', availability: 'https://schema.org/InStock', url: CFG.SHARE.url },
+      organizer: { '@type': 'Organization', name: CFG.host, url: CFG.hostUrl }
+    };
+    var sc = document.createElement('script');
+    sc.type = 'application/ld+json'; sc.id = 'cf26-ld';
+    sc.text = JSON.stringify(data);
+    document.head.appendChild(sc);
+  }
+
   function boot() {
     if (document.getElementById('cf26')) return;
     if (!onThisPage()) { uncover(); return; }
@@ -957,6 +1005,8 @@
       startCountdown();
       reveal();
       document.addEventListener('click', closeMenus);
+      trackClicks();
+      try { addEventData(); } catch (e) {}
       if (/^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
       else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
         var hid = location.hash.slice(1);
