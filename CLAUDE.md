@@ -33,7 +33,8 @@ who owns this repository.
 
 ## Making a change
 
-1. Edit the project file (for the Chanukah Festival: `chanukah-2026-draft.js`, see Rules).
+1. Edit the project file (for the Chanukah Festival main page: `chanukah-2026-draft.js`, then
+   push to draft or push live as the person says, see Rules).
 2. Bump `V` in `footer.js` (format `YYYY-MM-DD` plus a letter) in the same commit, so
    browsers fetch the new copy.
 3. Run the tests: `cd tools && npm install` (once), then `node tools/test.js` from the
@@ -67,21 +68,25 @@ aligned, on this site or in a ChabadOne form:
 - **Past events stay on.** Never remove a page from `PAGES` unless the person asks to
   turn that page off.
 - **Drafts** point at a draft page id. Switch to the live id only when asked to go live.
-- **Chanukah Festival: draft page vs live page.** Both are on `main`; there are no branches
-  to merge.
-  - Changes for review go in `chanukah-2026-draft.js`. They show only on the draft page
-    7553387 (`/templates/articlecco_cdo/aid/7553387/...`). Push freely once tests pass.
-  - When the person says to publish / make it live for everyone, run
-    `node tools/publish-chanukah.js`. It copies the draft to `chanukah-2026.js` (live page
-    4949424 and chanukahfestival.org), switching only `AID` and `BRAND_HOSTS`. Bump `V`,
-    test, push.
+- **Chanukah Festival main page: "push to draft" or "push live".** This applies only to the
+  festival main page. Both copies are on `main`; there are no branches to merge.
+  - Nothing goes anywhere automatically. The person says which one. If they don't say,
+    ask: "Push to draft or push live?"
+  - **Push to draft:** change `chanukah-2026-draft.js` only. It shows only on the draft page
+    7553387 (`/templates/articlecco_cdo/aid/7553387/...`). The live page doesn't change.
+  - **Push live:** make the change in `chanukah-2026-draft.js`, then run
+    `node tools/publish-chanukah.js`, which copies it to `chanukah-2026.js` (live page 4949424
+    and chanukahfestival.org), switching only `AID` and `BRAND_HOSTS`. Note this also
+    publishes anything that was waiting on the draft page; tell the person if there was.
   - Never edit `chanukah-2026.js` directly, or the next publish will overwrite that edit.
-    If a fix must go straight to live, make it in the draft and publish.
-  - Do not work on other branches or open pull requests for this site. Branches never show
-    on any page; only `main` is served.
   - Page 4949424 has no donation form yet, so Donate there opens the regular donate page;
     the draft page 7553387 has the form and the full donate pop-up. Once the form is added
     to 4949424, check its field ids on the live page before relying on the pop-up.
+- **Festival sub pages** (Kids Menorah Contest `menorah-contest-2026.js`, Dreidel Guessing
+  Contest `dreidel-2026.js`) and every other page have **live only**, no draft page. Show the
+  draft as a preview in Claude, get the OK, then push live.
+- Do not work on other branches or open pull requests for this site. Branches never show
+  on any page; only `main` is served.
 - Keep the page id in a project's CFG and its `PAGES` key the same.
 - The loader only loads `^[a-z0-9-]+\.js$` files from this repository. Never add code
   that loads a script URL taken from the page, the address bar or anywhere else.
