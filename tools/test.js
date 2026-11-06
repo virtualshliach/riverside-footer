@@ -292,6 +292,22 @@ var SITES = {
     var bd = await load('riverside', 'https://chanukahfestival.org/', { wait: 500 });
     ok(bd.d.getElementById('cf26'), 'chanukahfestival.org shows the festival site');
 
+    console.log('riverside: header.js matches footer.js');
+    var hsrc = fs.readFileSync(path.join(ROOT, 'header.js'), 'utf8'), fsrc = fs.readFileSync(path.join(ROOT, 'footer.js'), 'utf8');
+    var fCov = {}, hCov = {};
+    fsrc.replace(/'(\d+)':\s*\{[^}]*?cover:\s*'([^']+)',\s*coverId:\s*'([^']+)'/g, function (_, a, c, id) { fCov[a] = id + ' ' + c; });
+    hsrc.replace(/'(\d+)':\s*\{\s*coverId:\s*'([^']+)',\s*cover:\s*'([^']+)'/g, function (_, a, id, c) { hCov[a] = id + ' ' + c; });
+    ok(JSON.stringify(fCov) === JSON.stringify(hCov) && Object.keys(fCov).length >= 2, 'header.js covers the same pages as footer.js ' + JSON.stringify(hCov));
+    var fh = /var HOSTS = \{([^}]*)\}/.exec(fsrc)[1].replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s/g, ''), hh = /var HOSTS = \{([^}]*)\}/.exec(hsrc)[1].replace(/\s/g, '');
+    ok(fh === hh, 'header.js and footer.js list the same domains (' + hh + ')');
+    var hj = new JSDOM('<!doctype html><html><head></head><body><h1>old</h1></body></html>', { url: 'https://www.jewishriverside.com/templates/section_cdo/aid/4949424/jewish/x.htm', runScripts: 'outside-only' });
+    hj.window.eval(hsrc);
+    var hs = hj.window.document.getElementById('cf26-cover');
+    ok(hs && hs.tagName === 'STYLE' && /body\{opacity:0/.test(hs.textContent) && !/display:none/.test(hs.textContent), 'header.js hides the festival page with opacity (never display:none)');
+    var hj2 = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/123/jewish/x.htm', runScripts: 'outside-only' });
+    hj2.window.eval(hsrc);
+    ok(!hj2.window.document.querySelector('style'), 'header.js does nothing on other pages');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],

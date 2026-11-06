@@ -13,6 +13,11 @@ who owns this repository.
 - The site's ChabadOne footer contains exactly one line pointing here:
   `<script src="https://virtualshliach.github.io/riverside-footer/footer.js"></script>`
   Never rename or move `footer.js`; the live site depends on that address.
+- The site's ChabadOne **header** contains one line pointing here:
+  `<script src="https://virtualshliach.github.io/riverside-footer/header.js"></script>`
+  It hides the original page until a custom design is ready (no flash of the old page).
+  Never rename or move `header.js`. When you add, move or remove a page with a `cover` in
+  `PAGES`, or change `HOSTS`, make the same change in `header.js` (the tests check this).
 - `footer.js` is the loader. Its `PAGES` map lists which page id (aid) loads which
   project file. Pages not listed load nothing.
 - Each `*.js` project file in the root is one page's custom design. Each also checks
