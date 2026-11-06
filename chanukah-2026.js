@@ -693,6 +693,10 @@
       '#cf26 .cf-keyg li em{font-style:normal;font-weight:800;font-size:.8rem;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center}',
       '#cf26 .cf-keyg li b{color:#fff;font-weight:700}',
       '#cf26 .cf-roam{margin-top:14px;font-size:.95rem;color:#C9D6DA}',
+      '#cf26 .cf-keywrap{grid-column:1 / -1;padding:0 34px 32px}',
+      '#cf26 .cf-keywrap .cf-xp{margin-top:0}',
+      '@media (min-width:861px){#cf26 .cf-keyg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 26px}#cf26 .cf-keyg .cf-roam{grid-column:1 / -1;text-align:center;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}}',
+      '@media (max-width:860px){#cf26 .cf-keywrap{padding:0 22px 26px}}',
       '#cf26 .cf-roam b{color:' + GOLD + '}',
       /* Kids Menorah Contest card */
       '#cf26 .cf-mc{margin-top:28px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.35);border-radius:22px;padding:30px 34px}',
@@ -877,6 +881,7 @@
       '#cf26 .cf-foot-l{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;margin:10px 0 22px}',
       '#cf26 .cf-foot-l a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:' + INK + '}',
       '#cf26 .cf-foot-l a:hover{color:' + GOLD + '}',
+      '@media (max-width:600px){#cf26 .cf-foot-l{flex-direction:column;align-items:center;gap:12px}}',
       '#cf26 .cf-soc{display:inline-flex;align-items:center;gap:10px;color:' + INK + '}',
       '#cf26 .cf-soc a .cf-ic{width:1.3em;height:1.3em}',
       '#cf26 .cf-foot small{display:block;font-size:.74rem;opacity:.7;margin-top:14px}',
@@ -1772,7 +1777,7 @@
     dp.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
     add(btns, dp);
     info.appendChild(btns);
-    add(ev, info, buildMap());
+    add(ev, info, buildMap(), buildKey());
     w.appendChild(ev);
 
     s.appendChild(w);
@@ -1797,12 +1802,22 @@
     pdf.insertBefore(icon('dl'), pdf.firstChild);
     add(bt, full, pdf);
 
+    add(box, el('div', 'cf-kicker', 'Festival map'), a,
+      el('p', 'cf-maphint', 'Tap the map to open it full size and zoom in.'), bt);
+    return box;
+  }
+
+  /* Map key: a full-width strip under the details and the map (4 columns on wide
+     screens, open); a fold-out list on phones. */
+  function buildKey() {
+    var M = CFG.MAP;
+    var wrap = el('div', 'cf-keywrap');
     var xp = el('details', 'cf-xp');
-    /* open on wide screens, where it sits beside the details; folded on phones */
     if (window.innerWidth > 860) xp.open = true;
     add(xp, el('summary', null, 'Find each number on the map'));
     var inner = el('div', 'cf-xp-in cf-keyg');
     M.KEY.forEach(function (g) {
+      var grp = el('div', 'cf-keygrp');
       var h = el('h4');
       var dot = el('i'); dot.style.background = g.color;
       add(h, dot, document.createTextNode(T(g.group)));
@@ -1815,16 +1830,15 @@
         add(li, n, t);
         ul.appendChild(li);
       });
-      add(inner, h, ul);
+      add(grp, h, ul);
+      inner.appendChild(grp);
     });
     var roam = el('p', 'cf-roam');
     add(roam, el('b', null, 'Roaming the festival: '), document.createTextNode(M.ROAMING));
     inner.appendChild(roam);
     xp.appendChild(inner);
-
-    add(box, el('div', 'cf-kicker', 'Festival map'), a,
-      el('p', 'cf-maphint', 'Tap the map to open it full size and zoom in.'), bt, xp);
-    return box;
+    wrap.appendChild(xp);
+    return wrap;
   }
 
   /* ---------- Kids Menorah Contest card ---------- */
@@ -2169,16 +2183,12 @@
     ph.insertBefore(icon('phone'), ph.firstChild);
     var em = link(null, 'mailto:' + CFG.EMAIL, CFG.EMAIL);
     em.insertBefore(icon('mail'), em.firstChild);
-    /* same handle on both networks: two icon links, one label */
-    var soc = el('span', 'cf-soc');
-    var ig = link(null, CFG.SHARE.instagram, null, true);
-    ig.setAttribute('aria-label', 'Instagram ' + CFG.SHARE.igHandle);
-    ig.appendChild(icon('ig'));
-    var fbl = link(null, CFG.SHARE.facebook, null, true);
-    fbl.setAttribute('aria-label', 'Facebook ' + CFG.SHARE.igHandle);
-    fbl.appendChild(icon('fb'));
-    add(soc, ig, fbl, el('span', null, CFG.SHARE.igHandle));
-    add(l, ph, em, soc);
+    /* every contact item is icon + word */
+    var ig = link(null, CFG.SHARE.instagram, 'Instagram', true);
+    ig.insertBefore(icon('ig'), ig.firstChild);
+    var fbl = link(null, CFG.SHARE.facebook, 'Facebook', true);
+    fbl.insertBefore(icon('fb'), fbl.firstChild);
+    add(l, ph, em, ig, fbl);
     add(w, el('b', null, 'Questions? We\u2019d love to help.'), l,
       donateButton('Support the Festival'),
       el('small', null, '\u00a9 2026 ' + CFG.host + ' \u2022 ' + CFG.WEB));

@@ -221,6 +221,15 @@ var SITES = {
     var skr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7457011/jewish/Sukkot.htm', { wait: 300 });
     ok(projectRequests(skr).length === 1 && !skr.errors.length, 'Sukkot code also loads on its thank-you page');
 
+    console.log('riverside: Kids Menorah Contest thank-you page');
+    var mcShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><p>Thank you! Your child is registered for the Kids Menorah Contest. Please bring the finished menorah.</p></div>');
+    var mcr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mcShell, wait: 600 });
+    ok(projectRequests(mcr).some(function (u) { return /menorah-contest-2026\.js/.test(u); }), 'contest code loads on its thank-you page');
+    ok(!!mcr.d.getElementById('mc26') && !mcr.errors.length, 'designed thank-you card shown, no errors');
+    ok(/7:45\u20138 PM/.test(mcr.d.getElementById('mc26').textContent) && /#15/.test(mcr.d.getElementById('mc26').textContent), 'thank-you card has the drop-off table and winners time');
+    var mcf = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Kids-Menorah-Contest.htm', { wait: 400 });
+    ok(!mcf.d.getElementById('mc26'), 'registration form page itself is left as the platform draws it');
+
     console.log('riverside: social links go to the festival pages');
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
     ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
@@ -229,7 +238,7 @@ var SITES = {
     ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
     var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');
     ok(!/instagram\.com\/jewishriverside|facebook\.com\/jewishriverside/i.test(allA), 'no links to the Jewish Riverside social pages');
-    ok(/@chanukahfestival/.test(r.d.querySelector('.cf-foot').textContent), 'footer shows @chanukahfestival');
+    ok(/Instagram/.test(r.d.querySelector('.cf-foot').textContent) && /Facebook/.test(r.d.querySelector('.cf-foot').textContent) && r.d.querySelector('.cf-foot a[href="https://www.instagram.com/chanukahfestival/"]'), 'footer links Instagram and Facebook to the festival accounts');
 
     console.log('riverside: Chanukah guide pop-up');
     var gr = r;
