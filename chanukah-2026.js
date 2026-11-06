@@ -1883,7 +1883,7 @@
   function buildEvent() {
     var s = section('event');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire',
+    w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
       'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
 
     var hl = el('div', 'cf-hl');
