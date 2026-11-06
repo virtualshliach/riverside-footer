@@ -291,6 +291,7 @@
       '#dg26-hero .mh-when{font-weight:600;color:' + GOLD + ';font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}',
       '#dg26-hero .mh-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;list-style:none}',
       '#dg26-hero .mh-chips li{font-family:' + BODY + ';font-size:14px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.05)}',
+      '#dg26-hero .mh-p,#dg26-hero .mh-when,#dg26-hero .mh-a{font-family:' + BODY + '}',
       '#dg26-hero .mh-p{color:' + MUTED + ';font-size:16px;line-height:1.6;margin:16px auto 0;max-width:46ch}',
       '#dg26-hero .mh-a{display:inline-block;margin-top:12px;color:' + TEAL + ';font-weight:700;font-size:15px;text-decoration:none}',
       '#dg26-hero .mh-a:hover{text-decoration:underline}',
@@ -320,6 +321,9 @@
       /* the guess: one big line */
       F + ' li#id_17 textarea{min-height:0!important;height:56px!important;font-size:22px!important;font-weight:700!important;padding:10px 16px!important;resize:none}',
       F + ' li#id_17 .form-label-left label{font-size:17px!important}',
+      /* section headings (Your Info, Your Guess, Survey) */
+      F + ' .form-header-group{padding:6px 0 2px!important;margin:0!important;border:0!important}',
+      F + ' h2.form-header{font-family:' + DISP + '!important;font-weight:700!important;font-size:20px!important;color:' + NAVY + '!important;margin:0!important;padding:0!important}',
       /* old 2019 banner image at the top of the form (the hero replaces it) */
       F + ' li#id_18{display:none!important}',
       F + ' .form-multiple-column{columns:auto!important;width:auto!important}',
@@ -335,6 +339,23 @@
       F + ' button.form-submit-button:hover{filter:brightness(1.05)}',
       '@media (max-width:600px){' + F + ' button.form-submit-button{width:100%!important;min-width:0}}'
     ].join('\n');
+  }
+
+  /* This page sits in the festival mini-site, whose older template is fixed at 945px and has no
+     viewport tag, so phones (the booth QR) showed a zoomed-out desktop page. Make it fit phones. */
+  function templateCss() {
+    var ids = '#border_bottom,#chabad_body_content,.chabad_left_column,#ContentArea,#content_page,#co_body_container,#ContentBody,#cco_body,#co_content_container';
+    return '@media (max-width:760px){' + ids + '{width:auto!important;max-width:100%!important;float:none!important;margin-left:0!important;margin-right:0!important;padding-left:0!important;padding-right:0!important;box-sizing:border-box}#content_page{padding:0 12px!important}}';
+  }
+  function fitPhones() {
+    if (!document.querySelector('meta[name="viewport"]')) {
+      var m = document.createElement('meta'); m.name = 'viewport'; m.content = 'width=device-width, initial-scale=1';
+      document.head.appendChild(m);
+    }
+    if (!document.getElementById('dg26-fit')) {
+      var s = document.createElement('style'); s.id = 'dg26-fit'; s.textContent = templateCss();
+      document.head.appendChild(s);
+    }
   }
 
   function whenLine() {
@@ -394,6 +415,7 @@
   }
 
   function boot() {
+    try { fitPhones(); } catch (e) {}
     if (MODE === 'form') return formBoot();
     if (document.getElementById('dg26')) return;
     try {

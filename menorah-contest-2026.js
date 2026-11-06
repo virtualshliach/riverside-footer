@@ -290,6 +290,7 @@
       '#mc26-hero .mh-when{font-weight:600;color:' + GOLD + ';font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}',
       '#mc26-hero .mh-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;list-style:none}',
       '#mc26-hero .mh-chips li{font-family:' + BODY + ';font-size:14px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.05)}',
+      '#mc26-hero .mh-p,#mc26-hero .mh-when,#mc26-hero .mh-a{font-family:' + BODY + '}',
       '#mc26-hero .mh-p{color:' + MUTED + ';font-size:16px;line-height:1.6;margin:16px auto 0;max-width:46ch}',
       '#mc26-hero .mh-a{display:inline-block;margin-top:12px;color:' + TEAL + ';font-weight:700;font-size:15px;text-decoration:none}',
       '#mc26-hero .mh-a:hover{text-decoration:underline}',
