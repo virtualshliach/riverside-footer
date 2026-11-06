@@ -224,6 +224,8 @@ var SITES = {
     var skr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7457011/jewish/Sukkot.htm', { wait: 300 });
     ok(projectRequests(skr).length === 1 && !skr.errors.length, 'Sukkot code also loads on its thank-you page');
 
+    ok(/width=device-width/.test((r.d.querySelector('meta[name=viewport]') || {}).content || ''), 'phones get a viewport tag (the ChabadOne template sends none)');
+    ok(/html\.cf26-on\{font-size:16px/.test(r.d.getElementById('cf26-style').textContent), 'page is drawn on a 16px base (the template root is 10px)');
     var ld = r.d.getElementById('cf26-ld');
     var ldj = null; try { ldj = JSON.parse(ld.textContent); } catch (e) {}
     ok(ldj && ldj['@type'] === 'Event' && /2026-12-07T18:00/.test(ldj.startDate) && ldj.location.name === 'Riverside Historic Courthouse' && ldj.isAccessibleForFree === true, 'schema.org Event data: date, place, free');

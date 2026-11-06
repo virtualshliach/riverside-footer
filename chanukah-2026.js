@@ -295,7 +295,10 @@
     /* Looping highlight video behind the title. Files live next to this one in the repo. */
     HERO: { video: 'festival-hero.mp4', poster: 'festival-hero-poster.jpg' },
 
-    FLYER: '/media/images/1389/dEvL13899225.png',
+    /* 2026 flyer (Drive: Print/Chanukah-2026-Flyer-Updated WORKING District 1 WHITE.pdf, Nov 4):
+       new Chabad at UCR logo and the Jose Medina (County District 1) logo. */
+    FLYER: 'flyer-2026.pdf',
+    FLYER_THUMB: 'flyer-2026-thumb.jpg',
     DONATE_URL: '/article.asp?aid=4194665',
 
     /* Donation pop-up. Field ids from the ChabadOne form on this page (mapped Nov 2 2026). */
@@ -480,6 +483,8 @@
       'html.cf26-on .cco_templateless_template,html.cf26-on .page-tools-sidebar,html.cf26-on #BodyContainer{display:none !important}',
       /* the native page holds the donation form: park it off-screen, never display:none */
       'html.cf26-on .cco_templatelates_content{position:absolute !important;left:-10000px !important;top:0 !important;width:760px !important}',
+      /* the ChabadOne templates set the root font to 10px; this page is designed on the standard 16px */
+      'html.cf26-on{font-size:16px !important}',
       'html.cf26-on,html.cf26-on body{background:' + NAVY + ' !important;margin:0}',
       '#cf26{background:' + NAVY + ';color:' + INK + ';font-family:' + BODY + ';font-size:17px;line-height:1.6;text-align:left;-webkit-font-smoothing:antialiased;overflow-x:hidden}',
       '#cf26 *{box-sizing:border-box}',
@@ -512,14 +517,17 @@
       /* nav */
       '#cf26 .cf-nav{position:sticky;top:0;z-index:50;background:rgba(11,31,39,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}',
       '#cf26 .cf-nav .cf-wrap{display:flex;align-items:center;gap:18px;height:56px}',
+      '#cf26 .cf-sec,#cf26 #cf-contest{scroll-margin-top:76px}',
+      '@media (min-width:861px){#cf26 .cf-nav .cf-wrap{height:68px}#cf26 .cf-brand{font-size:1.55rem}}',
       '#cf26 .cf-brand{font-family:' + DISP + ';font-weight:700;color:#fff;text-decoration:none;font-size:1.4rem;letter-spacing:.04em;white-space:nowrap}',
       '@media (max-width:420px){#cf26 .cf-brand{font-size:1.2rem}}',
       '#cf26 .cf-brand span{color:' + TEAL + '}',
       '#cf26 .cf-links{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}',
       '#cf26 .cf-links::-webkit-scrollbar{display:none}',
-      '#cf26 .cf-links a{color:' + MUTED + ';text-decoration:none;font-size:.84rem;font-weight:600;padding:8px 11px;border-radius:999px;white-space:nowrap}',
+      '#cf26 .cf-links a{color:#e9f1f3;text-decoration:none;font-size:1rem;font-weight:600;padding:9px 14px;border-radius:999px;white-space:nowrap}',
+      '@media (max-width:1080px){#cf26 .cf-links a{font-size:.94rem;padding:8px 10px}}',
       '#cf26 .cf-links a:hover{color:#fff;background:rgba(255,255,255,.06)}',
-      '#cf26 .cf-nav .cf-btn{padding:9px 18px;font-size:.84rem}',
+      '#cf26 .cf-nav .cf-btn{padding:11px 22px;font-size:.98rem}',
       '#cf26 .cf-burger{display:none;width:44px;height:44px;border-radius:4px;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1.5px solid ' + TEAL + '}',
       '#cf26 .cf-burger i{display:block;width:20px;height:2px;border-radius:2px;background:#fff;transition:transform .25s ease,opacity .2s ease}',
       '#cf26 .cf-burger.open i:nth-child(1){transform:translateY(7px) rotate(45deg)}',
@@ -784,7 +792,7 @@
       '#cf26 .cf-sp img{max-height:64px;width:auto;margin-bottom:10px}',
       '#cf26 .cf-logos .cf-sp{min-height:128px;padding:20px 18px}',
       '#cf26 .cf-logos .cf-sp img{max-height:none;max-width:100%;width:auto;margin:0;object-fit:contain}',
-      '@media (max-width:640px){#cf26 .cf-logos .cf-sp{min-height:104px;padding:16px 12px}#cf26 .cf-logos .cf-sp img{transform:scale(.82)}}',
+      '@media (max-width:640px){#cf26 .cf-logos .cf-sp{min-height:104px;padding:14px 10px}}',
       '#cf26 .cf-sp b{font-family:' + DISP + ';color:#fff;line-height:1.2}',
       '#cf26 .cf-sp span{color:' + MUTED + ';font-size:.95rem;margin-top:4px;line-height:1.35}',
       '#cf26 .cf-xl .cf-sp{min-height:150px;padding:30px 22px;background:linear-gradient(160deg,rgba(233,185,73,.16),rgba(26,204,206,.08)),' + PANEL + ';border-color:rgba(233,185,73,.5)}',
@@ -849,7 +857,7 @@
       '#cf26 .cf-nt-c i.on{background:' + TEAL + '}',
       '#cf26 .cf-nt-c i.on:before{content:"";position:absolute;left:50%;top:-7px;width:5px;height:7px;margin-left:-2.5px;border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:' + GOLD + '}',
       '#cf26 .cf-nt b{display:block;font-family:' + DISP + ';color:#fff;font-size:1rem}',
-      '#cf26 .cf-nt span{display:block;font-size:.78rem;color:' + MUTED + '}',
+      '#cf26 .cf-nt span{display:block;font-size:.78rem;color:' + MUTED + ';white-space:nowrap;line-height:1.35}',
       '#cf26 .cf-nt em{display:block;font-style:normal;font-size:.7rem;color:' + GOLD + ';margin-top:4px;line-height:1.25;font-weight:600}',
       '#cf26 .cf-nnote{color:' + MUTED + ';font-size:.95rem;margin-top:14px}',
       '#cf26 .cf-gintro{color:' + MUTED + ';margin-top:30px;max-width:70ch}',
@@ -981,6 +989,12 @@
     if (document.getElementById('cf26')) return;
     if (!onThisPage()) { uncover(); return; }
     try {
+      /* The festival page templates (templateless form 7553387 and mini-site 4949424) send no viewport
+         tag, so phones would draw the page 980px wide and shrink it. Add one so the design fits. */
+      if (!document.querySelector('meta[name="viewport"]')) {
+        var vp = document.createElement('meta'); vp.name = 'viewport'; vp.content = 'width=device-width, initial-scale=1';
+        (document.head || document.documentElement).appendChild(vp);
+      }
       loadFonts();
       var st = document.createElement('style');
       st.id = 'cf26-style';
@@ -1955,11 +1969,11 @@
     var w = el('div', 'cf-wrap');
     var fl = el('div', 'cf-flyer cf-reveal');
     var im = document.createElement('img');
-    im.src = CFG.FLYER; im.alt = 'Chanukah Festival 2026 flyer'; im.loading = 'lazy';
+    im.src = asset(CFG.FLYER_THUMB); im.alt = 'Chanukah Festival 2026 flyer'; im.loading = 'lazy'; im.width = 92; im.height = 118;
     var tx = el('div');
     add(tx, el('b', null, 'Download the Flyer'), el('span', null, 'Print it, post it, send it to a friend.'));
-    var dl = link('cf-btn cf-ghost', CFG.FLYER, 'Download', true);
-    dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.png');
+    var dl = link('cf-btn cf-ghost', asset(CFG.FLYER), 'Download', true);
+    dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.pdf');
     dl.insertBefore(icon('dl'), dl.firstChild);
     add(fl, im, tx, dl);
     w.appendChild(fl);
@@ -2086,7 +2100,7 @@
       var c = el('div', 'cf-nt' + (n.star ? ' star' : ''));
       var cs = el('div', 'cf-nt-c');
       for (var i = 0; i < 8; i++) cs.appendChild(el('i', i >= 8 - n.n ? 'on' : null));
-      add(c, cs, el('b', null, 'Night ' + n.n), el('span', null, n.day + ', ' + n.date), n.note ? el('em', null, n.note) : null);
+      add(c, cs, el('b', null, 'Night ' + n.n), el('span', null, n.day), el('span', 'cf-nt-d', n.date), n.note ? el('em', null, n.note) : null);
       nights.appendChild(c);
     });
     w.appendChild(nights);
