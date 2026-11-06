@@ -173,7 +173,12 @@ var SITES = {
     ok(cards.length >= 15, 'news carousel has at least 15 stories (' + cards.length + ')');
     var pe = [].filter.call(cards, function (c) { return /pressenterprise\.com/.test(c.href); }).length;
     ok(pe >= 12, 'most stories are from The Press-Enterprise (' + pe + ')');
-    ok(!/mynewsla|raincrossgazette|pagesuite/.test(r.d.getElementById('cf-news').innerHTML), 'smaller outlets removed from the news');
+    var outlets = [].map.call(cards, function (c) { return /pressenterprise\.com/.test(c.href) ? 'PE' : 'other'; });
+    var run = 0, maxRun = 0, firstTen = outlets.slice(0, 10);
+    outlets.forEach(function (o) { run = o === 'PE' ? run + 1 : 0; maxRun = Math.max(maxRun, run); });
+    ok(cards.length >= 20 && /mynewsla/.test(r.d.getElementById('cf-news').innerHTML) && /raincrossgazette/.test(r.d.getElementById('cf-news').innerHTML), 'other outlets are back alongside the Press-Enterprise');
+    ok(firstTen.join(',').indexOf('PE,PE,PE') < 0, 'first ten stories mix outlets, never three Press-Enterprise in a row (' + firstTen.join(',') + ')');
+    ok(maxRun <= 3, 'no long Press-Enterprise runs anywhere (longest ' + maxRun + ')');
     ok([].every.call(cards, function (c) { return c.querySelector('.cf-nc-plate') && c.target === '_blank'; }), 'every story card has a nameplate and opens in a new tab');
     ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
     var kids = [].slice.call(r.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
