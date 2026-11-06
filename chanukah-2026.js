@@ -6,7 +6,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-04b';
+  var VERSION = 'cf26-2026-11-05a';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -34,13 +34,14 @@
 
     edition: '22',
     editionSuffix: 'nd',
-    host: 'Chabad Jewish Community Center',
+    host: 'Chabad Jewish Community Center of Riverside',
+    hostUrl: 'https://www.jewishriverside.com',
 
     event: {
       dayLine: 'Mon. Dec 7, 2026',
-      timeLine: '6\u20138\u00a0PM',
+      timeLine: '6 to 8\u00a0PM',
       nightLine: '4th Night of Chanukah',
-      venue: 'Riverside County Historic Courthouse',
+      venue: 'Riverside Historic Courthouse',
       street: '4050 Main St.',
       cityLine: 'Riverside, CA 92501',
       startUTC: '2026-12-08T02:00:00Z',   /* 6:00 PM Pacific */
@@ -182,14 +183,17 @@
     NIGHTS_NOTE: 'Chanukah 2026 begins Friday evening, December 4 and ends at nightfall on Saturday, December 12.',
 
     SHARE: {
-      url: 'https://www.jewishriverside.com/templates/section_cdo/aid/4949424/jewish/Chanukah-Festival-2026.htm',
-      text: 'Join us for the 22nd Annual Chanukah Festival \u2014 Mon. Dec 7, 6\u20138 PM at the Riverside County Historic Courthouse. Free admission, all are welcome!',
+      /* every share points at the public address; tags added per button (see shareUrl) */
+      url: 'https://chanukahfestival.org/',
+      text: 'Join us at Riverside\u2019s 22nd Annual Chanukah Festival! Monday, Dec 7, 6 to 8 PM at the Riverside Historic Courthouse. Grand Menorah Lighting, live music, latkes, donuts and kids\u2019 activities. Free for everyone. Come early: the first 300 guests get a free Chanukah gift!',
+      emailSubject: 'You\u2019re invited: Riverside Chanukah Festival, Dec 7',
+      emailEnd: 'Hope to see you there!',
       /* the festival's own social pages (not Jewish Riverside's or the shul's) */
       facebook: 'https://www.facebook.com/chanukahfestival/',
       instagram: 'https://www.instagram.com/chanukahfestival/',
       igHandle: '@chanukahfestival',
       /* paste the Facebook event link here once it exists; Follow on Facebook then goes to the event */
-      facebookEvent: ''
+      facebookEvent: 'https://www.facebook.com/events/1651125113077350/'
     },
 
     /* Looping highlight video behind the title. Files live next to this one in the repo. */
@@ -346,7 +350,10 @@
     phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
     mail: 'M3 5h18v14H3zM3 6l9 7 9-7',
     x: 'M6 6l12 12M18 6L6 18',
-    dl: 'M12 3v12M7 10l5 5 5-5M5 21h14'
+    dl: 'M12 3v12M7 10l5 5 5-5M5 21h14',
+    wa: 'M4 20l1.4-4.2A8 8 0 1 1 8.3 18.7zM9 9.5c.3 2 2.2 4 4.5 4.6l1-1.1 2 .8-.4 1.6c-3.7.2-7.6-3.6-7.4-7.3l1.6-.4.8 2z',
+    chat: 'M4 5h16v11H9l-5 4z',
+    link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1'
   };
   function icon(name, cls) {
     var NS = 'http://www.w3.org/2000/svg';
@@ -363,10 +370,10 @@
   /* =====================================================================
      STYLES - plain color values only (no custom properties)
      ===================================================================== */
-  var NAVY = '#0f2936', DEEP = '#0a1f2a', PANEL = '#133442', TEAL = '#1accce',
-      GREEN = '#4cbd9f', GOLD = '#ebbe4d', INK = '#e9f1f3', MUTED = '#a9c0c7';
+  var NAVY = '#0f2730', DEEP = '#0b1f27', PANEL = '#133442', TEAL = '#3cc7b4',
+      GREEN = '#4cbd9f', GOLD = '#e9b949', INK = '#e9f1f3', MUTED = '#a9c0c7';
   var DISP = '"Arvo","Rockwell","Roboto Slab",Georgia,serif';
-  var SCRIPT = '"Satisfy","Brush Script MT",cursive';
+  var SCRIPT = '"Kaushan Script","Brush Script MT",cursive';
   var BODY = '"Montserrat","Helvetica Neue",Arial,sans-serif';
   var GRAD = 'linear-gradient(90deg,' + TEAL + ' 0%,' + GREEN + ' 52%,' + GOLD + ' 100%)';
 
@@ -392,14 +399,14 @@
       '#cf26 .cf-lead{color:' + MUTED + ';max-width:62ch;font-size:1.05rem}',
       '#cf26 .cf-center{text-align:center}',
       '#cf26 .cf-center .cf-lead{margin:0 auto}',
-      '#cf26 .cf-rule{height:3px;width:72px;background:' + GRAD + ';border-radius:2px;margin:18px 0 0}',
+      '#cf26 .cf-rule{height:3px;width:72px;background:' + TEAL + ';border-radius:2px;margin:18px 0 0}',
       '#cf26 .cf-center .cf-rule{margin:18px auto 0}',
 
       /* buttons */
       '#cf26 .cf-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 24px;border-radius:999px;font-weight:700;font-size:.95rem;letter-spacing:.02em;text-decoration:none;transition:transform .2s ease,box-shadow .2s ease,background .2s ease;white-space:nowrap}',
       '#cf26 .cf-btn:hover{transform:translateY(-2px)}',
-      '#cf26 .cf-gold{background:' + GOLD + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(235,190,77,.25)}',
-      '#cf26 .cf-gold:hover{box-shadow:0 12px 30px rgba(235,190,77,.38)}',
+      '#cf26 .cf-gold{background:' + GOLD + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(233,185,73,.25)}',
+      '#cf26 .cf-gold:hover{box-shadow:0 12px 30px rgba(233,185,73,.38)}',
       '#cf26 .cf-ghost{border:1.5px solid rgba(255,255,255,.35);color:#fff}',
       '#cf26 .cf-ghost:hover{border-color:' + TEAL + ';color:' + TEAL + '}',
       '#cf26 .cf-teal{background:' + TEAL + ';color:' + DEEP + '}',
@@ -409,7 +416,7 @@
       '#cf26 .cf-nav .cf-wrap{display:flex;align-items:center;gap:18px;height:60px}',
       '#cf26 .cf-brand{font-family:' + DISP + ';font-weight:700;color:#fff;text-decoration:none;font-size:1.4rem;letter-spacing:.04em;white-space:nowrap}',
       '@media (max-width:420px){#cf26 .cf-brand{font-size:1.2rem}}',
-      '#cf26 .cf-brand span{background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent}',
+      '#cf26 .cf-brand span{color:' + TEAL + '}',
       '#cf26 .cf-links{display:flex;gap:4px;margin-left:auto;overflow-x:auto;scrollbar-width:none}',
       '#cf26 .cf-links::-webkit-scrollbar{display:none}',
       '#cf26 .cf-links a{color:' + MUTED + ';text-decoration:none;font-size:.84rem;font-weight:600;padding:8px 11px;border-radius:999px;white-space:nowrap}',
@@ -507,21 +514,35 @@
       '#cf26 .cf-tags{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:22px}',
       '#cf26 .cf-tag{background:' + GOLD + ';color:' + DEEP + ';font-family:' + SCRIPT + ';font-size:clamp(1.05rem,2.4vw,1.5rem);padding:7px 18px;line-height:1.2;border-radius:4px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
       '#cf26 .cf-info{padding:6px 0 64px}',
-      '@media (max-width:620px){#cf26 .cf-vid{min-height:clamp(380px,62vh,560px)}#cf26 .cf-vtext{padding:44px 16px 56px}}',
+      '@media (max-width:620px){#cf26 .cf-vid{min-height:clamp(330px,53vh,480px)}#cf26 .cf-vtext{padding:34px 16px 44px}}',
       '#cf26 .cf-bh{position:absolute;top:12px;left:18px;z-index:1;font-size:.78rem;color:rgba(255,255,255,.8);font-family:' + DISP + '}',
       '#cf26 .cf-invite{font-size:clamp(.9rem,2vw,1.08rem);font-weight:600;color:#fff;letter-spacing:.02em;margin:18px 0 8px}',
       '#cf26 .cf-annual{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:2px}',
       '#cf26 .cf-annual i{display:block;height:3px;width:min(160px,16vw);background:rgba(255,255,255,.85);border-radius:2px}',
-      '#cf26 .cf-annual b{font-family:' + SCRIPT + ';font-weight:400;font-size:clamp(2rem,5.4vw,3.6rem);line-height:1.15;background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent;padding:0 .12em}',
+      '#cf26 .cf-annual b{font-family:' + SCRIPT + ';font-weight:400;font-size:clamp(1.8rem,4.8vw,3.2rem);line-height:1.2;color:' + GOLD + ';padding:0 .12em}',
       '#cf26 .cf-annual sup{font-size:.5em;vertical-align:super}',
       '#cf26 .cf-t1{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.02em;background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent}',
       '#cf26 .cf-t2{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.04em;color:#fff}',
       '@media (max-width:620px){#cf26 .cf-when{font-size:clamp(1.6rem,7.4vw,2.4rem)}#cf26 .cf-when .cf-sep{display:none}#cf26 .cf-when .cf-tm{display:block}#cf26 .cf-invite{padding:0 18px}}',
-      '#cf26 .cf-venue{font-family:' + DISP + ';color:' + GOLD + ';text-transform:uppercase;font-size:clamp(1.05rem,2.8vw,1.75rem);letter-spacing:.02em;margin-top:18px;line-height:1.2}',
-      '#cf26 .cf-addr{font-family:' + DISP + ';color:#fff;font-size:clamp(1rem,2.3vw,1.4rem)}',
-      '#cf26 .cf-when{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.9rem,6vw,3.6rem);line-height:1.1;margin-top:0;background:linear-gradient(90deg,' + GOLD + ' 0%,' + GREEN + ' 100%);-webkit-background-clip:text;background-clip:text;color:transparent;text-transform:uppercase}',
+      '#cf26 .cf-venue{font-family:' + DISP + ';color:#fff;text-transform:uppercase;font-size:clamp(1rem,2.8vw,1.75rem);letter-spacing:.02em;margin-top:18px;line-height:1.2;white-space:nowrap}',
+      '#cf26 .cf-addr{font-family:' + BODY + ';color:' + INK + ';font-size:clamp(.98rem,2.2vw,1.25rem);margin-top:4px}',
+      /* hero credit and welcome line (hero option A) */
+      '#cf26 .cf-by{display:block;margin-top:22px;text-decoration:none;color:#fff}',
+      '#cf26 .cf-by i{display:block;font-family:' + SCRIPT + ';font-style:normal;color:' + GOLD + ';font-size:clamp(1.15rem,2.6vw,1.6rem);line-height:1.1;text-shadow:0 2px 12px rgba(0,0,0,.6)}',
+      '#cf26 .cf-by b{display:block;font-family:' + BODY + ';font-weight:700;letter-spacing:.14em;font-size:clamp(.78rem,1.7vw,1.02rem);margin-top:4px;text-shadow:0 2px 12px rgba(0,0,0,.6)}',
+      '#cf26 .cf-by:hover b{color:' + GOLD + '}',
+      '#cf26 .cf-welcome{margin-top:24px;font-family:' + BODY + ';font-weight:600;font-size:15px;letter-spacing:4px;color:' + GOLD + ';text-shadow:0 2px 12px rgba(0,0,0,.6)}',
+      '#cf26 .cf-welcome .cf-wdot{margin:0 14px}',
+      '@media (max-width:600px){#cf26 .cf-welcome{font-size:14px;letter-spacing:1.6px;margin-top:20px}#cf26 .cf-welcome .cf-wdot{margin:0 7px}#cf26 .cf-by b{letter-spacing:.1em;font-size:.84rem;line-height:1.5}#cf26 .cf-by b span{display:block}#cf26 .cf-venue{font-size:clamp(.9rem,4.6vw,1.1rem)}}',
+      '#cf26 .cf-when{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.9rem,6vw,3.6rem);line-height:1.1;margin-top:0;color:' + GOLD + ';text-transform:uppercase}',
+      '#cf26 .cf-when .cf-tm{white-space:nowrap}',
+      '#cf26 .cf-when .cf-to{text-transform:none}',
       '#cf26 .cf-night{font-family:' + DISP + ';color:#fff;font-size:clamp(1rem,2.3vw,1.35rem)}',
-      '#cf26 .cf-ctas{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:30px}',
+      '#cf26 .cf-ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}',
+      '#cf26 .cf-ctas .cf-btn{height:50px;padding:0 22px;font-size:.92rem}',
+      '#cf26 .cf-fbev{background:#1877f2;color:#fff}',
+      /* phones: an even 2-column grid, the Facebook button spans the full width */
+      '@media (max-width:600px){#cf26 .cf-ctas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:400px;margin-left:16px;margin-right:16px}#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}#cf26 .cf-ctas .cf-btn{padding:0 12px}#cf26 .cf-ctas .cf-fbev{grid-column:1 / -1}}',
       '#cf26 .cf-calwrap{position:relative;display:inline-block}',
       '#cf26 .cf-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#fff;color:' + DEEP + ';border-radius:12px;padding:6px;min-width:210px;box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:20;display:none;text-align:left}',
       '#cf26 .cf-menu.open{display:block}',
@@ -581,22 +602,22 @@
       '@media (max-width:560px){#cf26 .cf-flyer{flex-wrap:wrap}#cf26 .cf-flyer .cf-btn{margin-left:0}}',
 
       /* sponsors */
-      '#cf26 .cf-spons{background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(235,190,77,.12),rgba(10,31,42,0) 70%),' + DEEP + '}',
+      '#cf26 .cf-spons{background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(233,185,73,.12),rgba(10,31,42,0) 70%),' + DEEP + '}',
       '#cf26 .cf-tier{margin-top:46px}',
       '#cf26 .cf-tier-h{display:flex;align-items:center;gap:16px;margin-bottom:18px}',
       '#cf26 .cf-tier-h h3{font-family:' + DISP + ';color:' + GOLD + ';font-size:1.05rem;letter-spacing:.14em;text-transform:uppercase;white-space:nowrap}',
       '#cf26 .cf-tier-h small{color:' + MUTED + ';font-size:.85rem;white-space:nowrap}',
-      '#cf26 .cf-tier-h i{flex:1;height:1px;background:linear-gradient(90deg,rgba(235,190,77,.5),rgba(235,190,77,0))}',
+      '#cf26 .cf-tier-h i{flex:1;height:1px;background:linear-gradient(90deg,rgba(233,185,73,.5),rgba(233,185,73,0))}',
       '#cf26 .cf-sgrid{display:grid;gap:14px}',
       '#cf26 .cf-xl .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}',
       '#cf26 .cf-lg .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(190px,1fr))}',
       '#cf26 .cf-md .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(180px,1fr))}',
       '#cf26 .cf-sm .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}',
-      '#cf26 .cf-sp{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:' + PANEL + ';border:1px solid rgba(235,190,77,.22);padding:22px 16px;min-height:96px;text-decoration:none}',
+      '#cf26 .cf-sp{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.22);padding:22px 16px;min-height:96px;text-decoration:none}',
       '#cf26 .cf-sp img{max-height:64px;width:auto;margin-bottom:10px}',
       '#cf26 .cf-sp b{font-family:' + DISP + ';color:#fff;line-height:1.2}',
       '#cf26 .cf-sp span{color:' + MUTED + ';font-size:.82rem;margin-top:4px;line-height:1.35}',
-      '#cf26 .cf-xl .cf-sp{min-height:150px;padding:30px 22px;background:linear-gradient(160deg,rgba(235,190,77,.16),rgba(26,204,206,.08)),' + PANEL + ';border-color:rgba(235,190,77,.5)}',
+      '#cf26 .cf-xl .cf-sp{min-height:150px;padding:30px 22px;background:linear-gradient(160deg,rgba(233,185,73,.16),rgba(26,204,206,.08)),' + PANEL + ';border-color:rgba(233,185,73,.5)}',
       '#cf26 .cf-xl .cf-sp b{font-size:1.6rem}',
       '#cf26 .cf-lg .cf-sp b{font-size:1.25rem}',
       '#cf26 .cf-md .cf-sp b{font-size:1.05rem}',
@@ -642,7 +663,7 @@
       '#cf26 .cf-nights{display:grid;grid-template-columns:repeat(8,1fr);gap:8px;margin-top:36px}',
       '@media (max-width:820px){#cf26 .cf-nights{grid-template-columns:repeat(4,1fr)}}',
       '#cf26 .cf-nt{border-radius:14px;background:' + PANEL + ';padding:14px 8px 12px;text-align:center;border:1px solid rgba(255,255,255,.06)}',
-      '#cf26 .cf-nt.star{background:linear-gradient(160deg,rgba(235,190,77,.28),rgba(26,204,206,.14)),' + PANEL + ';border-color:' + GOLD + '}',
+      '#cf26 .cf-nt.star{background:linear-gradient(160deg,rgba(233,185,73,.28),rgba(26,204,206,.14)),' + PANEL + ';border-color:' + GOLD + '}',
       '#cf26 .cf-nt-c{display:flex;justify-content:center;gap:3px;height:22px;align-items:flex-end;margin-bottom:8px}',
       '#cf26 .cf-nt-c i{display:block;width:4px;height:14px;border-radius:2px;background:rgba(255,255,255,.22);position:relative}',
       '#cf26 .cf-nt-c i.on{background:' + TEAL + '}',
@@ -656,9 +677,9 @@
       '@media (max-width:900px){#cf26 .cf-ggrid{grid-template-columns:repeat(2,1fr)}}',
       '@media (max-width:560px){#cf26 .cf-ggrid{grid-template-columns:1fr}}',
       '#cf26 .cf-gc{display:flex;flex-direction:column;text-align:left;border-radius:18px;overflow:hidden;background:' + PANEL + ';border:1px solid rgba(255,255,255,.07);text-decoration:none;transition:transform .25s ease,border-color .25s ease;width:100%}',
-      '#cf26 .cf-gc:hover{transform:translateY(-4px);border-color:rgba(235,190,77,.5)}',
+      '#cf26 .cf-gc:hover{transform:translateY(-4px);border-color:rgba(233,185,73,.5)}',
       '#cf26 .cf-gc-img{aspect-ratio:16/9;width:100%;object-fit:cover;background:' + DEEP + '}',
-      '#cf26 .cf-gc-ph{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(26,204,206,.22),rgba(235,190,77,.22));color:' + GOLD + ';font-size:44px}',
+      '#cf26 .cf-gc-ph{aspect-ratio:16/9;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,rgba(26,204,206,.22),rgba(233,185,73,.22));color:' + GOLD + ';font-size:44px}',
       '#cf26 .cf-gc-b{padding:18px 20px 20px}',
       '#cf26 .cf-gc h3{font-family:' + DISP + ';color:#fff;font-size:1.08rem;line-height:1.3}',
       '#cf26 .cf-gc p{color:' + MUTED + ';font-size:.88rem;margin-top:6px}',
@@ -682,11 +703,15 @@
       '#cf26 .cf-rd-foot{margin-top:26px;padding-top:18px;border-top:1px solid #e7dfcf;display:flex;gap:12px;flex-wrap:wrap}',
 
       /* share band + footer */
-      '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(235,190,77,.55),rgba(235,190,77,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:70px 0}',
+      '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(233,185,73,.55),rgba(233,185,73,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:70px 0}',
       '#cf26 .cf-sharebtns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}',
       '#cf26 .cf-follow{margin-top:14px}',
       '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
       '#cf26 .cf-fb{background:#1877f2;color:#fff}',
+      '#cf26 .cf-wa{background:#25d366;color:#0b1f27}',
+      '#cf26 .cf-sharebtns .cf-btn{height:50px;padding:0 22px}',
+      '#cf26 .cf-sharenote{margin-top:16px;font-size:.95rem;color:#C9D6DA;min-height:1.5em}',
+      '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 10px;font-size:.9rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
       '#cf26 .cf-ig{background:linear-gradient(45deg,#f9a63a,#e1306c 50%,#833ab4);color:#fff}',
       '#cf26 .cf-pop{max-width:460px;margin:22px auto 0;background:#fff;color:' + DEEP + ';border-radius:16px;padding:20px;text-align:center;display:none}',
       '#cf26 .cf-pop.open{display:block}',
@@ -768,7 +793,7 @@
   function loadFonts() {
     var l = document.createElement('link');
     l.rel = 'stylesheet';
-    l.href = 'https://fonts.googleapis.com/css2?' + ['family=Arvo:wght@400;700', 'family=Satisfy',
+    l.href = 'https://fonts.googleapis.com/css2?' + ['family=Arvo:wght@400;700', 'family=Kaushan+Script',
       'family=Montserrat:wght@400;500;600;700;800', 'display=swap'].join(AMP);
     document.head.appendChild(l);
   }
@@ -1342,14 +1367,21 @@
     var b = el('b');
     add(b, document.createTextNode(CFG.edition), el('sup', null, CFG.editionSuffix), document.createTextNode(' Annual'));
     add(ann, el('i'), b, el('i'));
-    var tags = el('div', 'cf-tags');
-    add(tags, el('span', 'cf-tag', 'Free Admission!'), el('span', 'cf-tag', 'All Are Welcome!'));
+    var by = link('cf-by', CFG.hostUrl, '');
+    var hb = el('b');
+    /* phones show the name as two even lines: "...CENTER" / "OF RIVERSIDE" */
+    var hp = CFG.host.toUpperCase().split(' OF ');
+    if (hp.length === 2) add(hb, el('span', null, hp[0]), document.createTextNode(' '), el('span', null, 'OF ' + hp[1]));
+    else hb.textContent = CFG.host.toUpperCase();
+    add(by, el('i', null, 'Presented by'), hb);
+    var wel = el('div', 'cf-welcome');
+    add(wel, document.createTextNode('FREE ADMISSION'), el('span', 'cf-wdot', '\u2022'), document.createTextNode('ALL ARE WELCOME'));
     add(txt,
-      el('p', 'cf-invite', CFG.host + ' Invites You To Our'),
       ann,
       el('h1', 'cf-t1', 'Chanukah'.toUpperCase()),
       el('div', 'cf-t2', 'FESTIVAL'),
-      tags);
+      by,
+      wel);
     band.appendChild(txt);
     band.appendChild(el('div', 'cf-bh', 'B\u201dH'));
 
@@ -1360,17 +1392,29 @@
     sh.type = 'button';
     sh.insertBefore(icon('share'), sh.firstChild);
     sh.addEventListener('click', function () {
-      var t = document.getElementById('cf-share');
-      if (t) t.scrollIntoView({ behavior: 'smooth' });
+      /* phones: the native share sheet; elsewhere: the share section */
+      function toSection() {
+        var t = document.getElementById('cf-share');
+        if (t) t.scrollIntoView({ behavior: 'smooth' });
+      }
+      if (navigator.share) {
+        var pr = navigator.share({ title: 'Chanukah Festival', text: T(CFG.SHARE.text), url: shareUrl('native', 'festival-top') });
+        /* cancelled by the person: stay put; share sheet not allowed here: use the section */
+        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') toSection(); });
+        return;
+      }
+      toSection();
     });
     ctas.appendChild(sh);
+    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'RSVP on Facebook', true);
+    fbe.insertBefore(icon('fb'), fbe.firstChild);
+    ctas.appendChild(fbe);
 
     var info = el('div', 'cf-wrap cf-info');
     add(info,
       whenLine(),
-      el('div', 'cf-night', CFG.event.nightLine),
       el('div', 'cf-venue', CFG.event.venue),
-      el('div', 'cf-addr', CFG.event.street + ' Riverside, CA'),
+      el('div', 'cf-addr', CFG.event.street + ', ' + CFG.event.cityLine),
       ctas);
 
     add(h, band, info);
@@ -1379,8 +1423,16 @@
 
   function whenLine() {
     var d = el('div', 'cf-when');
-    add(d, el('span', null, CFG.event.dayLine), el('span', 'cf-sep', ' \u2022 '), el('span', 'cf-tm', CFG.event.timeLine));
+    add(d, el('span', null, CFG.event.dayLine), el('span', 'cf-sep', ' \u2022 '), timeSpan());
     return d;
+  }
+  /* "6 to 8 PM": keep the small "to" lowercase inside the uppercase date line */
+  function timeSpan() {
+    var t = el('span', 'cf-tm');
+    var parts = CFG.event.timeLine.split(' to ');
+    if (parts.length !== 2) { t.textContent = CFG.event.timeLine; return t; }
+    add(t, document.createTextNode(parts[0] + ' '), el('span', 'cf-to', 'to'), document.createTextNode(' ' + parts[1]));
+    return t;
   }
   function directionsUrl() {
     return 'https://www.google.com/maps/dir/?' + qs({ api: '1', destination: CFG.event.mapQuery });
@@ -1754,74 +1806,82 @@
   }
 
   /* ---------- share ---------- */
+  /* The public link with tracking tags, so each kind of share can be counted. */
+  function shareUrl(source, page) {
+    return CFG.SHARE.url + '?' + qs({ utm_source: source, utm_medium: 'share', utm_campaign: 'chanukah2026', utm_content: page || 'festival' });
+  }
+  /* One set of invite buttons. Used on the festival page; the same set goes on every
+     thank-you page. msg: the prefilled invitation; page: tag for analytics. */
+  function shareButtons(msg, page) {
+    var box = el('div');
+    var row = el('div', 'cf-sharebtns');
+    var note = el('p', 'cf-sharenote');
+    note.setAttribute('role', 'status');
+    function say(t) { note.textContent = t; }
+    function track(method) {
+      try { if (window.gtag) window.gtag('event', 'share_click', { method: method, page: page || 'festival' }); } catch (e) {}
+    }
+    function body(src) { return msg + ' ' + shareUrl(src, page); }
+
+    if (navigator.share) {
+      var nb = el('button', 'cf-btn cf-gold cf-native', 'Share');
+      nb.type = 'button';
+      nb.insertBefore(icon('share'), nb.firstChild);
+      nb.addEventListener('click', function () {
+        track('native');
+        var pr = navigator.share({ title: 'Chanukah Festival', text: msg, url: shareUrl('native', page) });
+        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') say('Use one of the buttons below to share.'); });
+      });
+      row.appendChild(nb);
+    }
+    var wa = link('cf-btn cf-wa', 'https://wa.me/?' + qs({ text: body('whatsapp') }), 'WhatsApp', true);
+    wa.insertBefore(icon('wa'), wa.firstChild);
+    wa.addEventListener('click', function () { track('whatsapp'); });
+    var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text message');
+    sms.insertBefore(icon('chat'), sms.firstChild);
+    sms.addEventListener('click', function () { track('sms'); });
+    var em = link('cf-btn cf-ghost', 'mailto:?subject=' + encodeURIComponent(CFG.SHARE.emailSubject) + AMP + 'body=' +
+      encodeURIComponent(body('email') + '\n\n' + CFG.SHARE.emailEnd), 'Email');
+    em.insertBefore(icon('mail'), em.firstChild);
+    em.addEventListener('click', function () { track('email'); });
+    var cp = el('button', 'cf-btn cf-ghost', 'Copy link');
+    cp.type = 'button';
+    cp.insertBefore(icon('link'), cp.firstChild);
+    cp.addEventListener('click', function () {
+      track('copy');
+      copyText(shareUrl('copy', page)).then(function () { say('Link copied!'); setTimeout(function () { say(''); }, 2000); },
+        function () { say('Copy this link: ' + shareUrl('copy', page)); });
+    });
+    var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page) }), 'Facebook', true);
+    fb.insertBefore(icon('fb'), fb.firstChild);
+    fb.addEventListener('click', function () { track('facebook'); });
+    /* Instagram has no web share link: phone share sheet, else copy the link */
+    var ig = el('button', 'cf-btn cf-ig', 'Instagram');
+    ig.type = 'button';
+    ig.insertBefore(icon('ig'), ig.firstChild);
+    ig.addEventListener('click', function () {
+      track('instagram');
+      function copyIt() {
+        copyText(shareUrl('instagram', page)).then(function () { say('Link copied. Paste it in your Instagram story or bio.'); },
+          function () { say('Copy this link for Instagram: ' + shareUrl('instagram', page)); });
+      }
+      if (!navigator.share) return copyIt();
+      var pr = navigator.share({ title: 'Chanukah Festival', text: msg, url: shareUrl('instagram', page) });
+      if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') copyIt(); });
+    });
+    add(row, wa, sms, em, cp, fb, ig);
+    add(box, row, note);
+    return box;
+  }
+
   function buildShare() {
     var s = el('section', 'cf-share');
     s.id = 'cf-share';
     var w = el('div', 'cf-wrap cf-center');
-    w.appendChild(heading('Spread the light', 'Invite your friends', 'Share the festival with your family, friends and neighbors.', true));
-    var row = el('div', 'cf-sharebtns');
-    var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: CFG.SHARE.url }), 'Share on Facebook', true);
-    fb.insertBefore(icon('fb'), fb.firstChild);
-    fb.addEventListener('click', function (e) {
-      if (window.innerWidth < 700) return;
-      e.preventDefault();
-      window.open(fb.href, 'cf26fb', 'width=620,height=560,noopener');
-    });
-    var ig = el('button', 'cf-btn cf-ig', 'Share on Instagram');
-    ig.type = 'button';
-    ig.insertBefore(icon('ig'), ig.firstChild);
-    add(row, fb, ig);
-
-    var pop = el('div', 'cf-pop');
-    pop.setAttribute('role', 'status');
-    var popP = el('p');
-    var popBtns = el('div');
-    var dl = link('cf-btn cf-gold', CFG.FLYER, 'Download the flyer', true);
-    dl.setAttribute('download', 'Chanukah-Festival-2026-Flyer.png');
-    dl.insertBefore(icon('dl'), dl.firstChild);
-    var follow = link('cf-btn cf-ghost', CFG.SHARE.instagram, 'Open ' + CFG.SHARE.igHandle, true);
-    follow.insertBefore(icon('ig'), follow.firstChild);
-    add(popBtns, dl, follow);
-    add(pop, popP, popBtns);
-
-    ig.addEventListener('click', function () { shareInstagram(pop, popP); });
-
-    var frow = el('div', 'cf-sharebtns cf-follow');
-    var ffb = link('cf-btn cf-ghost', CFG.SHARE.facebookEvent || CFG.SHARE.facebook,
-      CFG.SHARE.facebookEvent ? 'Join the Facebook event' : 'Follow on Facebook', true);
-    ffb.insertBefore(icon('fb'), ffb.firstChild);
-    var fig = link('cf-btn cf-ghost', CFG.SHARE.instagram, 'Follow on Instagram', true);
-    fig.insertBefore(icon('ig'), fig.firstChild);
-    add(frow, ffb, fig);
-    add(w, row, frow, pop);
+    w.appendChild(heading('Spread the light', 'Invite your family and friends', 'One tap sends the invitation with the festival link.', true));
+    w.appendChild(shareButtons(T(CFG.SHARE.text), 'festival'));
     s.appendChild(w);
     return s;
-  }
-
-  function shareInstagram(pop, popP) {
-    var data = { title: 'Chanukah Festival 2026', text: T(CFG.SHARE.text), url: CFG.SHARE.url };
-    function desktop() {
-      copyText(T(CFG.SHARE.text) + ' ' + CFG.SHARE.url).then(function () {
-        popP.textContent = 'Invitation copied! Instagram doesn\u2019t allow posting from a computer browser \u2014 download the flyer, post it from your phone, and paste the invitation as your caption.';
-      }, function () {
-        popP.textContent = 'Instagram doesn\u2019t allow posting from a computer browser \u2014 download the flyer and post it from your phone.';
-      });
-      pop.className = 'cf-pop open';
-    }
-    if (!navigator.share) return desktop();
-    var flyerUrl = abs(CFG.FLYER);
-    var sameOrigin = flyerUrl.indexOf(window.location.origin) === 0 || /^data:/.test(flyerUrl);
-    var p = (sameOrigin && window.File && navigator.canShare) ?
-      fetch(flyerUrl).then(function (r) { return r.blob(); }).then(function (b) {
-        var f = new File([b], 'Chanukah-Festival-2026.png', { type: b.type || 'image/png' });
-        return navigator.canShare({ files: [f] }) ? { files: [f], text: data.text + ' ' + data.url } : data;
-      }).catch(function () { return data; }) : Promise.resolve(data);
-    p.then(function (d) {
-      return navigator.share(d);
-    }).catch(function (e) {
-      if (e && e.name === 'AbortError') return;
-      desktop();
-    });
   }
 
   /* ---------- footer ---------- */

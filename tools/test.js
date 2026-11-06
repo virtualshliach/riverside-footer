@@ -157,7 +157,9 @@ var SITES = {
     ok(hv && hv.muted && hv.hasAttribute('playsinline') && hv.loop, 'hero video is muted, loops and plays inline');
     ok(hv && hv.poster === PAGES_BASE + 'festival-hero-poster.jpg', 'hero has a still image while the video loads');
     ok(fs.existsSync(path.join(ROOT, 'festival-hero.mp4')) && fs.existsSync(path.join(ROOT, 'festival-hero-poster.jpg')), 'video and still are in the repo');
-    ok(!r.d.getElementById('cf-rsvp') && !/rsvp/i.test(r.d.getElementById('cf26').textContent), 'no RSVP anywhere on the page');
+    var rsvp = [].filter.call(r.d.querySelectorAll('#cf26 a'), function (a) { return /rsvp/i.test(a.textContent); });
+    ok(!r.d.getElementById('cf-rsvp') && rsvp.length === 1 && rsvp[0].href === 'https://www.facebook.com/events/1651125113077350/',
+      'one RSVP button, to the Facebook event (brief Nov 5)');
     ok(!/become a sponsor|your name here|grand menorah sponsors|festival sponsors/i.test(r.d.getElementById('cf26').textContent), 'no sponsor tiers or sponsor button');
     ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 5, 'the five community partners are shown');
     var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
@@ -179,7 +181,7 @@ var SITES = {
     ok(r.d.querySelector('#cf-directions iframe') && !r.d.querySelector('#cf-directions .cf-ev-btns'), 'directions section has the map, no separate map buttons');
     ok(r.d.querySelector('.cco_templateless_template').style.getPropertyValue('display') === 'none' && r.d.querySelector('.cco_templateless_template').style.getPropertyPriority('display') === 'important', 'the platform\'s "Back to" bar is hidden despite its inline !important');
     var heroBtns = [].map.call(r.d.querySelectorAll('.cf-ctas .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(heroBtns.join('|') === 'Add to Calendar|Share', 'top buttons: Add to Calendar and Share only (' + heroBtns.join('|') + ')');
+    ok(heroBtns.join('|') === 'Add to Calendar|Share|RSVP on Facebook', 'top buttons: Add to Calendar, Share, RSVP on Facebook (' + heroBtns.join('|') + ')');
     var evBtns = [].map.call(r.d.querySelectorAll('#cf-event .cf-ev-btns .cf-btn'), function (b) { return b.textContent.trim(); });
     ok(evBtns.join('|') === 'Directions & parking', 'event details: Directions & parking only (' + evBtns.join('|') + ')');
     var row = r.d.querySelectorAll('#cf-directions .cf-prow')[0], item = row.parentNode;
@@ -219,8 +221,10 @@ var SITES = {
 
     console.log('riverside: social links go to the festival pages');
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
-    ok(shareA.some(function (t) { return t === 'Follow on Facebook>https://www.facebook.com/chanukahfestival/'; }), 'Follow on Facebook goes to the festival page');
-    ok(shareA.some(function (t) { return t === 'Follow on Instagram>https://www.instagram.com/chanukahfestival/'; }), 'Follow on Instagram goes to the festival account');
+    ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
+    var waA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /wa\.me/.test(a.href); })[0];
+    ok(waA && /chanukahfestival\.org%2F%3Futm_source%3Dwhatsapp/i.test(waA.href), 'WhatsApp invite carries the tagged ChanukahFestival.org link');
+    ok(!/[\u2013\u2014]/.test(r.d.getElementById('cf26').querySelector('.cf-hero').textContent), 'no dashes in the hero copy');
     var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');
     ok(!/instagram\.com\/jewishriverside|facebook\.com\/jewishriverside/i.test(allA), 'no links to the Jewish Riverside social pages');
     ok(/@chanukahfestival/.test(r.d.querySelector('.cf-foot').textContent), 'footer shows @chanukahfestival');
