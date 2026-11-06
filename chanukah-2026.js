@@ -2086,7 +2086,8 @@
       var pr = navigator.share({ title: 'Chanukah Festival', text: msg, url: shareUrl('instagram', page) });
       if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') copyIt(); });
     });
-    add(row, wa, sms, em, cp, fb, ig);
+    /* order: most used first (texting), utility last */
+    add(row, sms, wa, em, fb, ig, cp);
     add(box, row, note);
     return box;
   }
