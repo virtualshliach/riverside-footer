@@ -141,14 +141,15 @@
     /* ---- Community partners shown on the page ---- */
     PARTNERS_INTRO: 'Thank you to our partners for making this celebration possible.',
     /* Order per brief (Nov 5). County grants are credited to the district office, not the official.
-       Add logo: 'file.png' per partner once all logo files are in the repo. */
+       Logos are the white versions from the 2026 flyer. h = display height in px, so square and
+       wide logos look the same visual size. Tiles show logos only when every partner has one. */
     PARTNERS: [
-      { name: 'Chabad at UCR' },
-      { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation' },
-      { name: 'Riverside County District 2', sub: 'Supervisor Karen Spiegel' },
-      { name: 'City of Riverside' },
-      { name: 'Riverside Downtown Partnership' },
-      { name: 'Riverside County District 1', sub: 'Supervisor Jose Medina' }
+      { name: 'Chabad at UCR', logo: 'partner-chabad-ucr.png', h: 74 },
+      { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation', logo: 'partner-blumenthal-moore.png', h: 62 },
+      { name: 'Riverside County District 2', sub: 'Supervisor Karen Spiegel', logo: 'partner-district2-spiegel.png', h: 40 },
+      { name: 'City of Riverside', logo: 'partner-city-riverside.png', h: 74 },
+      { name: 'Riverside Downtown Partnership', logo: 'partner-rdp.png', h: 46 },
+      { name: 'Riverside County District 1', sub: 'Supervisor Jose Medina', logo: 'partner-district1-medina.png', h: 38 }
     ],
     ORGANIZER: {
       logo: 'chabad-jcc-logo-white-gold.png',
@@ -781,6 +782,9 @@
       '#cf26 .cf-sm .cf-sgrid{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}',
       '#cf26 .cf-sp{position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:16px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.22);padding:22px 16px;min-height:96px;text-decoration:none}',
       '#cf26 .cf-sp img{max-height:64px;width:auto;margin-bottom:10px}',
+      '#cf26 .cf-logos .cf-sp{min-height:128px;padding:20px 18px}',
+      '#cf26 .cf-logos .cf-sp img{max-height:none;max-width:100%;width:auto;margin:0;object-fit:contain}',
+      '@media (max-width:640px){#cf26 .cf-logos .cf-sp{min-height:104px;padding:16px 12px}#cf26 .cf-logos .cf-sp img{transform:scale(.82)}}',
       '#cf26 .cf-sp b{font-family:' + DISP + ';color:#fff;line-height:1.2}',
       '#cf26 .cf-sp span{color:' + MUTED + ';font-size:.95rem;margin-top:4px;line-height:1.35}',
       '#cf26 .cf-xl .cf-sp{min-height:150px;padding:30px 22px;background:linear-gradient(160deg,rgba(233,185,73,.16),rgba(26,204,206,.08)),' + PANEL + ';border-color:rgba(233,185,73,.5)}',
@@ -1928,16 +1932,20 @@
     var ph = el('div', 'cf-center cf-partners-h');
     add(ph, el('h3', null, 'Together with our community partners'), el('p', null, CFG.PARTNERS_INTRO));
     w.appendChild(ph);
-    var g = el('div', 'cf-sgrid cf-reveal');
+    var allLogos = CFG.PARTNERS.every(function (n) { return !!n.logo; });
+    var g = el('div', 'cf-sgrid cf-reveal' + (allLogos ? ' cf-logos' : ''));
     CFG.PARTNERS.forEach(function (n) {
       var c = el(n.url ? 'a' : 'div', 'cf-sp');
       if (n.url) { c.href = n.url; c.target = '_blank'; c.rel = 'noopener'; }
-      if (n.logo) {
+      if (allLogos) {
         var im = document.createElement('img');
-        im.src = n.logo; im.alt = T(n.name); im.loading = 'lazy';
+        im.src = asset(n.logo); im.loading = 'lazy';
+        im.alt = T(n.name) + (n.sub ? ', ' + T(n.sub) : '');
+        if (n.h) im.style.height = n.h + 'px';
         c.appendChild(im);
+      } else {
+        add(c, el('b', null, n.name), n.sub ? el('span', null, n.sub) : null);
       }
-      add(c, el('b', null, n.name), n.sub ? el('span', null, n.sub) : null);
       g.appendChild(c);
     });
     var tier = el('div', 'cf-tier cf-lg');

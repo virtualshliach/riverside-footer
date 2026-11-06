@@ -162,7 +162,10 @@ var SITES = {
       'one RSVP button, to the Facebook event (brief Nov 5)');
     ok(!/become a sponsor|your name here|grand menorah sponsors|festival sponsors/i.test(r.d.getElementById('cf26').textContent), 'no sponsor tiers or sponsor button');
     ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 6, 'the six community partners are shown (brief Nov 5)');
-    ok(/Chabad at UCR/.test(r.d.getElementById('cf-partners').textContent) && !/Chabad of UCR/.test(r.d.getElementById('cf26').textContent), 'written as Chabad at UCR');
+    var pImgs = [].slice.call(r.d.querySelectorAll('#cf-partners .cf-sp img'));
+    ok(pImgs.some(function (i) { return i.alt === 'Chabad at UCR'; }) && !/Chabad of UCR/.test(r.d.getElementById('cf26').textContent), 'written as Chabad at UCR');
+    ok(pImgs.length === 6 && pImgs.every(function (i) { return i.alt && fs.existsSync(path.join(ROOT, i.getAttribute('src').replace(PAGES_BASE, '').split('?')[0])); }),
+      'every partner shows its logo from the repo, with a name for screen readers');
     ok(fs.existsSync(path.join(ROOT, 'chabad-jcc-logo-white-gold.png')), 'organizer logo is in the repo');
     var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(nImgs.length === 7 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');

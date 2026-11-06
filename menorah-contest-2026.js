@@ -32,7 +32,7 @@
       ['Display', 'Menorahs stay on display at the table during the festival'],
       ['Winners', 'Announced 7:45–8 PM. Please pick up your menorah before you leave']
     ],
-    SHARE_TEXT: 'My child is entering the Kids Menorah Contest at Riverside’s Chanukah Festival! Come cheer us on Monday, Dec 7, 6–8 PM at the Historic Courthouse. Winners are announced 7:45–8 PM. Kids 4–12 can enter free: https://www.jewishriverside.com/7606745',
+    SHARE_TEXT: 'We’re entering the Kids Menorah Contest at Riverside’s Chanukah Festival! Come cheer us on Monday, Dec 7, 6–8 PM at the Historic Courthouse. Winners are announced 7:45–8 PM. Kids 4–12 can enter free: https://www.jewishriverside.com/7606745',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
