@@ -8,13 +8,13 @@
    the same coverId and color, and HOSTS must match. (tools/test.js checks this.) */
 (function () {
   var COVERS = {
-    '7457011': { coverId: 'hh26-cover', cover: '#F5EBDF' },   /* Sukkot & Simchat Torah */
+    '7457011': { coverId: 'hh26-cover', cover: '#F5EBDF', onResponse: true },   /* Sukkot & Simchat Torah (was the HH 5787 preboot in the header) */
     '4949424': { coverId: 'cf26-cover', cover: '#0f2936' }    /* Chanukah Festival 2026 */
   };
   var HOSTS = { 'chanukahfestival.org': '4949424' };
 
   var l = window.location;
-  if (/ArticleCcoResponse/i.test(l.href)) return;
+  var isResponse = /ArticleCcoResponse/i.test(l.href);
   var m = /\/aid\/(\d+)/i.exec(l.pathname) || /\baid=(\d+)/i.exec(l.search);
   var aid = m ? m[1] : null;
   if (!aid && (l.pathname === '/' || l.pathname === '')) {
@@ -22,6 +22,7 @@
   }
   var p = aid && Object.prototype.hasOwnProperty.call(COVERS, aid) ? COVERS[aid] : null;
   if (!p || document.getElementById(p.coverId)) return;
+  if (isResponse && !p.onResponse) return;
   var s = document.createElement('style');
   s.id = p.coverId;
   s.textContent = 'html{background:' + p.cover + ' !important}body{opacity:0 !important}';
