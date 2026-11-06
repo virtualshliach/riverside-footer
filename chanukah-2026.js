@@ -154,27 +154,41 @@
       logo: 'chabad-jcc-logo-white-gold.png',
       caption: 'Founded and organized by Chabad Jewish Community Center of Riverside, celebrating with our community since 2005.'
     },
-    /* Who we are card. MISSION: paste the line from JewishRiverside.com (left as TBA, not invented). */
+    /* Who we are card. Mission from the JewishRiverside.com About page (aid 5201495). */
     WHO: {
-      mission: '[Mission line from JewishRiverside.com: TBA]',
-      explore: 'https://www.jewishriverside.com'
+      mission: 'Simply put, our mission is to reach out to others with acts of goodness and kindness. From university students and families to individuals just passing through, we are here for you and warmly welcome everyone.',
+      explore: 'https://www.jewishriverside.com/5201495',
+      /* the homepage's first slide: Join Our Mailing List (free challah to your doorstep) */
+      mailingList: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join-Our-Mailing-List.htm'
     },
 
     /* img: thumbnail in this repo. NBC's own photo is a stock image from elsewhere,
        so its card shows our festival photo instead. */
     NEWS: [
-      { outlet: 'Riverside County Supervisor, District 2', date: 'Dec 22, 2025',
+      { outlet: 'Riverside County District 2', date: 'Dec 22, 2025',
         title: 'Chanukah Festival Celebrated at Riverside Historic Courthouse',
         blurb: 'Supervisor Spiegel\u2019s office recaps last year\u2019s festival: families downtown for the menorah lighting, music and activities, with photos.',
         url: 'https://rivcodistrict2.org/node/11701', img: 'news-2025.jpg' },
+      { outlet: 'Riverside County District 2', date: 'Dec 13, 2023',
+        title: '19th Annual Chanukah Festival and the Menorah Lighting',
+        blurb: 'Supervisor Spiegel joins the community for the menorah lighting before the courthouse.',
+        url: 'https://rivcodistrict2.org/node/3936', img: 'news-2023.jpg' },
+      { outlet: 'The Sun', date: 'Dec 2023',
+        title: 'Chanukah Festival lights up the night',
+        blurb: 'Hundreds gathered at the Historic Courthouse for the 19th festival: food, music, activities and the lighting of the region\u2019s largest menorah.',
+        url: 'https://edition.pagesuite.com/tribune/article_popover.aspx?guid=0ffd624c-e628-4eb1-914f-7bef6adef1e9', img: 'g-robot.jpg' },
       { outlet: 'Raincross Gazette', date: 'Nov 30, 2023',
         title: '19th Annual Chanukah Festival to light up Riverside Historic Courthouse',
         blurb: 'A preview of the courthouse-steps celebration and its message of unity, noting record turnout the year before.',
         url: 'https://www.raincrossgazette.com/19th-annual-chanukah-festival-to-light-up-riverside-historic-courthouse' , img: 'news-raincross.jpg' },
-      { outlet: 'Riverside County Supervisor, District 2', date: 'Dec 13, 2023',
-        title: '19th Annual Chanukah Festival and the Menorah Lighting',
-        blurb: 'Supervisor Spiegel joins the community for the menorah lighting before the courthouse.',
-        url: 'https://rivcodistrict2.org/node/3936', img: 'news-2023.jpg' },
+      { outlet: 'MyNewsLA', date: 'Nov 28, 2022',
+        title: 'Grand Menorah Lighting, Dancing, Food, Other Fun Set for Hanukkah Festival',
+        blurb: 'A preview of the 18th festival at the downtown courthouse: a large menorah lighting, live music, dancing and food.',
+        url: 'https://mynewsla.com/riverside/2022/11/28/grand-menorah-lighting-dancing-food-other-fun-set-for-hanukkah-festival/', img: 'g-kids.jpg' },
+      { outlet: 'MyNewsLA', date: 'Nov 29, 2021',
+        title: 'Chanukah Festival Held in Riverside',
+        blurb: 'The community gathered at the Historic Courthouse for the menorah lighting, music, dancing and more.',
+        url: 'https://mynewsla.com/riverside/2021/11/29/chanukah-festival-held-in-riverside/', img: 'g-family.jpg' },
       { outlet: 'NBC Los Angeles', date: 'Dec 2020',
         title: 'Riverside\u2019s Annual Hanukkah Festival to Go Mobile Amid COVID-19 Restrictions',
         blurb: 'How the festival kept the lights on during the pandemic with a drive-in celebration.',
@@ -431,6 +445,8 @@
     phone: 'M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2',
     mail: 'M3 5h18v14H3zM3 6l9 7 9-7',
     x: 'M6 6l12 12M18 6L6 18',
+    left: 'M15 5l-7 7 7 7',
+    right: 'M9 5l7 7-7 7',
     dl: 'M12 3v12M7 10l5 5 5-5M5 21h14',
     wa: 'M4 20l1.4-4.2A8 8 0 1 1 8.3 18.7zM9 9.5c.3 2 2.2 4 4.5 4.6l1-1.1 2 .8-.4 1.6c-3.7.2-7.6-3.6-7.4-7.3l1.6-.4.8 2z',
     chat: 'M4 5h16v11H9l-5 4z',
@@ -793,16 +809,26 @@
       '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem}',
 
       /* news */
-      '#cf26 .cf-news{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:40px}',
-      '@media (max-width:900px){#cf26 .cf-news{grid-template-columns:repeat(2,1fr)}}',
-      '@media (max-width:560px){#cf26 .cf-news{grid-template-columns:1fr}}',
+      /* scrolling row: 4 cards visible on a computer, swipe on phones (next card peeks in) */
+      '#cf26 .cf-newsbox{position:relative;margin-top:40px}',
+      '#cf26 .cf-news{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 54px) / 4);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:14px;scrollbar-width:thin;scrollbar-color:rgba(60,199,180,.5) transparent;-webkit-overflow-scrolling:touch}',
+      '#cf26 .cf-news > .cf-nc{scroll-snap-align:start}',
+      '@media (max-width:900px){#cf26 .cf-news{grid-auto-columns:calc((100% - 18px) / 2.3)}}',
+      '@media (max-width:560px){#cf26 .cf-news{grid-auto-columns:82%}}',
+      '#cf26 .cf-newsnav{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:16px}',
+      '#cf26 .cf-newsnav button{width:46px;height:46px;border-radius:50%;border:1.5px solid rgba(255,255,255,.35);display:flex;align-items:center;justify-content:center;color:#fff;transition:opacity .2s ease,border-color .2s ease}',
+      '#cf26 .cf-newsnav button:hover{border-color:' + GOLD + '}',
+      '#cf26 .cf-newsnav button[disabled]{opacity:.3;cursor:default}',
+      '#cf26 .cf-newsnav .cf-ic{width:22px;height:22px}',
+      '#cf26 .cf-newsnav span{font-size:.9rem;color:' + MUTED + ';min-width:120px;text-align:center}',
+      '@media (prefers-reduced-motion:reduce){#cf26 .cf-news{scroll-behavior:auto}}',
       '#cf26 .cf-nc{display:flex;flex-direction:column;background:' + PANEL + ';border:1px solid rgba(255,255,255,.08);color:#fff;border-radius:18px;overflow:hidden;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;min-height:230px}',
       '#cf26 .cf-nc-ph{aspect-ratio:16/10;max-width:100%;overflow:hidden;background:' + DEEP + '}',
       '#cf26 .cf-nc-ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}',
       '#cf26 .cf-nc:hover .cf-nc-ph img{transform:scale(1.05)}',
       '#cf26 .cf-nc-bd{display:flex;flex-direction:column;flex:1;padding:18px 20px 18px}',
       '#cf26 .cf-nc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35)}',
-      '#cf26 .cf-nc-top{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:4px 10px;margin-bottom:10px}',
+      '#cf26 .cf-nc-top{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:10px}',
       '#cf26 .cf-nc-out{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:' + TEAL + '}',
       '#cf26 .cf-nc-date{font-size:.8rem;color:' + MUTED + ';white-space:nowrap}',
       '#cf26 .cf-nc h3{font-family:' + DISP + ';color:#fff;font-size:1.08rem;line-height:1.3;margin-bottom:8px}',
@@ -1947,8 +1973,7 @@
     w.appendChild(heading('Press', 'In the News', 'Coverage of the festival over the years.', true));
     var g = el('div', 'cf-news');
     CFG.NEWS.forEach(function (n, i) {
-      var a = link('cf-nc cf-reveal', n.url, null, true);
-      a.style.transitionDelay = (i % 4 * 0.08) + 's';
+      var a = link('cf-nc', n.url, null, true);
       if (n.img) {
         var ph = el('div', 'cf-nc-ph');
         var im = document.createElement('img');
@@ -1965,7 +1990,27 @@
       a.appendChild(bd);
       g.appendChild(a);
     });
-    w.appendChild(g);
+    g.setAttribute('tabindex', '0');
+    g.setAttribute('aria-label', 'News stories, scroll sideways for more');
+    /* arrows: left and right, greyed out at each end */
+    var nav = el('div', 'cf-newsnav');
+    var prev = el('button'); prev.type = 'button'; prev.setAttribute('aria-label', 'Previous stories'); prev.appendChild(icon('left'));
+    var next = el('button'); next.type = 'button'; next.setAttribute('aria-label', 'More stories'); next.appendChild(icon('right'));
+    var count = el('span', null, CFG.NEWS.length + ' stories');
+    add(nav, prev, count, next);
+    function step() { var c = g.querySelector('.cf-nc'); return c ? c.getBoundingClientRect().width + 18 : 280; }
+    prev.addEventListener('click', function () { g.scrollBy({ left: -step(), behavior: 'smooth' }); });
+    next.addEventListener('click', function () { g.scrollBy({ left: step(), behavior: 'smooth' }); });
+    function sync() {
+      prev.disabled = g.scrollLeft < 4;
+      next.disabled = g.scrollLeft + g.clientWidth > g.scrollWidth - 4;
+    }
+    g.addEventListener('scroll', sync, { passive: true });
+    window.addEventListener('resize', sync);
+    setTimeout(sync, 0);
+    var box = el('div', 'cf-newsbox cf-reveal');
+    add(box, g, nav);
+    w.appendChild(box);
     s.appendChild(w);
     return s;
   }
@@ -2166,7 +2211,7 @@
     var c = el('div', 'cf-who cf-reveal');
     var b = el('div', 'cf-who-btns');
     var ex = link('cf-btn cf-ghost', CFG.WHO.explore, 'Explore More', true);
-    var ml = link('cf-btn cf-ghost', CFG.WHO.explore, 'Join Our Mailing List', true);
+    var ml = link('cf-btn cf-ghost', CFG.WHO.mailingList, 'Join Our Mailing List', true);
     add(b, ex, ml);
     add(c, el('h2', null, 'Who We Are'), el('p', null, CFG.WHO.mission), b);
     w.appendChild(c);

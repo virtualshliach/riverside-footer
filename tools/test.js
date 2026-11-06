@@ -165,7 +165,7 @@ var SITES = {
     ok(/Chabad at UCR/.test(r.d.getElementById('cf-partners').textContent) && !/Chabad of UCR/.test(r.d.getElementById('cf26').textContent), 'written as Chabad at UCR');
     ok(fs.existsSync(path.join(ROOT, 'chabad-jcc-logo-white-gold.png')), 'organizer logo is in the repo');
     var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
-    ok(nImgs.length === 4 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');
+    ok(nImgs.length === 7 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');
     ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
     var kids = [].slice.call(r.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
     ok(kids[kids.length - 2] === 'cf-flysec' && kids[kids.length - 1] === 'cf-foot', 'flyer download sits right before the footer (' + kids.slice(-3).join(' > ') + ')');
