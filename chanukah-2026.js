@@ -54,10 +54,84 @@
     highlights: [
       { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'The lighting of Riverside\u2019s Menorah, the largest in the region, on the courthouse steps.' },
       { img: 'hl-food.jpg',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
-      { img: 'hl-music.jpg',   title: 'Live Music',             text: 'Holiday music and dancing in the heart of downtown.' },
+      { img: 'hl-music.jpg',   title: 'Live Music',             text: 'Aaron Holder, a Jewish pop-folk singer with a reggae edge, live on the Main Stage.' },
       { img: 'hl-family.jpg',  title: 'Fun for the Whole Family', text: 'Children\u2019s crafts, activities and entertainment.' }
     ],
     accessNote: 'ASL Interpreter on site',
+    COME_EARLY: 'The first 300 guests get a free Chanukah gift',
+
+    /* Exactly five rows (brief Nov 5). */
+    SCHEDULE: [
+      ['5:45 PM', 'Come early! The first 300 guests get a free Chanukah gift'],
+      ['6:00 PM', 'Festival opens with food, music, kids’ activities and more'],
+      ['7:00 PM', 'Official program with the Grand Menorah Lighting', true],
+      ['7:45 PM', 'Children’s Gelt Drop and Menorah Contest winners'],
+      ['8:00 PM', 'Festival ends']
+    ],
+
+    /* Festival map v15 (approved Nov 5). Files live next to this one in the repo.
+       KEY mirrors the printed 4x6 card back. Never place anything by the restrooms. */
+    MAP: {
+      web: 'festival-map-2026-web.jpg',
+      full: 'festival-map-2026.png',
+      pdf: 'festival-map-2026.pdf',
+      alt: 'Visitor map of Chanukah Festival 2026 at the Riverside Historic Courthouse on Main Street between 10th and 11th, Dec 7, 6 to 8 PM, with numbered booths including #15 Menorah Contest and #16 Gelt Drop.',
+      KEY: [
+        { group: 'Stage {amp} Show', color: '#c8102e', items: [
+          [1, 'Upper Stage {amp} Dais', 'Top of the courthouse steps'],
+          [2, 'Main Stage', 'Live music: Aaron Holder, Jewish pop-folk singer with a reggae edge'] ] },
+        { group: 'Kids', color: '#00857c', items: [
+          [3, 'Kids Crafts', 'Two craft areas. Craft names TBA'],
+          [4, 'Face Painting', ''],
+          [5, 'Balloon Twisting', ''],
+          [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45 to 8 PM'],
+          [7, 'Mini Train Rides', ''],
+          [15, 'Menorah Contest', 'Kids’ entries on display. Winners 7:45 to 8 PM'],
+          [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
+        { group: 'Food {amp} Shopping', color: '#e0661b', items: [
+          [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
+          [9, 'Gift Shop', ''],
+          [10, 'Cocktail Tables', 'High-tops at each end'],
+          [17, 'Food Truck', ''] ] },
+        { group: 'Photo Spots', color: '#2a5ea8', items: [
+          [11, 'Fire Truck', 'On 10th St.'],
+          [12, 'Police Mustang', 'Riverside’s display Mustang cruiser'],
+          [13, 'Inflatable Menorah', 'Left lawn'],
+          [14, 'Inflatable Dreidel', 'Right lawn'],
+          [18, 'Grand Menorah', 'Photos 6 to 7 PM and after the menorah lighting'] ] }
+      ],
+      ROAMING: 'LED Robot · Dreidel Mascot · Stilt Walker · Juggler'
+    },
+
+    /* Kids Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
+    CONTEST: {
+      url: 'https://www.jewishriverside.com/7606745',
+      intro: 'Kids ages 4 to 12 design and build a unique menorah at home. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
+      facts: ['Register by Dec 4', 'Drop off 5:45 to 6:15 at table #15', 'Winners 7:45 to 8 PM'],
+      how: [
+        'Register by Friday, Dec 4.',
+        'Build your menorah at home, following the rules below.',
+        'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
+        'Menorahs stay on display at table #15 during the festival.',
+        'Judging is on Visual Impact, Creativity and Craftsmanship, with the child’s age in mind.',
+        'Winners are announced between 7:45 and 8 PM. Please pick up your menorah before you leave.'
+      ],
+      prizes: [
+        'Two age groups: 4 to 7 and 8 to 12.',
+        'A 1st place winner in each age group, plus one Best in Show (3 winners).',
+        'Every child who enters gets a Chanukah gift.'
+      ],
+      rules: [
+        'Ages 4 to 12. Free to enter; register by Dec 4.',
+        'Nine branches, including the shamash.',
+        'Eight branches in a straight line at an even height; the shamash higher or lower.',
+        'No food.',
+        'Bring a wax candle or oil.',
+        'It must stand on its own and not break, fall or melt when lit.',
+        'One entry per child. The child is the main builder (adult help for safety is OK).'
+      ],
+      note: 'Children’s Gelt Drop: 7:45 to 8 PM on the left lawn (#16 on the map), toward 10th Street.'
+    },
 
     about: [
       'Chabad Jewish Community Center of Riverside presents an annual community-wide Chanukah Festival, free of charge and open to the public. The festival features the lighting of Riverside\u2019s Menorah, the largest in the region, live music, traditional foods, entertainment, children\u2019s crafts and activities.',
@@ -579,7 +653,54 @@
       '#cf26 .cf-hl-card:hover{transform:translateY(-4px);border-color:rgba(26,204,206,.45)}',
       '#cf26 .cf-hl-card h3{font-family:' + DISP + ';color:#fff;font-size:1.15rem;line-height:1.25;margin-bottom:6px}',
       '#cf26 .cf-hl-card p{color:' + MUTED + ';font-size:.93rem}',
-      '#cf26 .cf-asl{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border-radius:999px;border:1px solid rgba(76,189,159,.45);color:' + GREEN + ';font-family:' + SCRIPT + ';font-size:1.3rem}',
+      '#cf26 .cf-asl{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border-radius:999px;border:1px solid rgba(60,199,180,.45);color:' + TEAL + ';font-family:' + BODY + ';font-weight:600;font-size:1rem}',
+      /* schedule */
+      '#cf26 .cf-sched{list-style:none;margin:6px 0 0;padding:0}',
+      '#cf26 .cf-sched li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:1rem;color:' + INK + '}',
+      '#cf26 .cf-sched li:last-child{border-bottom:0}',
+      '#cf26 .cf-sched time{font-weight:700;color:' + GOLD + ';font-variant-numeric:tabular-nums;white-space:nowrap}',
+      '#cf26 .cf-sched li.cf-key-row span{font-weight:700;color:#fff}',
+      '#cf26 .cf-ev-info .cf-kicker + .cf-sched{margin-top:0}',
+      '#cf26 .cf-ev-sub{margin-top:26px}',
+      /* map inside the event card */
+      '#cf26 .cf-ev2{grid-template-columns:minmax(0,1fr) minmax(0,1.15fr)}',
+      '@media (max-width:860px){#cf26 .cf-ev2{grid-template-columns:1fr}}',
+      '#cf26 .cf-mapbox{padding:34px 34px 30px;border-left:1px solid rgba(255,255,255,.07);scroll-margin-top:80px}',
+      '@media (max-width:860px){#cf26 .cf-mapbox{border-left:0;border-top:1px solid rgba(255,255,255,.07);padding:26px 22px}}',
+      '#cf26 .cf-mapimg{display:block;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 10px 30px rgba(0,0,0,.3)}',
+      '#cf26 .cf-mapimg img{width:100%;height:auto;display:block}',
+      '#cf26 .cf-maphint{font-size:.95rem;color:' + MUTED + ';margin-top:10px}',
+      '#cf26 .cf-mapbtns{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}',
+      '#cf26 .cf-mapbtns .cf-btn{padding:11px 18px;font-size:.88rem}',
+      '#cf26 .cf-xp{margin-top:16px;border:1px solid rgba(255,255,255,.12);border-radius:14px;background:rgba(255,255,255,.03)}',
+      '#cf26 .cf-xp summary{cursor:pointer;list-style:none;padding:14px 18px;font-weight:700;color:#fff;display:flex;align-items:center;justify-content:space-between;gap:12px}',
+      '#cf26 .cf-xp summary::-webkit-details-marker{display:none}',
+      '#cf26 .cf-xp summary:after{content:"+";font-size:1.3rem;line-height:1;color:' + TEAL + '}',
+      '#cf26 .cf-xp[open] summary:after{content:"\\2212"}',
+      '#cf26 .cf-xp-in{padding:2px 18px 18px}',
+      '#cf26 .cf-keyg h4{margin:14px 0 6px;font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;display:flex;align-items:center;gap:8px;color:#fff}',
+      '#cf26 .cf-keyg h4 i{width:12px;height:12px;border-radius:50%;display:inline-block}',
+      '#cf26 .cf-keyg ul{list-style:none;margin:0;padding:0}',
+      '#cf26 .cf-keyg li{display:grid;grid-template-columns:30px minmax(0,1fr);gap:10px;padding:6px 0;font-size:.95rem;color:#C9D6DA}',
+      '#cf26 .cf-keyg li em{font-style:normal;font-weight:800;font-size:.8rem;color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center}',
+      '#cf26 .cf-keyg li b{color:#fff;font-weight:700}',
+      '#cf26 .cf-roam{margin-top:14px;font-size:.95rem;color:#C9D6DA}',
+      '#cf26 .cf-roam b{color:' + GOLD + '}',
+      /* Kids Menorah Contest card */
+      '#cf26 .cf-mc{margin-top:28px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.35);border-radius:22px;padding:30px 34px}',
+      '@media (max-width:620px){#cf26 .cf-mc{padding:24px 20px}}',
+      '#cf26 .cf-mc h3{font-family:' + DISP + ';font-size:clamp(1.5rem,3.4vw,2rem);color:#fff;line-height:1.15;margin:0 0 8px}',
+      '#cf26 .cf-mc > p{color:#C9D6DA;font-size:1rem;max-width:68ch}',
+      '#cf26 .cf-mc-facts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;padding:0;list-style:none}',
+      '#cf26 .cf-mc-facts li{font-size:.9rem;font-weight:700;color:' + GOLD + ';border:1px solid rgba(233,185,73,.4);border-radius:999px;padding:6px 14px}',
+      '#cf26 .cf-mc-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}',
+      '#cf26 .cf-mc-btns .cf-btn{height:48px;padding:0 20px;font-size:.9rem}',
+      /* phones: paired buttons as two equal halves, same as the top of the page */
+      '@media (max-width:600px){#cf26 .cf-mapbtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#cf26 .cf-mc-btns{display:grid;grid-template-columns:1fr}#cf26 .cf-mc-btns .cf-btn,#cf26 .cf-mapbtns .cf-btn{width:100%;height:48px;padding:0 10px;font-size:.88rem}}',
+      '#cf26 .cf-mc .cf-xp h4{color:' + GOLD + ';font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;margin:14px 0 6px}',
+      '#cf26 .cf-mc .cf-xp ul,#cf26 .cf-mc .cf-xp ol{margin:0;padding-left:20px;color:#C9D6DA;font-size:.95rem}',
+      '#cf26 .cf-mc .cf-xp li{margin:4px 0}',
+      '#cf26 .cf-mc .cf-xp p{color:#C9D6DA;font-size:.95rem;margin-top:12px}',
       '#cf26 .cf-ev{display:grid;grid-template-columns:1.1fr 1fr;gap:0;margin-top:48px;border-radius:22px;overflow:hidden;border:1px solid rgba(255,255,255,.08);background:' + PANEL + '}',
       '@media (max-width:860px){#cf26 .cf-ev{grid-template-columns:1fr}}',
       '#cf26 .cf-ev-info{padding:34px 34px 30px}',
@@ -1597,24 +1718,109 @@
       w.appendChild(asl);
     }
 
-    var ev = el('div', 'cf-ev cf-ev1 cf-reveal');
+    w.appendChild(buildContest());
+
+    var ev = el('div', 'cf-ev cf-ev2 cf-reveal');
     var info = el('div', 'cf-ev-info');
     add(info,
       el('div', 'cf-kicker', 'Event details'),
-      evRow('cal', 'Monday, December 7, 2026', CFG.event.nightLine),
-      evRow('clock', '6:00 \u2013 8:00 PM', 'Menorah lighting during the evening'),
-      evRow('pin', CFG.event.venue, CFG.event.street + ' ' + CFG.event.cityLine));
+      evRow('cal', 'Monday, December 7, 2026', 'Free admission. All are welcome.'),
+      evRow('clock', '6 to 8 PM', 'Come early: ' + CFG.COME_EARLY.charAt(0).toLowerCase() + CFG.COME_EARLY.slice(1) + '. Gift tables open at 5:45 PM.'),
+      evRow('pin', CFG.event.venue, CFG.event.street + ', ' + CFG.event.cityLine));
+    var sk = el('div', 'cf-kicker cf-ev-sub', 'Schedule');
+    var sl = el('ol', 'cf-sched');
+    CFG.SCHEDULE.forEach(function (r) {
+      var li = el('li', r[2] ? 'cf-key-row' : null);
+      add(li, el('time', null, r[0]), el('span', null, r[1]));
+      sl.appendChild(li);
+    });
+    add(info, sk, sl);
     var btns = el('div', 'cf-ev-btns');
     var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & Parking');
     dp.insertBefore(icon('pin'), dp.firstChild);
     dp.addEventListener('click', function (e) { e.preventDefault(); goTo('directions'); });
     add(btns, dp);
     info.appendChild(btns);
-    ev.appendChild(info);
+    add(ev, info, buildMap());
     w.appendChild(ev);
 
     s.appendChild(w);
     return s;
+  }
+
+  /* ---------- festival map (right half of the event card) ---------- */
+  function buildMap() {
+    var M = CFG.MAP;
+    var box = el('div', 'cf-mapbox');
+    box.id = 'cf-map';
+    var a = link('cf-mapimg', asset(M.full), null, true);
+    a.setAttribute('aria-label', 'Open the festival map full size');
+    var im = document.createElement('img');
+    im.src = asset(M.web); im.alt = M.alt; im.loading = 'lazy';
+    im.width = 1800; im.height = 1224;
+    a.appendChild(im);
+    var bt = el('div', 'cf-mapbtns');
+    var full = link('cf-btn cf-teal', asset(M.full), 'Open Full Size', true);
+    full.insertBefore(icon('ext'), full.firstChild);
+    var pdf = link('cf-btn cf-ghost', asset(M.pdf), 'Download PDF', true);
+    pdf.insertBefore(icon('dl'), pdf.firstChild);
+    add(bt, full, pdf);
+
+    var xp = el('details', 'cf-xp');
+    /* open on wide screens, where it sits beside the details; folded on phones */
+    if (window.innerWidth > 860) xp.open = true;
+    add(xp, el('summary', null, 'Find each number on the map'));
+    var inner = el('div', 'cf-xp-in cf-keyg');
+    M.KEY.forEach(function (g) {
+      var h = el('h4');
+      var dot = el('i'); dot.style.background = g.color;
+      add(h, dot, document.createTextNode(T(g.group)));
+      var ul = el('ul');
+      g.items.slice().sort(function (x, y) { return x[0] - y[0]; }).forEach(function (it) {
+        var li = el('li');
+        var n = el('em', null, String(it[0])); n.style.background = g.color;
+        var t = el('div');
+        add(t, el('b', null, T(it[1])), it[2] ? document.createTextNode(' · ' + T(it[2])) : null);
+        add(li, n, t);
+        ul.appendChild(li);
+      });
+      add(inner, h, ul);
+    });
+    var roam = el('p', 'cf-roam');
+    add(roam, el('b', null, 'Roaming the festival: '), document.createTextNode(M.ROAMING));
+    inner.appendChild(roam);
+    xp.appendChild(inner);
+
+    add(box, el('div', 'cf-kicker', 'Festival map'), a,
+      el('p', 'cf-maphint', 'Tap the map to open it full size and zoom in.'), bt, xp);
+    return box;
+  }
+
+  /* ---------- Kids Menorah Contest card ---------- */
+  function buildContest() {
+    var C = CFG.CONTEST;
+    var c = el('div', 'cf-mc cf-reveal');
+    var facts = el('ul', 'cf-mc-facts');
+    C.facts.forEach(function (f) { facts.appendChild(el('li', null, f)); });
+    var btns = el('div', 'cf-mc-btns');
+    var reg = link('cf-btn cf-gold', C.url, 'Register Your Child', true);
+    var mp = link('cf-btn cf-ghost', '#cf-map', 'See the Festival Map');
+    mp.insertBefore(icon('pin'), mp.firstChild);
+    mp.addEventListener('click', function (e) { e.preventDefault(); goTo('map'); });
+    add(btns, reg, mp);
+
+    function list(tag, items) { var l = el(tag); items.forEach(function (x) { l.appendChild(el('li', null, x)); }); return l; }
+    var xp = el('details', 'cf-xp');
+    var inner = el('div', 'cf-xp-in');
+    add(inner, el('h4', null, 'How it works'), list('ol', C.how),
+      el('h4', null, 'Prizes'), list('ul', C.prizes),
+      el('h4', null, 'Rules'), list('ul', C.rules),
+      el('p', null, C.note));
+    add(xp, el('summary', null, 'See Contest Details'), inner);
+
+    add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, 'Kids Menorah Contest'),
+      el('p', null, C.intro), facts, btns, xp);
+    return c;
   }
 
   /* ---------- flyer download (last thing before the footer) ---------- */
