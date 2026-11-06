@@ -148,7 +148,7 @@ var SITES = {
       ok(r.d.getElementById(id), 'section #' + id);
     });
     var gTitles = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc h3'), function (h) { return h.textContent; });
-    ok(gTitles.join('|') === 'What Is Chanukah?|How to Light the Menorah|How to Celebrate Chanukah|Dreidel, Latkes and Doughnuts', 'four guide cards (' + gTitles.join('|') + ')');
+    ok(gTitles.join('|') === 'What Is Chanukah?|How to Light the Menorah|How to Celebrate Chanukah|Dreidel, Latkes and Donuts', 'four guide cards (' + gTitles.join('|') + ')');
     var gImgs = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(gImgs.join(',') === 'g-guide.jpg,g-light.jpg,g-celebrate.jpg,g-dreidel.jpg', 'guide cards use our event photos (' + gImgs.join(',') + ')');
     ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 9, 'nine guide photos are in the repo');
@@ -157,7 +157,7 @@ var SITES = {
     ok(hv && hv.muted && hv.hasAttribute('playsinline') && hv.loop, 'hero video is muted, loops and plays inline');
     ok(hv && hv.poster === PAGES_BASE + 'festival-hero-poster.jpg', 'hero has a still image while the video loads');
     ok(fs.existsSync(path.join(ROOT, 'festival-hero.mp4')) && fs.existsSync(path.join(ROOT, 'festival-hero-poster.jpg')), 'video and still are in the repo');
-    var rsvp = [].filter.call(r.d.querySelectorAll('#cf26 a'), function (a) { return /rsvp/i.test(a.textContent); });
+    var rsvp = [].filter.call(r.d.querySelectorAll('#cf26 a'), function (a) { return /facebook\.com\/events/.test(a.href); });
     ok(!r.d.getElementById('cf-rsvp') && rsvp.length === 1 && rsvp[0].href === 'https://www.facebook.com/events/1651125113077350/',
       'one RSVP button, to the Facebook event (brief Nov 5)');
     ok(!/become a sponsor|your name here|grand menorah sponsors|festival sponsors/i.test(r.d.getElementById('cf26').textContent), 'no sponsor tiers or sponsor button');
@@ -186,7 +186,7 @@ var SITES = {
     ok(r.d.querySelector('#cf-directions iframe') && !r.d.querySelector('#cf-directions .cf-ev-btns'), 'directions section has the map, no separate map buttons');
     ok(r.d.querySelector('.cco_templateless_template').style.getPropertyValue('display') === 'none' && r.d.querySelector('.cco_templateless_template').style.getPropertyPriority('display') === 'important', 'the platform\'s "Back to" bar is hidden despite its inline !important');
     var heroBtns = [].map.call(r.d.querySelectorAll('.cf-ctas .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(heroBtns.join('|') === 'Add to Calendar|Share|RSVP on Facebook', 'top buttons: Add to Calendar, Share, RSVP on Facebook (' + heroBtns.join('|') + ')');
+    ok(heroBtns.join('|') === 'Add to Calendar|Share|Join the Facebook Event', 'top buttons: Add to Calendar, Share, Join the Facebook Event (' + heroBtns.join('|') + ')');
     var evBtns = [].map.call(r.d.querySelectorAll('#cf-event .cf-ev-btns .cf-btn'), function (b) { return b.textContent.trim(); });
     ok(evBtns.join('|') === 'Directions & Parking', 'event details: Directions & Parking only (' + evBtns.join('|') + ')');
     var row = r.d.querySelectorAll('#cf-directions .cf-prow')[0], item = row.parentNode;

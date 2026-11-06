@@ -24,7 +24,7 @@
     mapUrl: 'https://chanukahfestival.org/#map',
     facebookEvent: 'https://www.facebook.com/events/1651125113077350/',
     donateUrl: 'https://www.jewishriverside.com/donate',
-    hostUrl: 'https://www.jewishriverside.com',
+    hostUrl: 'https://www.jewishriverside.com/5201495',
     host: 'Chabad Jewish Community Center of Riverside',
     startUTC: '2026-12-08T02:00:00Z',   /* 6:00 PM Pacific, Dec 7 */
     endUTC: '2026-12-08T04:00:00Z',
@@ -33,7 +33,7 @@
       ['Prize', '$180'],
       ['Winner', 'Announced 7:45–8 PM at the festival'],
       ['Where', 'Riverside Historic Courthouse, 4050 Main St.'],
-      ['Entries', 'One guess per person']
+      ['Entries', 'One entry per person']
     ],
     SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced 7:45–8 PM. Come join us Monday, Dec 7, 6–8 PM at the Historic Courthouse.',
     EMAIL_SUBJECT: 'Join me at the Riverside Chanukah Festival, Dec 7'
@@ -109,7 +109,7 @@
       '#dg26 .mc-ic{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}',
       '#dg26 :focus-visible{outline:2px solid ' + GOLD + ';outline-offset:3px}',
       /* header band */
-      '#dg26 .mc-hd{text-align:center;padding:40px 28px 34px;background:radial-gradient(ellipse 80% 90% at 50% 0%,rgba(60,199,180,.22),rgba(15,39,48,0) 70%),' + DEEP + '}',
+      '#dg26 .mc-hd{text-align:center;padding:40px 28px 34px;background:' + DEEP + '}',
       '#dg26 .mc-ok{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;background:' + TEAL + ';color:' + DEEP + '}',
       '#dg26 .mc-ok .mc-ic{width:34px;height:34px;stroke-width:2.6}',
       '#dg26 .mc-kick{font-family:' + SCRIPT + ';color:' + GOLD + ';font-size:21.6px;line-height:1.2}',
@@ -137,7 +137,9 @@
       '#dg26 .mc-row .mc-btn{width:100%;padding:0 10px}',
       '@media (max-width:600px){#dg26 .mc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#dg26 .mc-row .mc-wide{grid-column:1 / -1}}',
       '#dg26 .mc-row .mc-ic{width:1.3em;height:1.3em}',
+      '#dg26 .mc-plan{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#dg26 .mc-plan .mc-wide{grid-column:1 / -1}',
       '@media (max-width:600px){#dg26 .mc-plan{grid-template-columns:1fr}}',
+      '@media (max-width:380px){#dg26 .mc-row .mc-btn{font-size:13px;gap:6px;padding:0 6px}}',
       '#dg26 .mc-wa .mc-ic{color:#25d366}#dg26 .mc-fb .mc-ic{color:#4f9bff}#dg26 .mc-ig .mc-ic{color:#f06fa3}#dg26 .mc-line.mc-plain .mc-ic{color:' + TEAL + '}#dg26 .mc-gold .mc-ic{color:' + DEEP + '}',
       '#dg26 .mc-note{min-height:1.5em;margin-top:10px;font-size:14.7px;color:' + MUTED + '}',
       '#dg26 .mc-p{color:' + MUTED + ';margin-bottom:14px}',
@@ -236,7 +238,7 @@
     add(hd, ok,
       el('div', 'mc-kick', 'Good luck!'),
       el('h1', null, 'Thanks for your guess!'),
-      el('p', 'mc-lead', 'The winner of the $180 prize is announced between 7:45 and 8 PM at the Chanukah Festival.'));
+      el('p', 'mc-lead', 'Your guess is in. Here is everything you need for festival night.'));
 
     var bd = el('div', 'mc-bd');
 
@@ -255,7 +257,7 @@
     var r3 = el('div', 'mc-row mc-plan');
     var cal = link('mc-btn mc-line mc-plain', gcalUrl(), 'Add to Calendar', true);
     cal.insertBefore(icon('cal'), cal.firstChild);
-    var rs = link('mc-btn mc-line mc-fb', CFG.facebookEvent, 'RSVP on Facebook', true);
+    var rs = link('mc-btn mc-line mc-fb', CFG.facebookEvent, 'Join the Facebook Event', true);
     rs.insertBefore(icon('fb'), rs.firstChild);
     var mp = link('mc-btn mc-line mc-plain mc-wide', CFG.mapUrl, 'See the Festival Map', true);
     mp.insertBefore(icon('pin'), mp.firstChild);
@@ -283,7 +285,7 @@
     return [
       'html body h1.article-header__title.dg26-hidden-title{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}',
       /* hero */
-      '#dg26-hero{font-family:' + BODY + ';background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(60,199,180,.24),rgba(15,39,48,0) 70%),' + NAVY + ';color:' + INK + ';border-radius:20px;padding:34px 30px 30px;margin:6px auto 22px;max-width:680px;text-align:center;-webkit-font-smoothing:antialiased;box-sizing:border-box}',
+      '#dg26-hero{font-family:' + BODY + ';background:' + NAVY + ';color:' + INK + ';border-radius:20px;padding:34px 30px 30px;margin:6px auto 22px;max-width:680px;text-align:center;-webkit-font-smoothing:antialiased;box-sizing:border-box}',
       '#dg26-hero *{box-sizing:border-box;margin:0;padding:0}',
       '#dg26-hero .mh-kick{font-family:' + SCRIPT + ';color:' + GOLD + ';font-size:21px;line-height:1.2}',
       '#dg26-hero h2{font-family:' + DISP + ';font-weight:700;color:#fff;font-size:34px;line-height:1.15;margin-top:6px}',
@@ -366,8 +368,7 @@
 
   function buildFormHero() {
     var h = el('div'); h.id = 'dg26-hero';
-    var chips = el('ul', 'mh-chips');
-    ['Win $180', 'One entry per person', 'Winner announced 7:45–8 PM'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
+    var chips = null; /* the intro below already gives the prize, one entry and the winner time */
     var more = link('mh-a', CFG.festivalUrl, 'Festival schedule and map', true);
     add(h,
       el('div', 'mh-kick', '22nd Annual Chanukah Festival'),

@@ -80,7 +80,7 @@
           [1, 'Upper Stage {amp} Dais', 'Top of the courthouse steps'],
           [2, 'Main Stage', 'Live music'] ] },
         { group: 'Kids', color: '#00857c', items: [
-          [3, 'Kids Crafts', 'Two craft areas. Craft names TBA'],
+          [3, 'Kids Crafts', 'Two craft areas'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
           [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45–8 PM'],
@@ -112,7 +112,7 @@
         'Build your menorah at home, following the rules below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
         'Menorahs stay on display at table #15 during the festival.',
-        'Judging is on Visual Impact, Creativity and Craftsmanship, with the child’s age in mind.',
+        'Judging is on visual impact, creativity and craftsmanship, with the child’s age in mind.',
         'Winners are announced between 7:45 and 8 PM. Please pick up your menorah before you leave.'
       ],
       prizes: [
@@ -252,7 +252,7 @@
             '<li><b>Friday night:</b> light the menorah before the Shabbat candles.</li>' +
             '</ul>' },
 
-        { title: 'Dreidel, Latkes and Doughnuts', img: 'g-dreidel.jpg',
+        { title: 'Dreidel, Latkes and Donuts', img: 'g-dreidel.jpg',
           text: 'How to play dreidel, and the Chanukah foods that remind us of the miracle of the oil.',
           html:
             '<h3>The dreidel</h3>' +
@@ -485,6 +485,7 @@
       'html.cf26-on .cco_templatelates_content{position:absolute !important;left:-10000px !important;top:0 !important;width:760px !important}',
       /* the ChabadOne templates set the root font to 10px; this page is designed on the standard 16px */
       'html.cf26-on{font-size:16px !important}',
+      '#cf26 h1,#cf26 h2,#cf26 h3,#cf26 summary,#cf26 .cf-mc h3{text-wrap:balance}',
       'html.cf26-on,html.cf26-on body{background:' + NAVY + ' !important;margin:0}',
       '#cf26{background:' + NAVY + ';color:' + INK + ';font-family:' + BODY + ';font-size:17px;line-height:1.6;text-align:left;-webkit-font-smoothing:antialiased;overflow-x:hidden}',
       '#cf26 *{box-sizing:border-box}',
@@ -648,11 +649,11 @@
       '#cf26 .cf-ctas .cf-btn{height:50px;padding:0 22px;font-size:.92rem}',
       '#cf26 .cf-fbev{background:#1877f2;color:#fff}',
       /* phones: an even 2-column grid, the Facebook button spans the full width */
-      '@media (max-width:600px){#cf26 .cf-ctas{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:400px;margin-left:16px;margin-right:16px}#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}#cf26 .cf-ctas .cf-btn{padding:0 12px}#cf26 .cf-ctas .cf-fbev{grid-column:1 / -1}}',
+      '@media (max-width:600px){#cf26 .cf-ctas{display:grid;grid-template-columns:1fr;gap:10px;max-width:360px;margin-left:auto;margin-right:auto}#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}#cf26 .cf-ctas .cf-btn{padding:0 20px;justify-content:center}}',
       '#cf26 .cf-calwrap{position:relative;display:inline-block}',
-      '#cf26 .cf-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#fff;color:' + DEEP + ';border-radius:12px;padding:6px;min-width:210px;box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:20;display:none;text-align:left}',
+      '#cf26 .cf-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#fff;color:' + DEEP + ';border-radius:12px;padding:6px;min-width:250px;box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:20;display:none;text-align:left}',
       '#cf26 .cf-menu.open{display:block}',
-      '#cf26 .cf-menu a,#cf26 .cf-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.9rem;color:' + DEEP + '}',
+      '#cf26 .cf-menu a,#cf26 .cf-menu button{display:flex;align-items:center;gap:10px;width:100%;padding:10px 12px;border-radius:8px;text-decoration:none;font-weight:600;font-size:.9rem;white-space:nowrap;text-align:left;justify-content:flex-start;color:' + DEEP + '}',
       '#cf26 .cf-menu a:hover,#cf26 .cf-menu button:hover{background:#eef6f7}',
 
       /* countdown + marquee */
@@ -663,7 +664,7 @@
       '#cf26 .cf-unit{min-width:74px;text-align:center;padding:8px 6px;border-radius:12px;background:' + PANEL + ';border:1px solid rgba(26,204,206,.18)}',
       '#cf26 .cf-unit b{display:block;font-family:' + DISP + ';font-size:1.9rem;line-height:1.1;color:#fff}',
       '#cf26 .cf-unit span{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:' + GREEN + ';font-weight:700}',
-      '@media (max-width:420px){#cf26 .cf-units{gap:8px}#cf26 .cf-unit{min-width:64px;padding:8px 4px}#cf26 .cf-unit b{font-size:28px}#cf26 .cf-unit span{font-size:10px;letter-spacing:.1em}}',
+      '@media (max-width:420px){#cf26 .cf-units{gap:8px}#cf26 .cf-unit{min-width:64px;padding:8px 4px}#cf26 .cf-unit b{font-size:28px}#cf26 .cf-unit span{font-size:12px;letter-spacing:.08em}}',
       '#cf26 .cf-countmsg{font-family:' + DISP + ';font-size:1.3rem;color:' + GOLD + '}',
       '#cf26 .cf-marq{overflow:hidden;background:' + GOLD + ';color:' + DEEP + ';white-space:nowrap}',
       '#cf26 .cf-marq-in{display:inline-flex;gap:0;animation:cf26marq 40s linear infinite;padding:12px 0}',
@@ -729,11 +730,11 @@
       '#cf26 .cf-mc h3{font-family:' + DISP + ';font-size:clamp(1.5rem,3.4vw,2rem);color:#fff;line-height:1.15;margin:0 0 8px}',
       '#cf26 .cf-mc > p{color:#C9D6DA;font-size:1rem;max-width:68ch}',
       '#cf26 .cf-mc-facts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0 0;padding:0;list-style:none}',
-      '#cf26 .cf-mc-facts li{font-size:.9rem;font-weight:700;color:' + GOLD + ';border:1px solid rgba(233,185,73,.4);border-radius:999px;padding:6px 14px}',
+      '#cf26 .cf-mc-facts li{font-size:.9rem;font-weight:700;color:' + GOLD + ';border:1px solid rgba(233,185,73,.4);border-radius:999px;padding:6px 14px;text-align:center}',
       '#cf26 .cf-mc-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}',
       '#cf26 .cf-mc-btns .cf-btn{height:48px;padding:0 20px;font-size:.9rem}',
       /* phones: paired buttons as two equal halves, same as the top of the page */
-      '@media (max-width:600px){#cf26 .cf-mapbtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#cf26 .cf-mc-btns{display:grid;grid-template-columns:1fr}#cf26 .cf-mc-btns .cf-btn,#cf26 .cf-mapbtns .cf-btn{width:100%;height:48px;padding:0 10px;font-size:.88rem}}',
+      '@media (max-width:600px){#cf26 .cf-mapbtns{display:grid;grid-template-columns:1fr}#cf26 .cf-mc-btns{display:grid;grid-template-columns:1fr}#cf26 .cf-mc-btns .cf-btn,#cf26 .cf-mapbtns .cf-btn{width:100%;height:48px;padding:0 10px;font-size:.88rem}}',
       '#cf26 .cf-mc .cf-xp h4{color:' + GOLD + ';font-size:.78rem;letter-spacing:.16em;text-transform:uppercase;margin:14px 0 6px}',
       '#cf26 .cf-mc .cf-xp ul,#cf26 .cf-mc .cf-xp ol{margin:0;padding-left:20px;color:#C9D6DA;font-size:.95rem}',
       '#cf26 .cf-mc .cf-xp li{margin:4px 0}',
@@ -752,7 +753,7 @@
       '#cf26 .cf-map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:saturate(.85)}',
       '#cf26 .cf-map-fb{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:8px;color:' + MUTED + ';text-align:center;padding:20px}',
       '#cf26 .cf-flysec{background:' + DEEP + ';padding:40px 0 0}',
-      '#cf26 .cf-flyer{display:flex;gap:22px;align-items:center;margin-top:0;padding:18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px dashed rgba(255,255,255,.14)}',
+      '#cf26 .cf-flyer{display:flex;gap:22px;align-items:center;margin-top:0;padding:18px;border-radius:18px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.1)}',
       '#cf26 .cf-flyer img{width:92px;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.35)}',
       '#cf26 .cf-flyer b{display:block;color:#fff;font-family:' + DISP + ';font-size:1.1rem}',
       '#cf26 .cf-flyer span{color:' + MUTED + ';font-size:.9rem}',
@@ -1661,7 +1662,7 @@
       toSection();
     });
     ctas.appendChild(sh);
-    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'RSVP on Facebook', true);
+    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'Join the Facebook Event', true);
     fbe.insertBefore(icon('fb'), fbe.firstChild);
     ctas.appendChild(fbe);
 
@@ -1908,7 +1909,7 @@
     var wrap = el('div', 'cf-keywrap');
     var xp = el('details', 'cf-xp');
     if (window.innerWidth > 860) xp.open = true;
-    add(xp, el('summary', null, 'Find each number on the map'));
+    add(xp, el('summary', null, 'What each number means'));
     var inner = el('div', 'cf-xp-in cf-keyg');
     M.KEY.forEach(function (g) {
       var grp = el('div', 'cf-keygrp');

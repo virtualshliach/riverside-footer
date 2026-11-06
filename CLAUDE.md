@@ -22,6 +22,8 @@ who owns this repository.
 |---|---|---|
 | `sukkot-5787.js` | 7457011 Sukkot & Simchat Torah | Past event, **stays on** |
 | `chanukah-2026.js` | 7553387 Chanukah Festival 2026 | **Draft**. Live page will be 4949424 |
+| `menorah-contest-2026.js` | 7606745 Kids Menorah Contest 2026 (form + thank-you) | On with the festival |
+| `dreidel-2026.js` | 5738793 Dreidel Guessing Contest, JewishRiverside.com/Guess (form + thank-you) | On with the festival |
 
 ## Making a change
 

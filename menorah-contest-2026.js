@@ -23,13 +23,13 @@
     mapUrl: 'https://chanukahfestival.org/#map',
     facebookEvent: 'https://www.facebook.com/events/1651125113077350/',
     donateUrl: 'https://www.jewishriverside.com/donate',
-    hostUrl: 'https://www.jewishriverside.com',
+    hostUrl: 'https://www.jewishriverside.com/5201495',
     host: 'Chabad Jewish Community Center of Riverside',
     startUTC: '2026-12-08T02:00:00Z',   /* 6:00 PM Pacific, Dec 7 */
     endUTC: '2026-12-08T04:00:00Z',
     place: 'Riverside Historic Courthouse, 4050 Main St, Riverside, CA 92501',
     STEPS: [
-      ['When', 'Monday, Dec 7, between 5:45 and 6:15 PM'],
+      ['When', 'Monday, Dec 7, 5:45–6:15 PM'],
       ['Where', 'Menorah Contest table, #15 on the festival map, at the Riverside Historic Courthouse (4050 Main St.)'],
       ['Display', 'Menorahs stay on display at the table during the festival'],
       ['Winners', 'Announced 7:45–8 PM. Please pick up your menorah before you leave']
@@ -108,7 +108,7 @@
       '#mc26 .mc-ic{width:1.2em;height:1.2em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}',
       '#mc26 :focus-visible{outline:2px solid ' + GOLD + ';outline-offset:3px}',
       /* header band */
-      '#mc26 .mc-hd{text-align:center;padding:40px 28px 34px;background:radial-gradient(ellipse 80% 90% at 50% 0%,rgba(60,199,180,.22),rgba(15,39,48,0) 70%),' + DEEP + '}',
+      '#mc26 .mc-hd{text-align:center;padding:40px 28px 34px;background:' + DEEP + '}',
       '#mc26 .mc-ok{width:64px;height:64px;border-radius:50%;margin:0 auto 18px;display:flex;align-items:center;justify-content:center;background:' + TEAL + ';color:' + DEEP + '}',
       '#mc26 .mc-ok .mc-ic{width:34px;height:34px;stroke-width:2.6}',
       '#mc26 .mc-kick{font-family:' + SCRIPT + ';color:' + GOLD + ';font-size:21.6px;line-height:1.2}',
@@ -136,7 +136,9 @@
       '#mc26 .mc-row .mc-btn{width:100%;padding:0 10px}',
       '@media (max-width:600px){#mc26 .mc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#mc26 .mc-row .mc-wide{grid-column:1 / -1}}',
       '#mc26 .mc-row .mc-ic{width:1.3em;height:1.3em}',
+      '#mc26 .mc-plan{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#mc26 .mc-plan .mc-wide{grid-column:1 / -1}',
       '@media (max-width:600px){#mc26 .mc-plan{grid-template-columns:1fr}}',
+      '@media (max-width:380px){#mc26 .mc-row .mc-btn{font-size:13px;gap:6px;padding:0 6px}}',
       '#mc26 .mc-wa .mc-ic{color:#25d366}#mc26 .mc-fb .mc-ic{color:#4f9bff}#mc26 .mc-ig .mc-ic{color:#f06fa3}#mc26 .mc-line.mc-plain .mc-ic{color:' + TEAL + '}#mc26 .mc-gold .mc-ic{color:' + DEEP + '}',
       '#mc26 .mc-note{min-height:1.5em;margin-top:10px;font-size:14.7px;color:' + MUTED + '}',
       '#mc26 .mc-p{color:' + MUTED + ';margin-bottom:14px}',
@@ -254,7 +256,7 @@
     var r3 = el('div', 'mc-row mc-plan');
     var cal = link('mc-btn mc-line mc-plain', gcalUrl(), 'Add to Calendar', true);
     cal.insertBefore(icon('cal'), cal.firstChild);
-    var rs = link('mc-btn mc-line mc-fb', CFG.facebookEvent, 'RSVP on Facebook', true);
+    var rs = link('mc-btn mc-line mc-fb', CFG.facebookEvent, 'Join the Facebook Event', true);
     rs.insertBefore(icon('fb'), rs.firstChild);
     var mp = link('mc-btn mc-line mc-plain mc-wide', CFG.mapUrl, 'See the Festival Map', true);
     mp.insertBefore(icon('pin'), mp.firstChild);
@@ -282,7 +284,7 @@
     return [
       'html body h1.article-header__title.mc26-hidden-title{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}',
       /* hero */
-      '#mc26-hero{font-family:' + BODY + ';background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(60,199,180,.24),rgba(15,39,48,0) 70%),' + NAVY + ';color:' + INK + ';border-radius:20px;padding:34px 30px 30px;margin:6px auto 22px;max-width:680px;text-align:center;-webkit-font-smoothing:antialiased;box-sizing:border-box}',
+      '#mc26-hero{font-family:' + BODY + ';background:' + NAVY + ';color:' + INK + ';border-radius:20px;padding:34px 30px 30px;margin:6px auto 22px;max-width:680px;text-align:center;-webkit-font-smoothing:antialiased;box-sizing:border-box}',
       '#mc26-hero *{box-sizing:border-box;margin:0;padding:0}',
       '#mc26-hero .mh-kick{font-family:' + SCRIPT + ';color:' + GOLD + ';font-size:21px;line-height:1.2}',
       '#mc26-hero h2{font-family:' + DISP + ';font-weight:700;color:#fff;font-size:34px;line-height:1.15;margin-top:6px}',
