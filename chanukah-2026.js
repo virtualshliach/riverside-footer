@@ -52,13 +52,12 @@
 
     /* Photos from past festivals; files live next to this one in the repo. */
     highlights: [
-      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'The lighting of Riverside\u2019s Menorah, the largest in the region, on the courthouse steps.' },
+      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'Riverside\u2019s Grand Menorah, lit on the courthouse steps.' },
       { img: 'hl-food.jpg',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
       { img: 'hl-music.jpg',   title: 'Live Music',             text: 'Aaron Holder, a Jewish pop-folk singer with a reggae edge, live on the Main Stage.' },
       { img: 'hl-family.jpg',  title: 'Fun for the Whole Family', text: 'Children\u2019s crafts, activities and entertainment.' }
     ],
     accessNote: 'ASL Interpreter on site',
-    COME_EARLY: 'The first 300 guests get a free Chanukah gift',
 
     /* Exactly five rows (brief Nov 5). */
     SCHEDULE: [
@@ -79,14 +78,14 @@
       KEY: [
         { group: 'Stage {amp} Show', color: '#c8102e', items: [
           [1, 'Upper Stage {amp} Dais', 'Top of the courthouse steps'],
-          [2, 'Main Stage', 'Live music: Aaron Holder, Jewish pop-folk singer with a reggae edge'] ] },
+          [2, 'Main Stage', 'Live music'] ] },
         { group: 'Kids', color: '#00857c', items: [
           [3, 'Kids Crafts', 'Two craft areas. Craft names TBA'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
           [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45 to 8 PM'],
           [7, 'Mini Train Rides', ''],
-          [15, 'Menorah Contest', 'Kids’ entries on display. Winners 7:45 to 8 PM'],
+          [15, 'Menorah Contest', 'Kids’ entries on display. Winners announced 7:45 to 8 PM'],
           [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
@@ -107,7 +106,7 @@
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
       intro: 'Kids ages 4 to 12 design and build a unique menorah at home. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
-      facts: ['Register by Dec 4', 'Drop off 5:45 to 6:15 at table #15', 'Winners 7:45 to 8 PM'],
+      facts: ['Register by Dec 4', 'Drop off 5:45 to 6:15 PM at table #15', 'Winners announced 7:45 to 8 PM'],
       how: [
         'Register by Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
@@ -118,29 +117,26 @@
       ],
       prizes: [
         'Two age groups: 4 to 7 and 8 to 12.',
-        'A 1st place winner in each age group, plus one Best in Show (3 winners).',
-        'Every child who enters gets a Chanukah gift.'
+        'A 1st place winner in each age group, plus one Best in Show (3 winners).'
       ],
       rules: [
-        'Ages 4 to 12. Free to enter; register by Dec 4.',
+        'Ages 4 to 12.',
         'Nine branches, including the shamash.',
         'Eight branches in a straight line at an even height; the shamash higher or lower.',
         'No food.',
         'Bring a wax candle or oil.',
         'It must stand on its own and not break, fall or melt when lit.',
         'One entry per child. The child is the main builder (adult help for safety is OK).'
-      ],
-      note: 'Children’s Gelt Drop: 7:45 to 8 PM on the left lawn (#16 on the map), toward 10th Street.'
+      ]
     },
 
     about: [
-      'Chabad Jewish Community Center of Riverside presents an annual community-wide Chanukah Festival, free of charge and open to the public. The festival features the lighting of Riverside\u2019s Menorah, the largest in the region, live music, traditional foods, entertainment, children\u2019s crafts and activities.',
-      'The festival has grown into one of the premier holiday celebrations in the Inland Empire, sharing Chanukah\u2019s universal message, embracing cultural diversity, and promoting understanding. Each year, the festival is graced by the participation of many elected officials and civic leaders \u2014 a meaningful evening not only for the Jewish community but for the community at large.'
+      'Chabad Jewish Community Center of Riverside founded the Chanukah Festival in 2005 as a gift to the whole city, and has organized it every year since.',
+      'The festival has grown into one of the premier holiday celebrations in the Inland Empire, sharing Chanukah\u2019s universal message, embracing cultural diversity, and promoting understanding. Each year, the festival is graced by the participation of many elected officials and civic leaders. It is a meaningful evening not only for the Jewish community but for the community at large.'
     ],
     stats: [
-      { big: '22', small: 'years of light in Riverside' },
-      { big: 'Free', small: 'admission \u2014 all are welcome' },
-      { big: '#1', small: 'largest menorah in the region' }
+      { big: '22nd', small: 'year of light in Riverside' },
+      { big: 'Largest', small: 'menorah in the region' }
     ],
 
     /* ---- Community partners shown on the page ---- */
@@ -217,7 +213,7 @@
             '<p>Stay near the menorah and enjoy the lights. They are only for looking at, not for reading or other work. It’s a great time to sing Chanukah songs together.</p>' },
 
         { title: 'How to Celebrate Chanukah', img: 'g-celebrate.jpg',
-          text: 'Customs for all eight nights: gelt, special prayers, foods and sharing the light.',
+          text: 'Gelt, special prayers, holiday foods and sharing the light.',
           html:
             '<ul>' +
             '<li><b>Light the menorah every night,</b> adding one candle each night, and gather the whole family around it.</li>' +
@@ -254,7 +250,7 @@
       { n: 7, day: 'Thu', date: 'Dec 10', note: '' },
       { n: 8, day: 'Fri', date: 'Dec 11', note: 'Light before Shabbat candles' }
     ],
-    NIGHTS_NOTE: 'Chanukah 2026 begins Friday evening, December 4 and ends at nightfall on Saturday, December 12.',
+    NIGHTS_NOTE: 'Chanukah 2026 begins Friday evening, December 4, and ends at nightfall on Saturday, December 12.',
 
     SHARE: {
       /* every share points at the public address; tags added per button (see shareUrl) */
@@ -315,7 +311,7 @@
       'City garages are open 24 hours: $1.25 per 30 minutes, $20 daily maximum.',
       'The first 60 minutes in a City garage are free with the Park Riverside app.',
       'Street meters are $1.50 per 30 minutes until 7 PM on weekdays, and free after 7 PM.',
-      'Arrive early: the festival draws a big crowd and the closest spaces fill first.'
+      'The festival draws a big crowd, so the closest spaces fill first.'
     ],
     PHONE: '951-222-2005',
     EMAIL: 'info@jewishriverside.com',
@@ -1694,7 +1690,7 @@
     var s = section('event');
     var w = el('div', 'cf-wrap');
     w.appendChild(heading('The evening', 'An evening of light for all of Riverside',
-      'Free admission. All are welcome. Bring the whole family.', true));
+      'Bring the whole family to downtown Riverside for the 4th night of Chanukah.', true));
 
     var hl = el('div', 'cf-hl');
     CFG.highlights.forEach(function (x, i) {
@@ -1724,8 +1720,7 @@
     var info = el('div', 'cf-ev-info');
     add(info,
       el('div', 'cf-kicker', 'Event details'),
-      evRow('cal', 'Monday, December 7, 2026', 'Free admission. All are welcome.'),
-      evRow('clock', '6 to 8 PM', 'Come early: ' + CFG.COME_EARLY.charAt(0).toLowerCase() + CFG.COME_EARLY.slice(1) + '. Gift tables open at 5:45 PM.'),
+      evRow('cal', 'Monday, December 7, 2026', '6 to 8 PM'),
       evRow('pin', CFG.event.venue, CFG.event.street + ', ' + CFG.event.cityLine));
     var sk = el('div', 'cf-kicker cf-ev-sub', 'Schedule');
     var sl = el('ol', 'cf-sched');
@@ -1814,8 +1809,7 @@
     var inner = el('div', 'cf-xp-in');
     add(inner, el('h4', null, 'How it works'), list('ol', C.how),
       el('h4', null, 'Prizes'), list('ul', C.prizes),
-      el('h4', null, 'Rules'), list('ul', C.rules),
-      el('p', null, C.note));
+      el('h4', null, 'Rules'), list('ul', C.rules));
     add(xp, el('summary', null, 'See Contest Details'), inner);
 
     add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, 'Kids Menorah Contest'),
@@ -1872,7 +1866,7 @@
     var s = section('about', 'cf-alt');
     var w = el('div', 'cf-wrap cf-about');
     var l = el('div', 'cf-reveal');
-    l.appendChild(heading('About the festival', 'Sharing the light, together'));
+    l.appendChild(heading('About the festival', 'A Riverside tradition since 2005'));
     CFG.about.forEach(function (p) { l.appendChild(el('p', null, p)); });
     var r = el('div', 'cf-stats cf-reveal');
     CFG.stats.forEach(function (x) {
@@ -2118,8 +2112,8 @@
     add(l, ph, em, ig, fbl);
     add(w, el('b', null, 'Questions? We\u2019d love to help.'), l,
       donateButton('Support the Festival'),
-      el('small', null, CFG.host + ' \u2022 Riverside, CA \u2022 ' + CFG.WEB));
-    var back = link(null, 'https://www.jewishriverside.com', '\u2190 Back to ' + CFG.host);
+      el('small', null, 'Organized by ' + CFG.host + ' since 2005 \u2022 ' + CFG.WEB));
+    var back = link(null, 'https://www.jewishriverside.com', 'Visit JewishRiverside.com \u2192');
     back.style.display = 'inline-block';
     back.style.marginTop = '10px';
     back.style.fontSize = '.82rem';
