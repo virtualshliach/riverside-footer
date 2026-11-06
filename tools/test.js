@@ -148,20 +148,38 @@ var SITES = {
       ok(r.d.getElementById(id), 'section #' + id);
     });
     var gTitles = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc h3'), function (h) { return h.textContent; });
-    ok(gTitles.join('|') === 'What Is Chanukah?|How to Light the Menorah|How to Celebrate Chanukah|Dreidel, Latkes and Doughnuts', 'four guide cards (' + gTitles.join('|') + ')');
+    ok(gTitles.join('|') === 'What Is Chanukah?|How to Light the Menorah|How to Celebrate Chanukah|Dreidel, Latkes and Donuts', 'four guide cards (' + gTitles.join('|') + ')');
     var gImgs = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(gImgs.join(',') === 'g-guide.jpg,g-light.jpg,g-celebrate.jpg,g-dreidel.jpg', 'guide cards use our event photos (' + gImgs.join(',') + ')');
-    ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 9, 'nine guide photos are in the repo');
+    ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 8, 'eight guide photos are in the repo');
     var hv = r.d.querySelector('#cf-top .cf-vid video');
     ok(hv && hv.getAttribute('src') === PAGES_BASE + 'festival-hero.mp4', 'hero video points at festival-hero.mp4 in this repo (' + (hv && hv.getAttribute('src')) + ')');
     ok(hv && hv.muted && hv.hasAttribute('playsinline') && hv.loop, 'hero video is muted, loops and plays inline');
     ok(hv && hv.poster === PAGES_BASE + 'festival-hero-poster.jpg', 'hero has a still image while the video loads');
     ok(fs.existsSync(path.join(ROOT, 'festival-hero.mp4')) && fs.existsSync(path.join(ROOT, 'festival-hero-poster.jpg')), 'video and still are in the repo');
-    ok(!r.d.getElementById('cf-rsvp') && !/rsvp/i.test(r.d.getElementById('cf26').textContent), 'no RSVP anywhere on the page');
+    var rsvp = [].filter.call(r.d.querySelectorAll('#cf26 a'), function (a) { return /facebook\.com\/events/.test(a.href); });
+    ok(!r.d.getElementById('cf-rsvp') && rsvp.length === 1 && rsvp[0].href === 'https://www.facebook.com/events/1651125113077350/',
+      'one RSVP button, to the Facebook event (brief Nov 5)');
     ok(!/become a sponsor|your name here|grand menorah sponsors|festival sponsors/i.test(r.d.getElementById('cf26').textContent), 'no sponsor tiers or sponsor button');
-    ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 5, 'the five community partners are shown');
-    var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
-    ok(nImgs.length === 4 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');
+    ok(r.d.querySelectorAll('#cf-partners .cf-sp').length === 6, 'the six community partners are shown (brief Nov 5)');
+    var pImgs = [].slice.call(r.d.querySelectorAll('#cf-partners .cf-sp img'));
+    ok(pImgs.some(function (i) { return i.alt === 'Chabad at UCR'; }) && !/Chabad of UCR/.test(r.d.getElementById('cf26').textContent), 'written as Chabad at UCR');
+    ok(pImgs.length === 6 && pImgs.every(function (i) { return i.alt && fs.existsSync(path.join(ROOT, i.getAttribute('src').replace(PAGES_BASE, '').split('?')[0])); }),
+      'every partner shows its logo from the repo, with a name for screen readers');
+    ok(fs.existsSync(path.join(ROOT, 'chabad-jcc-logo-white-gold.png')), 'organizer logo is in the repo');
+    var front = r.d.querySelector('#cf-news .cf-front img');
+    ok(front && fs.existsSync(path.join(ROOT, front.getAttribute('src').replace(PAGES_BASE, ''))) && /Press-Enterprise/.test(front.alt), 'front page feature shows the Press-Enterprise front page image from the repo');
+    var cards = r.d.querySelectorAll('#cf-news .cf-news .cf-nc');
+    ok(cards.length >= 15, 'news carousel has at least 15 stories (' + cards.length + ')');
+    var pe = [].filter.call(cards, function (c) { return /pressenterprise\.com/.test(c.href); }).length;
+    ok(pe >= 12, 'most stories are from The Press-Enterprise (' + pe + ')');
+    var outlets = [].map.call(cards, function (c) { return /pressenterprise\.com/.test(c.href) ? 'PE' : 'other'; });
+    var run = 0, maxRun = 0, firstTen = outlets.slice(0, 10);
+    outlets.forEach(function (o) { run = o === 'PE' ? run + 1 : 0; maxRun = Math.max(maxRun, run); });
+    ok(cards.length >= 20 && /mynewsla/.test(r.d.getElementById('cf-news').innerHTML) && /raincrossgazette/.test(r.d.getElementById('cf-news').innerHTML), 'other outlets are back alongside the Press-Enterprise');
+    ok(firstTen.join(',').indexOf('PE,PE,PE') < 0, 'first ten stories mix outlets, never three Press-Enterprise in a row (' + firstTen.join(',') + ')');
+    ok(maxRun <= 3, 'no long Press-Enterprise runs anywhere (longest ' + maxRun + ')');
+    ok([].every.call(cards, function (c) { return c.querySelector('.cf-nc-plate') && c.target === '_blank'; }), 'every story card has a nameplate and opens in a new tab');
     ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
     var kids = [].slice.call(r.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
     ok(kids[kids.length - 2] === 'cf-flysec' && kids[kids.length - 1] === 'cf-foot', 'flyer download sits right before the footer (' + kids.slice(-3).join(' > ') + ')');
@@ -179,9 +197,9 @@ var SITES = {
     ok(r.d.querySelector('#cf-directions iframe') && !r.d.querySelector('#cf-directions .cf-ev-btns'), 'directions section has the map, no separate map buttons');
     ok(r.d.querySelector('.cco_templateless_template').style.getPropertyValue('display') === 'none' && r.d.querySelector('.cco_templateless_template').style.getPropertyPriority('display') === 'important', 'the platform\'s "Back to" bar is hidden despite its inline !important');
     var heroBtns = [].map.call(r.d.querySelectorAll('.cf-ctas .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(heroBtns.join('|') === 'Add to Calendar|Share', 'top buttons: Add to Calendar and Share only (' + heroBtns.join('|') + ')');
+    ok(heroBtns.join('|') === 'Add to Calendar|Share|Join the Facebook Event', 'top buttons: Add to Calendar, Share, Join the Facebook Event (' + heroBtns.join('|') + ')');
     var evBtns = [].map.call(r.d.querySelectorAll('#cf-event .cf-ev-btns .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(evBtns.join('|') === 'Directions & parking', 'event details: Directions & parking only (' + evBtns.join('|') + ')');
+    ok(evBtns.join('|') === 'Directions & Parking', 'event details: Directions & Parking only (' + evBtns.join('|') + ')');
     var row = r.d.querySelectorAll('#cf-directions .cf-prow')[0], item = row.parentNode;
     ok(item.querySelectorAll('.cf-ptray a').length === 4 && item.className === 'cf-pitem', 'each garage has a closed tray with four direction buttons');
     row.dispatchEvent(new r.w.MouseEvent('click', { bubbles: true }));
@@ -193,7 +211,7 @@ var SITES = {
     ok(item.className === 'cf-pitem' && /open/.test(row2.parentNode.className), 'opening another garage closes the first');
     ok(r.d.querySelectorAll('#cf-directions .cf-prow').length === 5 && /\$1\.25 per 30 minutes/.test(r.d.getElementById('cf-directions').textContent), 'parking: five nearby garages and the rates');
     var hlImgs = [].map.call(r.d.querySelectorAll('#cf-event .cf-hl-card img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
-    ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music.jpg,hl-family.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
+    ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music-aaron.jpg,hl-performer.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
     ok(hlImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'all four card photos are in the repo');
     ok(/FESTIVAL/.test(r.d.querySelector('#cf-top .cf-vtext').textContent) && /22/.test(r.d.querySelector('#cf-top .cf-vtext .cf-annual').textContent), 'title sits on top of the video');
 
@@ -217,13 +235,61 @@ var SITES = {
     var skr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7457011/jewish/Sukkot.htm', { wait: 300 });
     ok(projectRequests(skr).length === 1 && !skr.errors.length, 'Sukkot code also loads on its thank-you page');
 
+    ok(/width=device-width/.test((r.d.querySelector('meta[name=viewport]') || {}).content || ''), 'phones get a viewport tag (the ChabadOne template sends none)');
+    ok(/html\.cf26-on\{font-size:16px/.test(r.d.getElementById('cf26-style').textContent), 'page is drawn on a 16px base (the template root is 10px)');
+    var ld = r.d.getElementById('cf26-ld');
+    var ldj = null; try { ldj = JSON.parse(ld.textContent); } catch (e) {}
+    ok(ldj && ldj['@type'] === 'Event' && /2026-12-07T18:00/.test(ldj.startDate) && ldj.location.name === 'Riverside Historic Courthouse' && ldj.isAccessibleForFree === true, 'schema.org Event data: date, place, free');
+    ok(!r.requests.some(function (u) { return /googletagmanager/.test(u); }) && !r.w.gtag, 'analytics stays off until a GA4 ID is set');
+
+    console.log('riverside: Kids Menorah Contest thank-you page');
+    /* the platform's confirmation as set in ChabadOne (Nov 6): a div with a headline and three lines */
+    var MC_NATIVE = '<div id="mc-native"><h2>You\u2019re registered for the Kids Menorah Contest!</h2><p><b>Drop-off:</b> Monday, Dec 7, 5:45\u20136:15 PM at the Menorah Contest table (#15 on the festival map)</p>' +
+      '<p><b>Where:</b> Riverside Historic Courthouse, 4050 Main St., Riverside</p><p><b>Winners:</b> announced 7:45\u20138 PM</p><p>Every child who enters gets a Chanukah gift. See you at the festival!</p></div>';
+    var mcShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><div class="pagetools">Print</div>' + MC_NATIVE + '</div>');
+    var mcr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mcShell, wait: 600 });
+    ok(projectRequests(mcr).some(function (u) { return /menorah-contest-2026\.js/.test(u); }), 'contest code loads on its thank-you page');
+    ok(!!mcr.d.getElementById('mc26') && !mcr.errors.length, 'designed thank-you card shown, no errors');
+    ok(/7:45\u20138 PM/.test(mcr.d.getElementById('mc26').textContent) && /#15/.test(mcr.d.getElementById('mc26').textContent), 'thank-you card has the drop-off table and winners time');
+    ok(mcr.d.getElementById('mc-native').style.display === 'none' && mcr.d.querySelector('.pagetools').style.display !== 'none',
+      'the whole plain message is replaced (headline and all lines), nothing around it');
+    var MC_FORM = '<div id="formContainer"><form id="7606745" class="userform-form"><div class="form-all"><ul class="form-section">' +
+      '<li class="form-line" id="id_1"><div class="form-label-top"><label>Parent / guardian first name</label></div><div class="form-input-wide"><input class="form-textbox" name="q1"></div></li>' +
+      '<li class="form-line" id="id_5"><div class="form-label-top"><label>Phone</label></div><div class="form-input-wide"><input type="tel" class="form-textbox" name="q5"></div></li>' +
+      '<li class="form-line" id="id_17"><div class="form-input-wide"><button type="submit" class="form-submit-button">Submit</button></div></li></ul></div></form></div>';
+    var mfShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><h1 class="article-header__title">Kids Menorah Contest 2026</h1>' + MC_FORM + '</div>');
+    var mcf = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mfShell, wait: 500 });
+    ok(!mcf.d.getElementById('mc26') && !!mcf.d.getElementById('mc26-hero') && !mcf.errors.length, 'registration page gets the festival hero (not the thank-you card), no errors');
+    var mform = mcf.d.getElementById('7606745');
+    ok(mform.style.display !== 'none' && mform.querySelectorAll('input,button').length === 3 && mform.querySelector('[name=q1]'), 'the native form and its fields are untouched and visible');
+    ok(mcf.d.querySelector('input[type=tel]').getAttribute('inputmode') === 'tel', 'phone field opens the number keypad');
+
+    console.log('riverside: Dreidel Guessing Contest');
+    var DG_FORM = '<div id="formContainer"><form id="5738793" class="userform-form"><div class="form-all"><ul class="form-section">' +
+      '<li class="form-line" id="id_18"><img src="banner.jpg" alt=""></li>' +
+      '<li class="form-line" id="id_12"><div class="form-label-left"><label>Phone Number</label></div><div class="form-input"><div class="dir_ltr"><span class="form-sub-label-container"><input type="tel" class="form-textbox" name="q12a"></span><span class="form-sub-label-container"><input type="tel" class="form-textbox" name="q12b"></span></div></div></li>' +
+      '<li class="form-line" id="id_17"><div class="form-label-left"><label>How many dreidels are there?</label></div><div class="form-input"><textarea class="form-textarea" name="q17"></textarea></div></li>' +
+      '<li class="form-line" id="id_2"><button type="submit" class="form-submit-button">Submit</button></li></ul></div></form></div>';
+    var dgShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><h1 class="article-header__title">Dreidel Guessing Contest</h1>' + DG_FORM + '</div>');
+    var dg2 = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5738793/jewish/Dreidel-Guessing-Contest.htm', { shell: dgShell, wait: 500 });
+    ok(projectRequests(dg2).some(function (u) { return /dreidel-2026\.js/.test(u); }) && !!dg2.d.getElementById('dg26-hero') && !dg2.errors.length, 'dreidel page gets the festival hero, no errors');
+    ok(/win \$180/i.test(dg2.d.getElementById('dg26-hero').textContent) && /7:45 and 8 PM/.test(dg2.d.getElementById('dg26-hero').textContent), 'dreidel intro: $180 and the 7:45 to 8 PM announcement');
+    ok(dg2.d.getElementById('5738793').style.display !== 'none' && dg2.d.getElementById('5738793').querySelectorAll('input,textarea,button').length === 4, 'dreidel native form and fields untouched');
+    ok(dg2.d.querySelector('#id_17 textarea').getAttribute('inputmode') === 'numeric', 'the guess opens the number keypad');
+    var DG_NATIVE = '<div id="dg-native"><h2>Thanks for your guess!</h2><p>The winner of the $180 prize is announced between 7:45 and 8 PM at the Chanukah Festival.</p><p>Good luck, and enjoy the festival!</p></div>';
+    var dgr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/5738793/jewish/Dreidel-Guessing-Contest.htm', { shell: SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container">' + DG_NATIVE + '</div>'), wait: 600 });
+    ok(!!dgr.d.getElementById('dg26') && !dgr.errors.length && dgr.d.getElementById('dg-native').style.display === 'none', 'dreidel thank-you card replaces the plain message');
+    ok(dgr.d.querySelectorAll('#dg26 .mc-row a, #dg26 .mc-row button').length >= 6 && /utm_content%3Ddreidel-thanks|utm_content=dreidel-thanks/.test(dgr.d.getElementById('dg26').innerHTML), 'dreidel thank-you has the share buttons with tracking tags');
+
     console.log('riverside: social links go to the festival pages');
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
-    ok(shareA.some(function (t) { return t === 'Follow on Facebook>https://www.facebook.com/chanukahfestival/'; }), 'Follow on Facebook goes to the festival page');
-    ok(shareA.some(function (t) { return t === 'Follow on Instagram>https://www.instagram.com/chanukahfestival/'; }), 'Follow on Instagram goes to the festival account');
+    ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
+    var waA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /wa\.me/.test(a.href); })[0];
+    ok(waA && /chanukahfestival\.org%2F%3Futm_source%3Dwhatsapp/i.test(waA.href), 'WhatsApp invite carries the tagged ChanukahFestival.org link');
+    ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
     var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');
     ok(!/instagram\.com\/jewishriverside|facebook\.com\/jewishriverside/i.test(allA), 'no links to the Jewish Riverside social pages');
-    ok(/@chanukahfestival/.test(r.d.querySelector('.cf-foot').textContent), 'footer shows @chanukahfestival');
+    ok(/Instagram/.test(r.d.querySelector('.cf-foot').textContent) && /Facebook/.test(r.d.querySelector('.cf-foot').textContent) && r.d.querySelector('.cf-foot a[href="https://www.instagram.com/chanukahfestival/"]'), 'footer links Instagram and Facebook to the festival accounts');
 
     console.log('riverside: Chanukah guide pop-up');
     var gr = r;
@@ -308,10 +374,16 @@ var SITES = {
     hj2.window.eval(hsrc);
     ok(!hj2.window.document.querySelector('style'), 'header.js does nothing on other pages');
 
+    console.log('riverside: draft page vs live page');
+    var dr = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm', { wait: 600 });
+    ok(dr.d.getElementById('cf26') && dr.logs.some(function (l) { return /aid 7553387 -> chanukah-2026-draft\.js/.test(l); }), 'draft page 7553387 loads the draft file');
+    var dsrc = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8'), lsrc = fs.readFileSync(path.join(ROOT, 'chanukah-2026.js'), 'utf8');
+    ok(/AID: '7553387',/.test(dsrc) && /BRAND_HOSTS: \[\],/.test(dsrc), 'draft file guards page 7553387 and claims no domain');
+    ok(/AID: '4949424',/.test(lsrc) && /BRAND_HOSTS: \['chanukahfestival\.org'\],/.test(lsrc), 'live file guards page 4949424 and chanukahfestival.org');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],
-      ['https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm', 'old draft page'],
       ['https://www.jewishriverside.com/article.asp?aid=4194665', 'donate page'],
       ['https://www.jewishriverside.com/article.asp?aid=75533870', 'look-alike aid'],
       ['https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/' + DRAFT, 'response page']

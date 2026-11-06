@@ -9,7 +9,8 @@
 (function () {
   var COVERS = {
     '7457011': { coverId: 'hh26-cover', cover: '#F5EBDF', onResponse: true },   /* Sukkot & Simchat Torah (was the HH 5787 preboot in the header) */
-    '4949424': { coverId: 'cf26-cover', cover: '#0f2936' }    /* Chanukah Festival 2026 */
+    '4949424': { coverId: 'cf26-cover', cover: '#0f2936' },   /* Chanukah Festival 2026 (live) */
+    '7553387': { coverId: 'cf26-cover', cover: '#0f2936' }    /* Chanukah Festival 2026 (draft page) */
   };
   var HOSTS = { 'chanukahfestival.org': '4949424' };
 

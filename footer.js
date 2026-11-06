@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-06b';
+  var V = '2026-11-06k';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -16,8 +16,14 @@
     /* Sukkot & Simchat Torah 5787. Holiday is over; stays on so the page keeps its design.
        onResponse: it also shows the confirmation on the form's thank-you page. */
     '7457011': { file: 'sukkot-5787.js', cover: '#F5EBDF', coverId: 'hh26-cover', onResponse: true },
-    /* Chanukah Festival 2026 - LIVE page (draft was 7553387). */
+    /* Chanukah Festival 2026 - LIVE page, everyone sees it (chanukah-2026.js). */
     '4949424': { file: 'chanukah-2026.js', cover: '#0f2936', coverId: 'cf26-cover' },
+    /* Chanukah Festival 2026 - DRAFT page, for reviewing changes before they go live (chanukah-2026-draft.js). */
+    '7553387': { file: 'chanukah-2026-draft.js', cover: '#0f2936', coverId: 'cf26-cover' },
+    /* Kids Menorah Contest 2026 registration (hidden page): festival hero + restyled form, and the thank-you page. */
+    '7606745': { file: 'menorah-contest-2026.js', onResponse: true },
+    /* Dreidel Guessing Contest (JewishRiverside.com/Guess, booth banner QR). Form + thank-you page. */
+    '5738793': { file: 'dreidel-2026.js', onResponse: true },
     /* Join Our Mailing List form: California as the default state. */
     '5333083': { file: 'mailing-list.js' }
   };
@@ -26,6 +32,11 @@
   var HOSTS = {
     'chanukahfestival.org': '4949424'
   };
+
+  /* Google Analytics 4 for the pages listed above. OFF until a measurement ID is filled in
+     (format G-XXXXXXXXXX, from the GA4 property Rabbi Fuss chooses). Project files already send
+     share_click / cta_click events through window.gtag; with this empty they send nothing. */
+  var GA4_ID = '';
 
   var href = window.location.href;
   var isResponse = href.indexOf('ArticleCcoResponse') > -1;
@@ -69,6 +80,17 @@
   function uncover() {
     var el = document.getElementById(coverId);
     if (el && el.parentNode) el.parentNode.removeChild(el);
+  }
+
+  if (/^G-[A-Z0-9]{4,}$/.test(GA4_ID) && !window.gtag) {
+    window.dataLayer = window.dataLayer || [];
+    window.gtag = function () { window.dataLayer.push(arguments); };
+    window.gtag('js', new Date());
+    window.gtag('config', GA4_ID, { page_title: document.title, anonymize_ip: true });
+    var ga = document.createElement('script');
+    ga.async = true;
+    ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+    (document.head || document.documentElement).appendChild(ga);
   }
 
   var s = document.createElement('script');
