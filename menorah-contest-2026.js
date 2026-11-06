@@ -1,9 +1,9 @@
 /* KIDS MENORAH CONTEST 2026 - Chabad Jewish Community Center of Riverside
    Loaded by footer.js (PAGES '7606745', onResponse). Hidden registration form, aid 7606745.
-   Today this file designs the THANK-YOU page shown after a parent registers.
-   It finds the platform's plain confirmation text, hides it, and shows a designed
-   card in its place. The site header, menu and B"H stay as they are.
-   It never touches the registration form itself. */
+   On the registration page it adds a festival hero and restyles the native form (styles only:
+   every field, condition and the submit stay as the platform draws them).
+   On the thank-you page it finds the platform's plain confirmation, hides it, and shows a
+   designed card in its place. The site header, menu and B"H stay as they are. */
 (function () {
   'use strict';
 
@@ -16,6 +16,8 @@
   var CFG = {
     AID: '7606745',
     /* A phrase from the platform's own confirmation text, used to find it on the page. */
+    /* ...and its last words, so the whole message (headline to sign-off) is replaced. */
+    NATIVE_LAST: 'See you at the festival',
     NATIVE_TEXT: 'registered for the Kids Menorah Contest',
     festivalUrl: 'https://chanukahfestival.org/',
     mapUrl: 'https://chanukahfestival.org/#map',
@@ -218,7 +220,7 @@
     if (!best) return null;
     /* climb to the block that holds the whole message: while the parent adds little besides this
        message (headline + drop-off lines), the parent is still the message */
-    var whole = function (n) { var t = n.textContent || ''; return /Winners/i.test(t) && /gift/i.test(t); };
+    var whole = function (n) { return (n.textContent || '').indexOf(CFG.NATIVE_LAST) > -1; };
     var guard = 0;
     while (!whole(best) && best.parentNode && best.parentNode !== document.body && guard++ < 4 &&
       !best.parentNode.querySelector('form') && (best.parentNode.textContent || '').length < 1500) best = best.parentNode;
@@ -284,9 +286,10 @@
       '#mc26-hero *{box-sizing:border-box;margin:0;padding:0}',
       '#mc26-hero .mh-kick{font-family:' + SCRIPT + ';color:' + GOLD + ';font-size:21px;line-height:1.2}',
       '#mc26-hero h2{font-family:' + DISP + ';font-weight:700;color:#fff;font-size:34px;line-height:1.15;margin-top:6px}',
+      '#mc26-hero .mh-when span{white-space:nowrap}',
       '#mc26-hero .mh-when{font-weight:600;color:' + GOLD + ';font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}',
       '#mc26-hero .mh-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;list-style:none}',
-      '#mc26-hero .mh-chips li{font-size:14px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.05)}',
+      '#mc26-hero .mh-chips li{font-family:' + BODY + ';font-size:14px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.05)}',
       '#mc26-hero .mh-p{color:' + MUTED + ';font-size:16px;line-height:1.6;margin:16px auto 0;max-width:46ch}',
       '#mc26-hero .mh-a{display:inline-block;margin-top:12px;color:' + TEAL + ';font-weight:700;font-size:15px;text-decoration:none}',
       '#mc26-hero .mh-a:hover{text-decoration:underline}',
@@ -325,6 +328,12 @@
     ].join('\n');
   }
 
+  function whenLine() {
+    var p = el('p', 'mh-when');
+    add(p, el('span', null, 'Mon. Dec 7, 2026'), document.createTextNode(' · '), el('span', null, 'Riverside Historic Courthouse'));
+    return p;
+  }
+
   function buildFormHero() {
     var h = el('div'); h.id = 'mc26-hero';
     var chips = el('ul', 'mh-chips');
@@ -333,7 +342,7 @@
     add(h,
       el('div', 'mh-kick', '22nd Annual Chanukah Festival'),
       el('h2', null, 'Kids Menorah Contest'),
-      el('p', 'mh-when', 'Mon. Dec 7, 2026 · Riverside Historic Courthouse'),
+      whenLine(),
       chips,
       el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. Every child who enters gets a Chanukah gift, and our winners take home a special prize!'),
       more);

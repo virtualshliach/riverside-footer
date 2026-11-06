@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-06c';
+  var V = '2026-11-06d';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -18,9 +18,10 @@
     '7457011': { file: 'sukkot-5787.js', cover: '#F5EBDF', coverId: 'hh26-cover', onResponse: true },
     /* Chanukah Festival 2026 - DRAFT page. At go-live move to '4949424'. */
     '7553387': { file: 'chanukah-2026.js', cover: '#0f2936', coverId: 'cf26-cover' },
-    /* Kids Menorah Contest 2026 registration (hidden page). Designs the thank-you page only for now,
-       so no cover: the registration form shows as the platform draws it. */
-    '7606745': { file: 'menorah-contest-2026.js', onResponse: true }
+    /* Kids Menorah Contest 2026 registration (hidden page): festival hero + restyled form, and the thank-you page. */
+    '7606745': { file: 'menorah-contest-2026.js', onResponse: true },
+    /* Dreidel Guessing Contest (JewishRiverside.com/Guess, booth banner QR). Form + thank-you page. */
+    '5738793': { file: 'dreidel-2026.js', onResponse: true }
   };
 
   /* domain roots that should load a project without an aid in the URL */

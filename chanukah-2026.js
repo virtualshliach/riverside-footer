@@ -1875,6 +1875,7 @@
   function buildContest() {
     var C = CFG.CONTEST;
     var c = el('div', 'cf-mc cf-reveal');
+    c.id = 'cf-contest'; /* ChanukahFestival.org/#contest (linked from the contest registration page) */
     var facts = el('ul', 'cf-mc-facts');
     C.facts.forEach(function (f) { facts.appendChild(el('li', null, f)); });
     var btns = el('div', 'cf-mc-btns');
