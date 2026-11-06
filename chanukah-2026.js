@@ -139,7 +139,7 @@
     ],
 
     /* ---- Community partners shown on the page ---- */
-    PARTNERS_INTRO: 'Thank you to our partners for helping light up Riverside.',
+    PARTNERS_INTRO: 'Thank you to our partners for making this celebration possible.',
     /* Order per brief (Nov 5). County grants are credited to the district office, not the official.
        Add logo: 'file.png' per partner once all logo files are in the repo. */
     PARTNERS: [
@@ -152,7 +152,7 @@
     ],
     ORGANIZER: {
       logo: 'chabad-jcc-logo-white-gold.png',
-      caption: 'Founded and organized by Chabad Jewish Community Center of Riverside, celebrating with Riverside since 2005.'
+      caption: 'Founded and organized by Chabad Jewish Community Center of Riverside, celebrating with our community since 2005.'
     },
     /* Who we are card. MISSION: paste the line from JewishRiverside.com (left as TBA, not invented). */
     WHO: {
@@ -472,7 +472,7 @@
       '#cf26 img{max-width:100%;display:block}',
       '#cf26 .cf-ic{width:1.15em;height:1.15em;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;flex:none}',
       '#cf26 :focus-visible{outline:2px solid ' + GOLD + ';outline-offset:3px}',
-      '#cf26 .cf-wrap{max-width:1120px;margin:0 auto;padding:0 20px}',
+      '#cf26 .cf-wrap{max-width:1140px;margin:0 auto;padding:0 20px}',
       '#cf26 .cf-sec{padding:84px 0}',
       '#cf26 .cf-alt{background:' + DEEP + '}',
       '#cf26 .cf-kicker{font-size:.74rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:10px}',
@@ -493,8 +493,8 @@
       '#cf26 .cf-teal{background:' + TEAL + ';color:' + DEEP + '}',
 
       /* nav */
-      '#cf26 .cf-nav{position:sticky;top:0;z-index:50;background:rgba(10,31,42,.92);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}',
-      '#cf26 .cf-nav .cf-wrap{display:flex;align-items:center;gap:18px;height:60px}',
+      '#cf26 .cf-nav{position:sticky;top:0;z-index:50;background:rgba(11,31,39,.96);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.07)}',
+      '#cf26 .cf-nav .cf-wrap{display:flex;align-items:center;gap:18px;height:56px}',
       '#cf26 .cf-brand{font-family:' + DISP + ';font-weight:700;color:#fff;text-decoration:none;font-size:1.4rem;letter-spacing:.04em;white-space:nowrap}',
       '@media (max-width:420px){#cf26 .cf-brand{font-size:1.2rem}}',
       '#cf26 .cf-brand span{color:' + TEAL + '}',
@@ -503,7 +503,7 @@
       '#cf26 .cf-links a{color:' + MUTED + ';text-decoration:none;font-size:.84rem;font-weight:600;padding:8px 11px;border-radius:999px;white-space:nowrap}',
       '#cf26 .cf-links a:hover{color:#fff;background:rgba(255,255,255,.06)}',
       '#cf26 .cf-nav .cf-btn{padding:9px 18px;font-size:.84rem}',
-      '#cf26 .cf-burger{display:none;width:42px;height:42px;border-radius:10px;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1px solid rgba(255,255,255,.18)}',
+      '#cf26 .cf-burger{display:none;width:44px;height:44px;border-radius:4px;flex-direction:column;align-items:center;justify-content:center;gap:5px;border:1.5px solid ' + TEAL + '}',
       '#cf26 .cf-burger i{display:block;width:20px;height:2px;border-radius:2px;background:#fff;transition:transform .25s ease,opacity .2s ease}',
       '#cf26 .cf-burger.open i:nth-child(1){transform:translateY(7px) rotate(45deg)}',
       '#cf26 .cf-burger.open i:nth-child(2){opacity:0}',
@@ -638,6 +638,7 @@
       '#cf26 .cf-unit{min-width:74px;text-align:center;padding:8px 6px;border-radius:12px;background:' + PANEL + ';border:1px solid rgba(26,204,206,.18)}',
       '#cf26 .cf-unit b{display:block;font-family:' + DISP + ';font-size:1.9rem;line-height:1.1;color:#fff}',
       '#cf26 .cf-unit span{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:' + GREEN + ';font-weight:700}',
+      '@media (max-width:420px){#cf26 .cf-units{gap:8px}#cf26 .cf-unit{min-width:64px;padding:8px 4px}#cf26 .cf-unit b{font-size:28px}#cf26 .cf-unit span{font-size:10px;letter-spacing:.1em}}',
       '#cf26 .cf-countmsg{font-family:' + DISP + ';font-size:1.3rem;color:' + GOLD + '}',
       '#cf26 .cf-marq{overflow:hidden;background:' + GOLD + ';color:' + DEEP + ';white-space:nowrap}',
       '#cf26 .cf-marq-in{display:inline-flex;gap:0;animation:cf26marq 40s linear infinite;padding:12px 0}',
@@ -871,7 +872,7 @@
       '#cf26 .cf-pop p{font-size:.92rem;margin-bottom:14px}',
       '#cf26 .cf-pop .cf-btn{margin:4px}',
       '#cf26 .cf-pop .cf-ghost{color:' + DEEP + ';border-color:rgba(10,31,42,.25)}',
-      '#cf26 .cf-foot{background:' + DEEP + ';padding:46px 0 34px;text-align:center;color:' + MUTED + ';font-size:.92rem}',
+      '#cf26 .cf-foot{background:' + DEEP + ';padding:46px 0 96px;text-align:center;color:' + MUTED + ';font-size:.92rem}',
       '#cf26 .cf-foot b{display:block;font-family:' + DISP + ';color:#fff;font-size:1.25rem;margin-bottom:10px}',
       '#cf26 .cf-foot-l{display:flex;flex-wrap:wrap;gap:8px 22px;justify-content:center;margin:10px 0 22px}',
       '#cf26 .cf-foot-l a{display:inline-flex;align-items:center;gap:8px;text-decoration:none;color:' + INK + '}',
@@ -1707,8 +1708,10 @@
     var names = allSponsorNames();
     if (!names.length) return null;
     var m = el('div', 'cf-marq');
-    m.setAttribute('aria-label', 'Thank you to our community partners');
+    m.setAttribute('role', 'img');
+    m.setAttribute('aria-label', 'Thank you to our community partners: ' + names.join(', '));
     var inner = el('div', 'cf-marq-in');
+    inner.setAttribute('aria-hidden', 'true');
     var reps = Math.max(2, Math.ceil(12 / names.length)) * 2;
     for (var r = 0; r < reps; r++) {
       inner.appendChild(el('em', null, 'Thank you'));
@@ -1722,8 +1725,8 @@
   function buildEvent() {
     var s = section('event');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('The evening', 'An evening of light for all of Riverside',
-      'Bring the whole family to downtown Riverside for the 4th night of Chanukah.', true));
+    w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire',
+      'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
 
     var hl = el('div', 'cf-hl');
     CFG.highlights.forEach(function (x, i) {
@@ -1935,7 +1938,7 @@
       if (n.img) {
         var ph = el('div', 'cf-nc-ph');
         var im = document.createElement('img');
-        im.src = asset(n.img); im.alt = ''; im.loading = 'lazy';
+        im.src = asset(n.img); im.alt = T(n.title); im.loading = 'lazy';
         ph.appendChild(im);
         a.appendChild(ph);
       }
@@ -1977,7 +1980,7 @@
       a.type = 'button';
       a.style.transitionDelay = (i % 4 * 0.06) + 's';
       var im = document.createElement('img');
-      im.className = 'cf-gc-img'; im.src = asset(it.img); im.alt = ''; im.loading = 'lazy';
+      im.className = 'cf-gc-img'; im.src = asset(it.img); im.alt = T(it.title); im.loading = 'lazy';
       im.onerror = function () { this.parentNode.replaceChild(placeholderArt(), this); };
       a.appendChild(im);
       var b = el('div', 'cf-gc-b');
