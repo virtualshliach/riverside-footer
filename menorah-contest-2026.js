@@ -1,4 +1,4 @@
-/* KIDS MENORAH CONTEST 2026 - Chabad Jewish Community Center of Riverside
+/* MENORAH CONTEST 2026 - Chabad Jewish Community Center of Riverside
    Loaded by footer.js (PAGES '7606745', onResponse). Hidden registration form, aid 7606745.
    On the registration page it adds a festival hero and restyles the native form (styles only:
    every field, condition and the submit stay as the platform draws them).
@@ -18,7 +18,7 @@
     /* A phrase from the platform's own confirmation text, used to find it on the page. */
     /* ...and its last words, so the whole message (headline to sign-off) is replaced. */
     NATIVE_LAST: 'See you at the festival',
-    NATIVE_TEXT: 'registered for the Kids Menorah Contest',
+    NATIVE_TEXT: 'registered for the', /* matches the old (Kids) and new confirmation wording */
     festivalUrl: 'https://chanukahfestival.org/',
     mapUrl: 'https://chanukahfestival.org/#map',
     facebookEvent: 'https://www.facebook.com/events/1651125113077350/',
@@ -34,7 +34,7 @@
       ['Display', 'Menorahs stay on display at the table during the festival'],
       ['Winners', 'Announced 7:45–8 PM. Please pick up your menorah before you leave']
     ],
-    SHARE_TEXT: 'We’re entering the Kids Menorah Contest at Riverside’s Chanukah Festival! Come cheer us on Monday, Dec 7, 6–8 PM at the Historic Courthouse. Winners are announced 7:45–8 PM. Kids 4–12 can enter free: https://www.jewishriverside.com/7606745',
+    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival! Come cheer us on Monday, Dec 7, 6–8 PM at the Historic Courthouse. Winners are announced 7:45–8 PM. All ages can enter free: https://www.jewishriverside.com/7606745',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
@@ -155,7 +155,7 @@
   function f(iso) { return iso.replace(/[-:]/g, '').replace(/\.\d+/, ''); }
   function gcalUrl() {
     return 'https://calendar.google.com/calendar/render?' + qs({
-      action: 'TEMPLATE', text: 'Chanukah Festival + Kids Menorah Contest',
+      action: 'TEMPLATE', text: 'Chanukah Festival + Menorah Contest',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
       details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners announced 7:45–8 PM. ' + CFG.festivalUrl
     });
@@ -178,7 +178,7 @@
       nb.insertBefore(icon('share'), nb.firstChild);
       nb.addEventListener('click', function () {
         track('native');
-        var pr = navigator.share({ title: 'Kids Menorah Contest', text: CFG.SHARE_TEXT, url: shareUrl('native') });
+        var pr = navigator.share({ title: 'Menorah Contest', text: CFG.SHARE_TEXT, url: shareUrl('native') });
         if (pr && pr.catch) pr.catch(function () {});
       });
       row.appendChild(nb);
@@ -236,8 +236,8 @@
     var ok = el('div', 'mc-ok'); ok.appendChild(icon('check'));
     add(hd, ok,
       el('div', 'mc-kick', 'Thank you!'),
-      el('h1', null, 'You’re registered for the Kids Menorah Contest'),
-      el('p', 'mc-lead', 'We can’t wait to see the menorahs your family creates. Here is everything you need for festival night.'));
+      el('h1', null, 'You’re registered for the Menorah Contest'),
+      el('p', 'mc-lead', 'We can’t wait to see the menorahs you create. Here is everything you need for festival night.'));
 
     var bd = el('div', 'mc-bd');
 
@@ -340,14 +340,14 @@
   function buildFormHero() {
     var h = el('div'); h.id = 'mc26-hero';
     var chips = el('ul', 'mh-chips');
-    ['Ages 4–12', 'Free to enter', 'Register by Dec 4'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
+    ['All ages', 'Free to enter', 'Register by Dec 4'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
     var more = link('mh-a', CFG.festivalUrl + '#contest', 'Contest rules, prizes and the festival map', true);
     add(h,
       el('div', 'mh-kick', '22nd Annual Chanukah Festival'),
-      el('h2', null, 'Kids Menorah Contest'),
+      el('h2', null, 'Menorah Contest'),
       whenLine(),
       chips,
-      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. Every child who enters gets a Chanukah gift, and our winners take home a special prize!'),
+      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!'),
       more);
     return h;
   }

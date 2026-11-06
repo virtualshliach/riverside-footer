@@ -86,7 +86,7 @@
           [5, 'Balloon Twisting', ''],
           [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45–8 PM'],
           [7, 'Mini Train Rides', ''],
-          [15, 'Menorah Contest', 'Kids’ entries on display. Winners announced 7:45–8 PM'],
+          [15, 'Menorah Contest', 'All entries on display. Winners announced 7:45–8 PM'],
           [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
@@ -103,31 +103,32 @@
       ROAMING: 'LED Robot · Dreidel Mascot · Stilt Walker · Juggler'
     },
 
-    /* Kids Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
+    /* Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
-      intro: 'Kids ages 4–12 build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
+      intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
       facts: ['Register by Dec 4', 'Drop off 5:45–6:15 PM at table #15', 'Winners announced 7:45–8 PM'],
       how: [
         'Register by Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
         'Menorahs stay on display at table #15 during the festival.',
-        'Judging is on visual impact, creativity and craftsmanship, with the child’s age in mind.',
+        'Judging is on visual impact, creativity and craftsmanship, with the builder’s age in mind.',
         'Winners are announced between 7:45 and 8 PM. Please pick up your menorah before you leave.'
       ],
       prizes: [
-        'Two age groups: 4–7 and 8–12.',
-        'A 1st place winner in each age group, plus one Best in Show (3 winners).'
+        'Best Menorah: the festival trophy, awarded every year.',
+        'Runners-up: a $50 and a $25 Amazon gift card.',
+        'Every child who enters gets a Chanukah gift.'
       ],
       rules: [
-        'Ages 4–12.',
+        'Open to all ages, in two groups: 12 and under, and 13 and up.',
         'Nine branches, including the shamash.',
         'Eight branches in a straight line at an even height; the shamash higher or lower.',
         'No food.',
         'Bring a wax candle or oil.',
         'It must stand on its own and not break, fall or melt when lit.',
-        'One entry per child. The child is the main builder (adult help for safety is OK).'
+        'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK).'
       ]
     },
 
@@ -789,7 +790,7 @@
       '@media (min-width:861px){#cf26 .cf-keyg{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0 26px}#cf26 .cf-keyg .cf-roam{grid-column:1 / -1;text-align:center;padding-top:12px;border-top:1px solid rgba(255,255,255,.08)}}',
       '@media (max-width:860px){#cf26 .cf-keywrap{padding:0 22px 26px}}',
       '#cf26 .cf-roam b{color:' + GOLD + '}',
-      /* Kids Menorah Contest card */
+      /* Menorah Contest card */
       '#cf26 .cf-mc{margin-top:28px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.35);border-radius:22px;padding:30px 34px}',
       '@media (max-width:620px){#cf26 .cf-mc{padding:24px 20px}}',
       '#cf26 .cf-mc h3{font-family:' + DISP + ';font-size:clamp(1.5rem,3.4vw,2rem);color:#fff;line-height:1.15;margin:0 0 8px}',
@@ -2015,7 +2016,7 @@
     return wrap;
   }
 
-  /* ---------- Kids Menorah Contest card ---------- */
+  /* ---------- Menorah Contest card ---------- */
   function buildContest() {
     var C = CFG.CONTEST;
     var c = el('div', 'cf-mc cf-reveal');
@@ -2023,7 +2024,7 @@
     var facts = el('ul', 'cf-mc-facts');
     C.facts.forEach(function (f) { facts.appendChild(el('li', null, f)); });
     var btns = el('div', 'cf-mc-btns');
-    var reg = link('cf-btn cf-gold', C.url, 'Register Your Child', true);
+    var reg = link('cf-btn cf-gold', C.url, 'Register to Enter', true);
     var mp = link('cf-btn cf-ghost', '#cf-map', 'See the Festival Map');
     mp.insertBefore(icon('pin'), mp.firstChild);
     mp.addEventListener('click', function (e) { e.preventDefault(); goTo('map'); });
@@ -2037,7 +2038,7 @@
       el('h4', null, 'Rules'), list('ul', C.rules));
     add(xp, el('summary', null, 'See Contest Details'), inner);
 
-    add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, 'Kids Menorah Contest'),
+    add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, 'Menorah Contest'),
       el('p', null, C.intro), facts, btns, xp);
     return c;
   }

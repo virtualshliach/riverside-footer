@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-06k';
+  var V = '2026-11-06l';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -20,7 +20,7 @@
     '4949424': { file: 'chanukah-2026.js', cover: '#0f2936', coverId: 'cf26-cover' },
     /* Chanukah Festival 2026 - DRAFT page, for reviewing changes before they go live (chanukah-2026-draft.js). */
     '7553387': { file: 'chanukah-2026-draft.js', cover: '#0f2936', coverId: 'cf26-cover' },
-    /* Kids Menorah Contest 2026 registration (hidden page): festival hero + restyled form, and the thank-you page. */
+    /* Menorah Contest 2026 (all ages) registration (hidden page): festival hero + restyled form, and the thank-you page. */
     '7606745': { file: 'menorah-contest-2026.js', onResponse: true },
     /* Dreidel Guessing Contest (JewishRiverside.com/Guess, booth banner QR). Form + thank-you page. */
     '5738793': { file: 'dreidel-2026.js', onResponse: true },
