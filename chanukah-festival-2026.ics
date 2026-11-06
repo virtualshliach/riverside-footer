@@ -1,0 +1,16 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Chabad Jewish Community Center of Riverside//Chanukah Festival//EN
+CALSCALE:GREGORIAN
+METHOD:PUBLISH
+BEGIN:VEVENT
+UID:chanukah-festival-2026@jewishriverside.com
+DTSTAMP:20261106T180000Z
+DTSTART:20261208T020000Z
+DTEND:20261208T040000Z
+SUMMARY:22nd Annual Chanukah Festival
+LOCATION:Riverside Historic Courthouse\, 4050 Main St\, Riverside\, CA 92501
+DESCRIPTION:Grand Menorah Lighting\, live music\, latkes and donuts\, kids' activities. Free for everyone. Come early: the first 300 guests get a free Chanukah gift. https://ChanukahFestival.org
+URL:https://ChanukahFestival.org
+END:VEVENT
+END:VCALENDAR
