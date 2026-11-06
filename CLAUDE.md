@@ -36,6 +36,24 @@ who owns this repository.
 
 To undo a bad change, revert its commit and push; the site goes back within ~10 minutes.
 
+## Visual check before showing anything (layout, centering, alignment)
+
+A screenshot that "looks right" is not a check. Before saying any layout is fixed, centered or
+aligned, on this site or in a ChabadOne form:
+
+1. **Measure, don't eyeball.** Run a script on the live page that reads each element's
+   `getBoundingClientRect()` and compares centers or left edges. Centered items must share
+   the same center as their container within 2 px; aligned items must share a left edge.
+2. **Check every centered piece together:** the page heading, intro, notes, buttons and
+   footer lines. Report the numbers (for example "heading 1153, button 1153").
+3. **Find the cause before fixing.** Look at the parent's `display` (grid, flex, float).
+   ChabadOne form rows are a two-column grid (label | field); anything meant to span the
+   full width needs `grid-column: 1 / -1`, not just `margin-left: 0`.
+4. **Check desktop (1366 px) and phone (390 px)** after the change is live, not only in a
+   test page.
+5. **Look at a full-size screenshot,** never one scaled below about 60%; small offsets
+   disappear at small scales.
+
 ## Rules
 
 - **Past events stay on.** Never remove a page from `PAGES` unless the person asks to
