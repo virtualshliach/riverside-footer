@@ -151,7 +151,7 @@ var SITES = {
     ok(gTitles.join('|') === 'What Is Chanukah?|How to Light the Menorah|How to Celebrate Chanukah|Dreidel, Latkes and Donuts', 'four guide cards (' + gTitles.join('|') + ')');
     var gImgs = [].map.call(r.d.querySelectorAll('#cf-guide .cf-gc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(gImgs.join(',') === 'g-guide.jpg,g-light.jpg,g-celebrate.jpg,g-dreidel.jpg', 'guide cards use our event photos (' + gImgs.join(',') + ')');
-    ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 9, 'nine guide photos are in the repo');
+    ok(fs.readdirSync(ROOT).filter(function (f) { return /^g-.*\.jpg$/.test(f); }).length === 8, 'eight guide photos are in the repo');
     var hv = r.d.querySelector('#cf-top .cf-vid video');
     ok(hv && hv.getAttribute('src') === PAGES_BASE + 'festival-hero.mp4', 'hero video points at festival-hero.mp4 in this repo (' + (hv && hv.getAttribute('src')) + ')');
     ok(hv && hv.muted && hv.hasAttribute('playsinline') && hv.loop, 'hero video is muted, loops and plays inline');
@@ -167,8 +167,14 @@ var SITES = {
     ok(pImgs.length === 6 && pImgs.every(function (i) { return i.alt && fs.existsSync(path.join(ROOT, i.getAttribute('src').replace(PAGES_BASE, '').split('?')[0])); }),
       'every partner shows its logo from the repo, with a name for screen readers');
     ok(fs.existsSync(path.join(ROOT, 'chabad-jcc-logo-white-gold.png')), 'organizer logo is in the repo');
-    var nImgs = [].map.call(r.d.querySelectorAll('#cf-news .cf-nc img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
-    ok(nImgs.length === 7 && nImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'every news card has a thumbnail in the repo (' + nImgs.join(',') + ')');
+    var front = r.d.querySelector('#cf-news .cf-front img');
+    ok(front && fs.existsSync(path.join(ROOT, front.getAttribute('src').replace(PAGES_BASE, ''))) && /Press-Enterprise/.test(front.alt), 'front page feature shows the Press-Enterprise front page image from the repo');
+    var cards = r.d.querySelectorAll('#cf-news .cf-news .cf-nc');
+    ok(cards.length >= 15, 'news carousel has at least 15 stories (' + cards.length + ')');
+    var pe = [].filter.call(cards, function (c) { return /pressenterprise\.com/.test(c.href); }).length;
+    ok(pe >= 12, 'most stories are from The Press-Enterprise (' + pe + ')');
+    ok(!/mynewsla|raincrossgazette|pagesuite/.test(r.d.getElementById('cf-news').innerHTML), 'smaller outlets removed from the news');
+    ok([].every.call(cards, function (c) { return c.querySelector('.cf-nc-plate') && c.target === '_blank'; }), 'every story card has a nameplate and opens in a new tab');
     ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
     var kids = [].slice.call(r.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
     ok(kids[kids.length - 2] === 'cf-flysec' && kids[kids.length - 1] === 'cf-foot', 'flyer download sits right before the footer (' + kids.slice(-3).join(' > ') + ')');

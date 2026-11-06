@@ -163,37 +163,81 @@
       mailingList: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join-Our-Mailing-List.htm'
     },
 
-    /* img: thumbnail in this repo. NBC's own photo is a stock image from elsewhere,
-       so its card shows our festival photo instead. */
+    /* In the News. FRONT is the featured front page (image in this repo).
+       NEWS cards show a newspaper-style nameplate, newest first. badge is optional. */
+    NEWS_FRONT: {
+      outlet: 'The Press-Enterprise', kicker: 'Front page', date: 'Tuesday, Dec 20, 2022',
+      title: 'Hanukkah Fests Light Up Inland Empire',
+      blurb: 'The 18th annual festival led the front page: lights aglow downtown, a Hasidic band, potato latkes and what was billed as the Inland Empire\u2019s largest menorah.',
+      url: 'https://www.pressenterprise.com/2022/12/19/18th-chanukah-festival-celebrated-in-riverside/',
+      img: 'news-pe-front-2022.jpg',
+      alt: 'Front page of The Press-Enterprise, Tuesday, Dec 20, 2022, with the headline Hanukkah fests light up Inland Empire and a photo of musicians performing at the menorah lighting at the Riverside Historic Courthouse'
+    },
     NEWS: [
+      { outlet: 'The Press-Enterprise', date: 'Dec 15, 2025',
+        title: 'Riverside Joins Together for 21st Annual Chanukah Festival',
+        blurb: 'The festival went ahead despite attacks on the Jewish community that week, with a fire show, cookie decorating and the menorah lighting.',
+        url: 'https://www.pressenterprise.com/2025/12/15/riverside-joins-together-for-21st-annual-chanukah-festival/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 15, 2025',
+        title: 'Inland Empire Hanukkah Events Continue, Despite Local and Global Violence',
+        blurb: 'Jewish leaders across the region, Rabbi Shmuel Fuss among them, vowed to keep celebrating as police stepped up patrols.',
+        url: 'https://www.pressenterprise.com/2025/12/15/inland-empire-hanukkah-events-continue-despite-local-and-global-violence/' },
       { outlet: 'Riverside County District 2', date: 'Dec 22, 2025',
         title: 'Chanukah Festival Celebrated at Riverside Historic Courthouse',
-        blurb: 'Supervisor Spiegel\u2019s office recaps last year\u2019s festival: families downtown for the menorah lighting, music and activities, with photos.',
-        url: 'https://rivcodistrict2.org/node/11701', img: 'news-2025.jpg' },
-      { outlet: 'Riverside County District 2', date: 'Dec 13, 2023',
-        title: '19th Annual Chanukah Festival and the Menorah Lighting',
-        blurb: 'Supervisor Spiegel joins the community for the menorah lighting before the courthouse.',
-        url: 'https://rivcodistrict2.org/node/3936', img: 'news-2023.jpg' },
-      { outlet: 'The Sun', date: 'Dec 2023',
-        title: 'Chanukah Festival lights up the night',
-        blurb: 'Hundreds gathered at the Historic Courthouse for the 19th festival: food, music, activities and the lighting of the region\u2019s largest menorah.',
-        url: 'https://edition.pagesuite.com/tribune/article_popover.aspx?guid=0ffd624c-e628-4eb1-914f-7bef6adef1e9', img: 'g-robot.jpg' },
-      { outlet: 'Raincross Gazette', date: 'Nov 30, 2023',
-        title: '19th Annual Chanukah Festival to light up Riverside Historic Courthouse',
-        blurb: 'A preview of the courthouse-steps celebration and its message of unity, noting record turnout the year before.',
-        url: 'https://www.raincrossgazette.com/19th-annual-chanukah-festival-to-light-up-riverside-historic-courthouse' , img: 'news-raincross.jpg' },
-      { outlet: 'MyNewsLA', date: 'Nov 28, 2022',
-        title: 'Grand Menorah Lighting, Dancing, Food, Other Fun Set for Hanukkah Festival',
-        blurb: 'A preview of the 18th festival at the downtown courthouse: a large menorah lighting, live music, dancing and food.',
-        url: 'https://mynewsla.com/riverside/2022/11/28/grand-menorah-lighting-dancing-food-other-fun-set-for-hanukkah-festival/', img: 'g-kids.jpg' },
-      { outlet: 'MyNewsLA', date: 'Nov 29, 2021',
-        title: 'Chanukah Festival Held in Riverside',
-        blurb: 'The community gathered at the Historic Courthouse for the menorah lighting, music, dancing and more.',
-        url: 'https://mynewsla.com/riverside/2021/11/29/chanukah-festival-held-in-riverside/', img: 'g-family.jpg' },
+        blurb: 'Supervisor Spiegel\u2019s office recaps the festival: families downtown for the menorah lighting, music and activities, with photos.',
+        url: 'https://rivcodistrict2.org/node/11701' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 31, 2024',
+        title: 'Riverside Celebrates 20th Annual Chanukah Festival in Downtown',
+        blurb: 'Light, music and traditional foods on the sixth night of Chanukah, in photos.',
+        url: 'https://www.pressenterprise.com/2024/12/31/riverside-celebrates-20th-annual-chanukah-festival-in-downtown/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 12, 2023',
+        title: 'Riverside\u2019s 19th Annual Chanukah Festival Lights Up the Night',
+        blurb: 'The region\u2019s largest menorah, plus food, music and dancing at the Historic Courthouse. It led the Local News section.',
+        url: 'https://www.pressenterprise.com/2023/12/12/riversides-19th-annual-chanukah-festival-lights-up-the-night/', badge: 'Local front page' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 7, 2023',
+        title: 'Local Jewish Communities Look for Hanukkah to Bring Light in a Time of Darkness',
+        blurb: 'Rabbi Shmuel Fuss on why more Jews were celebrating with confidence, and why that year\u2019s festival would emphasize light and joy.',
+        url: 'https://www.pressenterprise.com/2023/12/07/local-jewish-communities-look-for-hanukkah-to-bring-light-in-a-time-of-darkness/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 15, 2022',
+        title: 'Riverside\u2019s Jewish Community Center Youths Build Menorahs',
+        blurb: 'Kids built their own menorahs at a pre-Chanukah workshop with The Home Depot in Moreno Valley.',
+        url: 'https://www.pressenterprise.com/2022/12/15/jewish-community-center-youths-build-menorahs/' },
+      { outlet: 'The Press-Enterprise', date: 'Nov 29, 2021',
+        title: 'Riverside Menorah Lighting Festival Marks Hanukkah',
+        blurb: 'Rabbi Shmuel Fuss speaks before the menorah lighting at the Historic Courthouse.',
+        url: 'https://www.pressenterprise.com/2021/11/29/riverside-menorah-lighting-festival-marks-hanukkah/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 24, 2020',
+        title: 'Inland Religious, Cultural Holiday Traditions Press On Despite Coronavirus',
+        blurb: 'Families came together for the 16th annual festival in a year shaped by the pandemic.',
+        url: 'https://www.pressenterprise.com/2020/12/24/inland-religious-cultural-holiday-traditions-press-on-despite-coronavirus/' },
       { outlet: 'NBC Los Angeles', date: 'Dec 2020',
         title: 'Riverside\u2019s Annual Hanukkah Festival to Go Mobile Amid COVID-19 Restrictions',
         blurb: 'How the festival kept the lights on during the pandemic with a drive-in celebration.',
-        url: 'https://www.nbclosangeles.com/holidays/riversides-annual-hanukkah-festival-to-go-mobile-amid-covid-19-restrictions/2481846/' , img: 'news-nbc.jpg' }
+        url: 'https://www.nbclosangeles.com/holidays/riversides-annual-hanukkah-festival-to-go-mobile-amid-covid-19-restrictions/2481846/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 20, 2019',
+        title: 'Riverside\u2019s Annual Hanukkah Celebration Set for Monday at Courthouse',
+        blurb: 'More than 2,000 people were expected in front of the Historic Courthouse for the 15th festival.',
+        url: 'https://www.pressenterprise.com/2019/12/20/riversides-annual-hanukkah-celebration-set-for-monday-at-courthouse/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 3, 2018',
+        title: 'Riverside Lights Inland Empire\u2019s Largest Menorah to Celebrate Hanukkah',
+        blurb: 'Mayor Rusty Bailey and Rabbi Shmuel Fuss light the region\u2019s largest menorah at the 14th festival.',
+        url: 'https://www.pressenterprise.com/2018/12/03/riverside-lights-inland-empires-largest-menorah-to-celebrate-hanukkah/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 8, 2015',
+        title: 'Hanukkah Festivalgoers Defiant Against Terrorists',
+        blurb: 'More than 300 people filled Main Street in front of the courthouse. \u201cTerrorism will not make us run away and hide,\u201d Rabbi Fuss said.',
+        url: 'https://www.pressenterprise.com/2015/12/08/hanukkah-festivalgoers-defiant-against-terrorists/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 12, 2013',
+        title: 'Riverside Hanukkah Festival Draws Diverse Crowd',
+        blurb: 'A diverse crowd filled the courthouse steps for the ninth festival as Mayor Rusty Bailey lit the center candle.',
+        url: 'https://www.pressenterprise.com/2013/12/12/riverside-hanukkah-festival-draws-diverse-crowd/' },
+      { outlet: 'The Press-Enterprise', date: 'Dec 28, 2011',
+        title: 'City Celebrates Hanukkah With a Festival',
+        blurb: 'Riverside celebrates the holiday downtown with the Chabad Jewish Community Center.',
+        url: 'https://www.pressenterprise.com/2011/12/28/riverside-city-celebrates-hanukkah-with-a-festival/' },
+      { outlet: 'KESQ News', date: 'Dec 5, 2010',
+        title: 'Nine-Foot Menorah Kicks Off Afternoon Hanukkah Festival',
+        blurb: 'A 9-foot menorah, food and music at the sixth annual festival.',
+        url: 'https://kesq.com/news/2010/12/05/nine-foot-menorah-kicks-off-afternoon-hanukkah-festival/' }
     ],
 
     /* ---- Chanukah guide ----
@@ -823,7 +867,7 @@
 
       /* news */
       /* scrolling row: 4 cards visible on a computer, swipe on phones (next card peeks in) */
-      '#cf26 .cf-newsbox{position:relative;margin-top:40px}',
+      '#cf26 .cf-newsbox{position:relative;margin-top:28px}',
       '#cf26 .cf-news{display:grid;grid-auto-flow:column;grid-auto-columns:calc((100% - 54px) / 4);gap:18px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding-bottom:14px;scrollbar-width:thin;scrollbar-color:rgba(60,199,180,.5) transparent;-webkit-overflow-scrolling:touch}',
       '#cf26 .cf-news > .cf-nc{scroll-snap-align:start}',
       '@media (max-width:900px){#cf26 .cf-news{grid-auto-columns:calc((100% - 18px) / 2.3)}}',
@@ -836,12 +880,26 @@
       '#cf26 .cf-newsnav span{font-size:.9rem;color:' + MUTED + ';min-width:120px;text-align:center}',
       '@media (prefers-reduced-motion:reduce){#cf26 .cf-news{scroll-behavior:auto}}',
       '#cf26 .cf-nc{display:flex;flex-direction:column;background:' + PANEL + ';border:1px solid rgba(255,255,255,.08);color:#fff;border-radius:18px;overflow:hidden;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease;min-height:230px}',
+      '#cf26 .cf-nc-plate{position:relative;aspect-ratio:16/7;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:18px;text-align:center;background:linear-gradient(180deg,' + DEEP + ',#0a1a21);border-bottom:3px double rgba(233,185,73,.55)}',
+      '#cf26 .cf-nc-pl-name{font-family:' + DISP + ';font-weight:700;font-size:1.15rem;line-height:1.2;color:#fff;letter-spacing:.01em}',
+      '#cf26 .cf-nc-pl-yr{font-family:' + DISP + ';font-size:.95rem;color:' + GOLD + ';letter-spacing:.2em}',
+      '#cf26 .cf-nc-badge{display:inline-block;align-self:flex-start;background:' + GOLD + ';color:#14262d;font-size:.72rem;font-weight:800;letter-spacing:.12em;text-transform:uppercase;padding:5px 10px;border-radius:20px}',
+      '#cf26 .cf-nc-top .cf-nc-badge{margin-bottom:4px}',
+      '#cf26 .cf-front{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);margin-top:40px;background:' + PANEL + ';border:1px solid rgba(255,255,255,.08);border-radius:18px;overflow:hidden;color:#fff;text-decoration:none;transition:transform .25s ease,box-shadow .25s ease}',
+      '#cf26 .cf-front:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35)}',
+      '#cf26 .cf-front-ph{background:#fff;display:flex;align-items:center;justify-content:center;padding:14px}',
+      '#cf26 .cf-front-ph img{width:100%;height:auto;display:block}',
+      '#cf26 .cf-front-bd{display:flex;flex-direction:column;align-items:flex-start;gap:6px;padding:26px 28px}',
+      '#cf26 .cf-front-bd .cf-nc-badge{margin-bottom:6px}',
+      '#cf26 .cf-front h3{font-family:' + DISP + ';color:#fff;font-size:1.5rem;line-height:1.25;margin:8px 0 6px}',
+      '#cf26 .cf-front p{font-size:1rem;color:' + MUTED + '}',
+      '@media (max-width:760px){#cf26 .cf-front{grid-template-columns:1fr}#cf26 .cf-front-bd{padding:20px}#cf26 .cf-front h3{font-size:1.3rem}}',
       '#cf26 .cf-nc-ph{aspect-ratio:16/10;max-width:100%;overflow:hidden;background:' + DEEP + '}',
       '#cf26 .cf-nc-ph img{width:100%;height:100%;object-fit:cover;transition:transform .6s ease}',
       '#cf26 .cf-nc:hover .cf-nc-ph img{transform:scale(1.05)}',
       '#cf26 .cf-nc-bd{display:flex;flex-direction:column;flex:1;padding:18px 20px 18px}',
       '#cf26 .cf-nc:hover{transform:translateY(-4px);box-shadow:0 18px 40px rgba(0,0,0,.35)}',
-      '#cf26 .cf-nc-top{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:10px}',
+      '#cf26 .cf-nc-top{display:flex;flex-direction:column;align-items:flex-start;gap:4px;margin-bottom:8px}',
       '#cf26 .cf-nc-out{font-size:.72rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:' + TEAL + '}',
       '#cf26 .cf-nc-date{font-size:.8rem;color:' + MUTED + ';white-space:nowrap}',
       '#cf26 .cf-nc h3{font-family:' + DISP + ';color:#fff;font-size:1.08rem;line-height:1.3;margin-bottom:8px}',
@@ -2044,21 +2102,34 @@
     if (!CFG.NEWS.length) return null;
     var s = section('news');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('Press', 'In the News', 'Coverage of the festival over the years.', true));
+    w.appendChild(heading('Press', 'In the News', 'Featured in The Press-Enterprise year after year, including the front page.', true));
+    var F = CFG.NEWS_FRONT;
+    if (F) {
+      var fa = link('cf-front cf-reveal', F.url, null, true);
+      var fp = el('div', 'cf-front-ph');
+      var fi = document.createElement('img');
+      fi.src = asset(F.img); fi.alt = F.alt; fi.loading = 'lazy';
+      fp.appendChild(fi);
+      var fb = el('div', 'cf-front-bd');
+      var fgo = el('span', 'cf-nc-go', 'Read the story');
+      fgo.appendChild(icon('ext'));
+      add(fb, el('span', 'cf-nc-badge', F.kicker), el('span', 'cf-nc-out', F.outlet), el('span', 'cf-nc-date', F.date),
+        el('h3', null, F.title), el('p', null, F.blurb), fgo);
+      add(fa, fp, fb);
+      w.appendChild(fa);
+    }
     var g = el('div', 'cf-news');
-    CFG.NEWS.forEach(function (n, i) {
+    CFG.NEWS.forEach(function (n) {
       var a = link('cf-nc', n.url, null, true);
-      if (n.img) {
-        var ph = el('div', 'cf-nc-ph');
-        var im = document.createElement('img');
-        im.src = asset(n.img); im.alt = T(n.title); im.loading = 'lazy';
-        ph.appendChild(im);
-        a.appendChild(ph);
-      }
+      /* newspaper-style nameplate: outlet and year */
+      var pl = el('div', 'cf-nc-plate');
+      add(pl, el('span', 'cf-nc-pl-name', n.outlet), el('span', 'cf-nc-pl-yr', (n.date.match(/\d{4}/) || [''])[0]));
+      a.appendChild(pl);
       var bd = el('div', 'cf-nc-bd');
       var top = el('div', 'cf-nc-top');
-      add(top, el('span', 'cf-nc-out', n.outlet), el('span', 'cf-nc-date', n.date));
-      var go = el('span', 'cf-nc-go', 'Read');
+      if (n.badge) top.appendChild(el('span', 'cf-nc-badge', n.badge));
+      top.appendChild(el('span', 'cf-nc-date', n.date));
+      var go = el('span', 'cf-nc-go', 'Read the story');
       go.appendChild(icon('ext'));
       add(bd, top, el('h3', null, n.title), n.blurb ? el('p', null, n.blurb) : null, go);
       a.appendChild(bd);
