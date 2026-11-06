@@ -226,7 +226,7 @@ var SITES = {
     ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
     var waA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /wa\.me/.test(a.href); })[0];
     ok(waA && /chanukahfestival\.org%2F%3Futm_source%3Dwhatsapp/i.test(waA.href), 'WhatsApp invite carries the tagged ChanukahFestival.org link');
-    ok(!/[\u2013\u2014]/.test(r.d.getElementById('cf26').querySelector('.cf-hero').textContent), 'no dashes in the hero copy');
+    ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
     var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');
     ok(!/instagram\.com\/jewishriverside|facebook\.com\/jewishriverside/i.test(allA), 'no links to the Jewish Riverside social pages');
     ok(/@chanukahfestival/.test(r.d.querySelector('.cf-foot').textContent), 'footer shows @chanukahfestival');

@@ -39,7 +39,7 @@
 
     event: {
       dayLine: 'Mon. Dec 7, 2026',
-      timeLine: '6 to 8\u00a0PM',
+      timeLine: '6–8\u00a0PM',
       nightLine: '4th Night of Chanukah',
       venue: 'Riverside Historic Courthouse',
       street: '4050 Main St.',
@@ -74,7 +74,7 @@
       web: 'festival-map-2026-web.jpg',
       full: 'festival-map-2026.png',
       pdf: 'festival-map-2026.pdf',
-      alt: 'Visitor map of Chanukah Festival 2026 at the Riverside Historic Courthouse on Main Street between 10th and 11th, Dec 7, 6 to 8 PM, with numbered booths including #15 Menorah Contest and #16 Gelt Drop.',
+      alt: 'Visitor map of Chanukah Festival 2026 at the Riverside Historic Courthouse on Main Street between 10th and 11th, Dec 7, 6–8 PM, with numbered booths including #15 Menorah Contest and #16 Gelt Drop.',
       KEY: [
         { group: 'Stage {amp} Show', color: '#c8102e', items: [
           [1, 'Upper Stage {amp} Dais', 'Top of the courthouse steps'],
@@ -83,9 +83,9 @@
           [3, 'Kids Crafts', 'Two craft areas. Craft names TBA'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
-          [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45 to 8 PM'],
+          [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45–8 PM'],
           [7, 'Mini Train Rides', ''],
-          [15, 'Menorah Contest', 'Kids’ entries on display. Winners announced 7:45 to 8 PM'],
+          [15, 'Menorah Contest', 'Kids’ entries on display. Winners announced 7:45–8 PM'],
           [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
@@ -97,7 +97,7 @@
           [12, 'Police Mustang', 'Riverside’s display Mustang cruiser'],
           [13, 'Inflatable Menorah', 'Left lawn'],
           [14, 'Inflatable Dreidel', 'Right lawn'],
-          [18, 'Grand Menorah', 'Photos 6 to 7 PM and after the menorah lighting'] ] }
+          [18, 'Grand Menorah', 'Photos 6–7 PM and after the menorah lighting'] ] }
       ],
       ROAMING: 'LED Robot · Dreidel Mascot · Stilt Walker · Juggler'
     },
@@ -105,8 +105,8 @@
     /* Kids Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
-      intro: 'Kids ages 4 to 12 design and build a unique menorah at home. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
-      facts: ['Register by Dec 4', 'Drop off 5:45 to 6:15 PM at table #15', 'Winners announced 7:45 to 8 PM'],
+      intro: 'Kids ages 4–12 design and build a unique menorah at home. Free to enter. Every child who enters gets a Chanukah gift, and our winners take home a special prize!',
+      facts: ['Register by Dec 4', 'Drop off 5:45–6:15 PM at table #15', 'Winners announced 7:45–8 PM'],
       how: [
         'Register by Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
@@ -116,11 +116,11 @@
         'Winners are announced between 7:45 and 8 PM. Please pick up your menorah before you leave.'
       ],
       prizes: [
-        'Two age groups: 4 to 7 and 8 to 12.',
+        'Two age groups: 4–7 and 8–12.',
         'A 1st place winner in each age group, plus one Best in Show (3 winners).'
       ],
       rules: [
-        'Ages 4 to 12.',
+        'Ages 4–12.',
         'Nine branches, including the shamash.',
         'Eight branches in a straight line at an even height; the shamash higher or lower.',
         'No food.',
@@ -265,7 +265,7 @@
     SHARE: {
       /* every share points at the public address; tags added per button (see shareUrl) */
       url: 'https://chanukahfestival.org/',
-      text: 'Join us at Riverside\u2019s 22nd Annual Chanukah Festival! Monday, Dec 7, 6 to 8 PM at the Riverside Historic Courthouse. Grand Menorah Lighting, live music, latkes, donuts and kids\u2019 activities. Free for everyone. Come early: the first 300 guests get a free Chanukah gift!',
+      text: 'Join us at Riverside\u2019s 22nd Annual Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Grand Menorah Lighting, live music, latkes, donuts and kids\u2019 activities. Free for everyone. Come early: the first 300 guests get a free Chanukah gift!',
       emailSubject: 'You\u2019re invited: Riverside Chanukah Festival, Dec 7',
       emailEnd: 'Hope to see you there!',
       /* the festival's own social pages (not Jewish Riverside's or the shul's) */
@@ -1580,7 +1580,7 @@
     add(d, el('span', null, CFG.event.dayLine), el('span', 'cf-sep', ' \u2022 '), timeSpan());
     return d;
   }
-  /* "6 to 8 PM": keep the small "to" lowercase inside the uppercase date line */
+  /* "6–8 PM": keep the small "to" lowercase inside the uppercase date line */
   function timeSpan() {
     var t = el('span', 'cf-tm');
     var parts = CFG.event.timeLine.split(' to ');
@@ -1682,7 +1682,7 @@
         countEls.units.style.display = 'none';
         countEls.msg.style.display = 'block';
         countEls.msg.textContent = now < end ?
-          'The festival is happening now \u2014 come join us!' :
+          'The festival is happening now. Come join us!' :
           'Thank you for celebrating with us. See you next Chanukah!';
         return now < end;
       }
@@ -1752,7 +1752,7 @@
     var info = el('div', 'cf-ev-info');
     add(info,
       el('div', 'cf-kicker', 'Event details'),
-      evRow('cal', 'Monday, December 7, 2026', '6 to 8 PM'),
+      evRow('cal', 'Monday, December 7, 2026', '6–8 PM'),
       evRow('pin', CFG.event.venue, CFG.event.street + ', ' + CFG.event.cityLine));
     var sk = el('div', 'cf-kicker cf-ev-sub', 'Schedule');
     var sl = el('ol', 'cf-sched');
