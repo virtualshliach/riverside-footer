@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'mc26-2026-11-06a';
+  var VERSION = 'mc26-2026-11-06b';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -36,11 +36,12 @@
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
-  /* ---------- guard: this page's thank-you screen only ---------- */
+  /* ---------- guard: this page only (form + its thank-you screen) ---------- */
   var HREF = window.location.href;
   var onPage = new RegExp('(/aid/' + CFG.AID + '(/|\\.|$))|([?\\x26]aid=' + CFG.AID + '(\\D|$))', 'i').test(HREF);
   var isResponse = HREF.indexOf('ArticleCcoResponse') > -1;
-  if (!PREVIEW && !(onPage && isResponse)) return;
+  if (!PREVIEW && !onPage) return;
+  var MODE = (isResponse || (PREVIEW && /mc26=thanks/.test(HREF))) ? 'thanks' : 'form';
 
   /* ---------- helpers ---------- */
   function el(tag, cls, text) {
@@ -215,9 +216,12 @@
       if (t.indexOf(CFG.NATIVE_TEXT) > -1 && t.length < 1500) best = all[i]; /* deepest match wins (last in document order) */
     }
     if (!best) return null;
-    /* climb to the block that holds the whole message */
-    while (best.parentNode && best.parentNode !== document.body &&
-      (best.parentNode.textContent || '').length < 1500 && /^(P|SPAN|B|STRONG|EM|FONT)$/.test(best.tagName)) best = best.parentNode;
+    /* climb to the block that holds the whole message: while the parent adds little besides this
+       message (headline + drop-off lines), the parent is still the message */
+    var whole = function (n) { var t = n.textContent || ''; return /Winners/i.test(t) && /gift/i.test(t); };
+    var guard = 0;
+    while (!whole(best) && best.parentNode && best.parentNode !== document.body && guard++ < 4 &&
+      !best.parentNode.querySelector('form') && (best.parentNode.textContent || '').length < 1500) best = best.parentNode;
     return best;
   }
 
@@ -267,6 +271,100 @@
     return root;
   }
 
+  /* ---------- registration form page ---------- */
+  /* Styles only: every native field, condition, hidden input and the submit stay exactly as the
+     platform draws them. Sizes are in px because the site template sets the root font to 10px. */
+  var FORM_SEL = 'html body form.userform-form[id="' + CFG.AID + '"]';
+  function formCss() {
+    var F = FORM_SEL;
+    return [
+      'html body h1.article-header__title.mc26-hidden-title{position:absolute!important;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}',
+      /* hero */
+      '#mc26-hero{font-family:' + BODY + ';background:radial-gradient(ellipse 80% 100% at 50% 0%,rgba(60,199,180,.24),rgba(15,39,48,0) 70%),' + NAVY + ';color:' + INK + ';border-radius:20px;padding:34px 30px 30px;margin:6px auto 22px;max-width:680px;text-align:center;-webkit-font-smoothing:antialiased;box-sizing:border-box}',
+      '#mc26-hero *{box-sizing:border-box;margin:0;padding:0}',
+      '#mc26-hero .mh-kick{font-family:' + SCRIPT + ';color:' + GOLD + ';font-size:21px;line-height:1.2}',
+      '#mc26-hero h2{font-family:' + DISP + ';font-weight:700;color:#fff;font-size:34px;line-height:1.15;margin-top:6px}',
+      '#mc26-hero .mh-when{font-weight:600;color:' + GOLD + ';font-size:15px;letter-spacing:.06em;text-transform:uppercase;margin-top:10px}',
+      '#mc26-hero .mh-chips{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px;list-style:none}',
+      '#mc26-hero .mh-chips li{font-size:14px;font-weight:600;color:#fff;border:1px solid rgba(255,255,255,.28);border-radius:999px;padding:6px 14px;background:rgba(255,255,255,.05)}',
+      '#mc26-hero .mh-p{color:' + MUTED + ';font-size:16px;line-height:1.6;margin:16px auto 0;max-width:46ch}',
+      '#mc26-hero .mh-a{display:inline-block;margin-top:12px;color:' + TEAL + ';font-weight:700;font-size:15px;text-decoration:none}',
+      '#mc26-hero .mh-a:hover{text-decoration:underline}',
+      '@media (max-width:600px){#mc26-hero{border-radius:16px;padding:28px 18px 24px}#mc26-hero h2{font-size:28px}#mc26-hero .mh-kick{font-size:19px}}',
+      /* form card */
+      F + ' .form-all{max-width:680px!important;width:auto!important;margin:0 auto 30px!important;background:#fff!important;border:1px solid #dfe8ea!important;border-radius:18px!important;padding:26px 28px 10px!important;box-shadow:0 10px 30px rgba(15,39,48,.08)!important;font-family:' + BODY + '!important;box-sizing:border-box}',
+      '@media (max-width:600px){' + F + ' .form-all{padding:18px 16px 4px!important;border-radius:14px!important}}',
+      F + ' ul.form-section{list-style:none!important;margin:0!important;padding:0!important}',
+      F + ' li.form-line{padding:0 0 18px!important;margin:0!important;width:auto!important;float:none!important}',
+      F + ' .form-label-top{width:auto!important;float:none!important;margin:0 0 6px!important}',
+      F + ' .form-label-top label{font-family:' + BODY + '!important;font-weight:600!important;font-size:15px!important;color:' + NAVY + '!important;line-height:1.35!important}',
+      F + ' .form-required{color:#c0392b!important}',
+      F + ' .form-input-wide{width:100%!important;float:none!important}',
+      F + ' input.form-textbox,' + F + ' select.form-dropdown,' + F + ' textarea{width:100%!important;max-width:100%!important;height:48px!important;box-sizing:border-box!important;border:1.5px solid #c9d6da!important;border-radius:10px!important;padding:0 14px!important;font-family:' + BODY + '!important;font-size:16px!important;color:' + NAVY + '!important;background:#fff!important;box-shadow:none!important}',
+      F + ' textarea{height:auto!important;min-height:96px;padding:12px 14px!important}',
+      F + ' input.form-textbox:focus,' + F + ' select.form-dropdown:focus,' + F + ' textarea:focus{outline:none!important;border-color:' + TEAL + '!important;box-shadow:0 0 0 3px rgba(60,199,180,.25)!important}',
+      /* each child starts a new group */
+      F + ' li#id_6,' + F + ' li#id_9,' + F + ' li#id_23,' + F + ' li#id_24{border-top:1px solid #e3ebed!important;padding-top:20px!important;margin-top:4px!important}',
+      F + ' li#id_18 select.form-dropdown{max-width:260px!important}',
+      F + ' li#id_8 select,' + F + ' li#id_11 select,' + F + ' li#id_19 select,' + F + ' li#id_20 select{max-width:160px!important}',
+      /* contest rules panel */
+      F + ' .form-html{background:#f2f8f8!important;border-left:4px solid ' + TEAL + '!important;border-radius:12px!important;padding:16px 20px!important;font-family:' + BODY + '!important;font-size:15px!important;line-height:1.55!important;color:' + NAVY + '!important}',
+      F + ' .form-html p,' + F + ' .form-html li,' + F + ' .form-html strong{font-family:' + BODY + '!important;font-size:15px!important;color:' + NAVY + '!important}',
+      F + ' .form-html ul{margin:8px 0 0 18px!important;padding:0!important}',
+      F + ' .form-html li{margin:3px 0!important;list-style:disc!important}',
+      /* checkboxes: label wraps at full width next to the box */
+      F + ' .form-checkbox-item{display:flex!important;align-items:flex-start;gap:10px;float:none!important;width:auto!important}',
+      F + ' .form-checkbox-item input{width:20px!important;height:20px!important;margin:2px 0 0!important;flex:none;accent-color:' + TEAL + '}',
+      F + ' .form-checkbox-item label{font-family:' + BODY + '!important;font-size:15px!important;line-height:1.5!important;color:' + NAVY + '!important;font-weight:400!important}',
+      F + ' .form-single-column{width:auto!important}',
+      /* submit */
+      F + ' .form-buttons-wrapper{text-align:center!important;padding:6px 0 18px!important;margin:0!important}',
+      F + ' button.form-submit-button{background:' + GOLD + '!important;color:' + DEEP + '!important;border:0!important;border-radius:999px!important;height:52px!important;padding:0 40px!important;font-family:' + BODY + '!important;font-weight:700!important;font-size:16px!important;cursor:pointer;min-width:240px;box-shadow:0 6px 16px rgba(233,185,73,.35)!important;background-image:none!important;text-shadow:none!important}',
+      F + ' button.form-submit-button:hover{filter:brightness(1.05)}',
+      '@media (max-width:600px){' + F + ' button.form-submit-button{width:100%!important;min-width:0}}'
+    ].join('\n');
+  }
+
+  function buildFormHero() {
+    var h = el('div'); h.id = 'mc26-hero';
+    var chips = el('ul', 'mh-chips');
+    ['Ages 4–12', 'Free to enter', 'Register by Dec 4'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
+    var more = link('mh-a', CFG.festivalUrl + '#contest', 'Contest rules, prizes and the festival map', true);
+    add(h,
+      el('div', 'mh-kick', '22nd Annual Chanukah Festival'),
+      el('h2', null, 'Kids Menorah Contest'),
+      el('p', 'mh-when', 'Mon. Dec 7, 2026 · Riverside Historic Courthouse'),
+      chips,
+      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. Every child who enters gets a Chanukah gift, and our winners take home a special prize!'),
+      more);
+    return h;
+  }
+
+  function formBoot() {
+    if (document.getElementById('mc26-hero')) return;
+    var form = document.querySelector('form.userform-form[id="' + CFG.AID + '"]');
+    if (!form) { if (window.console) console.warn('Menorah Contest ' + VERSION + ': form not found; page left as is'); return; }
+    try {
+      loadFonts();
+      var st = document.createElement('style'); st.id = 'mc26-form-style'; st.textContent = formCss();
+      document.head.appendChild(st);
+      var holder = document.getElementById('formContainer') || form;
+      holder.parentNode.insertBefore(buildFormHero(), holder);
+      var t = document.querySelector('h1.article-header__title');
+      if (t) t.className += ' mc26-hidden-title'; /* the hero carries the title; kept for screen readers */
+      /* numeric keypad for the phone field on phones */
+      var tel = form.querySelector('input[type="tel"]');
+      if (tel) tel.setAttribute('inputmode', 'tel');
+      if (window.console) console.log('Menorah Contest ' + VERSION + ': form page designed');
+    } catch (err) {
+      var h = document.getElementById('mc26-hero');
+      if (h && h.parentNode) h.parentNode.removeChild(h);
+      var s = document.getElementById('mc26-form-style');
+      if (s && s.parentNode) s.parentNode.removeChild(s);
+      if (window.console) console.error('Menorah Contest ' + VERSION + ' form styling failed', err);
+    }
+  }
+
   function loadFonts() {
     if (document.getElementById('mc26-fonts')) return;
     var l = document.createElement('link');
@@ -277,6 +375,7 @@
   }
 
   function boot() {
+    if (MODE === 'form') return formBoot();
     if (document.getElementById('mc26')) return;
     try {
       var native = findNative();

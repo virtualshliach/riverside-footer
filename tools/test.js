@@ -225,13 +225,26 @@ var SITES = {
     ok(projectRequests(skr).length === 1 && !skr.errors.length, 'Sukkot code also loads on its thank-you page');
 
     console.log('riverside: Kids Menorah Contest thank-you page');
-    var mcShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><p>Thank you! Your child is registered for the Kids Menorah Contest. Please bring the finished menorah.</p></div>');
+    /* the platform's confirmation as set in ChabadOne (Nov 6): a div with a headline and three lines */
+    var MC_NATIVE = '<div id="mc-native"><h2>You\u2019re registered for the Kids Menorah Contest!</h2><p><b>Drop-off:</b> Monday, Dec 7, 5:45\u20136:15 PM at the Menorah Contest table (#15 on the festival map)</p>' +
+      '<p><b>Where:</b> Riverside Historic Courthouse, 4050 Main St., Riverside</p><p><b>Winners:</b> announced 7:45\u20138 PM</p><p>Every child who enters gets a Chanukah gift. See you at the festival!</p></div>';
+    var mcShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><div class="pagetools">Print</div>' + MC_NATIVE + '</div>');
     var mcr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mcShell, wait: 600 });
     ok(projectRequests(mcr).some(function (u) { return /menorah-contest-2026\.js/.test(u); }), 'contest code loads on its thank-you page');
     ok(!!mcr.d.getElementById('mc26') && !mcr.errors.length, 'designed thank-you card shown, no errors');
     ok(/7:45\u20138 PM/.test(mcr.d.getElementById('mc26').textContent) && /#15/.test(mcr.d.getElementById('mc26').textContent), 'thank-you card has the drop-off table and winners time');
-    var mcf = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Kids-Menorah-Contest.htm', { wait: 400 });
-    ok(!mcf.d.getElementById('mc26'), 'registration form page itself is left as the platform draws it');
+    ok(mcr.d.getElementById('mc-native').style.display === 'none' && mcr.d.querySelector('.pagetools').style.display !== 'none',
+      'the whole plain message is replaced (headline and all lines), nothing around it');
+    var MC_FORM = '<div id="formContainer"><form id="7606745" class="userform-form"><div class="form-all"><ul class="form-section">' +
+      '<li class="form-line" id="id_1"><div class="form-label-top"><label>Parent / guardian first name</label></div><div class="form-input-wide"><input class="form-textbox" name="q1"></div></li>' +
+      '<li class="form-line" id="id_5"><div class="form-label-top"><label>Phone</label></div><div class="form-input-wide"><input type="tel" class="form-textbox" name="q5"></div></li>' +
+      '<li class="form-line" id="id_17"><div class="form-input-wide"><button type="submit" class="form-submit-button">Submit</button></div></li></ul></div></form></div>';
+    var mfShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><h1 class="article-header__title">Kids Menorah Contest 2026</h1>' + MC_FORM + '</div>');
+    var mcf = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mfShell, wait: 500 });
+    ok(!mcf.d.getElementById('mc26') && !!mcf.d.getElementById('mc26-hero') && !mcf.errors.length, 'registration page gets the festival hero (not the thank-you card), no errors');
+    var mform = mcf.d.getElementById('7606745');
+    ok(mform.style.display !== 'none' && mform.querySelectorAll('input,button').length === 3 && mform.querySelector('[name=q1]'), 'the native form and its fields are untouched and visible');
+    ok(mcf.d.querySelector('input[type=tel]').getAttribute('inputmode') === 'tel', 'phone field opens the number keypad');
 
     console.log('riverside: social links go to the festival pages');
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
