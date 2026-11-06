@@ -197,7 +197,7 @@ var SITES = {
     ok(item.className === 'cf-pitem' && /open/.test(row2.parentNode.className), 'opening another garage closes the first');
     ok(r.d.querySelectorAll('#cf-directions .cf-prow').length === 5 && /\$1\.25 per 30 minutes/.test(r.d.getElementById('cf-directions').textContent), 'parking: five nearby garages and the rates');
     var hlImgs = [].map.call(r.d.querySelectorAll('#cf-event .cf-hl-card img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
-    ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music.jpg,hl-performer.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
+    ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music-aaron.jpg,hl-performer.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
     ok(hlImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'all four card photos are in the repo');
     ok(/FESTIVAL/.test(r.d.querySelector('#cf-top .cf-vtext').textContent) && /22/.test(r.d.querySelector('#cf-top .cf-vtext .cf-annual').textContent), 'title sits on top of the video');
 
