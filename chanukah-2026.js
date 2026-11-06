@@ -140,14 +140,15 @@
 
     /* ---- Community partners shown on the page ---- */
     PARTNERS_INTRO: 'Thank you to our partners for helping light up Riverside.',
-    /* Order per brief (Nov 5). Add logo: 'file.png' per partner once all logo files are in the repo. */
+    /* Order per brief (Nov 5). County grants are credited to the district office, not the official.
+       Add logo: 'file.png' per partner once all logo files are in the repo. */
     PARTNERS: [
       { name: 'Chabad at UCR' },
       { name: 'Blumenthal {amp} Moore', sub: 'A Professional Law Corporation' },
-      { name: 'Karen Spiegel', sub: 'Riverside County Supervisor, District 2' },
+      { name: 'Riverside County District 2', sub: 'Supervisor Karen Spiegel' },
       { name: 'City of Riverside' },
       { name: 'Riverside Downtown Partnership' },
-      { name: 'Jose Medina', sub: 'Riverside County Supervisor, District 1' }
+      { name: 'Riverside County District 1', sub: 'Supervisor Jose Medina' }
     ],
     ORGANIZER: {
       logo: 'chabad-jcc-logo-white-gold.png',
