@@ -827,6 +827,9 @@
       '#cf26 .cf-fb{background:#1877f2;color:#fff}',
       '#cf26 .cf-wa{background:#25d366;color:#0b1f27}',
       '#cf26 .cf-sharebtns .cf-btn{height:50px;padding:0 22px}',
+      /* even rows, never one button alone: 6 across, or 3 + 3 on medium screens */
+      '@media (min-width:601px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:repeat(6,auto);justify-content:center}#cf26 .cf-sharebtns .cf-native{display:none}}',
+      '@media (min-width:601px) and (max-width:1060px){#cf26 .cf-sharebtns{grid-template-columns:repeat(3,200px)}#cf26 .cf-sharebtns .cf-btn{width:100%}}',
       /* one button style in the share set; each brand keeps its color on the icon */
       '#cf26 .cf-sharebtns .cf-wa,#cf26 .cf-sharebtns .cf-fb,#cf26 .cf-sharebtns .cf-ig{background:rgba(255,255,255,.04);color:#fff;border:1.5px solid rgba(255,255,255,.35);box-shadow:none}',
       '#cf26 .cf-sharebtns .cf-ghost{background:rgba(255,255,255,.04);border-width:1.5px}',
@@ -2028,7 +2031,9 @@
     }
     function body(src) { return msg + ' ' + shareUrl(src, page); }
 
-    if (navigator.share) {
+    /* the phone share sheet: phones and tablets only; computers use the buttons below */
+    var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
+    if (navigator.share && touch) {
       var nb = el('button', 'cf-btn cf-gold cf-native', 'Share');
       nb.type = 'button';
       nb.insertBefore(icon('share'), nb.firstChild);
