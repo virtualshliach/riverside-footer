@@ -55,7 +55,7 @@
       { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'Riverside\u2019s Grand Menorah, lit on the courthouse steps.' },
       { img: 'hl-food.jpg',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
       { img: 'hl-music.jpg',   title: 'Live Music',             text: 'Aaron Holder, a Jewish pop-folk singer with a reggae edge, live on the Main Stage.' },
-      { img: 'hl-family.jpg',  title: 'Fun for the Whole Family', text: 'Children\u2019s crafts, activities and entertainment.' }
+      { img: 'hl-performer.jpg', title: 'Fun for the Whole Family', text: 'Street performers, kids\u2019 crafts, train rides and activities for all ages.' }
     ],
     accessNote: 'ASL Interpreter on site',
 
