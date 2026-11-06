@@ -1839,11 +1839,18 @@
     wa.addEventListener('click', function () { track('whatsapp'); });
     var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text message');
     sms.insertBefore(icon('chat'), sms.firstChild);
-    sms.addEventListener('click', function () { track('sms'); });
+    sms.addEventListener('click', function (e) {
+      track('sms');
+      /* the preview window can't open apps; on the real site this opens Messages */
+      if (PREVIEW) { e.preventDefault(); say('On the real site this opens your Messages app with the invitation filled in.'); }
+    });
     var em = link('cf-btn cf-ghost', 'mailto:?subject=' + encodeURIComponent(CFG.SHARE.emailSubject) + AMP + 'body=' +
       encodeURIComponent(body('email') + '\n\n' + CFG.SHARE.emailEnd), 'Email');
     em.insertBefore(icon('mail'), em.firstChild);
-    em.addEventListener('click', function () { track('email'); });
+    em.addEventListener('click', function (e) {
+      track('email');
+      if (PREVIEW) { e.preventDefault(); say('On the real site this opens your email app (Gmail works too) with the invitation filled in.'); }
+    });
     var cp = el('button', 'cf-btn cf-ghost', 'Copy link');
     cp.type = 'button';
     cp.insertBefore(icon('link'), cp.firstChild);
