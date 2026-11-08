@@ -181,9 +181,6 @@ var SITES = {
     ok(maxRun <= 3, 'no long Press-Enterprise runs anywhere (longest ' + maxRun + ')');
     ok([].every.call(cards, function (c) { return c.querySelector('.cf-nc-plate') && c.target === '_blank'; }), 'every story card has a nameplate and opens in a new tab');
     ok(!/riversideca\.gov/.test(r.d.getElementById('cf-news').innerHTML), 'dead City of Riverside link removed');
-    var kids = [].slice.call(r.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
-    ok(kids[kids.length - 2] === 'cf-flysec' && kids[kids.length - 1] === 'cf-foot', 'flyer download sits right before the footer (' + kids.slice(-3).join(' > ') + ')');
-    ok(!r.d.querySelector('#cf-event .cf-flyer'), 'flyer no longer in the event section');
     var menu = [].map.call(r.d.querySelectorAll('.cf-links a'), function (a) { return a.textContent + '>' + a.getAttribute('href'); });
     ok(menu.join('|') === 'Event Info>#cf-event|Directions & Parking>#cf-directions|In the News>#cf-news|Chanukah Guide>#cf-guide', 'menu items in order (' + menu.join('|') + ')');
     ok(menu.every(function (m) { return r.d.getElementById(m.split('>#')[1]); }), 'every menu item has a section to go to');
@@ -377,6 +374,12 @@ var SITES = {
     console.log('riverside: draft page vs live page');
     var dr = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm', { wait: 600 });
     ok(dr.d.getElementById('cf26') && dr.logs.some(function (l) { return /aid 7553387 -> chanukah-2026-draft\.js/.test(l); }), 'draft page 7553387 loads the draft file');
+    var dkids = [].slice.call(dr.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
+    ok(dkids[dkids.length - 2] === 'cf-share' && dkids[dkids.length - 1] === 'cf-foot', 'share section (with the picture kit) sits right before the footer (' + dkids.slice(-3).join(' > ') + ')');
+    var kit = dr.d.querySelectorAll('#cf-share .cf-kit-card');
+    ok(kit.length === 3, 'share kit has 3 pictures: flyer, story, square (' + kit.length + ')');
+    ok([].every.call(dr.d.querySelectorAll('#cf-share .cf-kit-card img'), function (i) { return fs.existsSync(path.join(ROOT, i.getAttribute('src').split('/').pop())); }), 'every share kit thumbnail exists in the repo');
+    ok(/flyer-2026\.pdf$/.test((dr.d.querySelector('#cf-share .cf-kit-card a[download]') || {}).href || ''), 'flyer card still offers the PDF to print');
     var dsrc = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8'), lsrc = fs.readFileSync(path.join(ROOT, 'chanukah-2026.js'), 'utf8');
     ok(/AID: '7553387',/.test(dsrc) && /BRAND_HOSTS: \[\],/.test(dsrc), 'draft file guards page 7553387 and claims no domain');
     ok(/AID: '4949424',/.test(lsrc) && /BRAND_HOSTS: \['chanukahfestival\.org'\],/.test(lsrc), 'live file guards page 4949424 and chanukahfestival.org');
