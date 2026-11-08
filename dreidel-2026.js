@@ -35,7 +35,7 @@
       ['Where', 'Riverside Historic Courthouse, 4050 Main St.'],
       ['Entries', 'One entry per person']
     ],
-    SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced 7:45–8 PM. Come join us Monday, Dec 7, 6–8 PM at the Historic Courthouse.',
+    SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced 7:45–8 PM.\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome join us!',
     EMAIL_SUBJECT: 'Join me at the Riverside Chanukah Festival, Dec 7'
   };
 
@@ -164,7 +164,7 @@
 
   /* ---------- share ---------- */
   function shareUrl(src) {
-    return CFG.festivalUrl + '?' + qs({ utm_source: src, utm_medium: 'share', utm_campaign: 'chanukah2026', utm_content: 'dreidel-thanks' });
+    return CFG.festivalUrl + '?s=' + src + '-dreidel'; /* footer.js turns s into the analytics campaign */
   }
   function track(m) { try { if (window.gtag) window.gtag('event', 'share_click', { method: m, page: 'dreidel-thanks' }); } catch (e) {} }
   function shareBlock() {
@@ -172,7 +172,7 @@
     var row = el('div', 'mc-row');
     var note = el('p', 'mc-note'); note.setAttribute('role', 'status');
     function say(t) { note.textContent = t; }
-    function body(src) { return CFG.SHARE_TEXT + ' · Festival info: ' + shareUrl(src); }
+    function body(src) { return CFG.SHARE_TEXT + '\n\nFestival info: ' + shareUrl(src); }
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
     if (navigator.share && touch) {
       var nb = el('button', 'mc-btn mc-gold mc-wide', 'Share'); nb.type = 'button';

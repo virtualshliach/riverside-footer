@@ -34,7 +34,7 @@
       ['Display', 'Menorahs stay on display at the table during the festival'],
       ['Winners', 'Announced 7:45–8 PM. Please pick up your menorah before you leave']
     ],
-    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival! Come cheer us on Monday, Dec 7, 6–8 PM at the Historic Courthouse. Winners are announced 7:45–8 PM. All ages can enter free: https://www.jewishriverside.com/7606745',
+    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced 7:45–8 PM. All ages can enter free: https://www.jewishriverside.com/7606745',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
@@ -163,7 +163,7 @@
 
   /* ---------- share ---------- */
   function shareUrl(src) {
-    return CFG.festivalUrl + '?' + qs({ utm_source: src, utm_medium: 'share', utm_campaign: 'chanukah2026', utm_content: 'contest-thanks' });
+    return CFG.festivalUrl + '?s=' + src + '-contest'; /* footer.js turns s into the analytics campaign */
   }
   function track(m) { try { if (window.gtag) window.gtag('event', 'share_click', { method: m, page: 'contest-thanks' }); } catch (e) {} }
   function shareBlock() {
@@ -171,7 +171,7 @@
     var row = el('div', 'mc-row');
     var note = el('p', 'mc-note'); note.setAttribute('role', 'status');
     function say(t) { note.textContent = t; }
-    function body(src) { return CFG.SHARE_TEXT + ' · Festival info: ' + shareUrl(src); }
+    function body(src) { return CFG.SHARE_TEXT + '\n\nFestival info: ' + shareUrl(src); }
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
     if (navigator.share && touch) {
       var nb = el('button', 'mc-btn mc-gold mc-wide', 'Share'); nb.type = 'button';

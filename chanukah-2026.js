@@ -347,7 +347,8 @@
     SHARE: {
       /* every share points at the public address; tags added per button (see shareUrl) */
       url: 'https://chanukahfestival.org/',
-      text: 'Join us at Riverside\u2019s 22nd Annual Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Grand Menorah Lighting, live music, latkes, donuts and kids\u2019 activities. Free for everyone. Come early: the first 300 guests get a free Chanukah gift!',
+      /* line breaks make it readable in texts, WhatsApp and email */
+      text: 'Join us at Riverside\u2019s 22nd Annual Chanukah Festival!\n\n\ud83d\udcc5 Monday, Dec 7, 6–8 PM\n\ud83d\udccd Riverside Historic Courthouse\n\nGrand Menorah Lighting, live music, latkes, donuts and kids\u2019 activities. Free for everyone.\n\nCome early: the first 300 guests get a free Chanukah gift!',
       emailSubject: 'You\u2019re invited: Riverside Chanukah Festival, Dec 7',
       emailEnd: 'Hope to see you there!',
       /* the festival's own social pages (not Jewish Riverside's or the shul's) */
@@ -2342,8 +2343,11 @@
 
   /* ---------- share ---------- */
   /* The public link with tracking tags, so each kind of share can be counted. */
+  /* Short, readable link: ?s=<where it was shared>[-<page>]. footer.js turns s into the
+     analytics campaign (source = before the dash, content = after), so no long utm_ tags. */
   function shareUrl(source, page) {
-    return CFG.SHARE.url + '?' + qs({ utm_source: source, utm_medium: 'share', utm_campaign: 'chanukah2026', utm_content: page || 'festival' });
+    var p = (page || 'festival').replace(/^festival-?/, '');
+    return CFG.SHARE.url + '?s=' + source + (p ? '-' + p : '');
   }
   /* One set of invite buttons. Used on the festival page; the same set goes on every
      thank-you page. msg: the prefilled invitation; page: tag for analytics. */
@@ -2356,7 +2360,7 @@
     function track(method) {
       try { if (window.gtag) window.gtag('event', 'share_click', { method: method, page: page || 'festival' }); } catch (e) {}
     }
-    function body(src) { return msg + ' ' + shareUrl(src, page); }
+    function body(src) { return msg + '\n\n' + shareUrl(src, page); }
 
     /* the phone share sheet: phones and tablets only; computers use the buttons below */
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);

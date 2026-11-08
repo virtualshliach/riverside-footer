@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-08a';
+  var V = '2026-11-08b';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -86,7 +86,11 @@
     window.dataLayer = window.dataLayer || [];
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
-    window.gtag('config', GA4_ID, { page_title: document.title, anonymize_ip: true });
+    var gcfg = { page_title: document.title, anonymize_ip: true };
+    /* short share links (?s=whatsapp-contest) count as the share campaign */
+    var sm = /[?&]s=([a-z]+)(?:-([a-z0-9]+))?(?:&|$)/.exec(window.location.search);
+    if (sm) { gcfg.campaign_source = sm[1]; gcfg.campaign_medium = 'share'; gcfg.campaign_name = 'chanukah2026'; gcfg.campaign_content = sm[2] || 'festival'; }
+    window.gtag('config', GA4_ID, gcfg);
     var ga = document.createElement('script');
     ga.async = true;
     ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;

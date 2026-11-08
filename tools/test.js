@@ -276,13 +276,14 @@ var SITES = {
     var DG_NATIVE = '<div id="dg-native"><h2>Thanks for your guess!</h2><p>The winner of the $180 prize is announced between 7:45 and 8 PM at the Chanukah Festival.</p><p>Good luck, and enjoy the festival!</p></div>';
     var dgr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/5738793/jewish/Dreidel-Guessing-Contest.htm', { shell: SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container">' + DG_NATIVE + '</div>'), wait: 600 });
     ok(!!dgr.d.getElementById('dg26') && !dgr.errors.length && dgr.d.getElementById('dg-native').style.display === 'none', 'dreidel thank-you card replaces the plain message');
-    ok(dgr.d.querySelectorAll('#dg26 .mc-row a, #dg26 .mc-row button').length >= 6 && /utm_content%3Ddreidel-thanks|utm_content=dreidel-thanks/.test(dgr.d.getElementById('dg26').innerHTML), 'dreidel thank-you has the share buttons with tracking tags');
+    ok(dgr.d.querySelectorAll('#dg26 .mc-row a, #dg26 .mc-row button').length >= 6 && /s%3Dwhatsapp-dreidel|s=whatsapp-dreidel/.test(dgr.d.getElementById('dg26').innerHTML), 'dreidel thank-you has the share buttons with short tracking links');
 
     console.log('riverside: social links go to the festival pages');
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
     ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
     var waA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /wa\.me/.test(a.href); })[0];
-    ok(waA && /chanukahfestival\.org%2F%3Futm_source%3Dwhatsapp/i.test(waA.href), 'WhatsApp invite carries the tagged ChanukahFestival.org link');
+    ok(waA && /chanukahfestival\.org%2F%3Fs%3Dwhatsapp(%26|$)/i.test(waA.href) && !/utm_/.test(waA.href), 'WhatsApp invite carries the short tagged ChanukahFestival.org link');
+    ok(/%0A%0A/.test(waA.href), 'invite text has line breaks');
     ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
     var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');
     ok(!/instagram\.com\/jewishriverside|facebook\.com\/jewishriverside/i.test(allA), 'no links to the Jewish Riverside social pages');
