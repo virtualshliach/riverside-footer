@@ -351,7 +351,7 @@ var SITES = {
     var nf = await load('riverside', DPAGE, { wait: 400 });
     var opened = null; nf.w.open = function (u) { opened = u; };
     nf.d.querySelector('.cf-nav .cf-don').dispatchEvent(new nf.w.MouseEvent('click', { bubbles: true }));
-    ok(opened === 'https://www.jewishriverside.com/article.asp?aid=4194665' && !nf.d.querySelector('.cf-dm'), 'no form on the page: Donate opens the donate page instead');
+    ok(opened === null && nf.d.querySelector('.cf-fp iframe') && /aid\/4194665\/.*#cf-embed$/.test(nf.d.querySelector('.cf-fp iframe').getAttribute('src')), 'no form on the page: Donate opens the donate form in the festival pop-up');
 
     var bd = await load('riverside', 'https://chanukahfestival.org/', { wait: 500 });
     ok(bd.d.getElementById('cf26'), 'chanukahfestival.org shows the festival site');
@@ -392,7 +392,7 @@ var SITES = {
     ok(/html\.cf26-home #header,html\.cf26-home #content,html\.cf26-home #footer\{display:none/.test(ns.d.getElementById('cf26-style').textContent), 'new site template header, content and footer are hidden');
     var nd = ns.d.querySelector('.cf-nav .cf-don'); var nopened = null; ns.w.open = function (u) { nopened = u; };
     if (nd) nd.dispatchEvent(new ns.w.MouseEvent('click', { bubbles: true }));
-    ok(nopened === 'https://www.jewishriverside.com/article.asp?aid=4194665', 'Donate on the new site opens jewishriverside.com donate page (' + nopened + ')');
+    ok(nopened === null && ns.d.querySelector('.cf-fp iframe') && /^https:\/\/www\.jewishriverside\.com\/templates\/articlecco_cdo\/aid\/4194665\//.test(ns.d.querySelector('.cf-fp iframe').getAttribute('src')), 'Donate on the new site opens the jewishriverside.com donate form in the pop-up');
     var nsub = await load('riverside', 'https://12899.centers.clhosting.org/36226', { shell: NS, wait: 400 });
     ok(!nsub.d.getElementById('cf26'), 'other pages on the new site are left alone');
 

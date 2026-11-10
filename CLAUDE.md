@@ -80,9 +80,10 @@ aligned, on this site or in a ChabadOne form:
     and chanukahfestival.org), switching only `AID` and `BRAND_HOSTS`. Note this also
     publishes anything that was waiting on the draft page; tell the person if there was.
   - Never edit `chanukah-2026.js` directly, or the next publish will overwrite that edit.
-  - Page 4949424 has no donation form yet, so Donate there opens the regular donate page;
-    the draft page 7553387 has the form and the full donate pop-up. Once the form is added
-    to 4949424, check its field ids on the live page before relying on the pop-up.
+  - Donate, Menorah Contest and Mailing List open in the festival's form pop-up: an iframe of
+    the real jewishriverside.com form (Donate 4194665, Contest 7606745, Mailing list 5333083)
+    that `embed.js` shows on its own, festival-styled. On the draft page 7553387, Donate uses
+    its own built-in donation form instead.
 - **Festival sub pages** (Kids Menorah Contest `menorah-contest-2026.js`, Dreidel Guessing
   Contest `dreidel-2026.js`) and every other page have **live only**, no draft page. Show the
   draft as a preview in Claude, get the OK, then push live.
