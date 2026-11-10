@@ -378,6 +378,17 @@
     ],
     /* full address: the festival also runs on its own ChabadOne site (chanukahfestival.org) */
     DONATE_URL: 'https://www.jewishriverside.com/article.asp?aid=4194665',
+    /* jewishriverside.com forms that open in the festival's own pop-up (an iframe showing just the
+       form, styled by embed.js). Everything is submitted and recorded on jewishriverside.com.
+       match: any link on this page to that form opens the pop-up instead. */
+    FORM_POPS: {
+      donate: { aid: '4194665', title: 'Support the Chanukah Festival', sub: 'Your gift keeps the festival free for the whole community.',
+        url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm' },
+      contest: { aid: '7606745', title: 'Menorah Contest', sub: 'All ages. Free to enter. Register by Dec 4.',
+        url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Menorah-Contest-2026.htm' },
+      mailing: { aid: '5333083', title: 'Join Our Mailing List', sub: 'Hear about the festival and everything else at Chabad.',
+        url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join-Our-Mailing-List.htm' }
+    },
 
     /* Donation pop-up. Field ids from the ChabadOne form on this page (mapped Nov 2 2026). */
     DONATE: {
@@ -628,6 +639,17 @@
       '@media (max-width:620px){#cf26 .cf-dm{padding:0}#cf26 .cf-dm-box{height:100%;max-width:none;border-radius:0}}',
       '#cf26 .cf-dm{transition:opacity .2s ease}',
       '#cf26 .cf-dm.cf-dm-off{visibility:hidden;pointer-events:none;opacity:0}',
+      '#cf26 .cf-fp-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;position:relative;background:#fff}',
+      '#cf26 .cf-fp-frame{display:block;width:100%;height:900px;border:0;opacity:0;transition:opacity .25s ease}',
+      '#cf26 .cf-fp-ready .cf-fp-frame{opacity:1}',
+      '#cf26 .cf-fp-wait{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;color:#5a6a70;font-size:.95rem}',
+      '#cf26 .cf-fp-ready .cf-fp-wait{display:none}',
+      '#cf26 .cf-fp-spin{width:34px;height:34px;border-radius:50%;border:3px solid #e6eef0;border-top-color:' + TEAL + ';animation:cf-spin .8s linear infinite}',
+      '@keyframes cf-spin{to{transform:rotate(360deg)}}',
+      '#cf26 .cf-fp-alt{margin:0;padding:10px 22px 16px;font-size:.82rem;color:#7a8d93;text-align:center}',
+      '#cf26 .cf-fp-alt a{color:' + TEAL + ';font-weight:600}',
+      '#cf26 .cf-fp-slow .cf-fp-alt{font-size:.95rem;font-weight:600;color:' + DEEP + '}',
+      '@media (max-width:640px){#cf26 .cf-fp{padding:0}#cf26 .cf-fp .cf-dm-box{height:100%;max-height:none;border-radius:0}}',
       '#cf26 .cf-dm-steps{display:flex;gap:6px;padding:12px 22px;border-bottom:1px solid #e6eef0;background:#f6fafb}',
       '#cf26 .cf-dm-st{display:flex;align-items:center;gap:8px;flex:1;font-size:.82rem;font-weight:600;color:#7a8d93}',
       '#cf26 .cf-dm-st i{font-style:normal;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:#e2ebee;color:#4a5d64;font-size:.78rem;flex:none}',
@@ -1117,6 +1139,15 @@
       if (host === document.body) document.body.insertBefore(root, document.body.firstChild);
       else host.parentNode.insertBefore(root, host);
 
+      root.addEventListener('click', function (e) {
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a || e.defaultPrevented || e.metaKey || e.ctrlKey || e.shiftKey || e.button === 1) return;
+        if (a.closest('.cf-fp')) return;
+        var kind = formKindFor(a.href);
+        if (!kind) return;
+        e.preventDefault();
+        if (kind === 'donate') openDonate(); else openFormPop(kind);
+      });
       document.documentElement.className += ' cf26-on' + (byHost ? ' cf26-home' : '');
       hideTopBar();
       if (window.addEventListener) window.addEventListener('load', hideTopBar);
@@ -1287,9 +1318,84 @@
   }
   function money(n) { return '$' + Number(n).toLocaleString('en-US', { maximumFractionDigits: 2 }); }
 
+  /* ---------- form pop-up (jewishriverside.com form in a frame) ---------- */
+  var FP = null;
+  var FORM_ORIGIN = 'https://www.jewishriverside.com';
+  function formKindFor(href) {
+    if (!href) return null;
+    var keys = Object.keys(CFG.FORM_POPS);
+    for (var i = 0; i < keys.length; i++) {
+      var a = CFG.FORM_POPS[keys[i]].aid;
+      if (new RegExp('jewishriverside\\.com/(?:' + a + '(?:\\D|$)|.*[/=]' + a + '(?:\\D|$))', 'i').test(href)) return keys[i];
+    }
+    return null;
+  }
+  function openFormPop(kind) {
+    var F = CFG.FORM_POPS[kind];
+    if (!F) return;
+    closeFormPop();
+    lastFocus = document.activeElement;
+    var ov = el('div', 'cf-dm cf-fp');
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-modal', 'true');
+    ov.setAttribute('aria-label', F.title);
+    var box = el('div', 'cf-dm-box');
+    var hd = el('div', 'cf-dm-hd');
+    var x = el('button', 'cf-dm-x'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.appendChild(icon('x'));
+    var ht = el('div');
+    add(ht, el('b', null, F.title), el('span', null, F.sub));
+    add(hd, ht, x);
+    var body = el('div', 'cf-fp-body');
+    var wait = el('div', 'cf-fp-wait');
+    add(wait, el('i', 'cf-fp-spin'), el('span', null, 'Loading the form…'));
+    var fr = document.createElement('iframe');
+    fr.className = 'cf-fp-frame';
+    fr.title = F.title;
+    fr.src = F.url + '#cf-embed';
+    fr.setAttribute('allow', 'payment');
+    var alt = el('p', 'cf-fp-alt');
+    var altA = link(null, F.url, 'Open the form in a new tab', true);
+    add(alt, document.createTextNode('Trouble with the form? '), altA);
+    add(body, wait, fr, alt);
+    add(box, hd, body);
+    ov.appendChild(box);
+    root.appendChild(ov);
+    document.documentElement.style.overflow = 'hidden';
+    x.focus();
+    var ready = false;
+    function onMsg(e) {
+      if (e.origin !== FORM_ORIGIN || e.source !== fr.contentWindow) return;
+      var d = e.data;
+      if (!d || d.cf26 !== 'embed') return;
+      if (d.type === 'ready' || d.type === 'height') {
+        if (!ready) { ready = true; box.className += ' cf-fp-ready'; }
+        if (d.type === 'height' && d.h > 100) fr.style.height = Math.min(Math.round(d.h), 6000) + 'px';
+      }
+      if (d.type === 'done') { body.scrollTop = 0; track('form_done_' + kind); }
+    }
+    /* if the form page never answers (blocked or slow), show it anyway with the new-tab link */
+    var slow = setTimeout(function () { if (!ready) box.className += ' cf-fp-ready cf-fp-slow'; }, 8000);
+    function onKey(e) { if (e.key === 'Escape') closeFormPop(); }
+    window.addEventListener('message', onMsg);
+    document.addEventListener('keydown', onKey);
+    x.addEventListener('click', closeFormPop);
+    ov.addEventListener('click', function (e) { if (e.target === ov) closeFormPop(); });
+    FP = { ov: ov, off: function () { clearTimeout(slow); window.removeEventListener('message', onMsg); document.removeEventListener('keydown', onKey); } };
+    track('form_open_' + kind);
+  }
+  function closeFormPop() {
+    if (!FP) return;
+    FP.off();
+    if (FP.ov.parentNode) FP.ov.parentNode.removeChild(FP.ov);
+    FP = null;
+    document.documentElement.style.overflow = '';
+    if (lastFocus && lastFocus.focus) try { lastFocus.focus(); } catch (e) {}
+  }
+  function track(name) { try { if (window.gtag) window.gtag('event', 'cta_click', { label: name }); } catch (e) {} }
+
   function openDonate() {
     var form = nativeForm();
-    if (!form || !$id(CFG.DONATE.F.submit)) { window.open(CFG.DONATE_URL, '_blank'); return; }
+    if (!form || !$id(CFG.DONATE.F.submit)) { openFormPop('donate'); return; }
     if (!DM) DM = buildDonate(form);
     DM.ov.className = 'cf-dm';
     document.documentElement.style.overflow = 'hidden';
