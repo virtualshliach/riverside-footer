@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'embed-2026-11-09b';
+  var VERSION = 'embed-2026-11-09c';
   if (window.CF26_EMBED) return;
   window.CF26_EMBED = VERSION;
 
@@ -31,7 +31,7 @@
     /* let the content use the frame's full width */
     'html.cf-embed .cf-embed-path{width:auto !important;max-width:none !important;min-width:0 !important;margin:0 !important;padding:0 !important;float:none !important;border:0 !important;box-shadow:none !important;background:transparent !important;position:static !important;left:auto !important}',
     'html.cf-embed #formContainer,html.cf-embed .form-all{width:auto !important;max-width:none !important;margin:0 !important;padding:0 !important;box-shadow:none !important;background:transparent !important}',
-    'html.cf-embed .cf-embed-keep{padding:18px 20px 26px !important}',
+    'html.cf-embed .cf-embed-keep,html.cf-embed #formContainer.cf-embed-keep{padding:18px 22px 26px !important;box-sizing:border-box !important}',
     /* fields */
     'html.cf-embed .userform-form{font-family:Montserrat,"Helvetica Neue",Arial,sans-serif !important;font-size:15px !important}',
     'html.cf-embed .userform-form .form-line{padding:8px 0 !important;margin:0 !important}',
