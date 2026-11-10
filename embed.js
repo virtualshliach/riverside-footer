@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'embed-2026-11-09a';
+  var VERSION = 'embed-2026-11-09b';
   if (window.CF26_EMBED) return;
   window.CF26_EMBED = VERSION;
 
@@ -25,7 +25,7 @@
     'html.cf-embed body{font-family:Montserrat,"Helvetica Neue",Arial,sans-serif !important;color:' + INK + '}',
     /* site chrome around the form */
     'html.cf-embed .cco_templateless_template,html.cf-embed #PrintCreditHeader,html.cf-embed #header,html.cf-embed #footer,' +
-      'html.cf-embed #BodyContainer,html.cf-embed .page-tools-sidebar,html.cf-embed [id^="gb-widget"],html.cf-embed #mc26-hero,' +
+      'html.cf-embed .page-tools-sidebar,html.cf-embed [id^="gb-widget"],html.cf-embed #mc26-hero,' +
       'html.cf-embed .article-header,html.cf-embed h1.article-header__title{display:none !important}',
     'html.cf-embed .cf-embed-off{display:none !important}',
     /* let the content use the frame's full width */
@@ -102,6 +102,8 @@
         sib.classList.add('cf-embed-off');
       });
       if (n !== keep) n.classList.add('cf-embed-path');
+      /* safety: nothing that holds the form may end up hidden by the page's own styles or ours */
+      if (window.getComputedStyle(n).display === 'none') n.style.setProperty('display', 'block', 'important');
       n = n.parentNode;
     }
     kept = keep;

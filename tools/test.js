@@ -450,6 +450,12 @@ var SITES = {
     ok(ed.getElementById('cf-embed-pp') && /new tab/.test(ed.getElementById('cf-embed-pp').textContent), 'PayPal choice gets a link to the full donate page');
     ok(!/display:\s*none[^}]*userform-form|userform-form[^{]*\{[^}]*display:\s*none/.test(ed.getElementById('cf-embed-style').textContent), 'embed styles never hide a form');
 
+    var FT = '<!doctype html><html><head></head><body><div id="header">menu</div><div id="content"><div id="BodyContainer" class="wrapper"><div id="co_content_container"><article><div id="formContainer"><form id="7606745" class="userform-form"><input id="input_1"></form></div></article></div></div></div><div id="footer">f</div></body></html>';
+    var ft = new JSDOM(FT, { url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/x.htm#cf-embed', runScripts: 'outside-only', pretendToBeVisual: true });
+    ft.window.eval(esrc); await wait(300);
+    var ftHidden = function (el) { return ft.window.getComputedStyle(el).display === 'none'; };
+    ok(!ftHidden(ft.window.document.getElementById('BodyContainer')) && !ftHidden(ft.window.document.getElementById('formContainer')) && ftHidden(ft.window.document.getElementById('header')), 'full-template form page (contest, mailing list): form shown, site header hidden');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],
