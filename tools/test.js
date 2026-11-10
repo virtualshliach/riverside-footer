@@ -428,7 +428,7 @@ var SITES = {
 
     console.log('riverside: embed.js (the form page inside the pop-up)');
     var esrc = fs.readFileSync(path.join(ROOT, 'embed.js'), 'utf8');
-    var EP = '<!doctype html><html><head></head><body class="cco_templateless_page"><div class="cco_templateless_template">Back to</div>' +
+    var EP = '<!doctype html><html><head></head><body class="cco_templateless_page"><div class="cco_templateless_template" style="display:block !important;height:30px!important">Back to</div>' +
       '<div class="cco_templatelates_content"><div id="co_content_container" class="co_content_container"><nav id="sitenav">Home About</nav>' +
       '<div id="chabad_body_page"><h1 class="article-header__title">Donate</h1><div id="formContainer"><form id="4194665" class="userform-form"><ul>' +
       '<li class="form-line" id="id_3"><input id="input_3"></li><li class="form-line" id="id_13"><input type="radio" id="input_13_creditCard"><input type="radio" id="input_13_paypal"></li>' +

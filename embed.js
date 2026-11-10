@@ -12,7 +12,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'embed-2026-11-09c';
+  var VERSION = 'embed-2026-11-09d';
   if (window.CF26_EMBED) return;
   window.CF26_EMBED = VERSION;
 
@@ -33,7 +33,8 @@
     'html.cf-embed #formContainer,html.cf-embed .form-all{width:auto !important;max-width:none !important;margin:0 !important;padding:0 !important;box-shadow:none !important;background:transparent !important}',
     'html.cf-embed .cf-embed-keep,html.cf-embed #formContainer.cf-embed-keep{padding:18px 22px 26px !important;box-sizing:border-box !important}',
     /* fields */
-    'html.cf-embed .userform-form{font-family:Montserrat,"Helvetica Neue",Arial,sans-serif !important;font-size:15px !important}',
+    'html.cf-embed .userform-form,html.cf-embed .userform-form label,html.cf-embed .userform-form .form-label,html.cf-embed .userform-form .form-sub-label,html.cf-embed .userform-form td,html.cf-embed .userform-form span{font-family:Montserrat,"Helvetica Neue",Arial,sans-serif !important}',
+    'html.cf-embed .userform-form{font-size:15px !important}',
     'html.cf-embed .userform-form .form-line{padding:8px 0 !important;margin:0 !important}',
     'html.cf-embed .userform-form .form-label{color:' + NAVY + ' !important;font-weight:700 !important;font-size:14px !important}',
     'html.cf-embed .userform-form input[type=text],html.cf-embed .userform-form input[type=email],html.cf-embed .userform-form input[type=tel],' +
@@ -84,7 +85,14 @@
     return n.querySelector && (n.querySelector('iframe[src*="recaptcha"]') || n.querySelector('iframe[title*="recaptcha" i]'));
   }
   var kept = null;
+  function hideBar() {
+    /* the "Back to ..." bar carries inline !important styles, so CSS alone can't hide it (not a form) */
+    [].forEach.call(document.querySelectorAll('.cco_templateless_template'), function (e) {
+      if (e.style.getPropertyValue('display') !== 'none') e.style.setProperty('display', 'none', 'important');
+    });
+  }
   function isolate() {
+    hideBar();
     var keep = keepNode();
     if (!keep || keep === kept) return !!keep;
     [].forEach.call(document.querySelectorAll('.cf-embed-path,.cf-embed-off,.cf-embed-keep'), function (n) {
