@@ -351,7 +351,7 @@ var SITES = {
     var nf = await load('riverside', DPAGE, { wait: 400 });
     var opened = null; nf.w.open = function (u) { opened = u; };
     nf.d.querySelector('.cf-nav .cf-don').dispatchEvent(new nf.w.MouseEvent('click', { bubbles: true }));
-    ok(opened === '/article.asp?aid=4194665' && !nf.d.querySelector('.cf-dm'), 'no form on the page: Donate opens the donate page instead');
+    ok(opened === 'https://www.jewishriverside.com/article.asp?aid=4194665' && !nf.d.querySelector('.cf-dm'), 'no form on the page: Donate opens the donate page instead');
 
     var bd = await load('riverside', 'https://chanukahfestival.org/', { wait: 500 });
     ok(bd.d.getElementById('cf26'), 'chanukahfestival.org shows the festival site');
@@ -383,7 +383,18 @@ var SITES = {
     ok(/flyer-2026\.pdf$/.test((dr.d.querySelector('#cf-share .cf-kit-card a[download]') || {}).href || ''), 'flyer card still offers the PDF to print');
     var dsrc = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8'), lsrc = fs.readFileSync(path.join(ROOT, 'chanukah-2026.js'), 'utf8');
     ok(/AID: '7553387',/.test(dsrc) && /BRAND_HOSTS: \[\],/.test(dsrc), 'draft file guards page 7553387 and claims no domain');
-    ok(/AID: '4949424',/.test(lsrc) && /BRAND_HOSTS: \['chanukahfestival\.org'\],/.test(lsrc), 'live file guards page 4949424 and chanukahfestival.org');
+    ok(/AID: '4949424',/.test(lsrc) && /BRAND_HOSTS: \['chanukahfestival\.org', '12899\.centers\.clhosting\.org'\],/.test(lsrc), 'live file guards page 4949424 and chanukahfestival.org');
+
+    console.log('riverside: the festival\'s own ChabadOne site (full site template homepage)');
+    var NS = '<!doctype html><html><head><title>Chanukah Festival</title></head><body class="lang_en dir_ltr home cco_body"><div id="PrintCreditHeader"></div><div id="header">Menu</div><div id="content">Hebrew School lorem</div><div id="footer">footer</div></body></html>';
+    var ns = await load('riverside', 'https://12899.centers.clhosting.org/', { shell: NS, wait: 600 });
+    ok(ns.d.getElementById('cf26') && /cf26-home/.test(ns.d.documentElement.className), 'new site homepage shows the festival');
+    ok(/html\.cf26-home #header,html\.cf26-home #content,html\.cf26-home #footer\{display:none/.test(ns.d.getElementById('cf26-style').textContent), 'new site template header, content and footer are hidden');
+    var nd = ns.d.querySelector('.cf-nav .cf-don'); var nopened = null; ns.w.open = function (u) { nopened = u; };
+    if (nd) nd.dispatchEvent(new ns.w.MouseEvent('click', { bubbles: true }));
+    ok(nopened === 'https://www.jewishriverside.com/article.asp?aid=4194665', 'Donate on the new site opens jewishriverside.com donate page (' + nopened + ')');
+    var nsub = await load('riverside', 'https://12899.centers.clhosting.org/36226', { shell: NS, wait: 400 });
+    ok(!nsub.d.getElementById('cf26'), 'other pages on the new site are left alone');
 
     console.log('riverside: pages that must load nothing');
     var quiet = [

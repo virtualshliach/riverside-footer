@@ -7,7 +7,7 @@
 var fs = require('fs'), path = require('path');
 var ROOT = path.join(__dirname, '..');
 var DRAFT = { file: 'chanukah-2026-draft.js', aid: '7553387', hosts: "[]" };
-var LIVE = { file: 'chanukah-2026.js', aid: '4949424', hosts: "['chanukahfestival.org']" };
+var LIVE = { file: 'chanukah-2026.js', aid: '4949424', hosts: "['chanukahfestival.org', '12899.centers.clhosting.org']" };
 var toDraft = process.argv.indexOf('--to-draft') > -1;
 var from = toDraft ? LIVE : DRAFT, to = toDraft ? DRAFT : LIVE;
 var src = fs.readFileSync(path.join(ROOT, from.file), 'utf8');

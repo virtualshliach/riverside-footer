@@ -31,7 +31,7 @@
   var CFG = {
     /* Page id: 4949424 in chanukah-2026.js (live), 7553387 in chanukah-2026-draft.js. Set by tools/publish-chanukah.js. */
     AID: '4949424',
-    BRAND_HOSTS: ['chanukahfestival.org'],
+    BRAND_HOSTS: ['chanukahfestival.org', '12899.centers.clhosting.org'],
 
     edition: '22',
     editionSuffix: 'nd',
@@ -376,7 +376,8 @@
       { title: 'Square Post', note: 'For a Facebook or Instagram post, or a group chat.', thumb: 'share-square-2026-thumb.jpg',
         file: 'share-square-2026.jpg', name: 'Chanukah-Festival-2026-Post.jpg' }
     ],
-    DONATE_URL: '/article.asp?aid=4194665',
+    /* full address: the festival also runs on its own ChabadOne site (chanukahfestival.org) */
+    DONATE_URL: 'https://www.jewishriverside.com/article.asp?aid=4194665',
 
     /* Donation pop-up. Field ids from the ChabadOne form on this page (mapped Nov 2 2026). */
     DONATE: {
@@ -562,6 +563,8 @@
       'html.cf26-on .cco_templatelates_content{position:absolute !important;left:-10000px !important;top:0 !important;width:760px !important}',
       /* the ChabadOne templates set the root font to 10px; this page is designed on the standard 16px */
       'html.cf26-on{font-size:16px !important}',
+      /* on the festival's own site the homepage uses the full site template: hide its header, content and footer (no forms there) */
+      'html.cf26-home #PrintCreditHeader,html.cf26-home #header,html.cf26-home #content,html.cf26-home #footer{display:none !important}',
       '#cf26 h1,#cf26 h2,#cf26 h3,#cf26 summary,#cf26 .cf-mc h3{text-wrap:balance}',
       'html.cf26-on,html.cf26-on body{background:' + NAVY + ' !important;margin:0}',
       '#cf26{background:' + NAVY + ';color:' + INK + ';font-family:' + BODY + ';font-size:17px;line-height:1.6;text-align:left;-webkit-font-smoothing:antialiased;overflow-x:hidden}',
@@ -1114,7 +1117,7 @@
       if (host === document.body) document.body.insertBefore(root, document.body.firstChild);
       else host.parentNode.insertBefore(root, host);
 
-      document.documentElement.className += ' cf26-on';
+      document.documentElement.className += ' cf26-on' + (byHost ? ' cf26-home' : '');
       hideTopBar();
       if (window.addEventListener) window.addEventListener('load', hideTopBar);
       uncover();

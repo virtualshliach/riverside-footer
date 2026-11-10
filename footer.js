@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-08b';
+  var V = '2026-11-09a';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -30,7 +30,9 @@
 
   /* domain roots that should load a project without an aid in the URL */
   var HOSTS = {
-    'chanukahfestival.org': '4949424'
+    'chanukahfestival.org': '4949424',
+    /* the festival's own ChabadOne site until its DNS moves to chanukahfestival.org */
+    '12899.centers.clhosting.org': '4949424'
   };
 
   /* Google Analytics 4 for the pages listed above. OFF until a measurement ID is filled in

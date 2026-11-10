@@ -12,7 +12,7 @@
     '4949424': { coverId: 'cf26-cover', cover: '#0f2936' },   /* Chanukah Festival 2026 (live) */
     '7553387': { coverId: 'cf26-cover', cover: '#0f2936' }    /* Chanukah Festival 2026 (draft page) */
   };
-  var HOSTS = { 'chanukahfestival.org': '4949424' };
+  var HOSTS = { 'chanukahfestival.org': '4949424', '12899.centers.clhosting.org': '4949424' };
 
   var l = window.location;
   var isResponse = /ArticleCcoResponse/i.test(l.href);
