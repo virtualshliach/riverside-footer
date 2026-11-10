@@ -398,7 +398,23 @@ var SITES = {
 
     console.log('riverside: form pop-ups (donate, contest, mailing list) on the draft copy');
     var DR = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm';
+    var st = await load('riverside', DR, { wait: 700 });
+    st.d.querySelector('.cf-nav .cf-don').dispatchEvent(new st.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+    ok(st.w.CFStripe && st.w.CFStripe.ready && st.d.getElementById('cfs') && !/cfs-off/.test(st.d.getElementById('cfs').className) && !st.d.querySelector('.cf-fp'),
+      'draft: Donate opens the Stripe pop-up (stripe-donate.js)');
+    var stC = [].filter.call(st.d.querySelectorAll('#cf26 a[href]'), function (a) { return /7606745/.test(a.href); })[0];
+    stC.dispatchEvent(new st.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+    var ov1 = st.d.querySelector('.cff-ov');
+    ok(st.w.CFForms && st.w.CFForms.ready && ov1 && /Menorah Contest/.test(ov1.querySelector('.cff-hd b').textContent) && !st.d.querySelector('.cf-fp iframe'),
+      'draft: a Menorah Contest link opens our own contest form (festival-forms.js)');
+    ov1.querySelector('.cff-x').dispatchEvent(new st.w.MouseEvent('click', { bubbles: true }));
+    var stM = [].filter.call(st.d.querySelectorAll('#cf26 a[href]'), function (a) { return /5333083/.test(a.href); })[0];
+    stM.dispatchEvent(new st.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+    var ov2 = st.d.querySelector('.cff-ov');
+    ok(!ov1.parentNode && ov2 && /Mailing List/.test(ov2.querySelector('.cff-hd b').textContent), 'draft: Join Our Mailing List opens our own mailing list form');
     var fp = await load('riverside', DR, { wait: 600 });          /* no native donation form in this shell */
+    fp.w.CFStripe = { version: 'off', ready: false, open: function () { return false; } };   /* Stripe off: the old pop-up */
+    fp.w.CFForms = { version: 'off', ready: false, open: function () { return false; } };     /* own forms off: the old pop-ups */
     function fpClick(el) { el.dispatchEvent(new fp.w.MouseEvent('click', { bubbles: true, cancelable: true })); }
     fpClick(fp.d.querySelector('.cf-nav .cf-don'));
     var fr = fp.d.querySelector('.cf-fp iframe');

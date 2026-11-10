@@ -31,6 +31,8 @@ who owns this repository.
 | `menorah-contest-2026.js` | 7606745 Menorah Contest 2026, all ages (form + thank-you) | On with the festival |
 | `dreidel-2026.js` | 5738793 Dreidel Guessing Contest, JewishRiverside.com/Guess (form + thank-you) | On with the festival |
 | `embed.js` | Donate 4194665, Menorah Contest 7606745, Mailing list 5333083, only inside the festival's form pop-up (`#cf-embed` in a frame) | Shows just the form, festival-styled |
+| `stripe-donate.js` | Donate pop-up with Stripe (card, Google Pay, Link, Cash App Pay, bank). Loaded by the festival page when `STRIPE_DONATE` is on (draft only for now). Backend: Google Apps Script web app in the org's "Chanukah Festival" Google Sheet (Donations tab, receipts) | **Draft** |
+| `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page when `OWN_FORMS` is on (draft only for now) | **Draft** |
 
 ## Making a change
 
@@ -39,7 +41,7 @@ who owns this repository.
 2. Bump `V` in `footer.js` (format `YYYY-MM-DD` plus a letter) in the same commit, so
    browsers fetch the new copy.
 3. Run the tests: `cd tools && npm install` (once), then `node tools/test.js` from the
-   repo root. All must pass.
+   repo root (and `node tools/test-stripe.js` when the Stripe pop-up or forms change). All must pass.
 4. Show the person a preview of the change (a rendered page they can look at) and get
    their OK before pushing.
 5. Commit with a plain-English message saying what changed on the site, then push.
@@ -92,6 +94,9 @@ aligned, on this site or in a ChabadOne form:
 - Keep the page id in a project's CFG and its `PAGES` key the same.
 - The loader only loads `^[a-z0-9-]+\.js$` files from this repository. Never add code
   that loads a script URL taken from the page, the address bar or anywhere else.
+- **Stripe and Apps Script:** the Stripe secret key lives only in the Apps Script's Script
+  properties. This repo holds just the publishable key (`pk_live_`) and the web-app URL.
+  The Apps Script code (Code.gs) is not in this repo.
 - **No secrets, ever.** This repository and the code it serves are public. No Stripe
   secret keys, Authorize.Net transaction keys, passwords or API tokens. Publishable
   keys and Google Apps Script web-app URLs are fine.
