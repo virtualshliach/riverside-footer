@@ -8,14 +8,23 @@
 (function () {
   'use strict';
 
-  var VERSION = 'dg26-2026-11-06a';
+  var VERSION = 'dg26-2026-11-09a';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
+  var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
+  if (!SELF_SRC) {
+    var ss = document.getElementsByTagName('script');
+    for (var si = ss.length - 1; si >= 0; si--) if (/\/dreidel-2026\.js(\?|$)/.test(ss[si].src)) { SELF_SRC = ss[si].src; break; }
+  }
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
   var AMP = ch(38);
 
   var CFG = {
     AID: '5738793',
+    /* Show our own form (festival-forms.js -> Google Sheet + confirmation email) instead of the
+       ChabadOne one. The ChabadOne form stays on the page, hidden off-screen, and comes back if
+       our file can't load. false = the ChabadOne form as before. */
+    OWN_FORM: true,
     /* A phrase from the platform's own confirmation text, used to find it on the page. */
     /* ...and its last words, so the whole message (headline to sign-off) is replaced. */
     NATIVE_LAST: 'enjoy the festival',
@@ -397,6 +406,7 @@
       var g = form.querySelector('#id_17 textarea');
       if (g) { g.setAttribute('inputmode', 'numeric'); g.setAttribute('rows', '1'); if (!g.getAttribute('placeholder')) g.setAttribute('placeholder', 'Your guess'); }
       if (window.console) console.log('Dreidel Guess ' + VERSION + ': form page designed');
+      if (CFG.OWN_FORM) useOwnForm(holder);
     } catch (err) {
       var h = document.getElementById('dg26-hero');
       if (h && h.parentNode) h.parentNode.removeChild(h);
@@ -404,6 +414,39 @@
       if (s && s.parentNode) s.parentNode.removeChild(s);
       if (window.console) console.error('Dreidel Guess ' + VERSION + ' form styling failed', err);
     }
+  }
+
+  /* Our own form in place of the ChabadOne one; the thank-you card appears in its place when sent. */
+  function useOwnForm(holder) {
+    var base = SELF_SRC ? SELF_SRC.split('?')[0].replace(/[^\/]+$/, '') : '';
+    var v = /\?v=([^&]+)/.exec(SELF_SRC);
+    function go() {
+      var F = window.CFForms;
+      if (!F || !F.ready) return;
+      var host = el('div'); host.id = 'dg26-own';
+      holder.parentNode.insertBefore(host, holder);
+      if (!F.mount('dreidel', host, { onDone: done })) { host.parentNode.removeChild(host); return; }
+      /* park the ChabadOne form off-screen (never display:none) */
+      holder.setAttribute('data-dg26', 'parked');
+      holder.style.cssText += ';position:absolute!important;left:-10000px!important;top:0!important;width:1px!important;height:1px!important;overflow:hidden!important';
+      if (window.console) console.log('Dreidel Guess ' + VERSION + ': using our own form');
+      function done() {
+        if (!document.getElementById('dg26-style')) {
+          var st = document.createElement('style'); st.id = 'dg26-style'; st.textContent = css();
+          document.head.appendChild(st);
+        }
+        var card = build();
+        host.parentNode.replaceChild(card, host);
+        var hero = document.getElementById('dg26-hero');
+        if (hero && hero.parentNode) hero.parentNode.removeChild(hero);
+        try { card.scrollIntoView({ block: 'start' }); } catch (e) { try { window.scrollTo(0, 0); } catch (x) {} }
+      }
+    }
+    if (window.CFForms) return go();
+    var sc = document.createElement('script');
+    sc.src = base + 'festival-forms.js' + (v ? '?v=' + v[1] : '');
+    sc.onload = go;
+    (document.head || document.documentElement).appendChild(sc);
   }
 
   function loadFonts() {

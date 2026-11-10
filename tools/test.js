@@ -47,6 +47,10 @@ function load(site, url, opts) {
   var dom = new JSDOM(html, {
     url: url, runScripts: 'dangerously', resources: makeLoader(requests), pretendToBeVisual: true,
     beforeParse: function (w) {
+      if (opts.nativeDonate) {   /* Stripe pop-up and own forms switched off: test the ChabadOne fallbacks */
+        w.CFStripe = { version: 'off', ready: false, open: function () { return false; } };
+        w.CFForms = { version: 'off', ready: false, open: function () { return false; } };
+      }
       w.console.error = function () { errors.push([].join.call(arguments, ' ')); };
       w.console.warn = function () { logs.push('warn ' + [].join.call(arguments, ' ')); };
       w.console.log = function () { logs.push([].join.call(arguments, ' ')); };
@@ -138,7 +142,9 @@ var SITES = {
     var DRAFT = '4949424';
     console.log('riverside: draft Chanukah page');
     var r = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm');
-    ok(projectRequests(r).length === 1 && /riverside-footer\/chanukah-2026\.js\?v=/.test(projectRequests(r)[0]), 'loader fetched chanukah-2026.js with version stamp');
+    ok(/riverside-footer\/chanukah-2026\.js\?v=/.test(projectRequests(r)[0]) &&
+      projectRequests(r).slice(1).every(function (u) { return /\/(stripe-donate|festival-forms)\.js\?v=/.test(u); }),
+      'loader fetched chanukah-2026.js with version stamp (plus the Stripe and forms files it uses)');
     ok(r.d.getElementById('cf26'), 'template rendered');
     ok(!r.d.getElementById('cf26-cover'), 'cover removed after render');
     ok(r.errors.length === 0, 'no console errors ' + (r.errors.length ? JSON.stringify(r.errors) : ''));
@@ -311,20 +317,20 @@ var SITES = {
 
     console.log('riverside: donate pop-up against a live-shaped form');
     var DPAGE = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/' + DRAFT + '/jewish/Draft.htm';
-    var dz = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    var dz = await load('riverside', DPAGE, { shell: donateShell(), wait: 700, nativeDonate: true });
     ok(dz.d.getElementById('cf26') && dz.errors.length === 0, 'page renders with the form present, no errors ' + JSON.stringify(dz.errors));
     ok(dz.d.getElementById('4949424') && dz.d.getElementById('4949424').closest('.cco_templatelates_content'), 'native form left in place (not moved)');
     var css = dz.d.getElementById('cf26-style').textContent;
     ok(/\.cco_templatelates_content\{position:absolute !important;left:-10000px/.test(css) && !/\.cco_templatelates_content[^{]*\{display:none/.test(css), 'native page parked off-screen, never display:none');
     await donateFlow(dz, false);
     ok(dz.w.__clicks === 0 && /card/i.test(dz.d.querySelector('.cf-dm-err').textContent), 'card left empty: stopped in the pop-up, form not touched (' + dz.d.querySelector('.cf-dm-err').textContent + ')');
-    var dv = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    var dv = await load('riverside', DPAGE, { shell: donateShell(), wait: 700, nativeDonate: true });
     await donateFlow(dv, '4111');
     ok(dv.w.__clicks === 1, 'form refuses the card: native submit clicked once (' + dv.w.__clicks + ')');
     ok(/card details/i.test(dv.d.querySelector('.cf-dm-err').textContent), 'form refuses the card: donor told to check card details (' + dv.d.querySelector('.cf-dm-err').textContent + ')');
     ok(!dv.d.querySelector('.cf-dm-next').disabled, 'form refuses the card: button released for a retry');
 
-    var dg = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    var dg = await load('riverside', DPAGE, { shell: donateShell(), wait: 700, nativeDonate: true });
     await donateFlow(dg, true);
     var sub = dg.w.__submitted || {};
     ok(dg.w.__clicks === 1, 'card gift: native submit clicked exactly once (' + dg.w.__clicks + ')');
@@ -338,7 +344,7 @@ var SITES = {
     await wait(600);
     ok(/Thank you/.test(dg.d.querySelector('.cf-dm-done').textContent) && /\$180/.test(dg.d.querySelector('.cf-dm-done').textContent), 'card gift: thank-you shown when the form completes');
 
-    var dd = await load('riverside', DPAGE, { shell: donateShell(), wait: 700 });
+    var dd = await load('riverside', DPAGE, { shell: donateShell(), wait: 700, nativeDonate: true });
     dd.w.__decline = true;
     await donateFlow(dd, true);
     await wait(1500);
@@ -348,7 +354,10 @@ var SITES = {
     await wait(1200);
     ok(dd.w.__clicks === 2 && /Thank you/.test(dd.d.querySelector('.cf-dm-done').textContent), 'retry after a decline: stale decline text cleared, second attempt succeeds');
 
-    var nf = await load('riverside', DPAGE, { wait: 400 });
+    var sl = await load('riverside', DPAGE, { wait: 700 });
+    sl.d.querySelector('.cf-nav .cf-don').dispatchEvent(new sl.w.MouseEvent('click', { bubbles: true }));
+    ok(sl.d.getElementById('cfs') && !/cfs-off/.test(sl.d.getElementById('cfs').className) && !sl.d.querySelector('.cf-fp'), 'live page: Donate opens the Stripe pop-up');
+    var nf = await load('riverside', DPAGE, { wait: 400, nativeDonate: true });
     var opened = null; nf.w.open = function (u) { opened = u; };
     nf.d.querySelector('.cf-nav .cf-don').dispatchEvent(new nf.w.MouseEvent('click', { bubbles: true }));
     ok(opened === null && nf.d.querySelector('.cf-fp iframe') && /aid\/4194665\/.*#cf-embed$/.test(nf.d.querySelector('.cf-fp iframe').getAttribute('src')), 'no form on the page: Donate opens the donate form in the festival pop-up');
@@ -387,7 +396,10 @@ var SITES = {
 
     console.log('riverside: the festival\'s own ChabadOne site (full site template homepage)');
     var NS = '<!doctype html><html><head><title>Chanukah Festival</title></head><body class="lang_en dir_ltr home cco_body"><div id="PrintCreditHeader"></div><div id="header">Menu</div><div id="content">Hebrew School lorem</div><div id="footer">footer</div></body></html>';
-    var ns = await load('riverside', 'https://12899.centers.clhosting.org/', { shell: NS, wait: 600 });
+    var nss = await load('riverside', 'https://12899.centers.clhosting.org/', { shell: NS, wait: 700 });
+    var nsd = nss.d.querySelector('.cf-nav .cf-don'); if (nsd) nsd.dispatchEvent(new nss.w.MouseEvent('click', { bubbles: true }));
+    ok(nss.d.getElementById('cfs') && !/cfs-off/.test(nss.d.getElementById('cfs').className), 'festival\'s own site: Donate opens the Stripe pop-up');
+    var ns = await load('riverside', 'https://12899.centers.clhosting.org/', { shell: NS, wait: 600, nativeDonate: true });
     ok(ns.d.getElementById('cf26') && /cf26-home/.test(ns.d.documentElement.className), 'new site homepage shows the festival');
     ok(/html\.cf26-home #header,html\.cf26-home #content,html\.cf26-home #footer\{display:none/.test(ns.d.getElementById('cf26-style').textContent), 'new site template header, content and footer are hidden');
     var nd = ns.d.querySelector('.cf-nav .cf-don'); var nopened = null; ns.w.open = function (u) { nopened = u; };
@@ -412,6 +424,12 @@ var SITES = {
     stM.dispatchEvent(new st.w.MouseEvent('click', { bubbles: true, cancelable: true }));
     var ov2 = st.d.querySelector('.cff-ov');
     ok(!ov1.parentNode && ov2 && /Mailing List/.test(ov2.querySelector('.cff-hd b').textContent), 'draft: Join Our Mailing List opens our own mailing list form');
+    var gq = await load('riverside', DR + '?guess', { wait: 1200 });
+    var gov = gq.d.querySelector('.cff-ov');
+    ok(gov && /Dreidel Guessing Contest/.test(gov.querySelector('.cff-hd b').textContent) && gq.d.getElementById('cf26'),
+      'draft: ?guess (chanukahfestival.org/?guess) opens the Dreidel Contest form over the festival page');
+    var gn = await load('riverside', DR, { wait: 900 });
+    ok(!gn.d.querySelector('.cff-ov'), 'draft: without ?guess no form opens by itself');
     var fp = await load('riverside', DR, { wait: 600 });          /* no native donation form in this shell */
     fp.w.CFStripe = { version: 'off', ready: false, open: function () { return false; } };   /* Stripe off: the old pop-up */
     fp.w.CFForms = { version: 'off', ready: false, open: function () { return false; } };     /* own forms off: the old pop-ups */

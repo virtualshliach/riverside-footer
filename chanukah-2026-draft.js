@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-09b';
+  var VERSION = 'cf26-2026-11-09c';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -386,6 +386,8 @@
        Sheet, not ChabadOne. Falls back to the ChabadOne form pop-up if the file can't load.
        false = always use the ChabadOne forms. */
     OWN_FORMS: true,
+    /* where ?guess goes if our forms can't load */
+    GUESS_URL: 'https://www.jewishriverside.com/Guess',
     /* jewishriverside.com forms that open in the festival's own pop-up (an iframe showing just the
        form, styled by embed.js). Everything is submitted and recorded on jewishriverside.com.
        match: any link on this page to that form opens the pop-up instead. */
@@ -1166,8 +1168,11 @@
       trackClicks();
       try { addEventData(); } catch (e) {}
       /* back from Cash App or a bank window: stripe-donate.js shows the result */
-      if (CFG.STRIPE_DONATE) loadStripeDonate();
-      if (CFG.OWN_FORMS) loadOwnForms();   /* small file; also shows the result when back from Cash App */
+      if (CFG.STRIPE_DONATE) loadStripeDonate();   /* small file; also shows the result when back from Cash App */
+      if (CFG.OWN_FORMS) loadOwnForms();
+      /* chanukahfestival.org/?guess (booth sign): open the Dreidel Guessing Contest form.
+         Cloudflare forwards the domain here and keeps the ?guess part. */
+      if (/[?&]guess(?:[=&]|$)/i.test(location.search)) setTimeout(openGuess, 300);
       if (!/[?&]payment_intent=/.test(location.search) && /^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
       else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
         var hid = location.hash.slice(1);
@@ -1355,6 +1360,14 @@
       (document.head || document.documentElement).appendChild(sc);
     });
     return formsLoading;
+  }
+  function openGuess() {
+    function fallback() { location.href = CFG.GUESS_URL; }   /* the ChabadOne Guess page */
+    if (!CFG.OWN_FORMS) return fallback();
+    loadOwnForms().then(function (F) {
+      if (F && F.ready && F.open('dreidel')) { track('form_open_dreidel'); return; }
+      fallback();
+    });
   }
   function openFormPop(kind) {
     if (CFG.OWN_FORMS && OWN_KIND[kind]) {

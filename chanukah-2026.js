@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-06c';
+  var VERSION = 'cf26-2026-11-09c';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -378,6 +378,16 @@
     ],
     /* full address: the festival also runs on its own ChabadOne site (chanukahfestival.org) */
     DONATE_URL: 'https://www.jewishriverside.com/article.asp?aid=4194665',
+    /* Donate with Stripe (stripe-donate.js): our own pop-up, gifts go to Stripe, the Google Sheet
+       and our own receipt email, not through ChabadOne. Falls back to the ChabadOne pop-up below
+       while stripe-donate.js has no keys filled in. false = always use the ChabadOne pop-up. */
+    STRIPE_DONATE: true,
+    /* Our own Menorah Contest and Mailing List forms (festival-forms.js): entries go to the Google
+       Sheet, not ChabadOne. Falls back to the ChabadOne form pop-up if the file can't load.
+       false = always use the ChabadOne forms. */
+    OWN_FORMS: true,
+    /* where ?guess goes if our forms can't load */
+    GUESS_URL: 'https://www.jewishriverside.com/Guess',
     /* jewishriverside.com forms that open in the festival's own pop-up (an iframe showing just the
        form, styled by embed.js). Everything is submitted and recorded on jewishriverside.com.
        match: any link on this page to that form opens the pop-up instead. */
@@ -1157,7 +1167,13 @@
       document.addEventListener('click', closeMenus);
       trackClicks();
       try { addEventData(); } catch (e) {}
-      if (/^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
+      /* back from Cash App or a bank window: stripe-donate.js shows the result */
+      if (CFG.STRIPE_DONATE) loadStripeDonate();   /* small file; also shows the result when back from Cash App */
+      if (CFG.OWN_FORMS) loadOwnForms();
+      /* chanukahfestival.org/?guess (booth sign): open the Dreidel Guessing Contest form.
+         Cloudflare forwards the domain here and keeps the ?guess part. */
+      if (/[?&]guess(?:[=&]|$)/i.test(location.search)) setTimeout(openGuess, 300);
+      if (!/[?&]payment_intent=/.test(location.search) && /^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
       else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
         var hid = location.hash.slice(1);
         setTimeout(function () { goTo(hid); }, 400);
@@ -1330,7 +1346,42 @@
     }
     return null;
   }
+  /* our own forms (festival-forms.js, loaded at boot) */
+  var OWN_KIND = { contest: 'menorah', mailing: 'mailing' };
+  var formsLoading = null;
+  function loadOwnForms() {
+    if (window.CFForms) return Promise.resolve(window.CFForms);
+    if (formsLoading) return formsLoading;
+    formsLoading = new Promise(function (res) {
+      var sc = document.createElement('script');
+      sc.src = asset('festival-forms.js') + (/\?v=([^&]+)/.exec(SELF_SRC) ? '?v=' + /\?v=([^&]+)/.exec(SELF_SRC)[1] : '');
+      sc.onload = function () { res(window.CFForms || null); };
+      sc.onerror = function () { formsLoading = null; res(null); };
+      (document.head || document.documentElement).appendChild(sc);
+    });
+    return formsLoading;
+  }
+  function openGuess() {
+    function fallback() { location.href = CFG.GUESS_URL; }   /* the ChabadOne Guess page */
+    if (!CFG.OWN_FORMS) return fallback();
+    loadOwnForms().then(function (F) {
+      if (F && F.ready && F.open('dreidel')) { track('form_open_dreidel'); return; }
+      fallback();
+    });
+  }
   function openFormPop(kind) {
+    if (CFG.OWN_FORMS && OWN_KIND[kind]) {
+      var go = function (F) {
+        if (F && F.ready && F.open(OWN_KIND[kind])) { track('form_open_' + kind); return; }
+        openFramePop(kind);
+      };
+      if (window.CFForms) return go(window.CFForms);
+      loadOwnForms().then(go);
+      return;
+    }
+    openFramePop(kind);
+  }
+  function openFramePop(kind) {
     var F = CFG.FORM_POPS[kind];
     if (!F) return;
     closeFormPop();
@@ -1393,7 +1444,33 @@
   }
   function track(name) { try { if (window.gtag) window.gtag('event', 'cta_click', { label: name }); } catch (e) {} }
 
+  /* Stripe pop-up (stripe-donate.js, loaded the first time it is needed) */
+  var stripeLoading = null;
+  function loadStripeDonate() {
+    if (window.CFStripe) return Promise.resolve(window.CFStripe);
+    if (stripeLoading) return stripeLoading;
+    stripeLoading = new Promise(function (res) {
+      var sc = document.createElement('script');
+      sc.src = asset('stripe-donate.js') + (/\?v=([^&]+)/.exec(SELF_SRC) ? '?v=' + /\?v=([^&]+)/.exec(SELF_SRC)[1] : '');
+      sc.onload = function () { res(window.CFStripe || null); };
+      sc.onerror = function () { stripeLoading = null; res(null); };
+      (document.head || document.documentElement).appendChild(sc);
+    });
+    return stripeLoading;
+  }
   function openDonate() {
+    if (!CFG.STRIPE_DONATE) return openDonateNative();
+    function go(S) {
+      if (S && S.ready && S.open()) {
+        try { history.replaceState(null, '', '#donate'); } catch (e) {}
+        return;
+      }
+      openDonateNative();
+    }
+    if (window.CFStripe) return go(window.CFStripe);   /* normally already loaded at boot */
+    loadStripeDonate().then(go);
+  }
+  function openDonateNative() {
     var form = nativeForm();
     if (!form || !$id(CFG.DONATE.F.submit)) { openFormPop('donate'); return; }
     if (!DM) DM = buildDonate(form);

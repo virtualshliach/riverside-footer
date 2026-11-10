@@ -31,8 +31,8 @@ who owns this repository.
 | `menorah-contest-2026.js` | 7606745 Menorah Contest 2026, all ages (form + thank-you) | On with the festival |
 | `dreidel-2026.js` | 5738793 Dreidel Guessing Contest, JewishRiverside.com/Guess (form + thank-you) | On with the festival |
 | `embed.js` | Donate 4194665, Menorah Contest 7606745, Mailing list 5333083, only inside the festival's form pop-up (`#cf-embed` in a frame) | Shows just the form, festival-styled |
-| `stripe-donate.js` | Donate pop-up with Stripe (card, Google Pay, Link, Cash App Pay, bank). Loaded by the festival page when `STRIPE_DONATE` is on (draft only for now). Backend: Google Apps Script web app in the org's "Chanukah Festival" Google Sheet (Donations tab, receipts) | **Draft** |
-| `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page when `OWN_FORMS` is on (draft only for now) | **Draft** |
+| `stripe-donate.js` | Donate pop-up with Stripe (card, Google Pay, Link, Cash App Pay, bank). Loaded by the festival page (draft and live) when `STRIPE_DONATE` is on. Backend: Google Apps Script web app in the org's "Chanukah Festival" Google Sheet (Donations tab, receipts) | **Live** |
+| `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page (draft and live) when `OWN_FORMS` is on, and by the Guess page (`dreidel-2026.js`). `chanukahfestival.org/?guess` opens the Dreidel form | **Live** |
 
 ## Making a change
 
@@ -82,10 +82,15 @@ aligned, on this site or in a ChabadOne form:
     and chanukahfestival.org), switching only `AID` and `BRAND_HOSTS`. Note this also
     publishes anything that was waiting on the draft page; tell the person if there was.
   - Never edit `chanukah-2026.js` directly, or the next publish will overwrite that edit.
-  - Donate, Menorah Contest and Mailing List open in the festival's form pop-up: an iframe of
-    the real jewishriverside.com form (Donate 4194665, Contest 7606745, Mailing list 5333083)
-    that `embed.js` shows on its own, festival-styled. On the draft page 7553387, Donate uses
-    its own built-in donation form instead.
+  - Donate opens the Stripe pop-up (`stripe-donate.js`); Menorah Contest and Mailing List open
+    our own forms (`festival-forms.js`), all logging to the Google Sheet. If those files can't
+    load, the old pop-ups come back: an iframe of the real jewishriverside.com form (Donate
+    4194665, Contest 7606745, Mailing list 5333083) that `embed.js` shows festival-styled.
+  - `?guess` on the festival page (chanukahfestival.org/?guess; Cloudflare forwards the domain
+    and keeps the query, but drops any path like /guess) opens the Dreidel Contest form.
+  - The Guess page (5738793) shows our own Dreidel form; the ChabadOne form stays on the page,
+    parked off-screen, and comes back if `festival-forms.js` can't load.
+  - The ChabadOne Menorah Contest and Mailing List pages themselves are unchanged.
 - **Festival sub pages** (Kids Menorah Contest `menorah-contest-2026.js`, Dreidel Guessing
   Contest `dreidel-2026.js`) and every other page have **live only**, no draft page. Show the
   draft as a preview in Claude, get the OK, then push live.
