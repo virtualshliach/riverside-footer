@@ -34,6 +34,22 @@ who owns this repository.
 | `stripe-donate.js` | Donate pop-up with Stripe (card, Google Pay, Link, Cash App Pay, bank). Loaded by the festival page (draft and live) when `STRIPE_DONATE` is on. Backend: Google Apps Script web app in the org's "Chanukah Festival" Google Sheet (Donations tab, receipts) | **Live** |
 | `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page (draft and live) when `OWN_FORMS` is on, and by the Guess page (`dreidel-2026.js`). `chanukahfestival.org/?guess` opens the Dreidel form | **Live** |
 
+## Working together (two people push to this repository)
+
+Yudell and the Riverside client both make changes here, each with their own Claude. To make
+sure nobody's work is overwritten or published by surprise:
+
+1. **Pull first, pull again before pushing.** At the start of every session, run
+   `git pull --rebase origin main` before reading or changing any file. Right before every
+   push, pull again, rerun the tests on the result, and only then push. If the pull brings in
+   someone else's changes to a file you edited, check both changes survived. Never force-push.
+2. **Say what else is going live.** Before any push, run `git log --oneline` for the commits
+   since your session started and tell the person about any that weren't made in this session
+   (who and what, in plain words). Before a **push live** of the festival page, also list
+   everything on the draft that the live page doesn't have yet (compare `chanukah-2026-draft.js`
+   with `chanukah-2026.js`, ignoring `AID` and `BRAND_HOSTS`), and point out anything this
+   session didn't make. Ask before publishing someone else's unfinished draft work.
+
 ## Making a change
 
 1. Edit the project file (for the Chanukah Festival main page: `chanukah-2026-draft.js`, then
