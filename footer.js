@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-09a';
+  var V = '2026-11-09b';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -55,10 +55,6 @@
   }
 
   var aid = findAid();
-  var page = aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
-  if (!page) return;
-  if (isResponse && !page.onResponse) return;
-  if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(page.file)) return;
 
   /* Only ever load from this loader's own folder. */
   var me = document.currentScript && document.currentScript.src;
@@ -70,6 +66,36 @@
   }
   if (!me) return;
   var base = me.split('?')[0].replace(/[^\/]+$/, '');
+
+  function load(file) {
+    if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(file)) return;
+    var sc = document.createElement('script');
+    sc.src = base + file + '?v=' + V;
+    sc.onerror = function () {
+      uncover();
+      if (window.console) console.error('[' + SITE + '] could not load ' + file);
+    };
+    (document.head || document.documentElement).appendChild(sc);
+  }
+
+  /* Forms shown inside the festival's pop-up (an iframe on the festival page, on this site or on
+     chanukahfestival.org). In that frame, embed.js shows just the form. Only these pages. */
+  var EMBED = { '4194665': 'donate', '7606745': 'contest', '5333083': 'mailing' };
+  var framed = false;
+  try { framed = window.self !== window.top; } catch (e) { framed = true; }
+  if (framed && aid && Object.prototype.hasOwnProperty.call(EMBED, aid)) {
+    var flag = /cf-embed/.test(window.location.hash);
+    try {
+      if (flag) sessionStorage.setItem('cf26-embed', '1');
+      else flag = sessionStorage.getItem('cf26-embed') === '1';
+    } catch (e) {}
+    if (flag) load('embed.js');
+  }
+
+  var page = aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
+  if (!page) return;
+  if (isResponse && !page.onResponse) return;
+  if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(page.file)) return;
 
   var coverId = page.coverId || 'fc-cover';
   if (page.cover && !isResponse && !document.getElementById(coverId)) {
@@ -99,12 +125,6 @@
     (document.head || document.documentElement).appendChild(ga);
   }
 
-  var s = document.createElement('script');
-  s.src = base + page.file + '?v=' + V;
-  s.onerror = function () {
-    uncover();
-    if (window.console) console.error('[' + SITE + '] could not load ' + page.file);
-  };
-  (document.head || document.documentElement).appendChild(s);
+  load(page.file);
   if (window.console) console.log('[' + SITE + '] ' + V + ' aid ' + aid + ' -> ' + page.file);
 })();

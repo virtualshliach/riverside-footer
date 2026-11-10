@@ -396,6 +396,60 @@ var SITES = {
     var nsub = await load('riverside', 'https://12899.centers.clhosting.org/36226', { shell: NS, wait: 400 });
     ok(!nsub.d.getElementById('cf26'), 'other pages on the new site are left alone');
 
+    console.log('riverside: form pop-ups (donate, contest, mailing list) on the draft copy');
+    var DR = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm';
+    var fp = await load('riverside', DR, { wait: 600 });          /* no native donation form in this shell */
+    function fpClick(el) { el.dispatchEvent(new fp.w.MouseEvent('click', { bubbles: true, cancelable: true })); }
+    fpClick(fp.d.querySelector('.cf-nav .cf-don'));
+    var fr = fp.d.querySelector('.cf-fp iframe');
+    ok(fr && fr.getAttribute('src') === 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm#cf-embed', 'no form on the page: Donate opens the donate form in a pop-up (' + (fr && fr.getAttribute('src')) + ')');
+    ok(fp.d.querySelector('.cf-fp .cf-dm-hd b').textContent === 'Support the Chanukah Festival', 'donate pop-up has the festival heading');
+    fp.w.dispatchEvent(new fp.w.MessageEvent('message', { origin: 'https://evil.example', source: fr.contentWindow, data: { cf26: 'embed', type: 'height', h: 1234 } }));
+    ok(!/1234/.test(fr.style.height || ''), 'messages from other websites are ignored');
+    fp.w.dispatchEvent(new fp.w.MessageEvent('message', { origin: 'https://www.jewishriverside.com', source: fr.contentWindow, data: { cf26: 'embed', type: 'height', h: 1234 } }));
+    ok(fr.style.height === '1234px' && /cf-fp-ready/.test(fp.d.querySelector('.cf-fp .cf-dm-box').className), 'the form page sets the pop-up height and shows the form');
+    fp.d.dispatchEvent(new fp.w.KeyboardEvent('keydown', { key: 'Escape' }));
+    ok(!fp.d.querySelector('.cf-fp'), 'Escape closes the form pop-up');
+    var cl = [].filter.call(fp.d.querySelectorAll('#cf26 a[href]'), function (a) { return /7606745/.test(a.href); });
+    ok(cl.length > 0, 'page has Menorah Contest links (' + cl.length + ')');
+    fpClick(cl[0]);
+    fr = fp.d.querySelector('.cf-fp iframe');
+    ok(fr && /aid\/7606745\/jewish\/Menorah-Contest-2026\.htm#cf-embed$/.test(fr.getAttribute('src')), 'a Menorah Contest link opens the contest form in the pop-up');
+    fpClick(fp.d.querySelector('.cf-fp .cf-dm-x'));
+    ok(!fp.d.querySelector('.cf-fp'), 'X closes it');
+    var ml = [].filter.call(fp.d.querySelectorAll('#cf26 a[href]'), function (a) { return /5333083/.test(a.href); });
+    fpClick(ml[0]);
+    fr = fp.d.querySelector('.cf-fp iframe');
+    ok(ml.length && fr && /aid\/5333083\/.*#cf-embed$/.test(fr.getAttribute('src')), 'Join Our Mailing List opens the mailing list form in the pop-up');
+    fpClick(fp.d.querySelector('.cf-fp'));
+    ok(!fp.d.querySelector('.cf-fp'), 'clicking outside closes it');
+    var dsrc2 = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8');
+    ok(/if \(!form \|\| !\$id\(CFG\.DONATE\.F\.submit\)\) \{ openFormPop\('donate'\); return; \}/.test(dsrc2), 'with the native form (draft page) Donate still uses the built-in donate pop-up');
+
+    console.log('riverside: embed.js (the form page inside the pop-up)');
+    var esrc = fs.readFileSync(path.join(ROOT, 'embed.js'), 'utf8');
+    var EP = '<!doctype html><html><head></head><body class="cco_templateless_page"><div class="cco_templateless_template">Back to</div>' +
+      '<div class="cco_templatelates_content"><div id="co_content_container" class="co_content_container"><nav id="sitenav">Home About</nav>' +
+      '<div id="chabad_body_page"><h1 class="article-header__title">Donate</h1><div id="formContainer"><form id="4194665" class="userform-form"><ul>' +
+      '<li class="form-line" id="id_3"><input id="input_3"></li><li class="form-line" id="id_13"><input type="radio" id="input_13_creditCard"><input type="radio" id="input_13_paypal"></li>' +
+      '<li class="form-line" id="id_2"><button type="button" id="input_2" class="form-submit-button">Submit</button></li></ul><div class="js-recaptcha-wrapper"></div></form></div>' +
+      '<div id="aside">related links</div></div></div></div><div id="BodyContainer"></div><div id="gb-widget-1">chat</div>' +
+      '<div id="rc"><iframe title="recaptcha challenge expires in two minutes" src="https://www.google.com/recaptcha/api2/bframe"></iframe></div></body></html>';
+    var ej = new JSDOM(EP, { url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm#cf-embed', runScripts: 'outside-only', pretendToBeVisual: true });
+    var posted = [];
+    ej.window.eval('window.__posted=[];');
+    ej.window.eval(esrc);
+    await wait(500);
+    var ed = ej.window.document, ew = ej.window;
+    function hidden(el) { return ew.getComputedStyle(el).display === 'none'; }
+    ok(/cf-embed/.test(ed.documentElement.className) && ed.getElementById('cf-embed-style'), 'embed view switches on');
+    ok(!hidden(ed.getElementById('4194665')) && !hidden(ed.getElementById('formContainer')) && !hidden(ed.querySelector('.cco_templatelates_content')), 'the form and everything holding it stay shown (never display:none)');
+    ok(hidden(ed.getElementById('sitenav')) && hidden(ed.getElementById('aside')) && hidden(ed.querySelector('.cco_templateless_template')) && hidden(ed.getElementById('gb-widget-1')), 'site menu, side content, Back-to bar and chat button are hidden');
+    ok(!hidden(ed.getElementById('rc')), 'a reCAPTCHA challenge is never hidden');
+    ok(!hidden(ed.querySelector('.js-recaptcha-wrapper')), 'the reCAPTCHA spot in the form stays');
+    ok(ed.getElementById('cf-embed-pp') && /new tab/.test(ed.getElementById('cf-embed-pp').textContent), 'PayPal choice gets a link to the full donate page');
+    ok(!/display:\s*none[^}]*userform-form|userform-form[^{]*\{[^}]*display:\s*none/.test(ed.getElementById('cf-embed-style').textContent), 'embed styles never hide a form');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],

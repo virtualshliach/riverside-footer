@@ -30,6 +30,7 @@ who owns this repository.
 | `chanukah-2026-draft.js` | 7553387 Chanukah Festival 2026 draft page | **Draft** (for review) |
 | `menorah-contest-2026.js` | 7606745 Menorah Contest 2026, all ages (form + thank-you) | On with the festival |
 | `dreidel-2026.js` | 5738793 Dreidel Guessing Contest, JewishRiverside.com/Guess (form + thank-you) | On with the festival |
+| `embed.js` | Donate 4194665, Menorah Contest 7606745, Mailing list 5333083, only inside the festival's form pop-up (`#cf-embed` in a frame) | Shows just the form, festival-styled |
 
 ## Making a change
 
