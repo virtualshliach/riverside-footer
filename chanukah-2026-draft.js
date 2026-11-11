@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-09c';
+  var VERSION = 'cf26-2026-11-11e';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -137,8 +137,28 @@
     ],
     stats: [
       { big: '22nd', small: 'year of light in Riverside' },
-      { big: 'Largest', small: 'menorah in the region' }
+      { big: 'Largest', small: 'menorah in the region' },
+      { big: '3,000', small: 'people join us!' }
     ],
+
+    america250: {
+      title: 'Why this year shines brighter',
+      body: 'In 1790, George Washington wrote that the government of the United States "gives to bigotry no sanction, to persecution no assistance." In 1979, President Carter joined the first National Menorah lighting at the White House, and today public menorahs light up cities across the country and around the world. Two hundred fifty years later, that promise shines brighter than ever. For the 22nd year, it shines in Riverside, at the Historic Courthouse, a symbol of the justice and liberty that make it possible.',
+      photos: [
+        {
+          src: 'https://virtualshliach.github.io/riverside-footer/assets/chanukah-2026/n7-national-img3646-v7.jpg',
+          caption: 'National Menorah, Washington, DC',
+          credit: 'Photo: National Menorah',
+          alt: 'The National Menorah at night on the Ellipse, with the White House lit in the background'
+        },
+        {
+          src: 'https://virtualshliach.github.io/riverside-footer/assets/chanukah-2026/r4-reference-courthouse-v7.jpg',
+          caption: 'Riverside Historic Courthouse',
+          alt: 'The whole Riverside Historic Courthouse at night, with the festival menorah on the steps, a crowd in front, and white ESH orchestra stands',
+          featured: true
+        }
+      ]
+    },
 
     /* ---- Community partners shown on the page ---- */
     PARTNERS_INTRO: 'Thank you to our partners for making this celebration possible.',
@@ -742,6 +762,30 @@
       '#cf26 .cf-annual sup{font-size:.5em;vertical-align:super}',
       '#cf26 .cf-t1{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.02em;background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent}',
       '#cf26 .cf-t2{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.04em;color:#fff}',
+      '#cf26 .cf-subhead{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.375rem,4.3vw,2.35rem);line-height:1.28;letter-spacing:.015em;color:#fff;margin-top:20px;margin-bottom:4px;padding:0 18px;text-align:center;text-shadow:0 3px 18px rgba(0,0,0,.55)}',
+      '#cf26 .cf-subhead:after{content:"";display:block;width:64px;height:2px;margin:14px auto 12px;background:' + GOLD + ';border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,.35)}',
+      '#cf26 .cf-subhead .cf-sub-1,#cf26 .cf-subhead .cf-sub-2{display:inline;white-space:nowrap}',
+      '#cf26 .cf-subhead .cf-sub-2:before{content:" "}',
+      '@media (max-width:600px){#cf26 .cf-subhead .cf-sub-1,#cf26 .cf-subhead .cf-sub-2{display:block}#cf26 .cf-subhead .cf-sub-2:before{content:none}#cf26 .cf-subhead:after{margin-top:12px;margin-bottom:8px}}',
+      '#cf26 .cf-250-ribbon{background:' + GOLD + ';color:' + DEEP + ';text-align:center;padding:11px 22px}',
+      '#cf26 .cf-250-ribbon-inner{font-family:' + BODY + ';font-weight:600;font-size:clamp(.95rem,2.1vw,1.08rem);letter-spacing:.03em;line-height:1.4}',
+      '#cf26 .cf-250-r1,#cf26 .cf-250-r2{white-space:nowrap}',
+      '#cf26 .cf-250-r2:before{content:" "}',
+      '@media (max-width:600px){#cf26 .cf-250-r1,#cf26 .cf-250-r2{display:block;white-space:nowrap}#cf26 .cf-250-r2:before{content:none}}',
+      '#cf26 .cf-info .cf-by{margin-top:16px;margin-bottom:2px}',
+      '#cf26 .cf-info .cf-welcome{margin-top:10px;margin-bottom:20px}',
+      '#cf26 .cf-info .cf-by i,#cf26 .cf-info .cf-by b,#cf26 .cf-info .cf-welcome{text-shadow:none}',
+      '#cf26 .cf-250-sec{background:#0c2a30;border-top:1px solid rgba(233,185,73,.28);border-bottom:1px solid rgba(233,185,73,.28);padding:72px 0}',
+      '#cf26 .cf-250-copy{color:' + MUTED + ';font-size:1.08rem;line-height:1.8;max-width:46rem;margin:8px auto 0;text-align:center}',
+      '@media (max-width:600px){#cf26 .cf-250-sec{padding:56px 0}#cf26 .cf-250-copy{text-align:left;font-size:1.02rem;line-height:1.75}}',
+      '#cf26 .cf-250-photos{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:46rem;margin:36px auto 0;align-items:stretch}',
+      '#cf26 .cf-250-photo{margin:0;background:transparent}',
+      '#cf26 .cf-250-photo img{display:block;width:100%;height:auto;aspect-ratio:21/20;object-fit:cover;object-position:center;border-radius:14px;background:' + DEEP + '}',
+      '#cf26 .cf-250-photo figcaption{margin-top:10px;text-align:center;font-family:' + BODY + ';font-weight:600;font-size:.92rem;letter-spacing:.02em;color:' + MUTED + ';line-height:1.35}',
+      '#cf26 .cf-250-photo .cf-250-credit{display:block;margin-top:3px;text-align:center;font-family:' + BODY + ';font-weight:500;font-size:.78rem;letter-spacing:.02em;color:#b0bfc4;line-height:1.3}',
+      '#cf26 .cf-250-photo-ours img{box-shadow:0 0 0 2px ' + GOLD + ';border-radius:14px}',
+      '#cf26 .cf-250-photo-ours figcaption{color:' + GOLD + '}',
+      '@media (max-width:700px){#cf26 .cf-250-photos{grid-template-columns:1fr;gap:26px;margin-top:28px}#cf26 .cf-250-photo-ours img{aspect-ratio:21/20}}',
       '@media (max-width:620px){#cf26 .cf-when{font-size:clamp(1.6rem,7.4vw,2.4rem)}#cf26 .cf-when .cf-sep{display:none}#cf26 .cf-when .cf-tm{display:block}#cf26 .cf-invite{padding:0 18px}}',
       '#cf26 .cf-venue{font-family:' + DISP + ';color:#fff;text-transform:uppercase;font-size:clamp(1rem,2.8vw,1.75rem);letter-spacing:.02em;margin-top:18px;line-height:1.2;white-space:nowrap}',
       '#cf26 .cf-addr{font-family:' + BODY + ';color:' + INK + ';font-size:clamp(.98rem,2.2vw,1.25rem);margin-top:4px}',
@@ -757,11 +801,13 @@
       '#cf26 .cf-when .cf-tm{white-space:nowrap}',
       '#cf26 .cf-when .cf-to{text-transform:none}',
       '#cf26 .cf-night{font-family:' + DISP + ';color:#fff;font-size:clamp(1rem,2.3vw,1.35rem)}',
-      '#cf26 .cf-ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}',
-      '#cf26 .cf-ctas .cf-btn{height:50px;padding:0 22px;font-size:.92rem}',
-      '#cf26 .cf-fbev{background:#1877f2;color:#fff}',
-      /* phones: an even 2-column grid, the Facebook button spans the full width */
-      '@media (max-width:600px){#cf26 .cf-ctas{display:grid;grid-template-columns:1fr;gap:10px;max-width:360px;margin-left:auto;margin-right:auto}#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}#cf26 .cf-ctas .cf-btn{padding:0 20px;justify-content:center}}',
+      '#cf26 .cf-ctas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:960px;margin:30px auto 0;justify-items:stretch}',
+      '#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}',
+      '#cf26 .cf-ctas .cf-btn{height:50px;padding:0 16px;font-size:.92rem;justify-content:center}',
+      '#cf26 .cf-fbev{background:' + TEAL + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(60,199,180,.25)}',
+      '#cf26 .cf-cream{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      '#cf26 .cf-cream:hover{box-shadow:0 12px 30px rgba(0,0,0,.3)}',
+      '@media (max-width:600px){#cf26 .cf-ctas{display:flex;flex-direction:column;gap:10px;max-width:360px;margin-left:auto;margin-right:auto}#cf26 .cf-ctas .cf-calwrap{order:1;width:100%}#cf26 .cf-ctas .cf-cream{order:2}#cf26 .cf-ctas .cf-fbev{order:3}#cf26 .cf-ctas .cf-btn{padding:0 20px}}',
       '#cf26 .cf-calwrap{position:relative;display:inline-block}',
       '#cf26 .cf-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#fff;color:' + DEEP + ';border-radius:12px;padding:6px;min-width:250px;box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:20;display:none;text-align:left}',
       '#cf26 .cf-menu.open{display:block}',
@@ -875,12 +921,12 @@
       '#cf26 .cf-kit-card b{display:block;color:#fff;font-family:' + DISP + ';font-size:1.1rem;margin-top:16px}',
       '#cf26 .cf-kit-card p{color:#C9D6DA;font-size:.9rem;line-height:1.45;margin:4px 0 0}',
       '#cf26 .cf-kit-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:auto;padding-top:16px}',
-      '#cf26 .cf-kit-btns .cf-btn{height:44px;padding:0 18px;font-size:.88rem;background:rgba(255,255,255,.04);border-width:1.5px}',
-      '#cf26 .cf-kit-btns .cf-ic{color:' + TEAL + '}',
+      '#cf26 .cf-kit-btns .cf-btn{height:44px;min-height:44px;padding:0 18px;font-size:.88rem;background:#f3eee6;color:' + DEEP + ';border:0;box-shadow:0 6px 18px rgba(0,0,0,.2)}',
+      '#cf26 .cf-kit-btns .cf-ic{color:' + DEEP + '}',
       '@media (max-width:760px){#cf26 .cf-kit-grid{grid-template-columns:minmax(0,1fr);gap:12px;max-width:440px;margin-left:auto;margin-right:auto}' +
         '#cf26 .cf-kit-card{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:16px;align-items:center;text-align:left;padding:14px}' +
         '#cf26 .cf-kit-th{height:auto;grid-row:1 / span 3;justify-content:flex-start}#cf26 .cf-kit-th img{max-height:none;width:72px;border-radius:6px}' +
-        '#cf26 .cf-kit{margin-top:22px;padding-top:28px}#cf26 .cf-kit-card b{margin-top:0}#cf26 .cf-kit-btns{justify-content:flex-start;padding-top:10px}#cf26 .cf-kit-btns .cf-btn{height:40px;padding:0 14px}}',
+        '#cf26 .cf-kit{margin-top:22px;padding-top:28px}#cf26 .cf-kit-card b{margin-top:0}#cf26 .cf-kit-btns{justify-content:flex-start;padding-top:10px}#cf26 .cf-kit-btns .cf-btn{height:44px;min-height:44px;padding:0 14px}}',
 
       /* sponsors */
       '#cf26 .cf-spons{background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(233,185,73,.12),rgba(10,31,42,0) 70%),' + DEEP + '}',
@@ -1032,20 +1078,20 @@
       '#cf26 .cf-sharebtns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}',
       '#cf26 .cf-follow{margin-top:14px}',
       '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
-      '#cf26 .cf-fb{background:#1877f2;color:#fff}',
-      '#cf26 .cf-wa{background:#25d366;color:#0b1f27}',
-      '#cf26 .cf-sharebtns .cf-btn{height:50px;padding:0 22px}',
+      '#cf26 .cf-fb{background:' + TEAL + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(60,199,180,.25)}',
+      '#cf26 .cf-wa{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      '#cf26 .cf-sharebtns .cf-btn{height:50px;min-height:50px;padding:0 22px;justify-content:center}',
       /* even rows, never one button alone: 6 across, or 3 + 3 on medium screens */
       '@media (min-width:601px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:repeat(6,auto);justify-content:center}#cf26 .cf-sharebtns .cf-native{display:none}}',
       '@media (min-width:601px) and (max-width:1060px){#cf26 .cf-sharebtns{grid-template-columns:repeat(3,200px)}#cf26 .cf-sharebtns .cf-btn{width:100%}}',
-      /* one button style in the share set; each brand keeps its color on the icon */
-      '#cf26 .cf-sharebtns .cf-wa,#cf26 .cf-sharebtns .cf-fb,#cf26 .cf-sharebtns .cf-ig{background:rgba(255,255,255,.04);color:#fff;border:1.5px solid rgba(255,255,255,.35);box-shadow:none}',
-      '#cf26 .cf-sharebtns .cf-ghost{background:rgba(255,255,255,.04);border-width:1.5px}',
-      '#cf26 .cf-sharebtns .cf-ic{width:1.35em;height:1.35em}',
-      '#cf26 .cf-sharebtns .cf-wa .cf-ic{color:#25d366}#cf26 .cf-sharebtns .cf-fb .cf-ic{color:#4f9bff}#cf26 .cf-sharebtns .cf-ig .cf-ic{color:#f06fa3}#cf26 .cf-sharebtns .cf-ghost .cf-ic{color:' + TEAL + '}#cf26 .cf-sharebtns .cf-native .cf-ic{color:' + DEEP + '}',
+      /* matching Option 2 pills: teal Facebook, cream for the other share actions, gold native Share */
+      '#cf26 .cf-sharebtns .cf-fb{background:' + TEAL + ';color:' + DEEP + ';border:0;box-shadow:0 8px 24px rgba(60,199,180,.25)}',
+      '#cf26 .cf-sharebtns .cf-wa,#cf26 .cf-sharebtns .cf-ig,#cf26 .cf-sharebtns .cf-ghost{background:#f3eee6;color:' + DEEP + ';border:0;box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      '#cf26 .cf-sharebtns .cf-ic{width:1.15em;height:1.15em;color:' + DEEP + '}',
+      '#cf26 .cf-sharebtns .cf-wa .cf-ic,#cf26 .cf-sharebtns .cf-fb .cf-ic,#cf26 .cf-sharebtns .cf-ig .cf-ic,#cf26 .cf-sharebtns .cf-ghost .cf-ic,#cf26 .cf-sharebtns .cf-native .cf-ic{color:' + DEEP + '}',
       '#cf26 .cf-sharenote{margin-top:16px;font-size:.95rem;color:#C9D6DA;min-height:1.5em}',
-      '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 10px;font-size:.9rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
-      '#cf26 .cf-ig{background:linear-gradient(45deg,#f9a63a,#e1306c 50%,#833ab4);color:#fff}',
+      '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 12px;font-size:.88rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
+      '#cf26 .cf-ig{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
       '#cf26 .cf-pop{max-width:460px;margin:22px auto 0;background:#fff;color:' + DEEP + ';border-radius:16px;padding:20px;text-align:center;display:none}',
       '#cf26 .cf-pop.open{display:block}',
       '#cf26 .cf-pop p{font-size:.92rem;margin-bottom:14px}',
@@ -1142,7 +1188,7 @@
       root.id = 'cf26';
       add(root,
         buildNav(), buildHero(), buildCountdown(), buildMarquee(),
-        buildEvent(), buildDirections(), buildPartners(), buildAbout(),
+        buildEvent(), buildAmerica250(), buildActivities(), buildDirections(), buildPartners(), buildAbout(),
         buildNews(), buildGuide(), buildWho(), buildShare(), buildFooter());
 
       var host = document.querySelector('.cco_templatelates_content') || document.body;
@@ -1881,6 +1927,16 @@
   }
 
   /* ---------- hero ---------- */
+  function americaRibbon() {
+    var r = el('div', 'cf-250-ribbon');
+    var inner = el('div', 'cf-250-ribbon-inner');
+    add(inner,
+      el('span', 'cf-250-r1', 'Celebrating freedom and light'),
+      el('span', 'cf-250-r2', 'in America\u2019s 250th year.'));
+    r.appendChild(inner);
+    return r;
+  }
+
   function buildHero() {
     var h = el('header', 'cf-hero');
     h.id = 'cf-top';
@@ -1923,15 +1979,23 @@
       ann,
       el('h1', 'cf-t1', 'Chanukah'.toUpperCase()),
       el('div', 'cf-t2', 'FESTIVAL'),
-      by,
-      wel);
+      (function () {
+        var sub = el('div', 'cf-subhead');
+        add(sub,
+          el('span', 'cf-sub-1', 'Southern California\u2019s largest'),
+          el('span', 'cf-sub-2', 'Chanukah festival!'));
+        return sub;
+      })());
     band.appendChild(txt);
     band.appendChild(el('div', 'cf-bh', 'B\u201dH'));
 
     /* date, place and buttons under the video */
     var ctas = el('div', 'cf-ctas');
     ctas.appendChild(calendarButton('cf-btn cf-gold'));
-    var sh = el('button', 'cf-btn cf-ghost', 'Share');
+    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'Join the Facebook Event', true);
+    fbe.insertBefore(icon('fb'), fbe.firstChild);
+    ctas.appendChild(fbe);
+    var sh = el('button', 'cf-btn cf-cream', 'Share');
     sh.type = 'button';
     sh.insertBefore(icon('share'), sh.firstChild);
     sh.addEventListener('click', function () {
@@ -1949,18 +2013,17 @@
       toSection();
     });
     ctas.appendChild(sh);
-    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'Join the Facebook Event', true);
-    fbe.insertBefore(icon('fb'), fbe.firstChild);
-    ctas.appendChild(fbe);
 
     var info = el('div', 'cf-wrap cf-info');
     add(info,
+      by,
+      wel,
       whenLine(),
       el('div', 'cf-venue', CFG.event.venue),
       el('div', 'cf-addr', CFG.event.street + ', ' + CFG.event.cityLine),
       ctas);
 
-    add(h, band, info);
+    add(h, band, americaRibbon(), info);
     return h;
   }
 
@@ -2109,12 +2172,76 @@
   }
 
   /* ---------- event ---------- */
+
+  function buildAmerica250() {
+    if (!CFG.america250) return null;
+    var x = CFG.america250;
+    var s = section('america250', 'cf-250-sec');
+    var w = el('div', 'cf-wrap');
+    w.appendChild(heading(null, x.title, null, true));
+    w.appendChild(el('p', 'cf-250-copy cf-reveal', x.body));
+    var photos = x.photos || [];
+    if (photos.length) {
+      var pair = el('div', 'cf-250-photos cf-reveal');
+      photos.forEach(function (ph, i) {
+        var fig = el('figure', 'cf-250-photo' + (ph.featured ? ' cf-250-photo-ours' : ''));
+        var im = document.createElement('img');
+        im.src = ph.src;
+        im.alt = ph.alt || '';
+        im.loading = 'lazy';
+        var cap = el('figcaption', null, ph.caption);
+        fig.appendChild(im);
+        fig.appendChild(cap);
+        if (ph.credit) {
+          fig.appendChild(el('div', 'cf-250-credit', ph.credit));
+        }
+        pair.appendChild(fig);
+      });
+      w.appendChild(pair);
+    }
+    s.appendChild(w);
+    return s;
+  }
+
+  function buildActivities() {
+    if (!CFG.america250) return null;
+    var s = section('activities');
+    var w = el('div', 'cf-wrap');
+    var cards = el('div', 'cf-hl');
+    CFG.highlights.forEach(function (x, i) {
+      var c = el('div', 'cf-hl-card cf-reveal');
+      c.style.transitionDelay = (i * 0.08) + 's';
+      var ph = el('div', 'cf-hl-ph');
+      var im = document.createElement('img');
+      im.src = asset(x.img); im.alt = T(x.title); im.loading = 'lazy';
+      ph.appendChild(im);
+      var bd = el('div', 'cf-hl-bd');
+      add(bd, el('h3', null, x.title), el('p', null, x.text));
+      add(c, ph, bd);
+      cards.appendChild(c);
+    });
+    w.appendChild(cards);
+    if (CFG.accessNote) {
+      var asl = el('div', 'cf-center');
+      var p = el('div', 'cf-asl', CFG.accessNote);
+      p.insertBefore(icon('asl'), p.firstChild);
+      asl.appendChild(p);
+      w.appendChild(asl);
+    }
+    w.appendChild(buildContest());
+    s.appendChild(w);
+    return s;
+  }
+
   function buildEvent() {
     var s = section('event');
     var w = el('div', 'cf-wrap');
     w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
       'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
 
+    if (CFG.america250) {
+      /* highlights + contest render in buildActivities, after event details and the 250th section */
+    } else {
     var hl = el('div', 'cf-hl');
     CFG.highlights.forEach(function (x, i) {
       var c = el('div', 'cf-hl-card cf-reveal');
@@ -2138,6 +2265,7 @@
     }
 
     w.appendChild(buildContest());
+    } /* end original highlights+contest when no 250 section */
 
     var ev = el('div', 'cf-ev cf-ev2 cf-reveal');
     var info = el('div', 'cf-ev-info');
