@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11h';
+  var VERSION = 'cf26-2026-11-11i';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -139,7 +139,13 @@
     TRAIN: {
       title: 'Train Rides',
       intro: 'All aboard! Kids and families can ride the festival train all evening. Find it at stop #7 on the map.',
-      facts: ['Stop #7 on the Map', '6–8 PM']
+      facts: ['Stop #7 on the Map', '6–8 PM'],
+      /* Gelt Drop is map #16. The 7:45–8 PM window is on the schedule; the order with the winners announcement is not set, so the card copy does not mention it. */
+      gelt: {
+        title: 'Gelt Drop',
+        intro: 'The grand finale! Watch chocolate gelt and gifts parachute down from the sky.',
+        facts: ['7:45–8 PM', '#16 on the Map']
+      }
     },
 
     about: [
@@ -906,6 +912,10 @@
       '#cf26 .cf-newrow .cf-mc{margin-top:0;height:100%;display:flex;flex-direction:column;box-sizing:border-box}',
       '#cf26 .cf-newrow .cf-mc > p{max-width:none}',
       '#cf26 .cf-newrow .cf-mc-grow{flex:1 1 auto}',
+      '#cf26 .cf-mc-div{display:block;width:100%;border:0;border-top:1px solid rgba(255,255,255,.14);margin:20px 0 0;padding:0;height:0;background:none}',
+      '#cf26 .cf-mc-sub{font-family:' + DISP + ';font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;margin:16px 0 8px}',
+      '#cf26 .cf-mc-sub + p{color:#C9D6DA;font-size:1rem;margin:0}',
+      '@media (max-width:620px){#cf26 .cf-mc-div{margin-top:18px}#cf26 .cf-mc-sub{margin-top:14px}}',
       '#cf26 .cf-mc{margin-top:28px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.35);border-radius:22px;padding:30px 34px}',
       '@media (max-width:620px){#cf26 .cf-mc{padding:24px 20px}}',
       '#cf26 .cf-mc h3{font-family:' + DISP + ';font-size:clamp(1.5rem,3.4vw,2rem);color:#fff;line-height:1.15;margin:0 0 8px}',
@@ -2383,13 +2393,18 @@
     c.id = 'cf-train';
     var facts = el('ul', 'cf-mc-facts');
     Tr.facts.forEach(function (f) { facts.appendChild(el('li', null, f)); });
+    var gelt = Tr.gelt;
+    var gFacts = el('ul', 'cf-mc-facts');
+    gelt.facts.forEach(function (f) { gFacts.appendChild(el('li', null, f)); });
     var btns = el('div', 'cf-mc-btns');
     var mp = link('cf-btn cf-ghost', '#cf-map', 'See the Festival Map');
     mp.insertBefore(icon('pin'), mp.firstChild);
     mp.addEventListener('click', function (e) { e.preventDefault(); goTo('map'); });
     btns.appendChild(mp);
     add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, Tr.title),
-      el('p', null, Tr.intro), facts, el('div', 'cf-mc-grow'), btns);
+      el('p', null, Tr.intro), facts,
+      el('hr', 'cf-mc-div'), el('h4', 'cf-mc-sub', gelt.title), el('p', null, gelt.intro), gFacts,
+      el('div', 'cf-mc-grow'), btns);
     return c;
   }
 
