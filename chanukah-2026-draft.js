@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11f';
+  var VERSION = 'cf26-2026-11-11g';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -108,7 +108,7 @@
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
       intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
-      facts: ['Register by Dec 4', 'Drop off 5:45–6:15 PM at table #15', 'Winners announced 7:45–8 PM'],
+      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8 PM'],
       how: [
         'Register by Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
@@ -830,14 +830,16 @@
       '#cf26 .cf-unit{min-width:74px;text-align:center;padding:8px 6px;border-radius:12px;background:' + PANEL + ';border:1px solid rgba(26,204,206,.18)}',
       '#cf26 .cf-unit b{display:block;font-family:' + DISP + ';font-size:1.9rem;line-height:1.1;color:#fff}',
       '#cf26 .cf-unit span{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:' + GREEN + ';font-weight:700}',
+      /* phones: label on its own centered line, the four boxes in one row below (Nov 11 pick) */
+      '@media (max-width:620px){#cf26 .cf-count .cf-wrap{flex-direction:column;flex-wrap:nowrap;gap:12px;padding-top:16px;padding-bottom:16px}#cf26 .cf-count-l{text-align:center}#cf26 .cf-units{flex-wrap:nowrap;justify-content:center}}',
       '@media (max-width:420px){#cf26 .cf-units{gap:8px}#cf26 .cf-unit{min-width:64px;padding:8px 4px}#cf26 .cf-unit b{font-size:28px}#cf26 .cf-unit span{font-size:12px;letter-spacing:.08em}}',
       '#cf26 .cf-countmsg{font-family:' + DISP + ';font-size:1.3rem;color:' + GOLD + '}',
       '#cf26 .cf-marq{overflow:hidden;background:' + GOLD + ';color:' + DEEP + ';white-space:nowrap}',
-      '#cf26 .cf-marq-in{display:inline-flex;gap:0;animation:cf26marq 40s linear infinite;padding:12px 0}',
+      '#cf26 .cf-marq-in{display:inline-flex;align-items:center;gap:0;animation:cf26marq 40s linear infinite;padding:12px 0}',
       '#cf26 .cf-marq:hover .cf-marq-in{animation-play-state:paused}',
-      '#cf26 .cf-marq-in span{font-weight:700;font-size:.92rem;padding:0 22px;position:relative}',
+      '#cf26 .cf-marq-in span{font-weight:700;font-size:.92rem;padding:0 22px;position:relative;line-height:24px}',
       '#cf26 .cf-marq-in span:after{content:"";position:absolute;right:-4px;top:50%;width:7px;height:7px;margin-top:-3px;border-radius:50%;background:' + DEEP + ';opacity:.45}',
-      '#cf26 .cf-marq-in em{font-style:normal;font-family:' + DISP + ';text-transform:uppercase;letter-spacing:.12em;padding:0 22px;font-size:.8rem}',
+      '#cf26 .cf-marq-in em{font-style:normal;font-family:' + DISP + ';text-transform:uppercase;letter-spacing:.12em;padding:0 22px;font-size:.8rem;line-height:24px}',
       '@keyframes cf26marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}',
 
       /* highlights + event card */
