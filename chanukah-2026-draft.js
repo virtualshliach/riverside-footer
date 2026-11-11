@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11e';
+  var VERSION = 'cf26-2026-11-11f';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -58,7 +58,8 @@
       { img: 'hl-music-aaron.jpg', title: 'Live Music',             text: 'Aaron Holder, a Jewish pop-folk singer with a reggae edge, live on the Main Stage.' },
       { img: 'hl-performer.jpg', title: 'Fun for the Whole Family', text: 'Street performers, kids\u2019 crafts, train rides and activities for all ages.' }
     ],
-    accessNote: 'ASL Interpreter on site',
+    /* ASL note under the Schedule in Event details (moved from the pill, Nov 11). */
+    aslNote: { lead: 'ASL interpretation.', text: 'An ASL interpreter will be on stage and shown on the big screens during the official program.' },
 
     /* Exactly five rows (brief Nov 5). */
     SCHEDULE: [
@@ -172,6 +173,10 @@
       { name: 'City of Riverside', logo: 'partner-city-riverside.png', h: 74 },
       { name: 'Riverside Downtown Partnership', logo: 'partner-rdp.png', h: 46 },
       { name: 'Riverside County District 1', sub: 'Supervisor Jose Medina', logo: 'partner-district1-medina.png', h: 38 }
+    ],
+    /* Extra names for the gold thank-you ticker only (not the partner logo grid, which is laid out 3 + 3). */
+    TICKER_EXTRA: [
+      { name: 'Jewish Federation of the Desert' }
     ],
     ORGANIZER: {
       logo: 'chabad-jcc-logo-white-gold.png',
@@ -619,6 +624,9 @@
       '#cf26 .cf-wrap{max-width:1140px;margin:0 auto;padding:0 20px}',
       '#cf26 .cf-sec{padding:84px 0}',
       '#cf26 .cf-alt{background:' + DEEP + '}',
+      /* even section spacing (Nov 11): two same-color sections in a row share one gap, not two */
+      '#cf26 .cf-alt + .cf-alt,#cf26 .cf-alt + .cf-spons,#cf26 .cf-spons + .cf-alt{padding-top:0}',
+      '#cf26 #cf-activities .cf-wrap > .cf-hl:first-child{margin-top:0}',
       '#cf26 .cf-kicker{font-size:.74rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:10px}',
       '#cf26 .cf-h2{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.1;color:#fff;margin-bottom:14px}',
       '#cf26 .cf-lead{color:' + MUTED + ';max-width:62ch;font-size:1.05rem}',
@@ -775,7 +783,7 @@
       '#cf26 .cf-info .cf-by{margin-top:16px;margin-bottom:2px}',
       '#cf26 .cf-info .cf-welcome{margin-top:10px;margin-bottom:20px}',
       '#cf26 .cf-info .cf-by i,#cf26 .cf-info .cf-by b,#cf26 .cf-info .cf-welcome{text-shadow:none}',
-      '#cf26 .cf-250-sec{background:#0c2a30;border-top:1px solid rgba(233,185,73,.28);border-bottom:1px solid rgba(233,185,73,.28);padding:72px 0}',
+      '#cf26 .cf-250-sec{background:#0c2a30;border-top:1px solid rgba(233,185,73,.28);border-bottom:1px solid rgba(233,185,73,.28);padding:84px 0}',
       '#cf26 .cf-250-copy{color:' + MUTED + ';font-size:1.08rem;line-height:1.8;max-width:46rem;margin:8px auto 0;text-align:center}',
       '@media (max-width:600px){#cf26 .cf-250-sec{padding:56px 0}#cf26 .cf-250-copy{text-align:left;font-size:1.02rem;line-height:1.75}}',
       '#cf26 .cf-250-photos{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:46rem;margin:36px auto 0;align-items:stretch}',
@@ -845,7 +853,6 @@
       '#cf26 .cf-hl-card:hover{transform:translateY(-4px);border-color:rgba(26,204,206,.45)}',
       '#cf26 .cf-hl-card h3{font-family:' + DISP + ';color:#fff;font-size:1.15rem;line-height:1.25;margin-bottom:6px}',
       '#cf26 .cf-hl-card p{color:' + MUTED + ';font-size:.95rem}',
-      '#cf26 .cf-asl{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border-radius:999px;border:1px solid rgba(60,199,180,.45);color:' + TEAL + ';font-family:' + BODY + ';font-weight:600;font-size:1rem}',
       /* schedule */
       '#cf26 .cf-sched{list-style:none;margin:6px 0 0;padding:0}',
       '#cf26 .cf-sched li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:1rem;color:' + INK + '}',
@@ -905,6 +912,9 @@
       '#cf26 .cf-ev-row .cf-ic{color:' + TEAL + ';font-size:22px;margin-top:2px}',
       '#cf26 .cf-ev-row b{display:block;color:#fff;font-weight:700}',
       '#cf26 .cf-ev-row span{color:' + MUTED + ';font-size:.95rem}',
+      '#cf26 .cf-ev-note{display:flex;gap:12px;align-items:flex-start;margin:6px 0 0;padding:14px 0 0;border-top:1px solid rgba(255,255,255,.07);color:' + MUTED + ';font-family:' + BODY + ';font-size:.95rem;line-height:1.5}',
+      '#cf26 .cf-ev-note .cf-ic{color:' + TEAL + ';font-size:22px;margin-top:1px}',
+      '#cf26 .cf-ev-note b{color:#fff;font-weight:700}',
       '#cf26 .cf-ev-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}',
       '#cf26 .cf-ev-btns .cf-btn{padding:11px 18px;font-size:.88rem}',
       '#cf26 .cf-map{position:relative;min-height:340px;background:' + DEEP + '}',
@@ -1074,7 +1084,7 @@
       '#cf26 .cf-rd-foot{margin-top:26px;padding-top:18px;border-top:1px solid #e7dfcf;display:flex;gap:12px;flex-wrap:wrap}',
 
       /* share band + footer */
-      '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(233,185,73,.55),rgba(233,185,73,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:70px 0}',
+      '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(233,185,73,.55),rgba(233,185,73,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:84px 0}',
       '#cf26 .cf-sharebtns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}',
       '#cf26 .cf-follow{margin-top:14px}',
       '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
@@ -1110,7 +1120,7 @@
       '#cf26 .cf-toast.show{opacity:1;transform:translate(-50%,0)}',
       '#cf26 .cf-reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}',
       '#cf26 .cf-reveal.in{opacity:1;transform:none}',
-      '@media (max-width:620px){#cf26 .cf-sec{padding:60px 0}#cf26 .cf-ev-info{padding:26px 22px}}',
+      '@media (max-width:620px){#cf26 .cf-sec{padding:60px 0}#cf26 .cf-ev-info{padding:26px 22px}#cf26 .cf-share{padding:60px 0}}',
       '@media (prefers-reduced-motion:reduce){#cf26 .cf-marq-in{animation:none}#cf26 .cf-reveal{opacity:1;transform:none;transition:none}#cf26 .cf-skel{animation:none}}'
     ].join('\n');
   }
@@ -2152,7 +2162,7 @@
 
   /* ---------- sponsor marquee ---------- */
   function allSponsorNames() {
-    return CFG.PARTNERS.map(function (n) { return T(n.name); });
+    return CFG.PARTNERS.concat(CFG.TICKER_EXTRA || []).map(function (n) { return T(n.name); });
   }
   function buildMarquee() {
     var names = allSponsorNames();
@@ -2221,13 +2231,6 @@
       cards.appendChild(c);
     });
     w.appendChild(cards);
-    if (CFG.accessNote) {
-      var asl = el('div', 'cf-center');
-      var p = el('div', 'cf-asl', CFG.accessNote);
-      p.insertBefore(icon('asl'), p.firstChild);
-      asl.appendChild(p);
-      w.appendChild(asl);
-    }
     w.appendChild(buildContest());
     s.appendChild(w);
     return s;
@@ -2256,13 +2259,6 @@
       hl.appendChild(c);
     });
     w.appendChild(hl);
-    if (CFG.accessNote) {
-      var asl = el('div', 'cf-center');
-      var p = el('div', 'cf-asl', CFG.accessNote);
-      p.insertBefore(icon('asl'), p.firstChild);
-      asl.appendChild(p);
-      w.appendChild(asl);
-    }
 
     w.appendChild(buildContest());
     } /* end original highlights+contest when no 250 section */
@@ -2281,6 +2277,13 @@
       sl.appendChild(li);
     });
     add(info, sk, sl);
+    if (CFG.aslNote) {
+      var an = el('p', 'cf-ev-note');
+      var at = el('span');
+      add(at, el('b', null, CFG.aslNote.lead), document.createTextNode(' ' + CFG.aslNote.text));
+      add(an, icon('asl'), at);
+      info.appendChild(an);
+    }
     var btns = el('div', 'cf-ev-btns');
     var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & Parking');
     dp.insertBefore(icon('pin'), dp.firstChild);
