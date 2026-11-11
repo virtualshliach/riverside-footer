@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11g';
+  var VERSION = 'cf26-2026-11-11h';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -85,9 +85,9 @@
           [3, 'Kids Crafts', 'Two craft areas'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
-          [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45–8 PM'],
+          [6, 'Dreidel Guessing', 'Win $180! Winner Announced 7:45–8 PM'],
           [7, 'Mini Train Rides', ''],
-          [15, 'Menorah Contest', 'All entries on display. Winners announced 7:45–8 PM'],
+          [15, 'Menorah Contest', 'All entries on display. Winners Announced 7:45–8 PM'],
           [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
@@ -110,7 +110,7 @@
       intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
       facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8 PM'],
       how: [
-        'Register by Friday, Dec 4.',
+        'Register By Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
         'Menorahs stay on display at table #15 during the festival.',
@@ -131,6 +131,15 @@
         'It must stand on its own and not break, fall or melt when lit.',
         'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK).'
       ]
+    },
+
+    /* Train Rides (new this year). Stop #7 is already on the festival map.
+       Copy is generic: the train is on the draft map and a vendor invoice is on file,
+       but public claims like "free" are left out until Shmuel confirms them. */
+    TRAIN: {
+      title: 'Train Rides',
+      intro: 'All aboard! Kids and families can ride the festival train all evening. Find it at stop #7 on the map.',
+      facts: ['Stop #7 on the Map', '6–8 PM']
     },
 
     about: [
@@ -419,7 +428,7 @@
     FORM_POPS: {
       donate: { aid: '4194665', title: 'Support the Chanukah Festival', sub: 'Your gift keeps the festival free for the whole community.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm' },
-      contest: { aid: '7606745', title: 'Menorah Contest', sub: 'All ages. Free to enter. Register by Dec 4.',
+      contest: { aid: '7606745', title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Menorah-Contest-2026.htm' },
       mailing: { aid: '5333083', title: 'Join Our Mailing List', sub: 'Hear about the festival and everything else at Chabad.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join-Our-Mailing-List.htm' }
@@ -892,6 +901,11 @@
       '@media (max-width:860px){#cf26 .cf-keywrap{padding:0 22px 26px}}',
       '#cf26 .cf-roam b{color:' + GOLD + '}',
       /* Menorah Contest card */
+      '#cf26 .cf-newrow{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px;align-items:stretch}',
+      '@media (max-width:620px){#cf26 .cf-newrow{grid-template-columns:1fr}}',
+      '#cf26 .cf-newrow .cf-mc{margin-top:0;height:100%;display:flex;flex-direction:column;box-sizing:border-box}',
+      '#cf26 .cf-newrow .cf-mc > p{max-width:none}',
+      '#cf26 .cf-newrow .cf-mc-grow{flex:1 1 auto}',
       '#cf26 .cf-mc{margin-top:28px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.35);border-radius:22px;padding:30px 34px}',
       '@media (max-width:620px){#cf26 .cf-mc{padding:24px 20px}}',
       '#cf26 .cf-mc h3{font-family:' + DISP + ';font-size:clamp(1.5rem,3.4vw,2rem);color:#fff;line-height:1.15;margin:0 0 8px}',
@@ -2233,7 +2247,7 @@
       cards.appendChild(c);
     });
     w.appendChild(cards);
-    w.appendChild(buildContest());
+    w.appendChild(buildNewRow());
     s.appendChild(w);
     return s;
   }
@@ -2262,7 +2276,7 @@
     });
     w.appendChild(hl);
 
-    w.appendChild(buildContest());
+    w.appendChild(buildNewRow());
     } /* end original highlights+contest when no 250 section */
 
     var ev = el('div', 'cf-ev cf-ev2 cf-reveal');
@@ -2354,6 +2368,29 @@
     xp.appendChild(inner);
     wrap.appendChild(xp);
     return wrap;
+  }
+
+  /* ---------- New this year: Menorah Contest + Train Rides, side by side on desktop ---------- */
+  function buildNewRow() {
+    var row = el('div', 'cf-newrow');
+    row.appendChild(buildContest());
+    row.appendChild(buildTrain());
+    return row;
+  }
+  function buildTrain() {
+    var Tr = CFG.TRAIN;
+    var c = el('div', 'cf-mc cf-reveal');
+    c.id = 'cf-train';
+    var facts = el('ul', 'cf-mc-facts');
+    Tr.facts.forEach(function (f) { facts.appendChild(el('li', null, f)); });
+    var btns = el('div', 'cf-mc-btns');
+    var mp = link('cf-btn cf-ghost', '#cf-map', 'See the Festival Map');
+    mp.insertBefore(icon('pin'), mp.firstChild);
+    mp.addEventListener('click', function (e) { e.preventDefault(); goTo('map'); });
+    btns.appendChild(mp);
+    add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, Tr.title),
+      el('p', null, Tr.intro), facts, el('div', 'cf-mc-grow'), btns);
+    return c;
   }
 
   /* ---------- Menorah Contest card ---------- */
