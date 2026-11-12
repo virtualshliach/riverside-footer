@@ -20,7 +20,7 @@
   var BASE = SELF_SRC ? SELF_SRC.split('?')[0].replace(/[^\/]+$/, '') : 'https://virtualshliach.github.io/riverside-footer/';
 
   /* Exact invitation from the festival emails (curly apostrophe, en dash in the time). */
-  var MSG = 'Join us for Riverside\u2019s Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Free family fun, live music and the Grand Menorah Lighting. Visit ChanukahFestival.org: https://chanukahfestival.org/';
+  var MSG = 'Join us for Riverside\u2019s Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Free family fun, live music and the Grand Menorah Lighting. Details: chanukahfestival.org';
   var SMS = 'sms:?&body=' + encodeURIComponent(MSG);
 
   var CFG = {

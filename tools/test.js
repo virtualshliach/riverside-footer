@@ -640,7 +640,7 @@ var SITES = {
     ok(await whereTo('https://chanukahfestival.org/volunteer', 'header.js') === null && await whereTo('https://chanukahfestival.org/volunteer', 'footer.js') === null, '/volunteer is not sent anywhere else (no short-link redirect)');
 
     console.log('riverside: hidden Text share page chanukahfestival.org/?text');
-    var TXMSG = 'Join us for Riverside\u2019s Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Free family fun, live music and the Grand Menorah Lighting. Visit ChanukahFestival.org: https://chanukahfestival.org/';
+    var TXMSG = 'Join us for Riverside\u2019s Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Free family fun, live music and the Grand Menorah Lighting. Details: chanukahfestival.org';
     var TXSMS = 'sms:?&body=' + encodeURIComponent(TXMSG);
     var tx = await load('riverside', 'https://chanukahfestival.org/?text', { wait: 700 });
     var txReq = projectRequests(tx);
