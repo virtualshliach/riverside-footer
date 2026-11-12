@@ -571,6 +571,8 @@ var SITES = {
     ok(await whereTo('https://www.jewishriverside.com/donate', 'header.js') === null, 'jewishriverside.com/donate is left alone');
     ok(await whereTo('https://www.chanukahfestival.org/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm', 'header.js') === 'https://www.chanukahfestival.org/?donate', 'the old ChabadOne Donate page on the festival site goes to the Donate pop-up');
     ok(await whereTo('https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm', 'header.js') === null, 'the same page on jewishriverside.com is left alone');
+    ok(await whereTo('https://www.chanukahfestival.org/templates/donate_cdo/aid/9999999/jewish/Donate.htm', 'header.js') === 'https://www.chanukahfestival.org/?donate', 'the festival site\'s built-in ChabadOne Donate page (where /donate goes) opens the Donate pop-up');
+    ok(await whereTo('https://www.jewishriverside.com/templates/donate_cdo/aid/4970020/jewish/Donate.htm', 'header.js') === null, 'jewishriverside.com\'s own Donate page is left alone');
     ok(await whereTo('https://www.chanukahfestival.org/about', 'header.js') === null, 'other addresses on the festival site are left alone');
     var DSRC = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8');
     ok(/\[\?&\]menorah[^\n]*openFormPop\('contest'\)/.test(DSRC) && /\[\?&\]donate[^\n]*openDonate/.test(DSRC), 'festival page opens Menorah Contest for ?menorah and Donate for ?donate');
