@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-12a';
+  var VERSION = 'festival-forms 2026-11-12b';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -53,7 +53,7 @@
         'No food. Bring a wax candle or oil',
         'It must stand on its own and must not break, fall or melt when lit',
         'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK)',
-        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes, announced at the festival. Every child who enters gets a Chanukah gift',
+        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes. Winners are announced after the festival on our social media and by email. Every child who enters gets a Chanukah gift',
         'Drop Off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
     },
     dreidel: {
@@ -375,6 +375,7 @@
     if (kind === 'menorah') {
       title = 'You’re registered, ' + d.first + '!';
       lines = ['Drop Off your menorah on Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).',
+        'We’ll announce the winners after the festival on our social media and by email.', 'Follow us so you don’t miss it:',
         res.emailed ? 'A confirmation with all the details is on its way to ' + d.email + '.' : 'See you at the festival!'];
     } else if (kind === 'dreidel') {
       title = 'Thanks for your guess, ' + d.first + '!';
@@ -387,7 +388,7 @@
     }
     add(v, el('div', 'cff-ok', '✓'), el('h3', null, title));
     lines.forEach(function (t) { v.appendChild(el('p', null, t)); });
-    if (kind === 'dreidel') {
+    if (kind === 'dreidel' || kind === 'menorah') {
       var fw = el('div', 'cff-follow');
       FOLLOW.forEach(function (f) {
         var a = el('a', 'cff-fbtn', f[0]);

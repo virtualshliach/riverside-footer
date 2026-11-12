@@ -77,6 +77,7 @@ function page(opts) {
   ok(p && p.ct === 'text/plain;charset=utf-8' && p.body.action === 'form' && p.body.kind === 'menorah', 'sent to Apps Script as a menorah entry');
   ok(p.body.entrants.length === 2 && p.body.entrants[0].title === 'Lego Lights' && p.body.entrants[1].age === '4' && p.body.phone === '951-555-0111' && p.body.website === '', 'two entrants with ages and title, trap empty');
   ok(/You’re registered, Rivka!/.test(ov.textContent) && /5:45–6:15 PM/.test(ov.textContent) && /on its way to rivka@example\.com/.test(ov.textContent), 'thank-you with drop-off time and email note');
+  ok(ov.querySelectorAll('.cff-follow a[target="_blank"][aria-label]').length === 5 && /announce the winners after the festival on our social media and by email/.test(ov.textContent) && !/7:45/.test(ov.textContent), 'menorah pop-up thank-you: winners after the festival, 5 follow buttons');
   t.click(ov.querySelector('.cff-ft .cff-btn'));
   ok(!ov.parentNode && t.d.documentElement.style.overflow === '', 'Close removes the pop-up');
 
@@ -105,6 +106,7 @@ function page(opts) {
   var fo = [].map.call(ov.querySelectorAll('.cff-follow a'), function (a) { return a.getAttribute('href') + '|' + a.target + '|' + a.getAttribute('rel') + '|' + (a.getAttribute('aria-label') || ''); });
   ok(fo.length === 5 && /^https:\/\/www\.facebook\.com\/JewishRiverside\|_blank\|noopener\|Follow /.test(fo[0]) && /^https:\/\/x\.com\/Jewishriverside\|/.test(fo[2]) && /after the festival on our social media and by email/.test(ov.textContent) && !/7:45/.test(ov.textContent),
     'dreidel thank-you: winner after the festival, follow buttons (new tab, labeled)');
+  ok(!/300 guests/.test(ov.textContent), 'dreidel pop-up thank-you: no first-300-guests gift line');
   t.w.CFForms.close();
 
   console.log('Mailing List');

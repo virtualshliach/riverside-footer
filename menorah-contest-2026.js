@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'mc26-2026-11-11a';
+  var VERSION = 'mc26-2026-11-12a';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -32,9 +32,9 @@
       ['When', 'Monday, Dec 7, 5:45–6:15 PM'],
       ['Where', 'Menorah Contest table, #15 on the festival map, at the Riverside Historic Courthouse (4050 Main St.)'],
       ['Display', 'Menorahs stay on display at the table during the festival'],
-      ['Winners', 'Announced 7:45–8 PM. Please pick up your menorah before you leave']
+      ['Winners', 'Announced after the festival on our social media and by email. Please pick up your menorah before you leave the festival']
     ],
-    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced 7:45–8 PM. All ages can enter free: https://www.jewishriverside.com/7606745',
+    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced after the festival. All ages can enter free: https://www.jewishriverside.com/7606745',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
@@ -76,6 +76,7 @@
     check: 'M5 12.5l4.2 4.2L19 7',
     cal: 'M4 6h16v15H4zM4 10h16M8 3v4M16 3v4',
     pin: 'M12 21s-7-6.2-7-12a7 7 0 0 1 14 0c0 5.8-7 12-7 12zM12 11.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z',
+    x: 'M5 4l14 16M19 4L5 20',
     fb: 'M14 8h3V4h-3a4 4 0 0 0-4 4v2H7v4h3v8h4v-8h3l1-4h-4V8z',
     ig: 'M7 3h10a4 4 0 0 1 4 4v10a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V7a4 4 0 0 1 4-4zM12 16a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM17.5 6.5h.01',
     share: 'M18 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM6 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM18 22a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM8.6 13.5l6.8 4M15.4 6.5l-6.8 4',
@@ -84,6 +85,14 @@
     mail: 'M3 5h18v14H3zM3 6l9 7 9-7',
     link: 'M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1'
   };
+  /* Official social pages (follow to see the winner announcement). */
+  var FOLLOW = [
+    ['Facebook', 'https://www.facebook.com/JewishRiverside', 'fb', 'Follow Chabad Jewish Riverside on Facebook (opens in a new tab)'],
+    ['Instagram', 'https://www.instagram.com/jewishriverside', 'ig', 'Follow Chabad Jewish Riverside on Instagram (opens in a new tab)'],
+    ['X', 'https://x.com/Jewishriverside', 'x', 'Follow Chabad Jewish Riverside on X (opens in a new tab)'],
+    ['Festival on Facebook', 'https://www.facebook.com/chanukahfestival/', 'fb', 'Follow the Chanukah Festival on Facebook (opens in a new tab)'],
+    ['Festival on Instagram', 'https://www.instagram.com/chanukahfestival/', 'ig', 'Follow the Chanukah Festival on Instagram (opens in a new tab)']
+  ];
   function icon(name) {
     var ns = 'http://www.w3.org/2000/svg';
     var s = document.createElementNS(ns, 'svg');
@@ -136,6 +145,7 @@
       '#mc26 .mc-row .mc-btn{width:100%;padding:0 10px}',
       '@media (max-width:600px){#mc26 .mc-row{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#mc26 .mc-row .mc-wide{grid-column:1 / -1}}',
       '#mc26 .mc-row .mc-ic{width:1.3em;height:1.3em}',
+      '#mc26 .mc-follow{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}#mc26 .mc-follow .mc-btn{height:44px;padding:0 16px}#mc26 .mc-x .mc-ic{color:#fff}',
       '#mc26 .mc-plan{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#mc26 .mc-plan .mc-wide{grid-column:1 / -1}',
       '@media (max-width:600px){#mc26 .mc-plan{grid-template-columns:1fr}}',
       '@media (max-width:380px){#mc26 .mc-row .mc-btn{font-size:13px;gap:6px;padding:0 6px}}',
@@ -157,7 +167,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: 'Chanukah Festival + Menorah Contest',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners Announced 7:45–8 PM. ' + CFG.festivalUrl
+      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. We’ll announce the winners after the festival on our social media and by email. ' + CFG.festivalUrl
     });
   }
 
@@ -263,7 +273,18 @@
     add(r3, cal, rs, mp);
     add(s3, el('h2', null, 'Plan your evening'), r3);
 
-    add(bd, s1, s2, s3);
+    var s0 = el('section', 'mc-sec');
+    var fr = el('div', 'mc-follow');
+    FOLLOW.forEach(function (f) {
+      var a = link('mc-btn mc-line mc-' + f[2], f[1], f[0], true);
+      a.setAttribute('aria-label', f[3]);
+      a.insertBefore(icon(f[2]), a.firstChild);
+      fr.appendChild(a);
+    });
+    add(s0, el('h2', null, 'Follow us to see the winners'),
+      el('p', 'mc-p', 'We’ll announce the winners after the festival on our social media and by email. Follow us so you don’t miss it.'), fr);
+
+    add(bd, s1, s0, s2, s3);
 
     var ft = el('div', 'mc-ft');
     var who = el('span');

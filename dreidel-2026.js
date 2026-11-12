@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'dg26-2026-11-12a';
+  var VERSION = 'dg26-2026-11-12b';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
@@ -177,7 +177,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: '22nd Annual Chanukah Festival',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Dreidel Guessing Contest: we’ll announce the winner after the festival. Come early: the first 300 guests get a free Chanukah gift. ' + CFG.festivalUrl
+      details: 'Dreidel Guessing Contest: we’ll announce the winner after the festival on our social media and by email. ' + CFG.festivalUrl
     });
   }
 
@@ -264,9 +264,7 @@
     var s1 = el('section', 'mc-sec');
     var dl = el('dl');
     CFG.STEPS.forEach(function (r) { add(dl, el('dt', null, r[0]), el('dd', null, r[1])); });
-    var gift = el('p', 'mc-gift');
-    add(gift, el('b', null, 'Come early: the first 300 guests get a free Chanukah gift.'));
-    add(s1, el('h2', null, 'Dreidel Guessing Contest'), dl, gift);
+    add(s1, el('h2', null, 'Dreidel Guessing Contest'), dl);
 
     var s2 = el('section', 'mc-sec');
     add(s2, el('h2', null, 'Invite family and friends'),
