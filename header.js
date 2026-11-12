@@ -36,14 +36,27 @@
 
   /* Volunteer sign-up (hidden page): chanukahfestival.org/volunteer and /?volunteer. Hide the
      "Page Not Found" (or festival) page until volunteer-2026.js draws the form. Same as footer.js. */
+  var qpath = (window.location.pathname === '/' || window.location.pathname === '');
   if (HOSTS[sh] && (/^\/volunteer\/?$/i.test(window.location.pathname) ||
-      ((window.location.pathname === '/' || window.location.pathname === '') && /[?&]volunteer(?:[=&]|$)/i.test(window.location.search)))) {
+      (qpath && /[?&]volunteer(?:[=&]|$)/i.test(window.location.search)))) {
     if (!document.getElementById('vf26-cover')) {
       var vs = document.createElement('style');
       vs.id = 'vf26-cover';
       vs.textContent = 'html{background:#0A5769 !important}body{opacity:0 !important}';
       (document.head || document.documentElement).appendChild(vs);
       setTimeout(function () { if (vs.parentNode) vs.parentNode.removeChild(vs); }, 8000);
+    }
+    return;
+  }
+  /* Hidden SMS share page: chanukahfestival.org/?text. Hide the festival page until
+     text-share-2026.js draws the fallback. Same as footer.js. */
+  if (HOSTS[sh] && qpath && /[?&]text(?:[=&]|$)/i.test(window.location.search)) {
+    if (!document.getElementById('ts26-cover')) {
+      var ts = document.createElement('style');
+      ts.id = 'ts26-cover';
+      ts.textContent = 'html{background:#0A5769 !important}body{opacity:0 !important}';
+      (document.head || document.documentElement).appendChild(ts);
+      setTimeout(function () { if (ts.parentNode) ts.parentNode.removeChild(ts); }, 8000);
     }
     return;
   }

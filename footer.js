@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-12g';
+  var V = '2026-11-12h';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -81,7 +81,13 @@
   var isVolunteer = !!HOSTS[sh] && (/^\/volunteer\/?$/i.test(window.location.pathname) ||
     ((window.location.pathname === '/' || window.location.pathname === '') && /[?&]volunteer(?:[=&]|$)/i.test(window.location.search)));
 
-  var aid = isVolunteer ? 'volunteer' : findAid();
+  /* Hidden SMS share page for festival emails (Gmail on Android strips sms: links):
+     chanukahfestival.org/?text. Loads text-share-2026.js instead of the festival page. */
+  var TEXT = { file: 'text-share-2026.js', cover: '#0A5769', coverId: 'ts26-cover' };
+  var isText = !isVolunteer && !!HOSTS[sh] &&
+    (window.location.pathname === '/' || window.location.pathname === '') && /[?&]text(?:[=&]|$)/i.test(window.location.search);
+
+  var aid = isVolunteer ? 'volunteer' : isText ? 'text' : findAid();
 
   /* Only ever load from this loader's own folder. */
   var me = document.currentScript && document.currentScript.src;
@@ -119,7 +125,7 @@
     if (flag) load('embed.js');
   }
 
-  var page = isVolunteer ? VOLUNTEER : aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
+  var page = isVolunteer ? VOLUNTEER : isText ? TEXT : aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
   if (!page) return;
   if (isResponse && !page.onResponse) return;
   if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(page.file)) return;

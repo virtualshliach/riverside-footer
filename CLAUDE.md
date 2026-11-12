@@ -33,6 +33,8 @@ who owns this repository.
 | `embed.js` | Donate 4194665, Menorah Contest 7606745, Mailing list 5333083, only inside the festival's form pop-up (`#cf-embed` in a frame) | Shows just the form, festival-styled |
 | `stripe-donate.js` | Donate pop-up with Stripe (card, Google Pay, Link, Cash App Pay, bank). Loaded by the festival page (draft and live) when `STRIPE_DONATE` is on. Backend: Google Apps Script web app in the org's "Chanukah Festival" Google Sheet (Donations tab, receipts) | **Live** |
 | `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page (draft and live) when `OWN_FORMS` is on, and by the Guess page (`dreidel-2026.js`). `chanukahfestival.org/?guess` opens the Dreidel form | **Live** |
+| `volunteer-2026.js` | Hidden volunteer sign-up at chanukahfestival.org/volunteer and `/?volunteer` (noindex, community emails only) | **Live** |
+| `text-share-2026.js` | Hidden SMS share page at chanukahfestival.org/?text (noindex). Opens Messages with the festival invitation; fallback: "Tap to text a friend", "Copy message", and a link back to the festival page. Used by the Text button in festival emails, because Gmail on Android strips `sms:` links | **Live** |
 
 ## Working together (two people push to this repository)
 
@@ -106,6 +108,10 @@ aligned, on this site or in a ChabadOne form:
     is its own ChabadOne site now, so those paths reach its "Page Not Found" page with the address
     kept; `header.js` (and `footer.js` as a backup) send them to `/?guess`, `/?menorah`, `/?donate`,
     and the festival page opens the Dreidel form, the Menorah Contest form or Donate.
+  - Hidden SMS share page: chanukahfestival.org/?text (query string on the homepage, HTTP 200,
+    noindex). `footer.js` loads `text-share-2026.js` instead of the festival page. On a phone it
+    opens Messages with the invitation; everyone sees a branded fallback. Used by the Text button
+    in festival emails (Gmail on Android strips `sms:` links).
   - The Guess page (5738793), the old Donate page (4194665) and the festival page itself (4949424,
     now the homepage) moved to the chanukahfestival.org site. JewishRiverside.com/Guess no longer
     exists there; it needs a ChabadOne redirect on jewishriverside.com.

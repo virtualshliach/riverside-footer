@@ -44,7 +44,7 @@ function load(site, url, opts) {
   var errors = [], logs = [], requests = [];
   var html = (opts.shell || SHELL) + (opts.coScript || '') +
     '<script src="' + PAGES_BASE + 'footer.js"></script></body></html>';
-  var dom = new JSDOM(html, {
+  var jsdomOpts = {
     url: url, runScripts: 'dangerously', resources: makeLoader(requests), pretendToBeVisual: true,
     beforeParse: function (w) {
       if (opts.nativeDonate) {   /* Stripe pop-up and own forms switched off: test the ChabadOne fallbacks */
@@ -55,6 +55,9 @@ function load(site, url, opts) {
       w.console.warn = function () { logs.push('warn ' + [].join.call(arguments, ' ')); };
       w.console.log = function () { logs.push([].join.call(arguments, ' ')); };
       w.addEventListener('error', function (e) { errors.push(e.message); });
+      if (opts.userAgent) {
+        try { Object.defineProperty(w.navigator, 'userAgent', { get: function () { return opts.userAgent; }, configurable: true }); } catch (e) {}
+      }
       w.fetch = function (u) {
         var key = String(u).replace(/^https?:\/\/[^/]+/, '');
         if (opts.pages && opts.pages[key] != null) return Promise.resolve({ ok: true, status: 200, text: function () { return Promise.resolve(opts.pages[key]); } });
@@ -62,7 +65,10 @@ function load(site, url, opts) {
         return Promise.reject(new Error('offline in tests'));
       };
     }
-  });
+  };
+  if (opts.userAgent) jsdomOpts.userAgent = opts.userAgent;
+  if (opts.virtualConsole) jsdomOpts.virtualConsole = opts.virtualConsole;
+  var dom = new JSDOM(html, jsdomOpts);
   return wait(opts.wait || 600).then(function () {
     return { w: dom.window, d: dom.window.document, errors: errors, logs: logs, requests: requests };
   });
@@ -632,6 +638,53 @@ var SITES = {
     ok(![].some.call(vh.d.querySelectorAll('a[href]'), function (a) { return /volunteer/i.test(a.getAttribute('href')); }), 'hidden: the festival page has no link to the volunteer page');
     ok(!/volunteer-2026|\/volunteer\b|\?volunteer/i.test(fs.readFileSync(path.join(ROOT, 'chanukah-2026.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8')), 'hidden: neither festival page file links to it');
     ok(await whereTo('https://chanukahfestival.org/volunteer', 'header.js') === null && await whereTo('https://chanukahfestival.org/volunteer', 'footer.js') === null, '/volunteer is not sent anywhere else (no short-link redirect)');
+
+    console.log('riverside: hidden Text share page chanukahfestival.org/?text');
+    var TXMSG = 'Join us for Riverside\u2019s Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Free family fun, live music and the Grand Menorah Lighting. Visit ChanukahFestival.org: https://chanukahfestival.org/';
+    var TXSMS = 'sms:?&body=' + encodeURIComponent(TXMSG);
+    var tx = await load('riverside', 'https://chanukahfestival.org/?text', { wait: 700 });
+    var txReq = projectRequests(tx);
+    ok(txReq.length === 1 && /\/text-share-2026\.js\?v=/.test(txReq[0]), '?text loads only text-share-2026.js (' + txReq.map(function (u) { return u.replace(PAGES_BASE, ''); }).join(',') + ')');
+    ok(tx.d.getElementById('ts26') && !tx.d.getElementById('cf26') && !tx.errors.length, '?text shows the text-share page, not the festival page, no errors' + (tx.errors.length ? ' (' + tx.errors.join(' | ') + ')' : ''));
+    ok(!tx.d.getElementById('ts26-cover') && !tx.d.getElementById('cf26-cover') && tx.d.querySelector('meta[name="robots"]').getAttribute('content') === 'noindex, nofollow' && !tx.d.querySelector('link[rel="canonical"]'), 'cover removed; page is noindex and drops the canonical link');
+    ok(tx.d.getElementById('ts26-sms') && tx.d.getElementById('ts26-sms').getAttribute('href') === TXSMS && tx.d.getElementById('ts26-sms').textContent === 'Tap to text a friend', 'Tap to text a friend button uses sms:?&body= with the email invitation');
+    ok(tx.d.getElementById('ts26-msg') && tx.d.getElementById('ts26-msg').value === TXMSG, 'message box has the exact email invitation');
+    ok(tx.d.getElementById('ts26-copy') && tx.d.getElementById('ts26-copy').textContent === 'Copy message', 'Copy message button is shown');
+    ok([].some.call(tx.d.querySelectorAll('#ts26 a'), function (a) { return a.getAttribute('href') === 'https://chanukahfestival.org/' && /Back to the festival page/.test(a.textContent); }), 'link back to https://chanukahfestival.org/');
+    ok(/Arial/.test(tx.d.getElementById('ts26-css').textContent) && !/Montserrat/.test(tx.d.getElementById('ts26-css').textContent), 'page uses Arial, not Montserrat');
+    ok(!/\u2014/.test(tx.d.getElementById('ts26').textContent) && /Chanukah/.test(tx.d.getElementById('ts26').textContent) && !/Hanukkah/i.test(tx.d.getElementById('ts26').textContent), 'no em dashes; spelled Chanukah');
+    ok(!tx.w.TS26.smsAttempted, 'desktop: Messages is not opened automatically');
+    var copied = [];
+    tx.w.navigator.clipboard = { writeText: function (t) { copied.push(t); return Promise.resolve(); } };
+    tx.d.getElementById('ts26-copy').dispatchEvent(new tx.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+    await wait(50);
+    ok(copied.join('|') === TXMSG && /Copied/.test(tx.d.getElementById('ts26-copy').textContent), 'Copy message uses clipboard.writeText with the exact invitation');
+    var selected = false;
+    var txFb = await load('riverside', 'https://www.chanukahfestival.org/?text', { wait: 700 });
+    delete txFb.w.navigator.clipboard;
+    var box = txFb.d.getElementById('ts26-msg');
+    box.select = function () { selected = true; };
+    txFb.d.getElementById('ts26-copy').dispatchEvent(new txFb.w.MouseEvent('click', { bubbles: true, cancelable: true }));
+    await wait(50);
+    ok(selected, 'without clipboard.writeText, Copy message falls back to select()');
+    var vcNav = new jsdom.VirtualConsole();
+    vcNav.on('jsdomError', function () {});
+    var txPhone = await load('riverside', 'https://chanukahfestival.org/?text', {
+      wait: 700,
+      userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36',
+      virtualConsole: vcNav
+    });
+    ok(txPhone.w.TS26 && txPhone.w.TS26.smsAttempted === TXSMS && txPhone.d.getElementById('ts26'), 'Android phone: immediately tries location.href = sms:?&body=... and still shows the fallback page');
+    var ht = new JSDOM('<!doctype html><html><head></head><body><h1>festival</h1></body></html>', { url: 'https://chanukahfestival.org/?text', runScripts: 'outside-only' });
+    ht.window.eval(fs.readFileSync(path.join(ROOT, 'header.js'), 'utf8'));
+    var hts = ht.window.document.getElementById('ts26-cover');
+    ok(hts && hts.tagName === 'STYLE' && /body\{opacity:0/.test(hts.textContent) && !/display:none/.test(hts.textContent), 'header.js hides ?text with opacity (never display:none)');
+    var txJ = await load('riverside', 'https://www.jewishriverside.com/?text', { wait: 300 });
+    ok(projectRequests(txJ).length === 0 && !txJ.d.getElementById('ts26'), 'jewishriverside.com/?text is left alone');
+    ok(!projectRequests(vh).some(function (u) { return /text-share/.test(u); }) && !vh.d.getElementById('ts26'), 'festival homepage does not load the text-share page');
+    ok(await whereTo('https://chanukahfestival.org/?text', 'header.js') === null && await whereTo('https://chanukahfestival.org/?text', 'footer.js') === null, '?text is not sent anywhere else (no short-link redirect)');
+    var txNo = await load('riverside', 'https://chanukahfestival.org/?texture', { wait: 400 });
+    ok(!projectRequests(txNo).some(function (u) { return /text-share/.test(u); }) && !txNo.d.getElementById('ts26') && txNo.d.getElementById('cf26'), '?texture is not treated as the text-share page');
 
     console.log('riverside: pages that must load nothing');
     var quiet = [
