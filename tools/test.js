@@ -584,6 +584,8 @@ var SITES = {
     }
     ok(await whereTo('https://www.chanukahfestival.org/Guess', 'header.js') === 'https://www.chanukahfestival.org/?guess', 'header: /Guess goes to the Dreidel form');
     ok(await whereTo('https://www.chanukahfestival.org/guest', 'header.js') === 'https://www.chanukahfestival.org/?guess', 'header: /guest also goes to the Dreidel form');
+    ok(await whereTo('https://www.chanukahfestival.org/dreidel', 'header.js') === 'https://www.chanukahfestival.org/?guess', 'header: /dreidel goes to the Dreidel form');
+    ok(await whereTo('https://www.chanukahfestival.org/Menorah-Contest/', 'header.js') === 'https://www.chanukahfestival.org/?menorah', 'header: /menorah-contest goes to the Menorah Contest form');
     ok(await whereTo('https://chanukahfestival.org/menorah/', 'header.js') === 'https://chanukahfestival.org/?menorah', 'header: /menorah goes to the Menorah Contest form');
     ok(await whereTo('https://www.chanukahfestival.org/donate', 'footer.js') === 'https://www.chanukahfestival.org/?donate', 'footer (backup): /donate goes to Donate');
     ok(await whereTo('https://www.jewishriverside.com/donate', 'header.js') === null, 'jewishriverside.com/donate is left alone');
