@@ -577,6 +577,49 @@ var SITES = {
     var DSRC = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8');
     ok(/\[\?&\]menorah[^\n]*openFormPop\('contest'\)/.test(DSRC) && /\[\?&\]donate[^\n]*openDonate/.test(DSRC), 'festival page opens Menorah Contest for ?menorah and Donate for ?donate');
 
+    console.log('riverside: hidden Volunteer page chanukahfestival.org/volunteer');
+    var NF = '<!doctype html><html><head><title>Page Not Found</title><link rel="canonical" href="https://www.chanukahfestival.org/"></head><body><div id="header">menu</div><div id="co_content_container"><h1>Page Not Found</h1></div><div id="footer">f</div>';
+    var vo = await load('riverside', 'https://chanukahfestival.org/volunteer', { shell: NF, wait: 700 });
+    var voReq = projectRequests(vo);
+    ok(voReq.length === 1 && /\/volunteer-2026\.js\?v=/.test(voReq[0]), '/volunteer loads only volunteer-2026.js (' + voReq.map(function (u) { return u.replace(PAGES_BASE, ''); }).join(',') + ')');
+    ok(vo.d.getElementById('vf26') && !vo.d.getElementById('cf26') && !vo.errors.length, '/volunteer shows the volunteer page, not the festival page, no errors' + (vo.errors.length ? ' (' + vo.errors.join(' | ') + ')' : ''));
+    ok(!vo.d.getElementById('vf26-cover') && vo.d.querySelector('meta[name="robots"]').getAttribute('content') === 'noindex, nofollow' && !vo.d.querySelector('link[rel="canonical"]'), 'cover removed; page is noindex and drops the canonical link');
+    ok(vo.w.getComputedStyle(vo.d.getElementById('co_content_container')).display === 'none' && vo.w.getComputedStyle(vo.d.getElementById('header')).display === 'none', 'the "Page Not Found" page underneath is hidden');
+    var vlab = [].map.call(vo.d.querySelectorAll('#vf26 .vf-lab, #vf26 legend'), function (x) { return x.textContent; }).join('|');
+    ok(vlab === 'First name *|Last name *|Email *|Phone *|How would you like to help? *|Notes', 'fields: name, email, phone, roles, notes (' + vlab + ')');
+    ok(vo.d.querySelectorAll('#vf26 .vf-roles input[type=checkbox]').length === 7, 'seven role checkboxes');
+    ok(!/\u2014/.test(vo.d.getElementById('vf26').textContent) && /Chanukah/.test(vo.d.getElementById('vf26').textContent) && !/Hanukkah/i.test(vo.d.getElementById('vf26').textContent), 'no em dashes; spelled Chanukah');
+    var vw = vo.w, vd = vo.d, posts = [], replies = [];
+    vw.fetch = function (u, o) { posts.push(JSON.parse(o.body)); var r = replies.shift() || { ok: true }; return Promise.resolve({ json: function () { return Promise.resolve(r); } }); };
+    function vtype(id, val) { var e = vd.getElementById(id); e.value = val; e.dispatchEvent(new vw.Event('input', { bubbles: true })); }
+    function vclick(e) { e.dispatchEvent(new vw.MouseEvent('click', { bubbles: true, cancelable: true })); }
+    vclick(vd.getElementById('vf26-send'));
+    await wait(50);
+    ok(posts.length === 0 && /First name/.test(vd.querySelector('#vf26 .vf-err').textContent), 'empty form is not sent; asks for the first name');
+    vtype('vf26-first', 'Maya'); vtype('vf26-last', 'Cohen'); vtype('vf26-email', 'maya@example.com'); vtype('vf26-phone', '951-555-0100');
+    vclick(vd.getElementById('vf26-send'));
+    await wait(50);
+    ok(posts.length === 0 && /at least one/.test(vd.querySelector('#vf26 .vf-err').textContent), 'no role chosen: not sent, asks for one');
+    var vt = vd.querySelectorAll('#vf26 .vf-roles input'); vt[0].checked = true; vt[3].checked = true;
+    vtype('vf26-notes', 'I can come at 4.');
+    replies = [{ ok: false, error: 'Unknown form.' }, { ok: true }];
+    vclick(vd.getElementById('vf26-send'));
+    await wait(1000);
+    ok(posts.length === 2 && posts[0].action === 'form' && posts[0].kind === 'volunteer' && posts[0].first === 'Maya' && posts[0].roles.join('|') === 'Setup (from about 4 PM)|Food and latkes' && posts[0].notes === 'I can come at 4.' && posts[0].website === '' && /\/volunteer$/.test(posts[0].page),
+      'sent to Apps Script as a volunteer entry (name, email, phone, roles, notes, page)');
+    ok(posts[1] && posts[1].kind === 'mailing' && posts[1].interests[0] === 'Volunteering' && posts[1].interests.length === 3 && /Notes: I can come at 4\./.test(posts[1].more) && posts[1].first === 'Maya' && posts[1].phone === '951-555-0100',
+      'Apps Script without the volunteer kind ("Unknown form."): saved as a Mailing List entry with Volunteering and the roles');
+    ok(/Thank you, Maya!/.test(vd.getElementById('vf26').textContent) && !vd.getElementById('vf26-send'), 'thank-you shows after sending');
+    var vq = await load('riverside', 'https://www.chanukahfestival.org/?volunteer', { wait: 700 });
+    ok(projectRequests(vq).length === 1 && /volunteer-2026\.js/.test(projectRequests(vq)[0]) && vq.d.getElementById('vf26') && !vq.d.getElementById('cf26') && !vq.d.getElementById('cf26-cover'), 'backup address chanukahfestival.org/?volunteer shows the same page instead of the festival page');
+    var vj = await load('riverside', 'https://www.jewishriverside.com/volunteer', { wait: 300 });
+    ok(projectRequests(vj).length === 0 && !vj.d.getElementById('vf26'), 'jewishriverside.com/volunteer is left alone');
+    var vh = await load('riverside', 'https://www.chanukahfestival.org/', { wait: 900 });
+    ok(!projectRequests(vh).some(function (u) { return /volunteer/.test(u); }) && !vh.d.getElementById('vf26'), 'festival homepage does not load the volunteer page');
+    ok(![].some.call(vh.d.querySelectorAll('a[href]'), function (a) { return /volunteer/i.test(a.getAttribute('href')); }), 'hidden: the festival page has no link to the volunteer page');
+    ok(!/volunteer-2026|\/volunteer\b|\?volunteer/i.test(fs.readFileSync(path.join(ROOT, 'chanukah-2026.js'), 'utf8') + fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8')), 'hidden: neither festival page file links to it');
+    ok(await whereTo('https://chanukahfestival.org/volunteer', 'header.js') === null && await whereTo('https://chanukahfestival.org/volunteer', 'footer.js') === null, '/volunteer is not sent anywhere else (no short-link redirect)');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],

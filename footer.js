@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-12c';
+  var V = '2026-11-12d';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -74,7 +74,14 @@
     return;
   }
 
-  var aid = findAid();
+  /* Volunteer sign-up, a hidden page for community emails only (not in any menu or the sitemap):
+     chanukahfestival.org/volunteer (reaches ChabadOne's "Page Not Found" page with the address kept)
+     and, as a backup, chanukahfestival.org/?volunteer. Loads volunteer-2026.js instead of any page project. */
+  var VOLUNTEER = { file: 'volunteer-2026.js', cover: '#0A5769', coverId: 'vf26-cover' };
+  var isVolunteer = !!HOSTS[sh] && (/^\/volunteer\/?$/i.test(window.location.pathname) ||
+    ((window.location.pathname === '/' || window.location.pathname === '') && /[?&]volunteer(?:[=&]|$)/i.test(window.location.search)));
+
+  var aid = isVolunteer ? 'volunteer' : findAid();
 
   /* Only ever load from this loader's own folder. */
   var me = document.currentScript && document.currentScript.src;
@@ -112,7 +119,7 @@
     if (flag) load('embed.js');
   }
 
-  var page = aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
+  var page = isVolunteer ? VOLUNTEER : aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
   if (!page) return;
   if (isResponse && !page.onResponse) return;
   if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(page.file)) return;
