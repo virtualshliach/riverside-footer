@@ -200,7 +200,7 @@ var SITES = {
     ok(r.d.querySelector('#cf-directions iframe') && !r.d.querySelector('#cf-directions .cf-ev-btns'), 'directions section has the map, no separate map buttons');
     ok(r.d.querySelector('.cco_templateless_template').style.getPropertyValue('display') === 'none' && r.d.querySelector('.cco_templateless_template').style.getPropertyPriority('display') === 'important', 'the platform\'s "Back to" bar is hidden despite its inline !important');
     var heroBtns = [].map.call(r.d.querySelectorAll('.cf-ctas .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(heroBtns.join('|') === 'Add to Calendar|Share|Join the Facebook Event', 'top buttons: Add to Calendar, Share, Join the Facebook Event (' + heroBtns.join('|') + ')');
+    ok(heroBtns.join('|') === 'Add to Calendar|Join the Facebook Event|Share', 'top buttons: Add to Calendar, Join the Facebook Event, Share (' + heroBtns.join('|') + ')');
     var evBtns = [].map.call(r.d.querySelectorAll('#cf-event .cf-ev-btns .cf-btn'), function (b) { return b.textContent.trim(); });
     ok(evBtns.join('|') === 'Directions & Parking', 'event details: Directions & Parking only (' + evBtns.join('|') + ')');
     var row = r.d.querySelectorAll('#cf-directions .cf-prow')[0], item = row.parentNode;
@@ -213,7 +213,7 @@ var SITES = {
     row2.dispatchEvent(new r.w.MouseEvent('click', { bubbles: true }));
     ok(item.className === 'cf-pitem' && /open/.test(row2.parentNode.className), 'opening another garage closes the first');
     ok(r.d.querySelectorAll('#cf-directions .cf-prow').length === 5 && /\$1\.25 per 30 minutes/.test(r.d.getElementById('cf-directions').textContent), 'parking: five nearby garages and the rates');
-    var hlImgs = [].map.call(r.d.querySelectorAll('#cf-event .cf-hl-card img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
+    var hlImgs = [].map.call(r.d.querySelectorAll('#cf-activities .cf-hl-card img'), function (i) { return i.getAttribute('src').replace(PAGES_BASE, ''); });
     ok(hlImgs.join(',') === 'hl-menorah.jpg,hl-food.jpg,hl-music-aaron.jpg,hl-performer.jpg', 'four highlight cards use photos (' + hlImgs.join(',') + ')');
     ok(hlImgs.every(function (n) { return fs.existsSync(path.join(ROOT, n)); }), 'all four card photos are in the repo');
     ok(/FESTIVAL/.test(r.d.querySelector('#cf-top .cf-vtext').textContent) && /22/.test(r.d.querySelector('#cf-top .cf-vtext .cf-annual').textContent), 'title sits on top of the video');

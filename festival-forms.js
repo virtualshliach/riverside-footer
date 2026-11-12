@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-09b';
+  var VERSION = 'festival-forms 2026-11-11h';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -37,15 +37,15 @@
   var AGES = ['3 or under', '4', '5', '6', '7', '8', '9', '10', '11', '12', '13–17', '18 and up'];
   var FORMS = {
     menorah: {
-      title: 'Menorah Contest', sub: 'All ages. Free to enter. Register by Dec 4.', button: 'Register',
+      title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.', button: 'Register',
       rules: ['Open to all ages, in two groups: 12 and under, and 13 and up',
-        'Free to enter. Register by Friday, Dec 4',
+        'Free to enter. Register By Friday, Dec 4',
         'Nine branches including the shamash: eight in a straight line at an even height, with the shamash higher or lower',
         'No food. Bring a wax candle or oil',
         'It must stand on its own and must not break, fall or melt when lit',
         'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK)',
         'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes, announced at the festival. Every child who enters gets a Chanukah gift',
-        'Drop off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
+        'Drop Off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
     },
     dreidel: {
       title: 'Dreidel Guessing Contest', sub: 'Guess how many dreidels are in the jar. Win $180!', button: 'Send my guess',
@@ -362,7 +362,7 @@
     var title, lines;
     if (kind === 'menorah') {
       title = 'You’re registered, ' + d.first + '!';
-      lines = ['Drop off your menorah on Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).',
+      lines = ['Drop Off your menorah on Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).',
         res.emailed ? 'A confirmation with all the details is on its way to ' + d.email + '.' : 'See you at the festival!'];
     } else if (kind === 'dreidel') {
       title = 'Thanks for your guess, ' + d.first + '!';

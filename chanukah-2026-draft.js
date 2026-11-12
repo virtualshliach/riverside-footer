@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11j';
+  var VERSION = 'cf26-2026-11-11k';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -53,7 +53,7 @@
 
     /* Photos from past festivals; files live next to this one in the repo. */
     highlights: [
-      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'Riverside\u2019s handcrafted Grand Menorah, lit on the courthouse steps.' },
+      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'Riverside\u2019s handcrafted 10-foot Grand Menorah, lit on the courthouse steps.' },
       { img: 'hl-food.jpg',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
       { img: 'hl-music-aaron.jpg', title: 'Live Music',             text: 'Aaron Holder, a Jewish pop-folk singer with a reggae edge, live on the Main Stage.' },
       { img: 'hl-performer.jpg', title: 'Fun for the Whole Family', text: 'Street performers, kids\u2019 crafts, train rides and activities for all ages.' }
@@ -153,7 +153,7 @@
     ],
     stats: [
       { big: '22nd', small: 'year of light in Riverside' },
-      { big: 'Handcrafted', small: 'in Riverside' },
+      { big: '10 Ft', small: 'Grand Menorah' },
       { big: '3,000', small: 'people join us!' }
     ],
 
@@ -1024,7 +1024,7 @@
       '#cf26 .cf-stat:nth-child(3){border-left-color:' + GOLD + '}',
       '#cf26 .cf-stat b{font-family:' + DISP + ';font-size:2.2rem;color:#fff;min-width:90px;line-height:1;flex:none}',
       '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem;line-height:1.3;min-width:0}',
-      '@media (max-width:620px){#cf26 .cf-stat{gap:10px;padding:16px}#cf26 .cf-stat b{font-size:1.6rem;min-width:0}}',
+      '@media (max-width:620px){#cf26 .cf-stat{gap:10px;padding:16px}}',
 
       /* news */
       /* scrolling row: 4 cards visible on a computer, swipe on phones (next card peeks in) */

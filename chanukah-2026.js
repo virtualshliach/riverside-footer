@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-09c';
+  var VERSION = 'cf26-2026-11-11L';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -53,12 +53,13 @@
 
     /* Photos from past festivals; files live next to this one in the repo. */
     highlights: [
-      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'Riverside\u2019s Grand Menorah, lit on the courthouse steps.' },
+      { img: 'hl-menorah.jpg', title: 'Grand Menorah Lighting', text: 'Riverside\u2019s handcrafted 10-foot Grand Menorah, lit on the courthouse steps.' },
       { img: 'hl-food.jpg',    title: 'Traditional Food',       text: 'Hot latkes, jelly donuts and Chanukah treats for everyone.' },
       { img: 'hl-music-aaron.jpg', title: 'Live Music',             text: 'Aaron Holder, a Jewish pop-folk singer with a reggae edge, live on the Main Stage.' },
       { img: 'hl-performer.jpg', title: 'Fun for the Whole Family', text: 'Street performers, kids\u2019 crafts, train rides and activities for all ages.' }
     ],
-    accessNote: 'ASL Interpreter on site',
+    /* ASL note under the Schedule in Event details (moved from the pill, Nov 11). */
+    aslNote: { lead: 'ASL interpretation.', text: 'An ASL interpreter will be on stage and shown on the big screens during the official program.' },
 
     /* Exactly five rows (brief Nov 5). */
     SCHEDULE: [
@@ -84,9 +85,9 @@
           [3, 'Kids Crafts', 'Two craft areas'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
-          [6, 'Dreidel Guessing', 'Win $180! Winner announced 7:45–8 PM'],
-          [7, 'Mini Train Rides', ''],
-          [15, 'Menorah Contest', 'All entries on display. Winners announced 7:45–8 PM'],
+          [6, 'Dreidel Guessing', 'Win $180! Winner Announced 7:45–8 PM'],
+          [7, 'Train Rides', ''],
+          [15, 'Menorah Contest', 'All entries on display. Winners Announced 7:45–8 PM'],
           [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
@@ -107,9 +108,9 @@
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
       intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
-      facts: ['Register by Dec 4', 'Drop off 5:45–6:15 PM at table #15', 'Winners announced 7:45–8 PM'],
+      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8 PM'],
       how: [
-        'Register by Friday, Dec 4.',
+        'Register By Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
         'Menorahs stay on display at table #15 during the festival.',
@@ -132,13 +133,48 @@
       ]
     },
 
+    /* Train Rides (new this year). Stop #7 is already on the festival map.
+       Copy is generic: the train is on the draft map and a vendor invoice is on file,
+       but public claims like "free" are left out until Shmuel confirms them. */
+    TRAIN: {
+      title: 'Train Rides',
+      intro: 'All aboard! Kids and families can ride the festival train all evening. Find it at stop #7 on the map.',
+      facts: ['Stop #7 on the Map', '6–8 PM'],
+      /* Gelt Drop is map #16. The 7:45–8 PM window is on the schedule; the order with the winners announcement is not set, so the card copy does not mention it. */
+      gelt: {
+        title: 'Gelt Drop',
+        intro: 'The grand finale! Watch chocolate gelt and gifts parachute down from the sky.',
+        facts: ['7:45–8 PM', '#16 on the Map']
+      }
+    },
+
     about: [
       'The festival has grown into one of the premier holiday celebrations in the Inland Empire, sharing Chanukah\u2019s universal message, embracing cultural diversity, and promoting understanding. Each year, the festival is graced by the participation of many elected officials and civic leaders. It is a meaningful evening not only for the Jewish community but for the community at large.'
     ],
     stats: [
       { big: '22nd', small: 'year of light in Riverside' },
-      { big: 'Largest', small: 'menorah in the region' }
+      { big: '10 Ft', small: 'Grand Menorah' },
+      { big: '3,000', small: 'people join us!' }
     ],
+
+    america250: {
+      title: 'Why this year shines brighter',
+      body: 'In 1790, George Washington wrote that the government of the United States "gives to bigotry no sanction, to persecution no assistance." In 1979, President Carter joined the first National Menorah lighting at the White House, and today public menorahs light up cities across the country and around the world. Two hundred fifty years later, that promise shines brighter than ever. For the 22nd year, it shines in Riverside, at the Historic Courthouse, a symbol of the justice and liberty that make it possible.',
+      photos: [
+        {
+          src: 'https://virtualshliach.github.io/riverside-footer/assets/chanukah-2026/n7-national-img3646-v7.jpg',
+          caption: 'National Menorah, Washington, DC',
+          credit: 'Photo: National Menorah',
+          alt: 'The National Menorah at night on the Ellipse, with the White House lit in the background'
+        },
+        {
+          src: 'https://virtualshliach.github.io/riverside-footer/assets/chanukah-2026/r4-reference-courthouse-v7.jpg',
+          caption: 'Riverside Historic Courthouse',
+          alt: 'The whole Riverside Historic Courthouse at night, with the festival menorah on the steps, a crowd in front, and white ESH orchestra stands',
+          featured: true
+        }
+      ]
+    },
 
     /* ---- Community partners shown on the page ---- */
     PARTNERS_INTRO: 'Thank you to our partners for making this celebration possible.',
@@ -152,6 +188,10 @@
       { name: 'City of Riverside', logo: 'partner-city-riverside.png', h: 74 },
       { name: 'Riverside Downtown Partnership', logo: 'partner-rdp.png', h: 46 },
       { name: 'Riverside County District 1', sub: 'Supervisor Jose Medina', logo: 'partner-district1-medina.png', h: 38 }
+    ],
+    /* Extra names for the gold thank-you ticker only (not the partner logo grid, which is laid out 3 + 3). */
+    TICKER_EXTRA: [
+      { name: 'Jewish Federation of the Desert' }
     ],
     ORGANIZER: {
       logo: 'chabad-jcc-logo-white-gold.png',
@@ -394,7 +434,7 @@
     FORM_POPS: {
       donate: { aid: '4194665', title: 'Support the Chanukah Festival', sub: 'Your gift keeps the festival free for the whole community.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm' },
-      contest: { aid: '7606745', title: 'Menorah Contest', sub: 'All ages. Free to enter. Register by Dec 4.',
+      contest: { aid: '7606745', title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Menorah-Contest-2026.htm' },
       mailing: { aid: '5333083', title: 'Join Our Mailing List', sub: 'Hear about the festival and everything else at Chabad.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join-Our-Mailing-List.htm' }
@@ -599,6 +639,9 @@
       '#cf26 .cf-wrap{max-width:1140px;margin:0 auto;padding:0 20px}',
       '#cf26 .cf-sec{padding:84px 0}',
       '#cf26 .cf-alt{background:' + DEEP + '}',
+      /* even section spacing (Nov 11): two same-color sections in a row share one gap, not two */
+      '#cf26 .cf-alt + .cf-alt,#cf26 .cf-alt + .cf-spons,#cf26 .cf-spons + .cf-alt{padding-top:0}',
+      '#cf26 #cf-activities .cf-wrap > .cf-hl:first-child{margin-top:0}',
       '#cf26 .cf-kicker{font-size:.74rem;font-weight:700;letter-spacing:.24em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:10px}',
       '#cf26 .cf-h2{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.9rem,4.2vw,2.8rem);line-height:1.1;color:#fff;margin-bottom:14px}',
       '#cf26 .cf-lead{color:' + MUTED + ';max-width:62ch;font-size:1.05rem}',
@@ -742,6 +785,30 @@
       '#cf26 .cf-annual sup{font-size:.5em;vertical-align:super}',
       '#cf26 .cf-t1{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.02em;background:' + GRAD + ';-webkit-background-clip:text;background-clip:text;color:transparent}',
       '#cf26 .cf-t2{font-family:' + DISP + ';font-weight:700;font-size:clamp(3.1rem,11.5vw,8.4rem);line-height:.98;letter-spacing:.04em;color:#fff}',
+      '#cf26 .cf-subhead{font-family:' + DISP + ';font-weight:700;font-size:clamp(1.375rem,4.3vw,2.35rem);line-height:1.28;letter-spacing:.015em;color:#fff;margin-top:20px;margin-bottom:4px;padding:0 18px;text-align:center;text-shadow:0 3px 18px rgba(0,0,0,.55)}',
+      '#cf26 .cf-subhead:after{content:"";display:block;width:64px;height:2px;margin:14px auto 12px;background:' + GOLD + ';border-radius:2px;box-shadow:0 2px 8px rgba(0,0,0,.35)}',
+      '#cf26 .cf-subhead .cf-sub-1,#cf26 .cf-subhead .cf-sub-2{display:inline;white-space:nowrap}',
+      '#cf26 .cf-subhead .cf-sub-2:before{content:" "}',
+      '@media (max-width:600px){#cf26 .cf-subhead .cf-sub-1,#cf26 .cf-subhead .cf-sub-2{display:block}#cf26 .cf-subhead .cf-sub-2:before{content:none}#cf26 .cf-subhead:after{margin-top:12px;margin-bottom:8px}}',
+      '#cf26 .cf-250-ribbon{background:' + GOLD + ';color:' + DEEP + ';text-align:center;padding:11px 22px}',
+      '#cf26 .cf-250-ribbon-inner{font-family:' + BODY + ';font-weight:600;font-size:clamp(.95rem,2.1vw,1.08rem);letter-spacing:.03em;line-height:1.4}',
+      '#cf26 .cf-250-r1,#cf26 .cf-250-r2{white-space:nowrap}',
+      '#cf26 .cf-250-r2:before{content:" "}',
+      '@media (max-width:600px){#cf26 .cf-250-r1,#cf26 .cf-250-r2{display:block;white-space:nowrap}#cf26 .cf-250-r2:before{content:none}}',
+      '#cf26 .cf-info .cf-by{margin-top:16px;margin-bottom:2px}',
+      '#cf26 .cf-info .cf-welcome{margin-top:10px;margin-bottom:20px}',
+      '#cf26 .cf-info .cf-by i,#cf26 .cf-info .cf-by b,#cf26 .cf-info .cf-welcome{text-shadow:none}',
+      '#cf26 .cf-250-sec{background:#0c2a30;border-top:1px solid rgba(233,185,73,.28);border-bottom:1px solid rgba(233,185,73,.28);padding:84px 0}',
+      '#cf26 .cf-250-copy{color:' + MUTED + ';font-size:1.08rem;line-height:1.8;max-width:46rem;margin:8px auto 0;text-align:center}',
+      '@media (max-width:600px){#cf26 .cf-250-sec{padding:56px 0}#cf26 .cf-250-copy{text-align:left;font-size:1.02rem;line-height:1.75}}',
+      '#cf26 .cf-250-photos{display:grid;grid-template-columns:1fr 1fr;gap:22px;max-width:46rem;margin:36px auto 0;align-items:stretch}',
+      '#cf26 .cf-250-photo{margin:0;background:transparent}',
+      '#cf26 .cf-250-photo img{display:block;width:100%;height:auto;aspect-ratio:21/20;object-fit:cover;object-position:center;border-radius:14px;background:' + DEEP + '}',
+      '#cf26 .cf-250-photo figcaption{margin-top:10px;text-align:center;font-family:' + BODY + ';font-weight:600;font-size:.92rem;letter-spacing:.02em;color:' + MUTED + ';line-height:1.35}',
+      '#cf26 .cf-250-photo .cf-250-credit{display:block;margin-top:3px;text-align:center;font-family:' + BODY + ';font-weight:500;font-size:.78rem;letter-spacing:.02em;color:#b0bfc4;line-height:1.3}',
+      '#cf26 .cf-250-photo-ours img{box-shadow:0 0 0 2px ' + GOLD + ';border-radius:14px}',
+      '#cf26 .cf-250-photo-ours figcaption{color:' + GOLD + '}',
+      '@media (max-width:700px){#cf26 .cf-250-photos{grid-template-columns:1fr;gap:26px;margin-top:28px}#cf26 .cf-250-photo-ours img{aspect-ratio:21/20}}',
       '@media (max-width:620px){#cf26 .cf-when{font-size:clamp(1.6rem,7.4vw,2.4rem)}#cf26 .cf-when .cf-sep{display:none}#cf26 .cf-when .cf-tm{display:block}#cf26 .cf-invite{padding:0 18px}}',
       '#cf26 .cf-venue{font-family:' + DISP + ';color:#fff;text-transform:uppercase;font-size:clamp(1rem,2.8vw,1.75rem);letter-spacing:.02em;margin-top:18px;line-height:1.2;white-space:nowrap}',
       '#cf26 .cf-addr{font-family:' + BODY + ';color:' + INK + ';font-size:clamp(.98rem,2.2vw,1.25rem);margin-top:4px}',
@@ -757,11 +824,13 @@
       '#cf26 .cf-when .cf-tm{white-space:nowrap}',
       '#cf26 .cf-when .cf-to{text-transform:none}',
       '#cf26 .cf-night{font-family:' + DISP + ';color:#fff;font-size:clamp(1rem,2.3vw,1.35rem)}',
-      '#cf26 .cf-ctas{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin-top:30px}',
-      '#cf26 .cf-ctas .cf-btn{height:50px;padding:0 22px;font-size:.92rem}',
-      '#cf26 .cf-fbev{background:#1877f2;color:#fff}',
-      /* phones: an even 2-column grid, the Facebook button spans the full width */
-      '@media (max-width:600px){#cf26 .cf-ctas{display:grid;grid-template-columns:1fr;gap:10px;max-width:360px;margin-left:auto;margin-right:auto}#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}#cf26 .cf-ctas .cf-btn{padding:0 20px;justify-content:center}}',
+      '#cf26 .cf-ctas{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;width:100%;max-width:960px;margin:30px auto 0;justify-items:stretch}',
+      '#cf26 .cf-ctas .cf-calwrap,#cf26 .cf-ctas .cf-calwrap .cf-btn,#cf26 .cf-ctas .cf-btn{width:100%}',
+      '#cf26 .cf-ctas .cf-btn{height:50px;padding:0 16px;font-size:.92rem;justify-content:center}',
+      '#cf26 .cf-fbev{background:' + TEAL + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(60,199,180,.25)}',
+      '#cf26 .cf-cream{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      '#cf26 .cf-cream:hover{box-shadow:0 12px 30px rgba(0,0,0,.3)}',
+      '@media (max-width:600px){#cf26 .cf-ctas{display:flex;flex-direction:column;gap:10px;max-width:360px;margin-left:auto;margin-right:auto}#cf26 .cf-ctas .cf-calwrap{order:1;width:100%}#cf26 .cf-ctas .cf-cream{order:2}#cf26 .cf-ctas .cf-fbev{order:3}#cf26 .cf-ctas .cf-btn{padding:0 20px}}',
       '#cf26 .cf-calwrap{position:relative;display:inline-block}',
       '#cf26 .cf-menu{position:absolute;top:calc(100% + 8px);left:50%;transform:translateX(-50%);background:#fff;color:' + DEEP + ';border-radius:12px;padding:6px;min-width:250px;box-shadow:0 18px 40px rgba(0,0,0,.35);z-index:20;display:none;text-align:left}',
       '#cf26 .cf-menu.open{display:block}',
@@ -776,14 +845,16 @@
       '#cf26 .cf-unit{min-width:74px;text-align:center;padding:8px 6px;border-radius:12px;background:' + PANEL + ';border:1px solid rgba(26,204,206,.18)}',
       '#cf26 .cf-unit b{display:block;font-family:' + DISP + ';font-size:1.9rem;line-height:1.1;color:#fff}',
       '#cf26 .cf-unit span{font-size:.66rem;letter-spacing:.16em;text-transform:uppercase;color:' + GREEN + ';font-weight:700}',
+      /* phones: label on its own centered line, the four boxes in one row below (Nov 11 pick) */
+      '@media (max-width:620px){#cf26 .cf-count .cf-wrap{flex-direction:column;flex-wrap:nowrap;gap:12px;padding-top:16px;padding-bottom:16px}#cf26 .cf-count-l{text-align:center}#cf26 .cf-units{flex-wrap:nowrap;justify-content:center}}',
       '@media (max-width:420px){#cf26 .cf-units{gap:8px}#cf26 .cf-unit{min-width:64px;padding:8px 4px}#cf26 .cf-unit b{font-size:28px}#cf26 .cf-unit span{font-size:12px;letter-spacing:.08em}}',
       '#cf26 .cf-countmsg{font-family:' + DISP + ';font-size:1.3rem;color:' + GOLD + '}',
       '#cf26 .cf-marq{overflow:hidden;background:' + GOLD + ';color:' + DEEP + ';white-space:nowrap}',
-      '#cf26 .cf-marq-in{display:inline-flex;gap:0;animation:cf26marq 40s linear infinite;padding:12px 0}',
+      '#cf26 .cf-marq-in{display:inline-flex;align-items:center;gap:0;animation:cf26marq 40s linear infinite;padding:12px 0}',
       '#cf26 .cf-marq:hover .cf-marq-in{animation-play-state:paused}',
-      '#cf26 .cf-marq-in span{font-weight:700;font-size:.92rem;padding:0 22px;position:relative}',
+      '#cf26 .cf-marq-in span{font-weight:700;font-size:.92rem;padding:0 22px;position:relative;line-height:24px}',
       '#cf26 .cf-marq-in span:after{content:"";position:absolute;right:-4px;top:50%;width:7px;height:7px;margin-top:-3px;border-radius:50%;background:' + DEEP + ';opacity:.45}',
-      '#cf26 .cf-marq-in em{font-style:normal;font-family:' + DISP + ';text-transform:uppercase;letter-spacing:.12em;padding:0 22px;font-size:.8rem}',
+      '#cf26 .cf-marq-in em{font-style:normal;font-family:' + DISP + ';text-transform:uppercase;letter-spacing:.12em;padding:0 22px;font-size:.8rem;line-height:24px}',
       '@keyframes cf26marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}',
 
       /* highlights + event card */
@@ -799,7 +870,6 @@
       '#cf26 .cf-hl-card:hover{transform:translateY(-4px);border-color:rgba(26,204,206,.45)}',
       '#cf26 .cf-hl-card h3{font-family:' + DISP + ';color:#fff;font-size:1.15rem;line-height:1.25;margin-bottom:6px}',
       '#cf26 .cf-hl-card p{color:' + MUTED + ';font-size:.95rem}',
-      '#cf26 .cf-asl{display:inline-flex;align-items:center;gap:10px;margin-top:22px;padding:10px 18px;border-radius:999px;border:1px solid rgba(60,199,180,.45);color:' + TEAL + ';font-family:' + BODY + ';font-weight:600;font-size:1rem}',
       /* schedule */
       '#cf26 .cf-sched{list-style:none;margin:6px 0 0;padding:0}',
       '#cf26 .cf-sched li{display:grid;grid-template-columns:88px minmax(0,1fr);gap:14px;padding:11px 0;border-bottom:1px solid rgba(255,255,255,.07);font-size:1rem;color:' + INK + '}',
@@ -837,6 +907,15 @@
       '@media (max-width:860px){#cf26 .cf-keywrap{padding:0 22px 26px}}',
       '#cf26 .cf-roam b{color:' + GOLD + '}',
       /* Menorah Contest card */
+      '#cf26 .cf-newrow{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:28px;align-items:stretch}',
+      '@media (max-width:620px){#cf26 .cf-newrow{grid-template-columns:1fr}}',
+      '#cf26 .cf-newrow .cf-mc{margin-top:0;height:100%;display:flex;flex-direction:column;box-sizing:border-box}',
+      '#cf26 .cf-newrow .cf-mc > p{max-width:none}',
+      '#cf26 .cf-newrow .cf-mc-grow{flex:1 1 auto}',
+      '#cf26 .cf-mc-div{display:block;width:100%;border:0;border-top:1px solid rgba(255,255,255,.14);margin:20px 0 0;padding:0;height:0;background:none}',
+      '#cf26 .cf-mc-sub{font-family:' + DISP + ';font-size:1.25rem;font-weight:700;color:#fff;line-height:1.2;margin:16px 0 8px}',
+      '#cf26 .cf-mc-sub + p{color:#C9D6DA;font-size:1rem;margin:0}',
+      '@media (max-width:620px){#cf26 .cf-mc-div{margin-top:18px}#cf26 .cf-mc-sub{margin-top:14px}}',
       '#cf26 .cf-mc{margin-top:28px;background:' + PANEL + ';border:1px solid rgba(233,185,73,.35);border-radius:22px;padding:30px 34px}',
       '@media (max-width:620px){#cf26 .cf-mc{padding:24px 20px}}',
       '#cf26 .cf-mc h3{font-family:' + DISP + ';font-size:clamp(1.5rem,3.4vw,2rem);color:#fff;line-height:1.15;margin:0 0 8px}',
@@ -859,6 +938,9 @@
       '#cf26 .cf-ev-row .cf-ic{color:' + TEAL + ';font-size:22px;margin-top:2px}',
       '#cf26 .cf-ev-row b{display:block;color:#fff;font-weight:700}',
       '#cf26 .cf-ev-row span{color:' + MUTED + ';font-size:.95rem}',
+      '#cf26 .cf-ev-note{display:flex;gap:12px;align-items:flex-start;margin:6px 0 0;padding:14px 0 0;border-top:1px solid rgba(255,255,255,.07);color:' + MUTED + ';font-family:' + BODY + ';font-size:.95rem;line-height:1.5}',
+      '#cf26 .cf-ev-note .cf-ic{color:' + TEAL + ';font-size:22px;margin-top:1px}',
+      '#cf26 .cf-ev-note b{color:#fff;font-weight:700}',
       '#cf26 .cf-ev-btns{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px}',
       '#cf26 .cf-ev-btns .cf-btn{padding:11px 18px;font-size:.88rem}',
       '#cf26 .cf-map{position:relative;min-height:340px;background:' + DEEP + '}',
@@ -875,12 +957,12 @@
       '#cf26 .cf-kit-card b{display:block;color:#fff;font-family:' + DISP + ';font-size:1.1rem;margin-top:16px}',
       '#cf26 .cf-kit-card p{color:#C9D6DA;font-size:.9rem;line-height:1.45;margin:4px 0 0}',
       '#cf26 .cf-kit-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:auto;padding-top:16px}',
-      '#cf26 .cf-kit-btns .cf-btn{height:44px;padding:0 18px;font-size:.88rem;background:rgba(255,255,255,.04);border-width:1.5px}',
-      '#cf26 .cf-kit-btns .cf-ic{color:' + TEAL + '}',
+      '#cf26 .cf-kit-btns .cf-btn{height:44px;min-height:44px;padding:0 18px;font-size:.88rem;background:#f3eee6;color:' + DEEP + ';border:0;box-shadow:0 6px 18px rgba(0,0,0,.2)}',
+      '#cf26 .cf-kit-btns .cf-ic{color:' + DEEP + '}',
       '@media (max-width:760px){#cf26 .cf-kit-grid{grid-template-columns:minmax(0,1fr);gap:12px;max-width:440px;margin-left:auto;margin-right:auto}' +
         '#cf26 .cf-kit-card{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:16px;align-items:center;text-align:left;padding:14px}' +
         '#cf26 .cf-kit-th{height:auto;grid-row:1 / span 3;justify-content:flex-start}#cf26 .cf-kit-th img{max-height:none;width:72px;border-radius:6px}' +
-        '#cf26 .cf-kit{margin-top:22px;padding-top:28px}#cf26 .cf-kit-card b{margin-top:0}#cf26 .cf-kit-btns{justify-content:flex-start;padding-top:10px}#cf26 .cf-kit-btns .cf-btn{height:40px;padding:0 14px}}',
+        '#cf26 .cf-kit{margin-top:22px;padding-top:28px}#cf26 .cf-kit-card b{margin-top:0}#cf26 .cf-kit-btns{justify-content:flex-start;padding-top:10px}#cf26 .cf-kit-btns .cf-btn{height:44px;min-height:44px;padding:0 14px}}',
 
       /* sponsors */
       '#cf26 .cf-spons{background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(233,185,73,.12),rgba(10,31,42,0) 70%),' + DEEP + '}',
@@ -940,8 +1022,9 @@
       '#cf26 .cf-stat{display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:16px;background:' + PANEL + ';border-left:4px solid ' + TEAL + '}',
       '#cf26 .cf-stat:nth-child(2){border-left-color:' + GREEN + '}',
       '#cf26 .cf-stat:nth-child(3){border-left-color:' + GOLD + '}',
-      '#cf26 .cf-stat b{font-family:' + DISP + ';font-size:2.2rem;color:#fff;min-width:90px;line-height:1}',
-      '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem}',
+      '#cf26 .cf-stat b{font-family:' + DISP + ';font-size:2.2rem;color:#fff;min-width:90px;line-height:1;flex:none}',
+      '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem;line-height:1.3;min-width:0}',
+      '@media (max-width:620px){#cf26 .cf-stat{gap:10px;padding:16px}}',
 
       /* news */
       /* scrolling row: 4 cards visible on a computer, swipe on phones (next card peeks in) */
@@ -1028,24 +1111,24 @@
       '#cf26 .cf-rd-foot{margin-top:26px;padding-top:18px;border-top:1px solid #e7dfcf;display:flex;gap:12px;flex-wrap:wrap}',
 
       /* share band + footer */
-      '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(233,185,73,.55),rgba(233,185,73,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:70px 0}',
+      '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(233,185,73,.55),rgba(233,185,73,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:84px 0}',
       '#cf26 .cf-sharebtns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}',
       '#cf26 .cf-follow{margin-top:14px}',
       '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
-      '#cf26 .cf-fb{background:#1877f2;color:#fff}',
-      '#cf26 .cf-wa{background:#25d366;color:#0b1f27}',
-      '#cf26 .cf-sharebtns .cf-btn{height:50px;padding:0 22px}',
+      '#cf26 .cf-fb{background:' + TEAL + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(60,199,180,.25)}',
+      '#cf26 .cf-wa{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      '#cf26 .cf-sharebtns .cf-btn{height:50px;min-height:50px;padding:0 22px;justify-content:center}',
       /* even rows, never one button alone: 6 across, or 3 + 3 on medium screens */
       '@media (min-width:601px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:repeat(6,auto);justify-content:center}#cf26 .cf-sharebtns .cf-native{display:none}}',
       '@media (min-width:601px) and (max-width:1060px){#cf26 .cf-sharebtns{grid-template-columns:repeat(3,200px)}#cf26 .cf-sharebtns .cf-btn{width:100%}}',
-      /* one button style in the share set; each brand keeps its color on the icon */
-      '#cf26 .cf-sharebtns .cf-wa,#cf26 .cf-sharebtns .cf-fb,#cf26 .cf-sharebtns .cf-ig{background:rgba(255,255,255,.04);color:#fff;border:1.5px solid rgba(255,255,255,.35);box-shadow:none}',
-      '#cf26 .cf-sharebtns .cf-ghost{background:rgba(255,255,255,.04);border-width:1.5px}',
-      '#cf26 .cf-sharebtns .cf-ic{width:1.35em;height:1.35em}',
-      '#cf26 .cf-sharebtns .cf-wa .cf-ic{color:#25d366}#cf26 .cf-sharebtns .cf-fb .cf-ic{color:#4f9bff}#cf26 .cf-sharebtns .cf-ig .cf-ic{color:#f06fa3}#cf26 .cf-sharebtns .cf-ghost .cf-ic{color:' + TEAL + '}#cf26 .cf-sharebtns .cf-native .cf-ic{color:' + DEEP + '}',
+      /* matching Option 2 pills: teal Facebook, cream for the other share actions, gold native Share */
+      '#cf26 .cf-sharebtns .cf-fb{background:' + TEAL + ';color:' + DEEP + ';border:0;box-shadow:0 8px 24px rgba(60,199,180,.25)}',
+      '#cf26 .cf-sharebtns .cf-wa,#cf26 .cf-sharebtns .cf-ig,#cf26 .cf-sharebtns .cf-ghost{background:#f3eee6;color:' + DEEP + ';border:0;box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      '#cf26 .cf-sharebtns .cf-ic{width:1.15em;height:1.15em;color:' + DEEP + '}',
+      '#cf26 .cf-sharebtns .cf-wa .cf-ic,#cf26 .cf-sharebtns .cf-fb .cf-ic,#cf26 .cf-sharebtns .cf-ig .cf-ic,#cf26 .cf-sharebtns .cf-ghost .cf-ic,#cf26 .cf-sharebtns .cf-native .cf-ic{color:' + DEEP + '}',
       '#cf26 .cf-sharenote{margin-top:16px;font-size:.95rem;color:#C9D6DA;min-height:1.5em}',
-      '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 10px;font-size:.9rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
-      '#cf26 .cf-ig{background:linear-gradient(45deg,#f9a63a,#e1306c 50%,#833ab4);color:#fff}',
+      '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 12px;font-size:.88rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
+      '#cf26 .cf-ig{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
       '#cf26 .cf-pop{max-width:460px;margin:22px auto 0;background:#fff;color:' + DEEP + ';border-radius:16px;padding:20px;text-align:center;display:none}',
       '#cf26 .cf-pop.open{display:block}',
       '#cf26 .cf-pop p{font-size:.92rem;margin-bottom:14px}',
@@ -1064,7 +1147,7 @@
       '#cf26 .cf-toast.show{opacity:1;transform:translate(-50%,0)}',
       '#cf26 .cf-reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}',
       '#cf26 .cf-reveal.in{opacity:1;transform:none}',
-      '@media (max-width:620px){#cf26 .cf-sec{padding:60px 0}#cf26 .cf-ev-info{padding:26px 22px}}',
+      '@media (max-width:620px){#cf26 .cf-sec{padding:60px 0}#cf26 .cf-ev-info{padding:26px 22px}#cf26 .cf-share{padding:60px 0}}',
       '@media (prefers-reduced-motion:reduce){#cf26 .cf-marq-in{animation:none}#cf26 .cf-reveal{opacity:1;transform:none;transition:none}#cf26 .cf-skel{animation:none}}'
     ].join('\n');
   }
@@ -1142,7 +1225,7 @@
       root.id = 'cf26';
       add(root,
         buildNav(), buildHero(), buildCountdown(), buildMarquee(),
-        buildEvent(), buildDirections(), buildPartners(), buildAbout(),
+        buildEvent(), buildAmerica250(), buildActivities(), buildDirections(), buildPartners(), buildAbout(),
         buildNews(), buildGuide(), buildWho(), buildShare(), buildFooter());
 
       var host = document.querySelector('.cco_templatelates_content') || document.body;
@@ -1881,6 +1964,16 @@
   }
 
   /* ---------- hero ---------- */
+  function americaRibbon() {
+    var r = el('div', 'cf-250-ribbon');
+    var inner = el('div', 'cf-250-ribbon-inner');
+    add(inner,
+      el('span', 'cf-250-r1', 'Celebrating freedom and light'),
+      el('span', 'cf-250-r2', 'in America\u2019s 250th year.'));
+    r.appendChild(inner);
+    return r;
+  }
+
   function buildHero() {
     var h = el('header', 'cf-hero');
     h.id = 'cf-top';
@@ -1923,15 +2016,23 @@
       ann,
       el('h1', 'cf-t1', 'Chanukah'.toUpperCase()),
       el('div', 'cf-t2', 'FESTIVAL'),
-      by,
-      wel);
+      (function () {
+        var sub = el('div', 'cf-subhead');
+        add(sub,
+          el('span', 'cf-sub-1', 'Southern California\u2019s largest'),
+          el('span', 'cf-sub-2', 'Chanukah festival!'));
+        return sub;
+      })());
     band.appendChild(txt);
     band.appendChild(el('div', 'cf-bh', 'B\u201dH'));
 
     /* date, place and buttons under the video */
     var ctas = el('div', 'cf-ctas');
     ctas.appendChild(calendarButton('cf-btn cf-gold'));
-    var sh = el('button', 'cf-btn cf-ghost', 'Share');
+    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'Join the Facebook Event', true);
+    fbe.insertBefore(icon('fb'), fbe.firstChild);
+    ctas.appendChild(fbe);
+    var sh = el('button', 'cf-btn cf-cream', 'Share');
     sh.type = 'button';
     sh.insertBefore(icon('share'), sh.firstChild);
     sh.addEventListener('click', function () {
@@ -1949,18 +2050,17 @@
       toSection();
     });
     ctas.appendChild(sh);
-    var fbe = link('cf-btn cf-fbev', CFG.SHARE.facebookEvent, 'Join the Facebook Event', true);
-    fbe.insertBefore(icon('fb'), fbe.firstChild);
-    ctas.appendChild(fbe);
 
     var info = el('div', 'cf-wrap cf-info');
     add(info,
+      by,
+      wel,
       whenLine(),
       el('div', 'cf-venue', CFG.event.venue),
       el('div', 'cf-addr', CFG.event.street + ', ' + CFG.event.cityLine),
       ctas);
 
-    add(h, band, info);
+    add(h, band, americaRibbon(), info);
     return h;
   }
 
@@ -2089,7 +2189,7 @@
 
   /* ---------- sponsor marquee ---------- */
   function allSponsorNames() {
-    return CFG.PARTNERS.map(function (n) { return T(n.name); });
+    return CFG.PARTNERS.concat(CFG.TICKER_EXTRA || []).map(function (n) { return T(n.name); });
   }
   function buildMarquee() {
     var names = allSponsorNames();
@@ -2109,12 +2209,69 @@
   }
 
   /* ---------- event ---------- */
+
+  function buildAmerica250() {
+    if (!CFG.america250) return null;
+    var x = CFG.america250;
+    var s = section('america250', 'cf-250-sec');
+    var w = el('div', 'cf-wrap');
+    w.appendChild(heading(null, x.title, null, true));
+    w.appendChild(el('p', 'cf-250-copy cf-reveal', x.body));
+    var photos = x.photos || [];
+    if (photos.length) {
+      var pair = el('div', 'cf-250-photos cf-reveal');
+      photos.forEach(function (ph, i) {
+        var fig = el('figure', 'cf-250-photo' + (ph.featured ? ' cf-250-photo-ours' : ''));
+        var im = document.createElement('img');
+        im.src = ph.src;
+        im.alt = ph.alt || '';
+        im.loading = 'lazy';
+        var cap = el('figcaption', null, ph.caption);
+        fig.appendChild(im);
+        fig.appendChild(cap);
+        if (ph.credit) {
+          fig.appendChild(el('div', 'cf-250-credit', ph.credit));
+        }
+        pair.appendChild(fig);
+      });
+      w.appendChild(pair);
+    }
+    s.appendChild(w);
+    return s;
+  }
+
+  function buildActivities() {
+    if (!CFG.america250) return null;
+    var s = section('activities');
+    var w = el('div', 'cf-wrap');
+    var cards = el('div', 'cf-hl');
+    CFG.highlights.forEach(function (x, i) {
+      var c = el('div', 'cf-hl-card cf-reveal');
+      c.style.transitionDelay = (i * 0.08) + 's';
+      var ph = el('div', 'cf-hl-ph');
+      var im = document.createElement('img');
+      im.src = asset(x.img); im.alt = T(x.title); im.loading = 'lazy';
+      ph.appendChild(im);
+      var bd = el('div', 'cf-hl-bd');
+      add(bd, el('h3', null, x.title), el('p', null, x.text));
+      add(c, ph, bd);
+      cards.appendChild(c);
+    });
+    w.appendChild(cards);
+    w.appendChild(buildNewRow());
+    s.appendChild(w);
+    return s;
+  }
+
   function buildEvent() {
     var s = section('event');
     var w = el('div', 'cf-wrap');
     w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
       'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
 
+    if (CFG.america250) {
+      /* highlights + contest render in buildActivities, after event details and the 250th section */
+    } else {
     var hl = el('div', 'cf-hl');
     CFG.highlights.forEach(function (x, i) {
       var c = el('div', 'cf-hl-card cf-reveal');
@@ -2129,15 +2286,9 @@
       hl.appendChild(c);
     });
     w.appendChild(hl);
-    if (CFG.accessNote) {
-      var asl = el('div', 'cf-center');
-      var p = el('div', 'cf-asl', CFG.accessNote);
-      p.insertBefore(icon('asl'), p.firstChild);
-      asl.appendChild(p);
-      w.appendChild(asl);
-    }
 
-    w.appendChild(buildContest());
+    w.appendChild(buildNewRow());
+    } /* end original highlights+contest when no 250 section */
 
     var ev = el('div', 'cf-ev cf-ev2 cf-reveal');
     var info = el('div', 'cf-ev-info');
@@ -2153,6 +2304,13 @@
       sl.appendChild(li);
     });
     add(info, sk, sl);
+    if (CFG.aslNote) {
+      var an = el('p', 'cf-ev-note');
+      var at = el('span');
+      add(at, el('b', null, CFG.aslNote.lead), document.createTextNode(' ' + CFG.aslNote.text));
+      add(an, icon('asl'), at);
+      info.appendChild(an);
+    }
     var btns = el('div', 'cf-ev-btns');
     var dp = link('cf-btn cf-teal', '#cf-directions', 'Directions & Parking');
     dp.insertBefore(icon('pin'), dp.firstChild);
@@ -2221,6 +2379,34 @@
     xp.appendChild(inner);
     wrap.appendChild(xp);
     return wrap;
+  }
+
+  /* ---------- New this year: Menorah Contest + Train Rides, side by side on desktop ---------- */
+  function buildNewRow() {
+    var row = el('div', 'cf-newrow');
+    row.appendChild(buildContest());
+    row.appendChild(buildTrain());
+    return row;
+  }
+  function buildTrain() {
+    var Tr = CFG.TRAIN;
+    var c = el('div', 'cf-mc cf-reveal');
+    c.id = 'cf-train';
+    var facts = el('ul', 'cf-mc-facts');
+    Tr.facts.forEach(function (f) { facts.appendChild(el('li', null, f)); });
+    var gelt = Tr.gelt;
+    var gFacts = el('ul', 'cf-mc-facts');
+    gelt.facts.forEach(function (f) { gFacts.appendChild(el('li', null, f)); });
+    var btns = el('div', 'cf-mc-btns');
+    var mp = link('cf-btn cf-ghost', '#cf-map', 'See the Festival Map');
+    mp.insertBefore(icon('pin'), mp.firstChild);
+    mp.addEventListener('click', function (e) { e.preventDefault(); goTo('map'); });
+    btns.appendChild(mp);
+    add(c, el('div', 'cf-kicker', 'New this year'), el('h3', null, Tr.title),
+      el('p', null, Tr.intro), facts,
+      el('hr', 'cf-mc-div'), el('h4', 'cf-mc-sub', gelt.title), el('p', null, gelt.intro), gFacts,
+      el('div', 'cf-mc-grow'), btns);
+    return c;
   }
 
   /* ---------- Menorah Contest card ---------- */

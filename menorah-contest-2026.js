@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'mc26-2026-11-06b';
+  var VERSION = 'mc26-2026-11-11a';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -157,7 +157,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: 'Chanukah Festival + Menorah Contest',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners announced 7:45–8 PM. ' + CFG.festivalUrl
+      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners Announced 7:45–8 PM. ' + CFG.festivalUrl
     });
   }
 
@@ -340,7 +340,7 @@
   function buildFormHero() {
     var h = el('div'); h.id = 'mc26-hero';
     var chips = el('ul', 'mh-chips');
-    ['All ages', 'Free to enter', 'Register by Dec 4'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
+    ['All ages', 'Free to enter', 'Register By Dec 4'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
     var more = link('mh-a', CFG.festivalUrl + '#contest', 'Contest rules, prizes and the festival map', true);
     add(h,
       el('div', 'mh-kick', '22nd Annual Chanukah Festival'),
