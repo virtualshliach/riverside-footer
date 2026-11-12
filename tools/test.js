@@ -587,7 +587,8 @@ var SITES = {
     ok(vo.w.getComputedStyle(vo.d.getElementById('co_content_container')).display === 'none' && vo.w.getComputedStyle(vo.d.getElementById('header')).display === 'none', 'the "Page Not Found" page underneath is hidden');
     var vlab = [].map.call(vo.d.querySelectorAll('#vf26 .vf-lab, #vf26 legend'), function (x) { return x.textContent; }).join('|');
     ok(vlab === 'First name *|Last name *|Email *|Phone *|How would you like to help? *|Notes', 'fields: name, email, phone, roles, notes (' + vlab + ')');
-    ok(vo.d.querySelectorAll('#vf26 .vf-roles input[type=checkbox]').length === 7, 'seven role checkboxes');
+    ok(vo.d.querySelectorAll('#vf26 .vf-roles input[type=checkbox]').length === 8, 'eight role checkboxes');
+    ok(vo.d.querySelectorAll('#vf26 .vf-roles input')[0].value === 'Early setup (12–4 PM)' && vo.d.querySelectorAll('#vf26 .vf-roles input')[1].value === 'Setup (from about 4 PM)', 'Early setup (12–4 PM) sits directly above Setup (from about 4 PM)');
     ok(!/\u2014/.test(vo.d.getElementById('vf26').textContent) && /Chanukah/.test(vo.d.getElementById('vf26').textContent) && !/Hanukkah/i.test(vo.d.getElementById('vf26').textContent), 'no em dashes; spelled Chanukah');
     var vw = vo.w, vd = vo.d, posts = [], replies = [];
     vw.fetch = function (u, o) { posts.push(JSON.parse(o.body)); var r = replies.shift() || { ok: true }; return Promise.resolve({ json: function () { return Promise.resolve(r); } }); };
@@ -600,14 +601,14 @@ var SITES = {
     vclick(vd.getElementById('vf26-send'));
     await wait(50);
     ok(posts.length === 0 && /at least one/.test(vd.querySelector('#vf26 .vf-err').textContent), 'no role chosen: not sent, asks for one');
-    var vt = vd.querySelectorAll('#vf26 .vf-roles input'); vt[0].checked = true; vt[3].checked = true;
+    var vt = vd.querySelectorAll('#vf26 .vf-roles input'); vt[0].checked = true; vt[1].checked = true; vt[4].checked = true;
     vtype('vf26-notes', 'I can come at 4.');
     replies = [{ ok: false, error: 'Unknown form.' }, { ok: true }];
     vclick(vd.getElementById('vf26-send'));
     await wait(1000);
-    ok(posts.length === 2 && posts[0].action === 'form' && posts[0].kind === 'volunteer' && posts[0].first === 'Maya' && posts[0].roles.join('|') === 'Setup (from about 4 PM)|Food and latkes' && posts[0].notes === 'I can come at 4.' && posts[0].website === '' && /\/volunteer$/.test(posts[0].page),
+    ok(posts.length === 2 && posts[0].action === 'form' && posts[0].kind === 'volunteer' && posts[0].first === 'Maya' && posts[0].roles.join('|') === 'Early setup (12–4 PM)|Setup (from about 4 PM)|Food and latkes' && posts[0].notes === 'I can come at 4.' && posts[0].website === '' && /\/volunteer$/.test(posts[0].page),
       'sent to Apps Script as a volunteer entry (name, email, phone, roles, notes, page)');
-    ok(posts[1] && posts[1].kind === 'mailing' && posts[1].interests[0] === 'Volunteering' && posts[1].interests.length === 3 && /Notes: I can come at 4\./.test(posts[1].more) && posts[1].first === 'Maya' && posts[1].phone === '951-555-0100',
+    ok(posts[1] && posts[1].kind === 'mailing' && posts[1].interests[0] === 'Volunteering' && posts[1].interests.length === 4 && posts[1].interests[1] === 'Volunteer: Early setup (12–4 PM)' && posts[1].interests[2] === 'Volunteer: Setup (from about 4 PM)' && /Early setup \(12–4 PM\), Setup/.test(posts[1].more) && /Notes: I can come at 4\./.test(posts[1].more) && posts[1].first === 'Maya' && posts[1].phone === '951-555-0100',
       'Apps Script without the volunteer kind ("Unknown form."): saved as a Mailing List entry with Volunteering and the roles');
     ok(/Thank you, Maya!/.test(vd.getElementById('vf26').textContent) && !vd.getElementById('vf26-send'), 'thank-you shows after sending');
     var vq = await load('riverside', 'https://www.chanukahfestival.org/?volunteer', { wait: 700 });

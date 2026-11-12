@@ -17,7 +17,7 @@
   'use strict';
   if (window.VF26 && window.VF26.version) return;
 
-  var VERSION = 'vf26-2026-11-12b';
+  var VERSION = 'vf26-2026-11-12c';
   var PV = window.VF26_PREVIEW || null;
   var DEMO = !!(PV && PV.demo);
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
@@ -41,7 +41,7 @@
     TITLE: 'Volunteer With Us',
     WHEN: ['Monday, Dec 7, 2026 · 6–8 PM', 'Riverside Historic Courthouse'],
     INTRO: 'Help us light up downtown Riverside! Pick what you’d like to do, and we’ll be in touch with the details.',
-    ROLES: ['Setup (from about 4 PM)', 'Gift tables', 'Kids’ activities', 'Food and latkes', 'Greeting and info', 'Cleanup (after 8 PM)', 'Wherever I’m needed'],
+    ROLES: ['Early setup (12–4 PM)', 'Setup (from about 4 PM)', 'Gift tables', 'Kids’ activities', 'Food and latkes', 'Greeting and info', 'Cleanup (after 8 PM)', 'Wherever I’m needed'],
     BUTTON: 'Sign me up',
     PRIVACY: 'We use this only to plan festival volunteers. We never share it.'
   };
