@@ -385,7 +385,16 @@ var SITES = {
     var dr = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm', { wait: 600 });
     ok(dr.d.getElementById('cf26') && dr.logs.some(function (l) { return /aid 7553387 -> chanukah-2026-draft\.js/.test(l); }), 'draft page 7553387 loads the draft file');
     var dkids = [].slice.call(dr.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
-    ok(dkids[dkids.length - 2] === 'cf-share' && dkids[dkids.length - 1] === 'cf-foot', 'share section (with the picture kit) sits right before the footer (' + dkids.slice(-3).join(' > ') + ')');
+    /* section order approved Nov 11 (11o): what to expect, plan your evening, directions, story, press, partners, share, guide, who */
+    var dorder = [].slice.call(dr.d.getElementById('cf26').children).map(function (e) { return e.id || e.className.split(' ')[0]; }).join(' > ');
+    ok(dorder === 'cf-nav > cf-top > cf-count > cf-marq > cf-activities > cf-event > cf-directions > cf-america250 > cf-about > cf-news > cf-partners > cf-share > cf-guide > cf-who > cf-foot',
+      'sections in the approved order (' + dorder + ')');
+    ok(dkids[dkids.length - 1] === 'cf-foot', 'footer is last (' + dkids.slice(-2).join(' > ') + ')');
+    var actH = dr.d.querySelector('#cf-activities .cf-h2'), evH = dr.d.querySelector('#cf-event .cf-h2');
+    ok(actH && /An evening of light/.test(actH.textContent) && /What to expect/i.test(dr.d.querySelector('#cf-activities .cf-kicker').textContent),
+      'What to expect heading sits on the activity cards (' + (actH && actH.textContent) + ')');
+    ok(evH && evH.textContent === 'Schedule & Festival Map' && /Plan your evening/i.test(dr.d.querySelector('#cf-event .cf-kicker').textContent),
+      'details card is headed Plan your evening / Schedule & Festival Map (' + (evH && evH.textContent) + ')');
     var kit = dr.d.querySelectorAll('#cf-share .cf-kit-card');
     ok(kit.length === 3, 'share kit has 3 pictures: flyer, story, square (' + kit.length + ')');
     ok([].every.call(dr.d.querySelectorAll('#cf-share .cf-kit-card img'), function (i) { return fs.existsSync(path.join(ROOT, i.getAttribute('src').split('/').pop())); }), 'every share kit thumbnail exists in the repo');

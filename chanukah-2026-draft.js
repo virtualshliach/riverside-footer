@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11n-draft';
+  var VERSION = 'cf26-2026-11-11o-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -1228,9 +1228,11 @@
       root = document.createElement('div');
       root.id = 'cf26';
       add(root,
+        /* section order (approved Nov 11): what, when, where first; then what to do; then plan your
+           visit; then story and press; then partners, sharing and the guide */
         buildNav(), buildHero(), buildCountdown(), buildMarquee(),
-        buildEvent(), buildAmerica250(), buildActivities(), buildDirections(), buildPartners(), buildAbout(),
-        buildNews(), buildGuide(), buildWho(), buildShare(), buildFooter());
+        buildActivities(), buildEvent(), buildDirections(), buildAmerica250(), buildAbout(),
+        buildNews(), buildPartners(), buildShare(), buildGuide(), buildWho(), buildFooter());
 
       var host = document.querySelector('.cco_templatelates_content') || document.body;
       if (host === document.body) document.body.insertBefore(root, document.body.firstChild);
@@ -2248,6 +2250,8 @@
     if (!CFG.america250) return null;
     var s = section('activities');
     var w = el('div', 'cf-wrap');
+    w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
+      'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
     var cards = el('div', 'cf-hl');
     CFG.highlights.forEach(function (x, i) {
       var c = el('div', 'cf-hl-card cf-reveal');
@@ -2270,7 +2274,8 @@
   function buildEvent() {
     var s = section('event');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
+    if (CFG.america250) w.appendChild(heading('Plan your evening', 'Schedule & Festival Map', null, true));
+    else w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
       'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
 
     if (CFG.america250) {
