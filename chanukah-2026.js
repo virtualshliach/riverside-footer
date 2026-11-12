@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11L';
+  var VERSION = 'cf26-2026-11-11m';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -153,7 +153,7 @@
     ],
     stats: [
       { big: '22nd', small: 'year of light in Riverside' },
-      { big: '10 Ft', small: 'Grand Menorah' },
+      { big: '10 Ft', small: 'Handcrafted Grand Menorah' },
       { big: '3,000', small: 'people join us!' }
     ],
 
@@ -1018,13 +1018,13 @@
       '#cf26 .cf-about{display:grid;grid-template-columns:1.25fr 1fr;gap:56px;align-items:center}',
       '@media (max-width:860px){#cf26 .cf-about{grid-template-columns:1fr;gap:30px}}',
       '#cf26 .cf-about p{color:' + MUTED + ';margin-top:14px}',
-      '#cf26 .cf-stats{display:grid;gap:14px}',
+      '#cf26 .cf-stats{display:grid;gap:14px;grid-auto-rows:1fr}',
       '#cf26 .cf-stat{display:flex;align-items:center;gap:18px;padding:18px 22px;border-radius:16px;background:' + PANEL + ';border-left:4px solid ' + TEAL + '}',
       '#cf26 .cf-stat:nth-child(2){border-left-color:' + GREEN + '}',
       '#cf26 .cf-stat:nth-child(3){border-left-color:' + GOLD + '}',
       '#cf26 .cf-stat b{font-family:' + DISP + ';font-size:2.2rem;color:#fff;min-width:90px;line-height:1;flex:none}',
-      '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem;line-height:1.3;min-width:0}',
-      '@media (max-width:620px){#cf26 .cf-stat{gap:10px;padding:16px}}',
+      '#cf26 .cf-stat span{color:' + MUTED + ';font-size:.95rem;line-height:1.3;min-width:0;text-wrap:balance}',
+      '@media (max-width:620px){#cf26 .cf-stat{gap:10px;padding:16px}#cf26 .cf-stat span{text-align:center}}',
 
       /* news */
       /* scrolling row: 4 cards visible on a computer, swipe on phones (next card peeks in) */
