@@ -434,7 +434,7 @@ var SITES = {
     ok(/html\.cf26-home #header,html\.cf26-home #content,html\.cf26-home #footer\{display:none/.test(ns.d.getElementById('cf26-style').textContent), 'new site template header, content and footer are hidden');
     var nd = ns.d.querySelector('.cf-nav .cf-don'); var nopened = null; ns.w.open = function (u) { nopened = u; };
     if (nd) nd.dispatchEvent(new ns.w.MouseEvent('click', { bubbles: true }));
-    ok(nopened === null && ns.d.querySelector('.cf-fp iframe') && /^https:\/\/www\.jewishriverside\.com\/templates\/articlecco_cdo\/aid\/4194665\//.test(ns.d.querySelector('.cf-fp iframe').getAttribute('src')), 'Donate on the new site opens the jewishriverside.com donate form in the pop-up');
+    ok(nopened === null && ns.d.querySelector('.cf-fp iframe') && /^https:\/\/www\.chanukahfestival\.org\/templates\/articlecco_cdo\/aid\/4194665\//.test(ns.d.querySelector('.cf-fp iframe').getAttribute('src')), 'Donate on the new site opens the jewishriverside.com donate form in the pop-up');
     var nsub = await load('riverside', 'https://12899.centers.clhosting.org/36226', { shell: NS, wait: 400 });
     ok(!nsub.d.getElementById('cf26'), 'other pages on the new site are left alone');
 
@@ -499,7 +499,7 @@ var SITES = {
     function fpClick(el) { el.dispatchEvent(new fp.w.MouseEvent('click', { bubbles: true, cancelable: true })); }
     fpClick(fp.d.querySelector('.cf-nav .cf-don'));
     var fr = fp.d.querySelector('.cf-fp iframe');
-    ok(fr && fr.getAttribute('src') === 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm#cf-embed', 'no form on the page: Donate opens the donate form in a pop-up (' + (fr && fr.getAttribute('src')) + ')');
+    ok(fr && fr.getAttribute('src') === 'https://www.chanukahfestival.org/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm#cf-embed', 'no form on the page: Donate opens the donate form in a pop-up (' + (fr && fr.getAttribute('src')) + ')');
     ok(fp.d.querySelector('.cf-fp .cf-dm-hd b').textContent === 'Support the Chanukah Festival', 'donate pop-up has the festival heading');
     fp.w.dispatchEvent(new fp.w.MessageEvent('message', { origin: 'https://evil.example', source: fr.contentWindow, data: { cf26: 'embed', type: 'height', h: 1234 } }));
     ok(!/1234/.test(fr.style.height || ''), 'messages from other websites are ignored');
@@ -552,6 +552,26 @@ var SITES = {
     ft.window.eval(esrc); await wait(300);
     var ftHidden = function (el) { return ft.window.getComputedStyle(el).display === 'none'; };
     ok(!ftHidden(ft.window.document.getElementById('BodyContainer')) && !ftHidden(ft.window.document.getElementById('formContainer')) && ftHidden(ft.window.document.getElementById('header')), 'full-template form page (contest, mailing list): form shown, site header hidden');
+
+    console.log('riverside: short links chanukahfestival.org/guess, /menorah, /donate');
+    async function whereTo(url, file) {
+      var vc = new jsdom.VirtualConsole(), went = null;
+      vc.on('jsdomError', function (e) { if (/navigation/i.test(e.message)) went = 'nav'; });
+      var dom = new JSDOM('<!doctype html><html><head></head><body>Page Not Found</body></html>', { url: url, runScripts: 'outside-only', virtualConsole: vc });
+      var asked = null;
+      try { dom.window.eval('window.location.replace = function (u) { window.__to = u; };'); } catch (e) {}
+      var src = fs.readFileSync(path.join(ROOT, file), 'utf8').replace(/window\.location\.replace\(/g, '(window.__go || function (u) { window.__to = u; })(');
+      dom.window.eval(src);
+      return dom.window.__to || null;
+    }
+    ok(await whereTo('https://www.chanukahfestival.org/Guess', 'header.js') === 'https://www.chanukahfestival.org/?guess', 'header: /Guess goes to the Dreidel form');
+    ok(await whereTo('https://www.chanukahfestival.org/guest', 'header.js') === 'https://www.chanukahfestival.org/?guess', 'header: /guest also goes to the Dreidel form');
+    ok(await whereTo('https://chanukahfestival.org/menorah/', 'header.js') === 'https://chanukahfestival.org/?menorah', 'header: /menorah goes to the Menorah Contest form');
+    ok(await whereTo('https://www.chanukahfestival.org/donate', 'footer.js') === 'https://www.chanukahfestival.org/?donate', 'footer (backup): /donate goes to Donate');
+    ok(await whereTo('https://www.jewishriverside.com/donate', 'header.js') === null, 'jewishriverside.com/donate is left alone');
+    ok(await whereTo('https://www.chanukahfestival.org/about', 'header.js') === null, 'other addresses on the festival site are left alone');
+    var DSRC = fs.readFileSync(path.join(ROOT, 'chanukah-2026-draft.js'), 'utf8');
+    ok(/\[\?&\]menorah[^\n]*openFormPop\('contest'\)/.test(DSRC) && /\[\?&\]donate[^\n]*openDonate/.test(DSRC), 'festival page opens Menorah Contest for ?menorah and Donate for ?donate');
 
     console.log('riverside: pages that must load nothing');
     var quiet = [

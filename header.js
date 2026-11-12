@@ -14,6 +14,17 @@
   };
   var HOSTS = { 'chanukahfestival.org': '4949424', '12899.centers.clhosting.org': '4949424' };
 
+  /* Short links on the festival's own site: chanukahfestival.org/guess, /menorah, /donate.
+     ChabadOne has no such pages, so they reach its "Page Not Found" page with the address kept;
+     send them to the festival page, which opens the matching form (?guess, ?menorah, ?donate). */
+  var SHORT = { guess: 'guess', guest: 'guess', menorah: 'menorah', donate: 'donate' };
+  var sm = /^\/([a-z]+)\/?$/i.exec(window.location.pathname);
+  var sh = (window.location.hostname || '').toLowerCase().replace(/^www\./, '');
+  if (sm && HOSTS[sh] && Object.prototype.hasOwnProperty.call(SHORT, sm[1].toLowerCase())) {
+    window.location.replace(window.location.protocol + '//' + window.location.host + '/?' + SHORT[sm[1].toLowerCase()]);
+    return;
+  }
+
   var l = window.location;
   var isResponse = /ArticleCcoResponse/i.test(l.href);
   var m = /\/aid\/(\d+)/i.exec(l.pathname) || /\baid=(\d+)/i.exec(l.search);

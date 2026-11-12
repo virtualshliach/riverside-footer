@@ -102,8 +102,13 @@ aligned, on this site or in a ChabadOne form:
     our own forms (`festival-forms.js`), all logging to the Google Sheet. If those files can't
     load, the old pop-ups come back: an iframe of the real jewishriverside.com form (Donate
     4194665, Contest 7606745, Mailing list 5333083) that `embed.js` shows festival-styled.
-  - `?guess` on the festival page (chanukahfestival.org/?guess; Cloudflare forwards the domain
-    and keeps the query, but drops any path like /guess) opens the Dreidel Contest form.
+  - Short links: chanukahfestival.org/guess (also /guest), /menorah and /donate. chanukahfestival.org
+    is its own ChabadOne site now, so those paths reach its "Page Not Found" page with the address
+    kept; `header.js` (and `footer.js` as a backup) send them to `/?guess`, `/?menorah`, `/?donate`,
+    and the festival page opens the Dreidel form, the Menorah Contest form or Donate.
+  - The Guess page (5738793), the old Donate page (4194665) and the festival page itself (4949424,
+    now the homepage) moved to the chanukahfestival.org site. JewishRiverside.com/Guess no longer
+    exists there; it needs a ChabadOne redirect on jewishriverside.com.
   - The Guess page (5738793) shows our own Dreidel form; the ChabadOne form stays on the page,
     parked off-screen, and comes back if `festival-forms.js` can't load.
   - The ChabadOne Menorah Contest and Mailing List pages themselves are unchanged.

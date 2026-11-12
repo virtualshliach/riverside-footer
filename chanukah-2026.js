@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11q';
+  var VERSION = 'cf26-2026-11-12a';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -427,13 +427,13 @@
        false = always use the ChabadOne forms. */
     OWN_FORMS: true,
     /* where ?guess goes if our forms can't load */
-    GUESS_URL: 'https://www.jewishriverside.com/Guess',
+    GUESS_URL: 'https://www.chanukahfestival.org/templates/articlecco_cdo/aid/5738793/jewish/Dreidel-Guessing-Contest.htm',
     /* jewishriverside.com forms that open in the festival's own pop-up (an iframe showing just the
        form, styled by embed.js). Everything is submitted and recorded on jewishriverside.com.
        match: any link on this page to that form opens the pop-up instead. */
     FORM_POPS: {
       donate: { aid: '4194665', title: 'Support the Chanukah Festival', sub: 'Your gift keeps the festival free for the whole community.',
-        url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm' },
+        url: 'https://www.chanukahfestival.org/templates/articlecco_cdo/aid/4194665/jewish/Donate.htm' },
       contest: { aid: '7606745', title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.',
         url: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7606745/jewish/Menorah-Contest-2026.htm' },
       mailing: { aid: '5333083', title: 'Join Our Mailing List', sub: 'Hear about the festival and everything else at Chabad.',
@@ -1307,10 +1307,10 @@
       /* back from Cash App or a bank window: stripe-donate.js shows the result */
       if (CFG.STRIPE_DONATE) loadStripeDonate();   /* small file; also shows the result when back from Cash App */
       if (CFG.OWN_FORMS) loadOwnForms();
-      /* chanukahfestival.org/?guess (booth sign): open the Dreidel Guessing Contest form.
-         Cloudflare forwards the domain here and keeps the ?guess part. */
+      /* chanukahfestival.org/guess, /menorah and /donate arrive here as ?guess, ?menorah, ?donate */
       if (/[?&]guess(?:[=&]|$)/i.test(location.search)) setTimeout(openGuess, 300);
-      if (!/[?&]payment_intent=/.test(location.search) && /^#donate$/i.test(location.hash)) setTimeout(openDonate, 300);
+      if (/[?&]menorah(?:[=&]|$)/i.test(location.search)) setTimeout(function () { openFormPop('contest'); }, 300);
+      if (!/[?&]payment_intent=/.test(location.search) && (/^#donate$/i.test(location.hash) || /[?&]donate(?:[=&]|$)/i.test(location.search))) setTimeout(openDonate, 300);
       else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
         var hid = location.hash.slice(1);
         setTimeout(function () { goTo(hid); }, 400);
@@ -1473,7 +1473,7 @@
 
   /* ---------- form pop-up (jewishriverside.com form in a frame) ---------- */
   var FP = null;
-  var FORM_ORIGIN = 'https://www.jewishriverside.com';
+  var FORM_ORIGIN = /^https:\/\/www\.(jewishriverside\.com|chanukahfestival\.org)$/;
   function formKindFor(href) {
     if (!href) return null;
     var keys = Object.keys(CFG.FORM_POPS);
@@ -1552,7 +1552,7 @@
     x.focus();
     var ready = false;
     function onMsg(e) {
-      if (e.origin !== FORM_ORIGIN || e.source !== fr.contentWindow) return;
+      if (!FORM_ORIGIN.test(e.origin) || e.source !== fr.contentWindow) return;
       var d = e.data;
       if (!d || d.cf26 !== 'embed') return;
       if (d.type === 'ready' || d.type === 'height') {
