@@ -5,6 +5,7 @@
      menorah  Menorah Contest (ChabadOne aid 7606745)  - confirmation email
      dreidel  Dreidel Guessing Contest (aid 5738793)   - confirmation email
      mailing  Join Our Mailing List (aid 5333083)      - no email
+     volunteer  Volunteer sign-up (from volunteer-2026.js, our own) - chanukahfestival.org/volunteer, no email
    The ChabadOne pages themselves stay as they are, except the Guess page (dreidel-2026.js),
    which shows this form in place of the ChabadOne one.
 
@@ -16,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-12b';
+  var VERSION = 'festival-forms 2026-11-12c';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -74,6 +75,13 @@
       heard: ['Friend or family', 'Chanukah Festival', 'Another Chabad event', 'Facebook or Instagram', 'Google search',
         'Chabad at UCR', 'Newspaper or news story', 'Other'],
       privacy: 'All information submitted to Chabad Jewish Community Center of Riverside is strictly confidential. We do not share it with anyone or any organization under any circumstances.'
+    },
+    /* Same questions as volunteer-2026.js (the client's volunteer page, Nov 12 2026) */
+    volunteer: {
+      title: 'Volunteer With Us', sub: 'Chanukah Festival · Monday, Dec 7, 2026', button: 'Sign me up',
+      intro: 'Help us light up downtown Riverside! Pick what you’d like to do, and we’ll be in touch with the details.',
+      roles: ['Early setup (12–4 PM)', 'Setup (from about 4 PM)', 'Gift tables', 'Kids’ activities', 'Food and latkes', 'Greeting and info', 'Cleanup (after 8 PM)', 'Wherever I’m needed'],
+      privacy: 'We use this only to plan festival volunteers. We never share it.'
     }
   };
 
@@ -348,6 +356,30 @@
     };
   }
 
+  function buildVolunteer(body) {
+    var D = FORMS.volunteer;
+    var g = el('div', 'cff-grid');
+    var f = {
+      first: field('First name', 'text', { req: true, half: true, ac: 'given-name', max: 60 }),
+      last: field('Last name', 'text', { req: true, half: true, ac: 'family-name', max: 60 }),
+      email: field('Email', 'email', { req: true, half: true, ac: 'email', max: 120 }),
+      phone: field('Phone', 'tel', { req: true, half: true, ac: 'tel', im: 'tel', max: 30 })
+    };
+    var roles = group('How would you like to help?', D.roles, { req: true, cols: true });
+    var notes = field('Notes', 'textarea', { max: 500, placeholder: 'Anything we should know? Arrival time, a friend you’re coming with… (optional)' });
+    add(g, f.first.w, f.last.w, f.email.w, f.phone.w, roles.w, notes.w);
+    add(body, el('p', 'cff-p', D.intro), g, el('p', 'cff-small', D.privacy));
+    return {
+      check: function () {
+        return firstMissing([f.first, f.last, f.email, f.phone]) || emailBad(f.email) ||
+          (roles.values().length ? '' : 'Please choose at least one way you’d like to help.');
+      },
+      data: function () {
+        return { first: f.first.v(), last: f.last.v(), email: f.email.v(), phone: f.phone.v(), roles: roles.values(), notes: notes.v() };
+      }
+    };
+  }
+
   function firstMissing(list) {
     for (var i = 0; i < list.length; i++) {
       if (list[i].req && !list[i].v()) { try { list[i].i.focus(); } catch (e) {} return 'Please fill in: ' + list[i].label.replace(/\?$/, '') + '.'; }
@@ -362,11 +394,28 @@
   /* ---------- sending ---------- */
   function send(body) {
     if (DEMO) {
-      return new Promise(function (res) { setTimeout(function () { res({ ok: true, emailed: body.kind !== 'mailing' }); }, 600); });
+      return new Promise(function (res) { setTimeout(function () { res({ ok: true, emailed: body.kind === 'menorah' || body.kind === 'dreidel' }); }, 600); });
     }
+    return post(body).then(function (r) {
+      /* If Apps Script doesn't know the volunteer kind, save it as a Mailing List entry (same as volunteer-2026.js) */
+      if (body.kind === 'volunteer' && r && !r.ok && /unknown form/i.test(r.error || '')) {
+        return post(volunteerAsMailing(body)).then(function (r2) { if (r2) r2.via = 'mailing'; return r2; });
+      }
+      return r;
+    });
+  }
+  function post(body) {
     /* text/plain keeps this a "simple" request (no CORS preflight), which Apps Script needs */
     return fetch(CFG.ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(body), redirect: 'follow' })
       .then(function (r) { return r.json(); });
+  }
+  function volunteerAsMailing(req) {
+    var more = ('Festival volunteer: ' + req.roles.join(', ') + (req.notes ? ' | Notes: ' + req.notes : '')).slice(0, 300);
+    return { action: 'form', kind: 'mailing', website: req.website, page: req.page,
+      first: req.first, last: req.last, email: req.email, phone: req.phone,
+      challah: false, addr1: '', addr2: '', city: '', state: '', zip: '', texts: false, birthday: '',
+      interests: ['Volunteering'].concat(req.roles.map(function (r) { return 'Volunteer: ' + r; })),
+      heard: 'Other', more: more, source: 'volunteer-2026' };
   }
 
   function thanksView(kind, d, res) {
@@ -381,6 +430,10 @@
       title = 'Thanks for your guess, ' + d.first + '!';
       lines = ['Your guess: ' + d.guess + '. We’ll announce the winner after the festival on our social media and by email.', 'Follow us so you don’t miss it:',
         res.emailed ? 'A confirmation is on its way to ' + d.email + '.' : 'Good luck!'];
+    } else if (kind === 'volunteer') {
+      title = 'Thank you, ' + d.first + '!';
+      lines = ['You’re on our volunteer team for the Chanukah Festival. We’ll be in touch before Dec 7 with when to arrive and where to meet.',
+        'Questions before then? Call ' + CFG.PHONE + '.'];
     } else {
       title = 'You’re on the list, ' + d.first + '!';
       lines = ['Thanks for joining. Watch your inbox for our newsletter and invitations.'];
@@ -417,7 +470,7 @@
     var body = el('div', 'cff-body');
     var err = el('div', 'cff-err'); err.setAttribute('role', 'alert');
     body.appendChild(err);
-    var api = kind === 'menorah' ? buildMenorah(body) : kind === 'dreidel' ? buildDreidel(body) : buildMailing(body);
+    var api = kind === 'menorah' ? buildMenorah(body) : kind === 'dreidel' ? buildDreidel(body) : kind === 'volunteer' ? buildVolunteer(body) : buildMailing(body);
     var trap = el('label', 'cff-trap');
     var trapIn = document.createElement('input'); trapIn.type = 'text'; trapIn.tabIndex = -1; trapIn.setAttribute('autocomplete', 'off');
     add(trap, el('span', null, 'Leave this empty'), trapIn);

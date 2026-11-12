@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-12d';
+  var V = '2026-11-12e';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -57,7 +57,7 @@
   /* Short links on the festival's own site: chanukahfestival.org/guess, /dreidel, /menorah, /menorah-contest, /donate.
      ChabadOne has no such pages, so they reach its "Page Not Found" page with the address kept;
      send them to the festival page, which opens the matching form (?guess, ?menorah, ?donate). */
-  var SHORT = { guess: 'guess', guest: 'guess', dreidel: 'guess', menorah: 'menorah', 'menorah-contest': 'menorah', donate: 'donate' };
+  var SHORT = { guess: 'guess', guest: 'guess', dreidel: 'guess', menorah: 'menorah', 'menorah-contest': 'menorah', donate: 'donate', volunteer: 'volunteer' };
   var sm = /^\/([a-z-]+)\/?$/i.exec(window.location.pathname);
   var sh = (window.location.hostname || '').toLowerCase().replace(/^www\./, '');
   if (sm && HOSTS[sh] && Object.prototype.hasOwnProperty.call(SHORT, sm[1].toLowerCase())) {
@@ -74,20 +74,16 @@
     return;
   }
 
-  /* Volunteer sign-up, a hidden page for community emails only (not in any menu or the sitemap):
-     chanukahfestival.org/volunteer (reaches ChabadOne's "Page Not Found" page with the address kept)
-     and, as a backup, chanukahfestival.org/?volunteer. Loads volunteer-2026.js instead of any page project. */
-  var VOLUNTEER = { file: 'volunteer-2026.js', cover: '#0A5769', coverId: 'vf26-cover' };
-  var isVolunteer = !!HOSTS[sh] && (/^\/volunteer\/?$/i.test(window.location.pathname) ||
-    ((window.location.pathname === '/' || window.location.pathname === '') && /[?&]volunteer(?:[=&]|$)/i.test(window.location.search)));
+  /* Volunteer sign-up: chanukahfestival.org/volunteer is sent to /?volunteer (SHORT above), where the
+     festival page opens the volunteer form (festival-forms.js) in a pop-up, like the other forms. */
 
   /* Hidden SMS share page for festival emails (Gmail on Android strips sms: links):
      chanukahfestival.org/?text. Loads text-share-2026.js instead of the festival page. */
   var TEXT = { file: 'text-share-2026.js', cover: '#0A5769', coverId: 'ts26-cover' };
-  var isText = !isVolunteer && !!HOSTS[sh] &&
+  var isText = !!HOSTS[sh] &&
     (window.location.pathname === '/' || window.location.pathname === '') && /[?&]text(?:[=&]|$)/i.test(window.location.search);
 
-  var aid = isVolunteer ? 'volunteer' : isText ? 'text' : findAid();
+  var aid = isText ? 'text' : findAid();
 
   /* Only ever load from this loader's own folder. */
   var me = document.currentScript && document.currentScript.src;
@@ -125,7 +121,7 @@
     if (flag) load('embed.js');
   }
 
-  var page = isVolunteer ? VOLUNTEER : isText ? TEXT : aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
+  var page = isText ? TEXT : aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
   if (!page) return;
   if (isResponse && !page.onResponse) return;
   if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(page.file)) return;

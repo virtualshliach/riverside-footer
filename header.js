@@ -17,7 +17,7 @@
   /* Short links on the festival's own site: chanukahfestival.org/guess, /dreidel, /menorah, /menorah-contest, /donate.
      ChabadOne has no such pages, so they reach its "Page Not Found" page with the address kept;
      send them to the festival page, which opens the matching form (?guess, ?menorah, ?donate). */
-  var SHORT = { guess: 'guess', guest: 'guess', dreidel: 'guess', menorah: 'menorah', 'menorah-contest': 'menorah', donate: 'donate' };
+  var SHORT = { guess: 'guess', guest: 'guess', dreidel: 'guess', menorah: 'menorah', 'menorah-contest': 'menorah', donate: 'donate', volunteer: 'volunteer' };
   var sm = /^\/([a-z-]+)\/?$/i.exec(window.location.pathname);
   var sh = (window.location.hostname || '').toLowerCase().replace(/^www\./, '');
   if (sm && HOSTS[sh] && Object.prototype.hasOwnProperty.call(SHORT, sm[1].toLowerCase())) {
@@ -34,20 +34,7 @@
     return;
   }
 
-  /* Volunteer sign-up (hidden page): chanukahfestival.org/volunteer and /?volunteer. Hide the
-     "Page Not Found" (or festival) page until volunteer-2026.js draws the form. Same as footer.js. */
   var qpath = (window.location.pathname === '/' || window.location.pathname === '');
-  if (HOSTS[sh] && (/^\/volunteer\/?$/i.test(window.location.pathname) ||
-      (qpath && /[?&]volunteer(?:[=&]|$)/i.test(window.location.search)))) {
-    if (!document.getElementById('vf26-cover')) {
-      var vs = document.createElement('style');
-      vs.id = 'vf26-cover';
-      vs.textContent = 'html{background:#0A5769 !important}body{opacity:0 !important}';
-      (document.head || document.documentElement).appendChild(vs);
-      setTimeout(function () { if (vs.parentNode) vs.parentNode.removeChild(vs); }, 8000);
-    }
-    return;
-  }
   /* Hidden SMS share page: chanukahfestival.org/?text. Hide the festival page until
      text-share-2026.js draws the fallback. Same as footer.js. */
   if (HOSTS[sh] && qpath && /[?&]text(?:[=&]|$)/i.test(window.location.search)) {

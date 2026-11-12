@@ -129,6 +129,36 @@ function page(opts) {
   ok(/You’re on the list, Dina!/.test(ov.textContent) && /free challah/.test(ov.textContent), 'thank-you mentions the challah');
   t.w.CFForms.close();
 
+  console.log('Volunteer (chanukahfestival.org/volunteer)');
+  t.w.CFForms.open('volunteer');
+  ov = t.d.querySelector('.cff-ov');
+  var vlab = [].map.call(ov.querySelectorAll('.cff-lab, legend'), function (x) { return x.textContent; }).join('|');
+  ok(ov && /Volunteer With Us/.test(ov.querySelector('.cff-hd b').textContent) && /^First name \*\|Last name \*\|Email \*\|Phone \*\|How would you like to help\? \*\|Notes/.test(vlab), 'opens with his fields: name, email, phone, roles, notes (' + vlab + ')');
+  var vroles = [].map.call(ov.querySelectorAll('.cff-tick'), function (x) { return x.textContent; }).join('|');
+  ok(vroles === 'Early setup (12–4 PM)|Setup (from about 4 PM)|Gift tables|Kids’ activities|Food and latkes|Greeting and info|Cleanup (after 8 PM)|Wherever I’m needed', 'his eight roles, in his order');
+  var n0 = t.posts.length;
+  t.set(t.byLabel(ov, 'First name')[0], 'Maya'); t.set(t.byLabel(ov, 'Last name')[0], 'Cohen');
+  t.set(t.byLabel(ov, 'Email')[0], 'maya@example.com'); t.set(t.byLabel(ov, 'Phone')[0], '951-555-0100');
+  t.go(ov); await wait(30);
+  ok(t.posts.length === n0 && /at least one/.test(t.err(ov)), 'no role chosen: not sent, asks for one');
+  t.tick(ov, 'Early setup (12–4 PM)'); t.tick(ov, 'Food and latkes');
+  t.set(t.byLabel(ov, 'Notes')[0], 'I can come at 4.');
+  t.go(ov); await wait(50);
+  var vp = t.posts[t.posts.length - 1].body;
+  ok(vp.action === 'form' && vp.kind === 'volunteer' && vp.first === 'Maya' && vp.phone === '951-555-0100' && vp.roles.join('|') === 'Early setup (12–4 PM)|Food and latkes' && vp.notes === 'I can come at 4.' && vp.website === '', 'sent to the Sheet as a volunteer entry, same as his page');
+  ok(/Thank you, Maya!/.test(ov.textContent) && /volunteer team/.test(ov.textContent), 'thank-you shows');
+  t.w.CFForms.close();
+  var vf = page({ before: function (w) {
+    var rs = [{ ok: false, error: 'Unknown form.' }, { ok: true }];
+    w.fetch = function (u, o) { vf_posts.push(JSON.parse(o.body)); var r = rs.shift(); return Promise.resolve({ json: function () { return Promise.resolve(r); } }); };
+  } });
+  var vf_posts = [];
+  vf.w.CFForms.open('volunteer'); ov = vf.d.querySelector('.cff-ov');
+  vf.set(vf.byLabel(ov, 'First name')[0], 'Maya'); vf.set(vf.byLabel(ov, 'Last name')[0], 'Cohen');
+  vf.set(vf.byLabel(ov, 'Email')[0], 'maya@example.com'); vf.set(vf.byLabel(ov, 'Phone')[0], '951-555-0100');
+  vf.tick(ov, 'Gift tables'); vf.go(ov); await wait(80);
+  ok(vf_posts.length === 2 && vf_posts[1].kind === 'mailing' && vf_posts[1].interests.join('|') === 'Volunteering|Volunteer: Gift tables' && /Thank you, Maya!/.test(ov.textContent), 'Apps Script without the volunteer kind: saved as a Mailing List entry (same as his page)');
+
   console.log('problems');
   var se = page({ reply: { ok: false, error: 'Too many attempts. Please wait a little while and try again.' } });
   se.w.CFForms.open('mailing'); ov = se.d.querySelector('.cff-ov');
