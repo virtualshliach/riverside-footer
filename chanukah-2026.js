@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11p';
+  var VERSION = 'cf26-2026-11-11q';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -781,7 +781,9 @@
       '#cf26 .cf-tag{background:' + GOLD + ';color:' + DEEP + ';font-family:' + SCRIPT + ';font-size:clamp(1.05rem,2.4vw,1.5rem);padding:7px 18px;line-height:1.2;border-radius:4px;box-shadow:0 8px 22px rgba(0,0,0,.3)}',
       '#cf26 .cf-info{padding:6px 0 64px}',
       '@media (max-width:620px){#cf26 .cf-vid{min-height:clamp(330px,53vh,480px)}#cf26 .cf-vtext{padding:34px 16px 44px}}',
-      '#cf26 .cf-bh{position:absolute;top:12px;left:18px;z-index:1;font-size:.78rem;color:rgba(255,255,255,.8);font-family:' + DISP + '}',
+      /* 11q: B"H sits in the top-right corner of the sticky menu bar, not over the hero. */
+      '#cf26 .cf-nav .cf-wrap{padding-right:48px}',
+      '#cf26 .cf-bh{position:absolute;top:6px;right:10px;left:auto;z-index:2;font-size:.7rem;line-height:1;color:rgba(255,255,255,.8);font-family:' + DISP + ';pointer-events:none;letter-spacing:.02em}',
       '#cf26 .cf-invite{font-size:clamp(.9rem,2vw,1.08rem);font-weight:600;color:#fff;letter-spacing:.02em;margin:18px 0 8px}',
       '#cf26 .cf-annual{display:flex;align-items:center;justify-content:center;gap:22px;margin-bottom:2px}',
       '#cf26 .cf-annual i{display:block;height:3px;width:min(160px,16vw);background:rgba(255,255,255,.85);border-radius:2px}',
@@ -960,13 +962,18 @@
       '#cf26 .cf-kit-th img{display:block;max-height:170px;width:auto;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.4)}',
       '#cf26 .cf-kit-card b{display:block;color:#fff;font-family:' + DISP + ';font-size:1.1rem;margin-top:16px}',
       '#cf26 .cf-kit-card p{color:#C9D6DA;font-size:.9rem;line-height:1.45;margin:4px 0 0}',
-      '#cf26 .cf-kit-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin-top:auto;padding-top:16px}',
-      '#cf26 .cf-kit-btns .cf-btn{height:44px;min-height:44px;padding:0 18px;font-size:.88rem;background:#f3eee6;color:' + DEEP + ';border:0;box-shadow:0 6px 18px rgba(0,0,0,.2)}',
-      '#cf26 .cf-kit-btns .cf-ic{color:' + DEEP + '}',
+      /* 11q: picture-kit buttons match style A invite pills on desktop and mobile (approved Nov 11).
+         Fixed width keeps Download / Print PDF the same size on all three cards. */
+      '#cf26 .cf-kit-btns{display:flex;flex-wrap:wrap;justify-content:center;gap:10px;margin-top:auto;padding-top:16px}',
+      '#cf26 .cf-kit-btns .cf-btn{width:148px;height:48px;min-height:48px;padding:0 16px;gap:8px;font-size:13px;font-weight:700;letter-spacing:.01em;line-height:1;' +
+        'background:rgba(11,31,39,.35);color:#fff;border:1.5px solid ' + TEAL + ';box-shadow:none;transform:none;transition:background .2s ease,box-shadow .2s ease}',
+      '#cf26 .cf-kit-btns .cf-btn:hover,#cf26 .cf-kit-btns .cf-btn:focus-visible{background:rgba(233,185,73,.10);border-color:' + TEAL + ';color:#fff;transform:none;outline:none;' +
+        'box-shadow:0 0 0 1px rgba(233,185,73,.28),0 0 14px rgba(233,185,73,.55),0 0 30px rgba(233,185,73,.32)}',
+      '#cf26 .cf-kit-btns .cf-ic{width:18px;height:18px;flex:0 0 18px;color:' + GOLD + '}',
       '@media (max-width:760px){#cf26 .cf-kit-grid{grid-template-columns:minmax(0,1fr);gap:12px;max-width:440px;margin-left:auto;margin-right:auto}' +
         '#cf26 .cf-kit-card{display:grid;grid-template-columns:72px minmax(0,1fr);column-gap:16px;align-items:center;text-align:left;padding:14px}' +
         '#cf26 .cf-kit-th{height:auto;grid-row:1 / span 3;justify-content:flex-start}#cf26 .cf-kit-th img{max-height:none;width:72px;border-radius:6px}' +
-        '#cf26 .cf-kit{margin-top:22px;padding-top:28px}#cf26 .cf-kit-card b{margin-top:0}#cf26 .cf-kit-btns{justify-content:flex-start;padding-top:10px}#cf26 .cf-kit-btns .cf-btn{height:44px;min-height:44px;padding:0 14px}}',
+        '#cf26 .cf-kit{margin-top:22px;padding-top:28px}#cf26 .cf-kit-card b{margin-top:0}#cf26 .cf-kit-btns{justify-content:flex-start;padding-top:10px}}',
 
       /* sponsors */
       '#cf26 .cf-spons{background:radial-gradient(ellipse 70% 60% at 50% 0%,rgba(233,185,73,.12),rgba(10,31,42,0) 70%),' + DEEP + '}',
@@ -1158,9 +1165,22 @@
         '#cf26 #cf-share .cf-sharebtns .cf-btn{width:100%;padding:0 12px;font-size:12.5px}#cf26 #cf-share .cf-sharebtns .cf-native{grid-column:1 / -1}#cf26 #cf-share .cf-sharenote{margin-top:12px}#cf26 #cf-share .cf-sharenote:empty{margin:0;min-height:0}}',
       /* 11p: on phones (up to 767px) the Share a picture kit keeps only the Flyer card (approved Nov 11). Phone Story and
          Square Post stay in the markup and show on desktop. The lead line names all three, so it is hidden on phones too.
-         The one card is centered, one column. */
+         11q: the Flyer card and its buttons match the style A invite pills at max-width 767px (same width, height,
+         padding, radius, font). Desktop is unchanged. */
       '@media (max-width:767px){#cf26 #cf-share .cf-kit-social{display:none}#cf26 #cf-share .cf-kit-lead{display:none}' +
-        '#cf26 #cf-share .cf-kit-grid{grid-template-columns:minmax(0,1fr);max-width:440px;margin-left:auto;margin-right:auto;margin-top:18px}}',
+        '#cf26 #cf-share .cf-kit-grid{grid-template-columns:minmax(0,1fr);width:100%;max-width:350px;margin-left:auto;margin-right:auto;margin-top:18px}' +
+        '#cf26 #cf-share .cf-kit-flyer{display:flex;flex-direction:column;align-items:center;text-align:center;padding:0;background:transparent;border:0;border-radius:0}' +
+        '#cf26 #cf-share .cf-kit-flyer .cf-kit-th{height:auto;grid-row:auto;justify-content:center;width:100%}' +
+        '#cf26 #cf-share .cf-kit-flyer .cf-kit-th img{max-height:160px;width:auto;border-radius:8px;box-shadow:0 8px 20px rgba(0,0,0,.4)}' +
+        '#cf26 #cf-share .cf-kit-flyer b{margin-top:16px}' +
+        '#cf26 #cf-share .cf-kit-btns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 10px;width:100%;justify-content:stretch;margin-top:0;padding-top:16px}' +
+        '#cf26 #cf-share .cf-kit-btns .cf-btn{width:100%;height:48px;min-height:48px;padding:0 12px;gap:8px;font-size:12.5px;font-weight:700;letter-spacing:.01em;line-height:1;' +
+          'background:rgba(11,31,39,.35);color:#fff;border:1.5px solid ' + TEAL + ';box-shadow:none;transform:none;transition:background .2s ease,box-shadow .2s ease}' +
+        '#cf26 #cf-share .cf-kit-btns .cf-btn:hover,#cf26 #cf-share .cf-kit-btns .cf-btn:focus-visible{background:rgba(233,185,73,.10);border-color:' + TEAL + ';color:#fff;transform:none;outline:none;' +
+          'box-shadow:0 0 0 1px rgba(233,185,73,.28),0 0 14px rgba(233,185,73,.55),0 0 30px rgba(233,185,73,.32)}' +
+        '#cf26 #cf-share .cf-kit-btns .cf-ic{width:18px;height:18px;flex:0 0 18px;color:' + GOLD + '}}',
+      '@media (min-width:601px) and (max-width:767px){#cf26 #cf-share .cf-kit-grid{max-width:590px}' +
+        '#cf26 #cf-share .cf-kit-btns{grid-template-columns:190px 190px;justify-content:center;gap:10px}}',
       '#cf26 .cf-pop{max-width:460px;margin:22px auto 0;background:#fff;color:' + DEEP + ';border-radius:16px;padding:20px;text-align:center;display:none}',
       '#cf26 .cf-pop.open{display:block}',
       '#cf26 .cf-pop p{font-size:.92rem;margin-bottom:14px}',
@@ -1383,7 +1403,7 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') setOpen(false); });
 
     add(w, b, ls, d, tg);
-    add(n, w, mm);
+    add(n, w, mm, el('div', 'cf-bh', 'B\u201dH'));
     return n;
   }
 
@@ -2058,7 +2078,6 @@
         return sub;
       })());
     band.appendChild(txt);
-    band.appendChild(el('div', 'cf-bh', 'B\u201dH'));
 
     /* date, place and buttons under the video */
     var ctas = el('div', 'cf-ctas');

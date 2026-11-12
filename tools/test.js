@@ -300,6 +300,15 @@ var SITES = {
     ok(kc.join('|') === 'Flyer:cf-kit-flyer|Phone Story:cf-kit-social|Square Post:cf-kit-social', 'picture kit keeps all three cards in the markup (' + kc.join('|') + ')');
     ok(/@media \(max-width:767px\)\{#cf26 #cf-share \.cf-kit-social\{display:none\}/.test(shCss) && !/#cf-share \.cf-kit\{display:none/.test(shCss) && !/\.cf-kit-flyer\{display:none/.test(shCss),
       'phones (max-width 767px) hide only Phone Story and Square Post; the kit heading and the Flyer stay');
+    ok(/#cf26 #cf-share \.cf-kit-grid\{[^}]*max-width:350px/.test(shCss) && /#cf26 #cf-share \.cf-kit-btns\{[^}]*grid-template-columns:minmax\(0,1fr\) minmax\(0,1fr\)/.test(shCss) && /#cf26 #cf-share \.cf-kit-btns \.cf-btn\{[^}]*border:1\.5px solid #3cc7b4/.test(shCss) && /#cf26 #cf-share \.cf-kit-btns \.cf-ic\{[^}]*color:#e9b949/.test(shCss),
+      'phones restyle Flyer buttons as style A pills in a 350px 2-column grid matching the invite pills');
+    ok(/#cf26 \.cf-kit-btns \.cf-btn\{[^}]*border:1\.5px solid #3cc7b4/.test(shCss) && /#cf26 \.cf-kit-btns \.cf-btn\{[^}]*width:148px/.test(shCss) && /#cf26 \.cf-kit-btns \.cf-ic\{[^}]*color:#e9b949/.test(shCss) && /#cf26 \.cf-kit-btns \.cf-btn:hover[^{]*\{[^}]*rgba\(233,185,73,\.55\)/.test(shCss),
+      'picture-kit buttons are style A pills on desktop (teal outline, gold icons, gold hover, equal 148px width)');
+    var bh = r.d.querySelector('#cf26 .cf-bh');
+    ok(bh && bh.textContent === 'B\u201dH' && r.d.querySelectorAll('#cf26 .cf-bh').length === 1, 'one B"H mark is on the page');
+    ok(bh && bh.closest('.cf-nav') && !bh.closest('.cf-hero') && !bh.closest('.cf-vid'), 'B"H sits in the sticky menu bar, not over the hero');
+    ok(/#cf26 \.cf-bh\{[^}]*right:10px/.test(shCss) && /#cf26 \.cf-nav \.cf-wrap\{[^}]*padding-right:48px/.test(shCss) && !/#cf26 \.cf-bh\{[^}]*left:18px/.test(shCss),
+      'B"H is a small mark in the top-right corner of the menu bar');
     ok(waA && /chanukahfestival\.org%2F%3Fs%3Dwhatsapp(%26|$)/i.test(waA.href) && !/utm_/.test(waA.href), 'WhatsApp invite carries the short tagged ChanukahFestival.org link');
     ok(/%0A%0A/.test(waA.href), 'invite text has line breaks');
     ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
