@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11o-draft';
+  var VERSION = 'cf26-2026-11-11p-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -1133,6 +1133,34 @@
       '#cf26 .cf-sharenote{margin-top:16px;font-size:.95rem;color:#C9D6DA;min-height:1.5em}',
       '@media (max-width:600px){#cf26 .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px;max-width:400px;margin-left:auto;margin-right:auto}#cf26 .cf-sharebtns .cf-btn{width:100%;padding:0 12px;font-size:.88rem}#cf26 .cf-sharebtns .cf-native{grid-column:1 / -1}}',
       '#cf26 .cf-ig{background:#f3eee6;color:' + DEEP + ';box-shadow:0 8px 24px rgba(0,0,0,.22)}',
+      /* 11p: invite style A (approved Nov 11). Outline teal pills, white labels, gold icons, gold glow on hover.
+         Calm dark band (no corner glows). One row on wide screens, 3 + 3 on medium, 2 across on phones. */
+      '#cf26 .cf-share{background:linear-gradient(180deg,' + DEEP + ' 0px,' + NAVY + ' 16px,' + NAVY + ' 88%,#123038 100%);padding:68px 0 84px}',
+      '#cf26 #cf-share .cf-kicker{font-size:11px;font-weight:700;letter-spacing:.28em;margin-bottom:14px}',
+      '#cf26 #cf-share .cf-h2{font-size:40px;line-height:1.15;letter-spacing:-.01em;margin-bottom:14px}',
+      '#cf26 #cf-share .cf-lead{font-size:15px;line-height:1.45}',
+      '#cf26 #cf-share .cf-rule{width:64px;margin:16px auto 0}',
+      '#cf26 #cf-share .cf-sharebtns{display:flex;flex-wrap:nowrap;justify-content:center;gap:10px;margin-top:30px}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn{height:48px;min-height:48px;padding:0 16px;gap:8px;font-size:13px;font-weight:700;letter-spacing:.01em;line-height:1;' +
+        'background:rgba(11,31,39,.35);color:#fff;border:1.5px solid ' + TEAL + ';box-shadow:none;transform:none;transition:background .2s ease,box-shadow .2s ease}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn:hover,#cf26 #cf-share .cf-sharebtns .cf-btn:focus-visible{background:rgba(233,185,73,.10);border-color:' + TEAL + ';transform:none;outline:none;' +
+        'box-shadow:0 0 0 1px rgba(233,185,73,.28),0 0 14px rgba(233,185,73,.55),0 0 30px rgba(233,185,73,.32)}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn .cf-ic,#cf26 #cf-share .cf-sharebtns .cf-btn .cf-sic{width:18px;height:18px;flex:0 0 18px;color:' + GOLD + '}',
+      '#cf26 .cf-sic{display:block;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}',
+      '#cf26 .cf-sic .cf-fill{fill:currentColor;stroke:none}',
+      /* phones and tablets with a share sheet: the native Share button leads, full width, gold border */
+      '#cf26 #cf-share .cf-sharebtns .cf-native{border-color:' + GOLD + '}',
+      '@media (min-width:601px) and (max-width:900px){#cf26 #cf-share .cf-sharebtns{display:grid;grid-template-columns:repeat(3,190px);justify-content:center}#cf26 #cf-share .cf-sharebtns .cf-btn{width:100%}}',
+      '@media (max-width:600px){#cf26 .cf-share{padding:48px 0}#cf26 #cf-share .cf-kicker{font-size:10px;letter-spacing:.24em;margin-bottom:12px}' +
+        '#cf26 #cf-share .cf-h2{font-size:28px;line-height:1.2;margin-bottom:12px;padding:0 4px}#cf26 #cf-share .cf-lead{font-size:13.5px;padding:0 8px}' +
+        '#cf26 #cf-share .cf-rule{margin-top:14px}' +
+        '#cf26 #cf-share .cf-sharebtns{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px 10px;max-width:350px;margin:24px auto 0}' +
+        '#cf26 #cf-share .cf-sharebtns .cf-btn{width:100%;padding:0 12px;font-size:12.5px}#cf26 #cf-share .cf-sharebtns .cf-native{grid-column:1 / -1}#cf26 #cf-share .cf-sharenote{margin-top:12px}#cf26 #cf-share .cf-sharenote:empty{margin:0;min-height:0}}',
+      /* 11p: on phones (up to 767px) the Share a picture kit keeps only the Flyer card (approved Nov 11). Phone Story and
+         Square Post stay in the markup and show on desktop. The lead line names all three, so it is hidden on phones too.
+         The one card is centered, one column. */
+      '@media (max-width:767px){#cf26 #cf-share .cf-kit-social{display:none}#cf26 #cf-share .cf-kit-lead{display:none}' +
+        '#cf26 #cf-share .cf-kit-grid{grid-template-columns:minmax(0,1fr);max-width:440px;margin-left:auto;margin-right:auto;margin-top:18px}}',
       '#cf26 .cf-pop{max-width:460px;margin:22px auto 0;background:#fff;color:' + DEEP + ';border-radius:16px;padding:20px;text-align:center;display:none}',
       '#cf26 .cf-pop.open{display:block}',
       '#cf26 .cf-pop p{font-size:.92rem;margin-bottom:14px}',
@@ -2475,7 +2503,7 @@
     var note = el('p', 'cf-sharenote');
     note.setAttribute('role', 'status');
     CFG.KIT.forEach(function (it) {
-      var c = el('div', 'cf-kit-card');
+      var c = el('div', 'cf-kit-card ' + (it.pdf ? 'cf-kit-flyer' : 'cf-kit-social'));
       var th = el('div', 'cf-kit-th');
       var im = document.createElement('img');
       im.src = asset(it.thumb); im.alt = 'Chanukah Festival 2026: ' + it.title.toLowerCase(); im.loading = 'lazy';
@@ -2732,6 +2760,21 @@
   }
   /* One set of invite buttons. Used on the festival page; the same set goes on every
      thank-you page. msg: the prefilled invitation; page: tag for analytics. */
+  /* share button icons from invite style A (outline, 18px, gold; filled parts use .cf-fill) */
+  var SHARE_ICONS = {
+    chat: '<path d="M5.2 5.2h13.6A1.8 1.8 0 0 1 20.6 7v8.2a1.8 1.8 0 0 1-1.8 1.8H9.1L5 19.8V7A1.8 1.8 0 0 1 5.2 5.2z"/>',
+    wa: '<path d="M7.15 4.9c.25-.7.95-1.15 1.7-1.05l1.55.2c.55.07.95.54.95 1.1v1.85c0 .4-.22.76-.57.95l-1.05.58c.85 2.05 2.42 3.62 4.5 4.5l.58-1.05c.19-.35.55-.57.95-.57h1.85c.56 0 1.03.4 1.1.95l.2 1.55c.1.75-.35 1.45-1.05 1.7-1.15.4-2.55.15-4.15-.7-2.7-1.45-4.85-3.6-6.3-6.3-.85-1.6-1.1-3-.7-4.16z"/>',
+    mail: '<rect x="4" y="6.2" width="16" height="11.6" rx="1.8"/><path d="M5.2 7.4 12 12.3l6.8-4.9"/>',
+    fb: '<path class="cf-fill" transform="translate(12 12) scale(1.12) translate(-12 -12)" d="M13.85 20.4V12.9h2.55l.4-3.05h-2.95V8.1c0-.82.22-1.38 1.48-1.38h1.57V3.85A18.6 18.6 0 0 0 13.3 3.7c-2.28 0-3.85 1.38-3.85 3.92v2.23H7.15V12.9h2.3v7.5h4.4z"/>',
+    ig: '<rect x="4.4" y="4.4" width="15.2" height="15.2" rx="4.4"/><circle cx="12" cy="12" r="3.5"/><circle class="cf-fill" cx="16.6" cy="7.4" r="1"/>',
+    link: '<path d="M9.7 14.3a4.2 4.2 0 0 0 6 0l2.1-2.1a4.2 4.2 0 1 0-6-6l-1.2 1.2"/><path d="M14.3 9.7a4.2 4.2 0 0 0-6 0L6.2 11.8a4.2 4.2 0 1 0 6 6l1.2-1.2"/>'
+  };
+  function shareIcon(name) {
+    if (!SHARE_ICONS[name]) return icon(name);
+    var d = document.createElement('div');
+    d.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="cf-sic">' + SHARE_ICONS[name] + '</svg>';
+    return d.firstChild;
+  }
   function shareButtons(msg, page) {
     var box = el('div');
     var row = el('div', 'cf-sharebtns');
@@ -2757,10 +2800,10 @@
       row.appendChild(nb);
     }
     var wa = link('cf-btn cf-wa', 'https://wa.me/?' + qs({ text: body('whatsapp') }), 'WhatsApp', true);
-    wa.insertBefore(icon('wa'), wa.firstChild);
+    wa.insertBefore(shareIcon('wa'), wa.firstChild);
     wa.addEventListener('click', function () { track('whatsapp'); });
     var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text Message');
-    sms.insertBefore(icon('chat'), sms.firstChild);
+    sms.insertBefore(shareIcon('chat'), sms.firstChild);
     sms.addEventListener('click', function (e) {
       track('sms');
       /* the preview window can't open apps; on the real site this opens Messages */
@@ -2768,26 +2811,26 @@
     });
     var em = link('cf-btn cf-ghost', 'mailto:?subject=' + encodeURIComponent(CFG.SHARE.emailSubject) + AMP + 'body=' +
       encodeURIComponent(body('email') + '\n\n' + CFG.SHARE.emailEnd), 'Email');
-    em.insertBefore(icon('mail'), em.firstChild);
+    em.insertBefore(shareIcon('mail'), em.firstChild);
     em.addEventListener('click', function (e) {
       track('email');
       if (PREVIEW) { e.preventDefault(); say('On the real site this opens your email app (Gmail works too) with the invitation filled in.'); }
     });
     var cp = el('button', 'cf-btn cf-ghost', 'Copy Link');
     cp.type = 'button';
-    cp.insertBefore(icon('link'), cp.firstChild);
+    cp.insertBefore(shareIcon('link'), cp.firstChild);
     cp.addEventListener('click', function () {
       track('copy');
       copyText(shareUrl('copy', page)).then(function () { say('Link copied!'); setTimeout(function () { say(''); }, 2000); },
         function () { say('Copy this link: ' + shareUrl('copy', page)); });
     });
     var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page) }), 'Facebook', true);
-    fb.insertBefore(icon('fb'), fb.firstChild);
+    fb.insertBefore(shareIcon('fb'), fb.firstChild);
     fb.addEventListener('click', function () { track('facebook'); });
     /* Instagram has no web share link: phone share sheet, else copy the link */
     var ig = el('button', 'cf-btn cf-ig', 'Instagram');
     ig.type = 'button';
-    ig.insertBefore(icon('ig'), ig.firstChild);
+    ig.insertBefore(shareIcon('ig'), ig.firstChild);
     ig.addEventListener('click', function () {
       track('instagram');
       function copyIt() {

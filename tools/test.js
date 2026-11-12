@@ -288,6 +288,18 @@ var SITES = {
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
     ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
     var waA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /wa\.me/.test(a.href); })[0];
+    /* 11p: invite style A and the desktop-only picture kit */
+    var sb = [].map.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { return b.textContent.trim(); });
+    ok(sb.join('|') === 'Text Message|WhatsApp|Email|Facebook|Instagram|Copy Link', 'share buttons in order (' + sb.join('|') + ')');
+    ok([].every.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { var i = b.querySelector('svg'); return i && /cf-sic/.test(i.getAttribute('class')) && i.namespaceURI === 'http://www.w3.org/2000/svg'; }),
+      'every share button has its style A icon');
+    var shCss = r.d.getElementById('cf26-style').textContent;
+    ok(/#cf26 #cf-share \.cf-sharebtns \.cf-btn\{[^}]*border:1\.5px solid #3cc7b4/.test(shCss) && /#cf26 #cf-share \.cf-sharebtns \.cf-btn:hover[^{]*\{[^}]*rgba\(233,185,73,\.55\)/.test(shCss),
+      'share buttons are teal outline pills with a gold glow on hover (style A)');
+    var kc = [].map.call(r.d.querySelectorAll('#cf-share .cf-kit-card'), function (c) { return c.querySelector('b').textContent + ':' + c.className.split(' ')[1]; });
+    ok(kc.join('|') === 'Flyer:cf-kit-flyer|Phone Story:cf-kit-social|Square Post:cf-kit-social', 'picture kit keeps all three cards in the markup (' + kc.join('|') + ')');
+    ok(/@media \(max-width:767px\)\{#cf26 #cf-share \.cf-kit-social\{display:none\}/.test(shCss) && !/#cf-share \.cf-kit\{display:none/.test(shCss) && !/\.cf-kit-flyer\{display:none/.test(shCss),
+      'phones (max-width 767px) hide only Phone Story and Square Post; the kit heading and the Flyer stay');
     ok(waA && /chanukahfestival\.org%2F%3Fs%3Dwhatsapp(%26|$)/i.test(waA.href) && !/utm_/.test(waA.href), 'WhatsApp invite carries the short tagged ChanukahFestival.org link');
     ok(/%0A%0A/.test(waA.href), 'invite text has line breaks');
     ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
