@@ -408,6 +408,39 @@ var SITES = {
     var nsub = await load('riverside', 'https://12899.centers.clhosting.org/36226', { shell: NS, wait: 400 });
     ok(!nsub.d.getElementById('cf26'), 'other pages on the new site are left alone');
 
+    console.log('riverside: leftover ChabadOne chrome under the new festival footer (chanukahfestival.org)');
+    var LEGACY = '<!doctype html><html><head><title>Chanukah Festival</title></head><body class="lang_en dir_ltr home cco_body">' +
+      '<div id="chabad_body_page"><div id="chabad_main_content"><div id="chabad_head">' +
+      '<div class="widget-1 navigation custom v260 feed"><div class="wrapper"><div class="widget_content">' +
+      '<div id="navigation" class="chabad_navigator_bar"><a href="/">Home</a><a href="/about">About</a><a href="/event">Event Info</a><a href="/donate">Donate</a><a href="/guide">Chanukah Guide</a></div>' +
+      '</div></div></div></div>' +
+      '<div id="chabad_body_content"><div id="ContentArea" class="chabad_left_column"><h1><img alt="Chanukah Festival 2026 at Riverside Historic Courthouse" width="1200" height="400"></h1></div></div>' +
+      '</div></div><div id="BodyContainer_1">old credits</div></body></html>';
+    function isHidden(el, win) {
+      while (el && el.nodeType === 1) {
+        if (win.getComputedStyle(el).display === 'none') return true;
+        el = el.parentElement;
+      }
+      return false;
+    }
+    var lg = await load('riverside', 'https://www.chanukahfestival.org/', { shell: LEGACY, wait: 700 });
+    ok(lg.d.getElementById('cf26') && /cf26-home/.test(lg.d.documentElement.className), 'chanukahfestival.org homepage shows the festival');
+    ok(isHidden(lg.d.getElementById('chabad_body_page'), lg.w) && isHidden(lg.d.getElementById('BodyContainer_1'), lg.w), 'old #chabad_body_page and #BodyContainer_1 are display:none');
+    ok(isHidden(lg.d.getElementById('navigation'), lg.w) && isHidden(lg.d.querySelector('#ContentArea img[alt^="Chanukah Festival 2026"]'), lg.w), 'old Home / About menu and the old banner are not visible');
+    ok(lg.d.querySelector('#cf26 .cf-foot') && lg.w.getComputedStyle(lg.d.querySelector('#cf26 .cf-foot')).display !== 'none', 'new festival footer stays visible');
+    var leftover = [].filter.call(lg.d.body.children, function (e) {
+      return e.id !== 'cf26' && e.tagName !== 'SCRIPT' && e.tagName !== 'STYLE' && !isHidden(e, lg.w);
+    });
+    ok(leftover.length === 0, 'nothing after the new footer stays visible (' + leftover.map(function (e) { return e.id || e.tagName; }).join(',') + ')');
+    ok(lg.d.getElementById('cf26').parentNode === lg.d.body && lg.d.getElementById('chabad_body_page').parentNode === lg.d.body, '#cf26 is a sibling of #chabad_body_page, not inside it');
+    var cssLg = lg.d.getElementById('cf26-style').textContent;
+    ok(/#chabad_body_page/.test(cssLg) && /\[id\^="BodyContainer"\]/.test(cssLg), 'festival CSS hides the leftover wrappers');
+    var lgg = await load('riverside', 'https://www.chanukahfestival.org/?guess', { shell: LEGACY, wait: 1200 });
+    var lgov = lgg.d.querySelector('.cff-ov');
+    ok(lgov && /Dreidel Guessing Contest/.test(lgov.querySelector('.cff-hd b').textContent) && lgg.d.getElementById('cf26') && isHidden(lgg.d.getElementById('chabad_body_page'), lgg.w),
+      'chanukahfestival.org/?guess opens the Dreidel form and still hides the old menu');
+    ok(lgov && lgov.parentNode === lgg.d.body, '?guess pop-up mounts on document.body, not inside the old page');
+
     console.log('riverside: form pop-ups (donate, contest, mailing list) on the draft copy');
     var DR = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm';
     var st = await load('riverside', DR, { wait: 700 });

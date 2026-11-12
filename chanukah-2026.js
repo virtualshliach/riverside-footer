@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-11m';
+  var VERSION = 'cf26-2026-11-11n';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -619,13 +619,17 @@
 
   function css() {
     return [
-      'html.cf26-on .cco_templateless_template,html.cf26-on .page-tools-sidebar,html.cf26-on #BodyContainer{display:none !important}',
+      'html.cf26-on .cco_templateless_template,html.cf26-on .page-tools-sidebar,html.cf26-on #BodyContainer,html.cf26-on [id^="BodyContainer"]{display:none !important}',
       /* the native page holds the donation form: park it off-screen, never display:none */
       'html.cf26-on .cco_templatelates_content{position:absolute !important;left:-10000px !important;top:0 !important;width:760px !important}',
       /* the ChabadOne templates set the root font to 10px; this page is designed on the standard 16px */
       'html.cf26-on{font-size:16px !important}',
       /* on the festival's own site the homepage uses the full site template: hide its header, content and footer (no forms there) */
       'html.cf26-home #PrintCreditHeader,html.cf26-home #header,html.cf26-home #content,html.cf26-home #footer{display:none !important}',
+      /* chanukahfestival.org still draws the old ChabadOne page after #cf26: #chabad_body_page (old nav and banner) and #BodyContainer_1.
+         Hide that leftover chrome so the page ends at the new footer. #cf26 is a sibling, not inside these wrappers.
+         Forms and the ?guess pop-up mount on #cf26 or document.body, not inside the old page. */
+      'html.cf26-on #chabad_body_page,html.cf26-on #chabad_head,html.cf26-on #chabad_main_content,html.cf26-on #chabad_body_content{display:none !important}',
       '#cf26 h1,#cf26 h2,#cf26 h3,#cf26 summary,#cf26 .cf-mc h3{text-wrap:balance}',
       'html.cf26-on,html.cf26-on body{background:' + NAVY + ' !important;margin:0}',
       '#cf26{background:' + NAVY + ';color:' + INK + ';font-family:' + BODY + ';font-size:17px;line-height:1.6;text-align:left;-webkit-font-smoothing:antialiased;overflow-x:hidden}',
