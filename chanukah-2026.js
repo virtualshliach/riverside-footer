@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-12b';
+  var VERSION = 'cf26-2026-11-12b-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -426,6 +426,7 @@
        Sheet, not ChabadOne. Falls back to the ChabadOne form pop-up if the file can't load.
        false = always use the ChabadOne forms. */
     OWN_FORMS: true,
+    VOLUNTEER_URL: 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/2759014/jewish/Chanukah-Festival-Volunteer.htm',
     /* where ?guess goes if our forms can't load */
     GUESS_URL: 'https://www.chanukahfestival.org/templates/articlecco_cdo/aid/5738793/jewish/Dreidel-Guessing-Contest.htm',
     /* jewishriverside.com forms that open in the festival's own pop-up (an iframe showing just the
@@ -1310,6 +1311,7 @@
       /* chanukahfestival.org/guess, /menorah and /donate arrive here as ?guess, ?menorah, ?donate */
       if (/[?&]guess(?:[=&]|$)/i.test(location.search)) setTimeout(openGuess, 300);
       if (/[?&]menorah(?:[=&]|$)/i.test(location.search)) setTimeout(function () { openFormPop('contest'); }, 300);
+      if (/[?&]volunteer(?:[=&]|$)/i.test(location.search)) setTimeout(openVolunteer, 300);
       if (!/[?&]payment_intent=/.test(location.search) && (/^#donate$/i.test(location.hash) || /[?&]donate(?:[=&]|$)/i.test(location.search))) setTimeout(openDonate, 300);
       else if (/^#[a-z]+$/i.test(location.hash) && document.getElementById('cf-' + location.hash.slice(1))) {
         var hid = location.hash.slice(1);
@@ -1504,6 +1506,13 @@
     loadOwnForms().then(function (F) {
       if (F && F.ready && F.open('dreidel')) { track('form_open_dreidel'); return; }
       fallback();
+    });
+  }
+  /* chanukahfestival.org/volunteer arrives as ?volunteer: the volunteer form (festival-forms.js) in a pop-up */
+  function openVolunteer() {
+    loadOwnForms().then(function (F) {
+      if (F && F.ready && F.open('volunteer')) { track('form_open_volunteer'); return; }
+      location.href = CFG.VOLUNTEER_URL;   /* the ChabadOne volunteer page */
     });
   }
   function openFormPop(kind) {
