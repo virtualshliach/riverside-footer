@@ -102,6 +102,9 @@ function page(opts) {
   p = t.posts[1].body;
   ok(p.kind === 'dreidel' && p.guess === '412' && p.past.join('|') === 'I celebrate Chanukah|Other: Work party' && p.connection[0] === 'I love the Chanukah Festival' && p.heard[0] === 'Social media' && p.updates === true && p.favorite === 'The music', 'dreidel answers sent, Other text included');
   ok(/Thanks for your guess, Sam!/.test(ov.textContent) && /Your guess: 412/.test(ov.textContent), 'thank-you shows the guess');
+  var fo = [].map.call(ov.querySelectorAll('.cff-follow a'), function (a) { return a.getAttribute('href') + '|' + a.target + '|' + a.getAttribute('rel') + '|' + (a.getAttribute('aria-label') || ''); });
+  ok(fo.length === 5 && /^https:\/\/www\.facebook\.com\/JewishRiverside\|_blank\|noopener\|Follow /.test(fo[0]) && /^https:\/\/x\.com\/Jewishriverside\|/.test(fo[2]) && /after the festival on our social media and by email/.test(ov.textContent) && !/7:45/.test(ov.textContent),
+    'dreidel thank-you: winner after the festival, follow buttons (new tab, labeled)');
   t.w.CFForms.close();
 
   console.log('Mailing List');

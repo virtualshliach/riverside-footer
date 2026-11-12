@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-11h';
+  var VERSION = 'festival-forms 2026-11-12a';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -30,6 +30,15 @@
   var READY = DEMO || /^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(CFG.ENDPOINT);
 
   var NAVY = '#0f2730', DEEP = '#0b1f27', TEAL = '#3cc7b4', GOLD = '#e9b949', MUTED = '#c9d6da';
+  /* Official social pages (follow to see the winner announcement). */
+  var FOLLOW = [
+    ['Facebook', 'https://www.facebook.com/JewishRiverside', 'Follow Chabad Jewish Riverside on Facebook (opens in a new tab)'],
+    ['Instagram', 'https://www.instagram.com/jewishriverside', 'Follow Chabad Jewish Riverside on Instagram (opens in a new tab)'],
+    ['X', 'https://x.com/Jewishriverside', 'Follow Chabad Jewish Riverside on X (opens in a new tab)'],
+    ['Festival on Facebook', 'https://www.facebook.com/chanukahfestival/', 'Follow the Chanukah Festival on Facebook (opens in a new tab)'],
+    ['Festival on Instagram', 'https://www.instagram.com/chanukahfestival/', 'Follow the Chanukah Festival on Instagram (opens in a new tab)']
+  ];
+
   var DISP = '"Arvo","Rockwell","Roboto Slab",Georgia,serif';
   var BODY = '"Montserrat","Helvetica Neue",Arial,sans-serif';
 
@@ -133,6 +142,9 @@
       R + '.cff-done h3{font-family:' + DISP + ';font-size:1.35rem;color:' + NAVY + ';margin-bottom:8px}',
       R + '.cff-done p{color:#4a5d64;margin:8px auto;max-width:440px}',
       R + '.cff-done .cff-btn{margin-top:18px}',
+      R + '.cff-follow{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px auto 6px;max-width:460px}',
+      R + '.cff-fbtn{display:inline-flex;align-items:center;padding:9px 16px;border-radius:999px;border:1.5px solid ' + NAVY + ';color:' + NAVY + ';background:#fff;font-weight:700;font-size:.85rem;text-decoration:none;white-space:nowrap}',
+      R + '.cff-fbtn:hover,' + R + '.cff-fbtn:focus{background:' + GOLD + ';border-color:' + GOLD + ';color:' + DEEP + '}',
       R + '.cff-ok{width:64px;height:64px;border-radius:50%;background:' + TEAL + ';color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}',
       '@media (max-width:620px){.cff-ov{padding:0}.cff-ov .cff-box{height:100%;max-height:none;max-width:none;border-radius:0}' + R + '.cff-cols{columns:1}' + R + '.cff-fld.third{flex:1 1 calc(50% - 6px)}.cff-inline .cff-body{padding:20px 16px 22px}.cff-inline .cff-ft{padding:0 16px 22px}}'
     ];
@@ -275,7 +287,7 @@
     var heard = group('How did you hear about the Chanukah Festival?', D.heard, { req: true });
     var upd = tick('I would like to receive news and updates by email');
     add(g, f.first.w, f.last.w, f.phone.w, f.email.w, f.guess.w, past.w, fav.w, conn.w, heard.w, upd.w);
-    add(body, el('p', 'cff-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced between 7:45 and 8 PM at the festival.'), g);
+    add(body, el('p', 'cff-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. We’ll announce the winner after the festival on our social media and by email.'), g);
     return {
       check: function () {
         return firstMissing([f.first, f.last, f.phone, f.email, f.guess]) || emailBad(f.email) ||
@@ -366,7 +378,7 @@
         res.emailed ? 'A confirmation with all the details is on its way to ' + d.email + '.' : 'See you at the festival!'];
     } else if (kind === 'dreidel') {
       title = 'Thanks for your guess, ' + d.first + '!';
-      lines = ['Your guess: ' + d.guess + '. The winner is announced 7:45–8 PM at the festival.',
+      lines = ['Your guess: ' + d.guess + '. We’ll announce the winner after the festival on our social media and by email.', 'Follow us so you don’t miss it:',
         res.emailed ? 'A confirmation is on its way to ' + d.email + '.' : 'Good luck!'];
     } else {
       title = 'You’re on the list, ' + d.first + '!';
@@ -375,6 +387,17 @@
     }
     add(v, el('div', 'cff-ok', '✓'), el('h3', null, title));
     lines.forEach(function (t) { v.appendChild(el('p', null, t)); });
+    if (kind === 'dreidel') {
+      var fw = el('div', 'cff-follow');
+      FOLLOW.forEach(function (f) {
+        var a = el('a', 'cff-fbtn', f[0]);
+        a.href = f[1]; a.target = '_blank'; a.rel = 'noopener';
+        a.setAttribute('aria-label', f[2]);
+        fw.appendChild(a);
+      });
+      /* keep the follow buttons right after the follow line, before the confirmation line */
+      v.insertBefore(fw, v.lastChild);
+    }
     return v;
   }
 
