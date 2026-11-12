@@ -24,6 +24,15 @@
     window.location.replace(window.location.protocol + '//' + window.location.host + '/?' + SHORT[sm[1].toLowerCase()]);
     return;
   }
+  /* ChabadOne answers /donate itself, by sending visitors to the site's donation page. On the
+     festival's site that page is the old ChabadOne Donate page (4194665): send visitors on to the
+     festival's own Donate pop-up instead. Not inside a frame (the pop-up's backup shows that page). */
+  var onTop = false;
+  try { onTop = window.self === window.top; } catch (e) {}
+  if (onTop && HOSTS[sh] && (/\/aid\/4194665(?:[\/.]|$)/i.test(window.location.pathname) || /\baid=4194665\b/i.test(window.location.search))) {
+    window.location.replace(window.location.protocol + '//' + window.location.host + '/?donate');
+    return;
+  }
 
   var l = window.location;
   var isResponse = /ArticleCcoResponse/i.test(l.href);
