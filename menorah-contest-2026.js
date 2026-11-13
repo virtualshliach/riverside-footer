@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'mc26-2026-11-12a';
+  var VERSION = 'mc26-2026-11-12b';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -32,9 +32,9 @@
       ['When', 'Monday, Dec 7, 5:45–6:15 PM'],
       ['Where', 'Menorah Contest table, #15 on the festival map, at the Riverside Historic Courthouse (4050 Main St.)'],
       ['Display', 'Menorahs stay on display at the table during the festival'],
-      ['Winners', 'Announced after the festival on our social media and by email. Please pick up your menorah before you leave the festival']
+      ['Winners', 'Announced at the festival between 7:45 and 8:00 PM. Please pick up your menorah before you leave the festival']
     ],
-    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced after the festival. All ages can enter free: https://www.jewishriverside.com/7606745',
+    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced at the festival between 7:45 and 8:00 PM. All ages can enter free: https://www.jewishriverside.com/7606745',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
@@ -167,7 +167,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: 'Chanukah Festival + Menorah Contest',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. We’ll announce the winners after the festival on our social media and by email. ' + CFG.festivalUrl
+      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners are announced at the festival between 7:45 and 8:00 PM. ' + CFG.festivalUrl
     });
   }
 
@@ -281,8 +281,8 @@
       a.insertBefore(icon(f[2]), a.firstChild);
       fr.appendChild(a);
     });
-    add(s0, el('h2', null, 'Follow us to see the winners'),
-      el('p', 'mc-p', 'We’ll announce the winners after the festival on our social media and by email. Follow us so you don’t miss it.'), fr);
+    add(s0, el('h2', null, 'Follow us'),
+      el('p', 'mc-p', 'We’ll announce the winners at the festival between 7:45 and 8:00 PM. Follow us for photos and more from the festival.'), fr);
 
     add(bd, s1, s0, s2, s3);
 
@@ -324,7 +324,7 @@
       F + ' ul.form-section{list-style:none!important;margin:0!important;padding:0!important}',
       F + ' li.form-line{padding:0 0 18px!important;margin:0!important;width:auto!important;float:none!important}',
       F + ' .form-label-top{width:auto!important;float:none!important;margin:0 0 6px!important}',
-      F + ' .form-label-top label{font-family:' + BODY + '!important;font-weight:600!important;font-size:15px!important;color:' + NAVY + '!important;line-height:1.35!important}',
+      F + ' .form-label-top label{font-family:' + BODY + '!important;font-weight:600!important;font-size:16px!important;color:' + NAVY + '!important;line-height:1.35!important}',
       F + ' .form-required{color:#c0392b!important}',
       F + ' .form-input-wide{width:100%!important;float:none!important}',
       F + ' input.form-textbox,' + F + ' select.form-dropdown,' + F + ' textarea{width:100%!important;max-width:100%!important;height:48px!important;box-sizing:border-box!important;border:1.5px solid #c9d6da!important;border-radius:10px!important;padding:0 14px!important;font-family:' + BODY + '!important;font-size:16px!important;color:' + NAVY + '!important;background:#fff!important;box-shadow:none!important}',
@@ -340,9 +340,9 @@
       F + ' .form-html ul{margin:8px 0 0 18px!important;padding:0!important}',
       F + ' .form-html li{margin:3px 0!important;list-style:disc!important}',
       /* checkboxes: label wraps at full width next to the box */
-      F + ' .form-checkbox-item{display:flex!important;align-items:flex-start;gap:10px;float:none!important;width:auto!important}',
-      F + ' .form-checkbox-item input{width:20px!important;height:20px!important;margin:2px 0 0!important;flex:none;accent-color:' + TEAL + '}',
-      F + ' .form-checkbox-item label{font-family:' + BODY + '!important;font-size:15px!important;line-height:1.5!important;color:' + NAVY + '!important;font-weight:400!important}',
+      F + ' .form-checkbox-item{display:flex!important;align-items:flex-start;gap:12px;float:none!important;width:auto!important}',
+      F + ' .form-checkbox-item input{width:22px!important;height:22px!important;margin:2px 0 0!important;flex:none;accent-color:' + TEAL + '}',
+      F + ' .form-checkbox-item label{font-family:' + BODY + '!important;font-size:17px!important;line-height:1.35!important;color:' + NAVY + '!important;font-weight:400!important}',
       F + ' .form-single-column{width:auto!important}',
       /* submit */
       F + ' .form-buttons-wrapper{text-align:center!important;padding:6px 0 18px!important;margin:0!important}',

@@ -54,7 +54,7 @@
         'No food. Bring a wax candle or oil',
         'It must stand on its own and must not break, fall or melt when lit',
         'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK)',
-        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes. Winners are announced after the festival on our social media and by email. Every child who enters gets a Chanukah gift',
+        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes, announced at the festival between 7:45 and 8:00 PM. Every child who enters gets a Chanukah gift',
         'Drop Off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
     },
     dreidel: {
@@ -113,28 +113,28 @@
       R + '.cff-body{flex:1;min-height:0;overflow-y:auto;padding:20px 22px 24px;-webkit-overflow-scrolling:touch}',
       '.cff-inline{background:#fff;border-radius:20px;max-width:680px;margin:0 auto 22px;box-shadow:0 8px 30px rgba(15,39,48,.12)}',
       '.cff-inline .cff-body{padding:24px 26px 28px}',
-      R + '.cff-err{background:#fdecea;color:#8a1f12;border:1px solid #f4c4bd;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:.9rem}',
+      R + '.cff-err{background:#fdecea;color:#8a1f12;border:1px solid #f4c4bd;border-radius:10px;padding:10px 14px;margin-bottom:14px;font-size:16px}',
       R + '.cff-err:empty{display:none}',
-      R + '.cff-p{color:#33474f;font-size:.95rem;margin-bottom:16px}',
-      R + '.cff-small{color:#6b7f86;font-size:.8rem;margin-top:14px}',
+      R + '.cff-p{color:#33474f;font-size:16px;margin-bottom:16px}',
+      R + '.cff-small{color:#6b7f86;font-size:14px;line-height:1.45;margin-top:14px}',
       R + '.cff-rules{background:#f6fafb;border-radius:12px;padding:14px 16px;margin-bottom:18px}',
       R + '.cff-rules b{display:block;color:' + NAVY + ';margin-bottom:6px}',
-      R + '.cff-rules ul{padding-left:18px;font-size:.88rem;color:#33474f}',
+      R + '.cff-rules ul{padding-left:18px;font-size:16px;color:#33474f}',
       R + '.cff-rules li{margin:3px 0}',
       R + '.cff-grid{display:flex;flex-wrap:wrap;gap:12px}',
       R + '.cff-fld{display:flex;flex-direction:column;gap:5px;flex:1 1 100%;min-width:0}',
       R + '.cff-fld.half{flex:1 1 calc(50% - 6px)}',
       R + '.cff-fld.third{flex:1 1 calc(33.33% - 8px)}',
-      R + '.cff-lab{font-size:.8rem;font-weight:700;color:#4a5d64;letter-spacing:.02em}',
-      R + '.cff-hint{font-size:.78rem;color:#7a8d93}',
-      R + '.cff-in{width:100%;padding:12px 13px;font:inherit;font-size:1rem;color:' + NAVY + ';background:#fff;border:1.5px solid #d5e2e6;border-radius:10px;outline:none}',
+      R + '.cff-lab{font-size:16px;font-weight:600;color:#4a5d64;letter-spacing:.02em}',
+      R + '.cff-hint{font-size:14px;color:#7a8d93}',
+      R + '.cff-in{width:100%;padding:12px 13px;font:inherit;font-size:16px;color:' + NAVY + ';background:#fff;border:1.5px solid #d5e2e6;border-radius:10px;outline:none}',
       R + '.cff-in:focus{border-color:' + TEAL + ';box-shadow:0 0 0 3px rgba(60,199,180,.18)}',
       R + 'textarea.cff-in{min-height:70px;resize:vertical}',
       R + 'select.cff-in{appearance:auto}',
       R + '.cff-set{border:0;margin-top:6px;flex:1 1 100%}',
-      R + '.cff-set legend{font-size:.8rem;font-weight:700;color:#4a5d64;margin-bottom:6px}',
-      R + '.cff-tick{display:flex;align-items:flex-start;gap:10px;padding:6px 0;font-size:.95rem;color:' + NAVY + ';cursor:pointer}',
-      R + '.cff-tick input{width:20px;height:20px;margin-top:2px;accent-color:' + TEAL + ';flex:none}',
+      R + '.cff-set legend{font-size:16px;font-weight:600;color:#4a5d64;margin-bottom:6px}',
+      R + '.cff-tick{display:flex;align-items:flex-start;gap:12px;padding:8px 0;font-size:17px;line-height:1.35;color:' + NAVY + ';cursor:pointer}',
+      R + '.cff-tick input{width:22px;height:22px;margin-top:2px;accent-color:' + TEAL + ';flex:none}',
       R + '.cff-cols{columns:2;column-gap:18px}',
       R + '.cff-cols .cff-tick{break-inside:avoid}',
       R + '.cff-ent{border:1.5px solid #e2ebee;border-radius:14px;padding:14px;margin-top:4px;flex:1 1 100%}',
@@ -144,7 +144,7 @@
       R + '.cff-ft{display:flex;align-items:center;justify-content:flex-end;gap:12px;padding:12px 18px;border-top:1px solid #e6eef0}',
       '.cff-inline .cff-ft{border-top:0;padding:0 26px 26px;justify-content:stretch}',
       '.cff-inline .cff-ft .cff-btn{flex:1}',
-      R + '.cff-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 26px;border-radius:999px;font-weight:700;font-size:.95rem;letter-spacing:.02em;white-space:nowrap;background:' + GOLD + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(233,185,73,.25)}',
+      R + '.cff-btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:13px 26px;border-radius:999px;font-weight:700;font-size:16px;letter-spacing:.02em;white-space:nowrap;background:' + GOLD + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(233,185,73,.25)}',
       R + '.cff-btn[disabled]{opacity:.6;cursor:wait}',
       R + '.cff-done{text-align:center;padding:24px 6px}',
       R + '.cff-done h3{font-family:' + DISP + ';font-size:1.35rem;color:' + NAVY + ';margin-bottom:8px}',
@@ -295,7 +295,7 @@
     var heard = group('How did you hear about the Chanukah Festival?', D.heard, { req: true });
     var upd = tick('I would like to receive news and updates by email');
     add(g, f.first.w, f.last.w, f.phone.w, f.email.w, f.guess.w, past.w, fav.w, conn.w, heard.w, upd.w);
-    add(body, el('p', 'cff-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. We’ll announce the winner after the festival on our social media and by email.'), g);
+    add(body, el('p', 'cff-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced at the festival between 7:45 and 8:00 PM.'), g);
     return {
       check: function () {
         return firstMissing([f.first, f.last, f.phone, f.email, f.guess]) || emailBad(f.email) ||
@@ -424,11 +424,11 @@
     if (kind === 'menorah') {
       title = 'You’re registered, ' + d.first + '!';
       lines = ['Drop Off your menorah on Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).',
-        'We’ll announce the winners after the festival on our social media and by email.', 'Follow us so you don’t miss it:',
+        'We’ll announce the winners at the festival between 7:45 and 8:00 PM.', 'Follow us for photos and more from the festival:',
         res.emailed ? 'A confirmation with all the details is on its way to ' + d.email + '.' : 'See you at the festival!'];
     } else if (kind === 'dreidel') {
       title = 'Thanks for your guess, ' + d.first + '!';
-      lines = ['Your guess: ' + d.guess + '. We’ll announce the winner after the festival on our social media and by email.', 'Follow us so you don’t miss it:',
+      lines = ['Your guess: ' + d.guess + '. We’ll announce the winner at the festival between 7:45 and 8:00 PM.', 'Follow us for photos and more from the festival:',
         res.emailed ? 'A confirmation is on its way to ' + d.email + '.' : 'Good luck!'];
     } else if (kind === 'volunteer') {
       title = 'Thank you, ' + d.first + '!';

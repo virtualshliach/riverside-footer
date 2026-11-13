@@ -259,9 +259,9 @@ var SITES = {
     var mcr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mcShell, wait: 600 });
     ok(projectRequests(mcr).some(function (u) { return /menorah-contest-2026\.js/.test(u); }), 'contest code loads on its thank-you page');
     ok(!!mcr.d.getElementById('mc26') && !mcr.errors.length, 'designed thank-you card shown, no errors');
-    ok(/Announced after the festival on our social media and by email/.test(mcr.d.getElementById('mc26').textContent) && !/7:45/.test(mcr.d.getElementById('mc26').textContent) && /pick up your menorah before you leave/.test(mcr.d.getElementById('mc26').textContent) && /#15/.test(mcr.d.getElementById('mc26').textContent), 'thank-you card has the drop-off table; winners announced after the festival (no 7:45 time)');
+    ok(/Announced at the festival between 7:45 and 8:00 PM/.test(mcr.d.getElementById('mc26').textContent) && /pick up your menorah before you leave/.test(mcr.d.getElementById('mc26').textContent) && /#15/.test(mcr.d.getElementById('mc26').textContent) && !/after the festival/.test(mcr.d.getElementById('mc26').textContent), 'thank-you card has the drop-off table; winners announced at the festival between 7:45 and 8:00 PM');
     var mcF = [].map.call(mcr.d.querySelectorAll('#mc26 .mc-follow a'), function (a) { return a.getAttribute('href') + '|' + a.target + '|' + (a.getAttribute('aria-label') || ''); });
-    ok(mcF.length === 5 && mcF.every(function (t) { return /\|_blank\|Follow .+ \(opens in a new tab\)$/.test(t); }) && /Follow us so you don’t miss it/.test(mcr.d.getElementById('mc26').textContent), 'menorah thank-you: follow block with the 5 social buttons, new tab, labeled');
+    ok(mcF.length === 5 && mcF.every(function (t) { return /\|_blank\|Follow .+ \(opens in a new tab\)$/.test(t); }) && /Follow us for photos and more from the festival/.test(mcr.d.getElementById('mc26').textContent) && !/Follow us to see the winners/.test(mcr.d.getElementById('mc26').textContent), 'menorah thank-you: follow block with the 5 social buttons, new tab, labeled');
     ok(mcr.d.getElementById('mc-native').style.display === 'none' && mcr.d.querySelector('.pagetools').style.display !== 'none',
       'the whole plain message is replaced (headline and all lines), nothing around it');
     var MC_FORM = '<div id="formContainer"><form id="7606745" class="userform-form"><div class="form-all"><ul class="form-section">' +
@@ -284,7 +284,7 @@ var SITES = {
     var dgShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><h1 class="article-header__title">Dreidel Guessing Contest</h1>' + DG_FORM + '</div>');
     var dg2 = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/5738793/jewish/Dreidel-Guessing-Contest.htm', { shell: dgShell, wait: 500 });
     ok(projectRequests(dg2).some(function (u) { return /dreidel-2026\.js/.test(u); }) && !!dg2.d.getElementById('dg26-hero') && !dg2.errors.length, 'dreidel page gets the festival hero, no errors');
-    ok(/win \$180/i.test(dg2.d.getElementById('dg26-hero').textContent) && /We’ll announce the winner after the festival on our social media and by email\./.test(dg2.d.getElementById('dg26-hero').textContent) && !/7:45/.test(dg2.d.getElementById('dg26-hero').textContent), 'dreidel intro: $180 and the winner announced after the festival');
+    ok(/win \$180/i.test(dg2.d.getElementById('dg26-hero').textContent) && /The winner is announced at the festival between 7:45 and 8:00 PM\./.test(dg2.d.getElementById('dg26-hero').textContent) && !/after the festival/.test(dg2.d.getElementById('dg26-hero').textContent), 'dreidel intro: $180 and the winner announced at the festival between 7:45 and 8:00 PM');
     ok(dg2.d.getElementById('5738793').style.display !== 'none' && dg2.d.getElementById('5738793').querySelectorAll('input,textarea,button').length === 4, 'dreidel native form and fields untouched');
     ok(dg2.d.querySelector('#id_17 textarea').getAttribute('inputmode') === 'numeric', 'the guess opens the number keypad');
     var DG_NATIVE = '<div id="dg-native"><h2>Thanks for your guess!</h2><p>The winner of the $180 prize is announced between 7:45 and 8 PM at the Chanukah Festival.</p><p>Good luck, and enjoy the festival!</p></div>';
@@ -295,7 +295,7 @@ var SITES = {
     ok(dgF.length === 5 && dgF.every(function (t) { return /\|_blank\|Follow .+ \(opens in a new tab\)$/.test(t); }) &&
       ['https://www.facebook.com/JewishRiverside', 'https://www.instagram.com/jewishriverside', 'https://x.com/Jewishriverside', 'https://www.facebook.com/chanukahfestival/', 'https://www.instagram.com/chanukahfestival/'].every(function (u, i) { return dgF[i].indexOf(u + '|') === 0; }),
       'dreidel thank-you: follow buttons for the official social pages, new tab, labeled');
-    ok(/Follow us to see the winner/.test(dgr.d.getElementById('dg26').textContent) && /after the festival/.test(dgr.d.getElementById('dg26').textContent) && !/7:45/.test(dgr.d.getElementById('dg26').textContent), 'dreidel thank-you: winner announced after the festival, no 7:45 time');
+    ok(/We’ll announce the winner at the festival between 7:45 and 8:00 PM/.test(dgr.d.getElementById('dg26').textContent) && /Follow us for photos and more from the festival/.test(dgr.d.getElementById('dg26').textContent) && !/after the festival/.test(dgr.d.getElementById('dg26').textContent) && !/Follow us to see the winner/.test(dgr.d.getElementById('dg26').textContent), 'dreidel thank-you: winner announced at the festival between 7:45 and 8:00 PM');
     ok(!/300 guests/.test(dgr.d.getElementById('dg26').textContent) && !/300 guests/.test(decodeURIComponent(dgr.d.getElementById('dg26').innerHTML.replace(/\+/g, ' '))), 'dreidel thank-you and its calendar link: no first-300-guests gift line (form is filled out at the festival)');
 
     console.log('riverside: social links go to the festival pages');
@@ -420,9 +420,9 @@ var SITES = {
     var dr = await load('riverside', 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm', { wait: 600 });
     ok(dr.d.getElementById('cf26') && dr.logs.some(function (l) { return /aid 7553387 -> chanukah-2026-draft\.js/.test(l); }), 'draft page 7553387 loads the draft file');
     var drMap = dr.d.getElementById('cf26').textContent;
-    ok(/Dreidel Guessing[\s\S]{0,40}Win \$180! Winner announced after the festival on social media and email/.test(drMap) && !/Win \$180! Winner Announced 7:45/.test(drMap), 'draft map #6: dreidel winner announced after the festival (no 7:45 time)');
-    ok(/Menorah Contest[\s\S]{0,40}All entries on display\. Winners announced after the festival on social media and email/.test(drMap) && !/Winners Announced 7:45/.test(drMap) && !/between 7:45 and 8 PM/.test(drMap) && !/Menorah Contest winners/.test(drMap), 'draft: map #15, contest facts and how-to say winners are announced after the festival');
-    ok(/Children’s Gelt Drop/.test(drMap) && /pick up your menorah before you leave the festival/.test(drMap), 'draft: schedule keeps the 7:45 Gelt Drop and the menorah pick-up note');
+    ok(/Dreidel Guessing[\s\S]{0,40}Win \$180! Winner announced at the festival between 7:45 and 8:00 PM/.test(drMap) && !/after the festival/.test(drMap), 'draft map #6: dreidel winner announced at the festival between 7:45 and 8:00 PM');
+    ok(/Menorah Contest[\s\S]{0,40}All entries on display\. Winners announced at the festival between 7:45 and 8:00 PM/.test(drMap) && /Winners Announced 7:45–8:00 PM/.test(drMap) && /We’ll announce the winners at the festival between 7:45 and 8:00 PM/.test(drMap) && /announced at the festival between 7:45 and 8:00 PM/.test(drMap), 'draft: map #15, contest facts, how-to and prizes say winners are announced at the festival between 7:45 and 8:00 PM');
+    ok(/Children’s Gelt Drop, and Menorah Contest & Dreidel Winners Announced/.test(drMap) && /pick up your menorah before you leave the festival/.test(drMap), 'draft: 7:45 schedule lists the Gelt Drop and both winner announcements, plus the menorah pick-up note');
     var dkids = [].slice.call(dr.d.getElementById('cf26').children).map(function (e) { return e.className.split(' ')[0]; });
     /* section order approved Nov 11 (11o): what to expect, plan your evening, directions, story, press, partners, share, guide, who */
     var dorder = [].slice.call(dr.d.getElementById('cf26').children).map(function (e) { return e.id || e.className.split(' ')[0]; }).join(' > ');

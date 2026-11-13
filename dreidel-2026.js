@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'dg26-2026-11-12b';
+  var VERSION = 'dg26-2026-11-12c';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
@@ -40,11 +40,11 @@
     place: 'Riverside Historic Courthouse, 4050 Main St, Riverside, CA 92501',
     STEPS: [
       ['Prize', '$180'],
-      ['Winner', 'Announced after the festival on our social media and by email'],
+      ['Winner', 'Announced at the festival between 7:45 and 8:00 PM'],
       ['Where', 'Riverside Historic Courthouse, 4050 Main St.'],
       ['Entries', 'One entry per person']
     ],
-    SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced after the festival.\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome join us!',
+    SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced at the festival between 7:45 and 8:00 PM.\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome join us!',
     EMAIL_SUBJECT: 'Join me at the Riverside Chanukah Festival, Dec 7'
   };
 
@@ -177,7 +177,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: '22nd Annual Chanukah Festival',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Dreidel Guessing Contest: we’ll announce the winner after the festival on our social media and by email. ' + CFG.festivalUrl
+      details: 'Dreidel Guessing Contest: the winner is announced at the festival between 7:45 and 8:00 PM. ' + CFG.festivalUrl
     });
   }
 
@@ -289,8 +289,8 @@
       a.insertBefore(icon(f[2]), a.firstChild);
       fr.appendChild(a);
     });
-    add(s0, el('h2', null, 'Follow us to see the winner'),
-      el('p', 'mc-p', 'We’ll announce the winner after the festival on our social media and by email. Follow us so you don’t miss it.'), fr);
+    add(s0, el('h2', null, 'Follow us'),
+      el('p', 'mc-p', 'We’ll announce the winner at the festival between 7:45 and 8:00 PM. Follow us for photos and more from the festival.'), fr);
 
     add(bd, s1, s0, s2, s3);
 
@@ -332,7 +332,7 @@
       F + ' ul.form-section{list-style:none!important;margin:0!important;padding:0!important}',
       F + ' li.form-line{padding:0 0 18px!important;margin:0!important;width:auto!important;float:none!important}',
       F + ' .form-label-top{width:auto!important;float:none!important;margin:0 0 6px!important}',
-      F + ' .form-label-top label{font-family:' + BODY + '!important;font-weight:600!important;font-size:15px!important;color:' + NAVY + '!important;line-height:1.35!important}',
+      F + ' .form-label-top label{font-family:' + BODY + '!important;font-weight:600!important;font-size:16px!important;color:' + NAVY + '!important;line-height:1.35!important}',
       F + ' .form-required{color:#c0392b!important}',
       F + ' .form-input-wide{width:100%!important;float:none!important}',
       F + ' input.form-textbox,' + F + ' select.form-dropdown,' + F + ' textarea{width:100%!important;max-width:100%!important;height:48px!important;box-sizing:border-box!important;border:1.5px solid #c9d6da!important;border-radius:10px!important;padding:0 14px!important;font-family:' + BODY + '!important;font-size:16px!important;color:' + NAVY + '!important;background:#fff!important;box-shadow:none!important}',
@@ -340,7 +340,7 @@
       F + ' input.form-textbox:focus,' + F + ' select.form-dropdown:focus,' + F + ' textarea:focus{outline:none!important;border-color:' + TEAL + '!important;box-shadow:0 0 0 3px rgba(60,199,180,.25)!important}',
       /* this form puts labels on the left: stack them on top */
       F + ' .form-label-left{width:auto!important;float:none!important;display:block!important;margin:0 0 6px!important;text-align:left!important}',
-      F + ' .form-label-left label{font-family:' + BODY + '!important;font-weight:600!important;font-size:15px!important;color:' + NAVY + '!important;line-height:1.35!important}',
+      F + ' .form-label-left label{font-family:' + BODY + '!important;font-weight:600!important;font-size:16px!important;color:' + NAVY + '!important;line-height:1.35!important}',
       F + ' .form-input{width:100%!important;float:none!important;display:block!important;margin:0!important}',
       /* first/last name and area code/number side by side */
       F + ' .form-input > .form-sub-label-container,' + F + ' .form-input > .dir_ltr > .form-sub-label-container{display:inline-block!important;vertical-align:top;width:calc(50% - 6px)!important;margin:0 8px 0 0!important}',
@@ -359,9 +359,9 @@
       F + ' .form-multiple-column{columns:auto!important;width:auto!important}',
       F + ' .form-checkbox-item{margin:0 0 8px!important}',
       /* checkboxes: label wraps at full width next to the box */
-      F + ' .form-checkbox-item{display:flex!important;align-items:flex-start;gap:10px;float:none!important;width:auto!important}',
-      F + ' .form-checkbox-item input{width:20px!important;height:20px!important;margin:2px 0 0!important;flex:none;accent-color:' + TEAL + '}',
-      F + ' .form-checkbox-item label{font-family:' + BODY + '!important;font-size:15px!important;line-height:1.5!important;color:' + NAVY + '!important;font-weight:400!important}',
+      F + ' .form-checkbox-item{display:flex!important;align-items:flex-start;gap:12px;float:none!important;width:auto!important}',
+      F + ' .form-checkbox-item input{width:22px!important;height:22px!important;margin:2px 0 0!important;flex:none;accent-color:' + TEAL + '}',
+      F + ' .form-checkbox-item label{font-family:' + BODY + '!important;font-size:17px!important;line-height:1.35!important;color:' + NAVY + '!important;font-weight:400!important}',
       F + ' .form-single-column{width:auto!important}',
       /* submit */
       F + ' .form-buttons-wrapper{text-align:center!important;padding:6px 0 18px!important;margin:0!important}',
@@ -403,7 +403,7 @@
       el('h2', null, 'Dreidel Guessing Contest'),
       whenLine(),
       chips,
-      el('p', 'mh-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. We’ll announce the winner after the festival on our social media and by email.'),
+      el('p', 'mh-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced at the festival between 7:45 and 8:00 PM.'),
       more);
     return h;
   }

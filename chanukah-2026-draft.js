@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-12b-draft';
+  var VERSION = 'cf26-2026-11-12c-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -66,7 +66,7 @@
       ['5:45 PM', 'Come early! The first 300 guests get a free Chanukah gift'],
       ['6:00 PM', 'Festival opens with food, music, kids’ activities and more'],
       ['7:00 PM', 'Official program with the Grand Menorah Lighting', true],
-      ['7:45 PM', 'Children’s Gelt Drop'],
+      ['7:45–8:00 PM', 'Children’s Gelt Drop, and Menorah Contest & Dreidel Winners Announced'],
       ['8:00 PM', 'Festival ends']
     ],
 
@@ -85,9 +85,9 @@
           [3, 'Kids Crafts', 'Two craft areas'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
-          [6, 'Dreidel Guessing', 'Win $180! Winner announced after the festival on social media and email'],
+          [6, 'Dreidel Guessing', 'Win $180! Winner announced at the festival between 7:45 and 8:00 PM'],
           [7, 'Train Rides', ''],
-          [15, 'Menorah Contest', 'All entries on display. Winners announced after the festival on social media and email'],
+          [15, 'Menorah Contest', 'All entries on display. Winners announced at the festival between 7:45 and 8:00 PM'],
           [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
@@ -108,18 +108,18 @@
     CONTEST: {
       url: 'https://www.jewishriverside.com/7606745',
       intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
-      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced After the Festival'],
+      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8:00 PM'],
       how: [
         'Register By Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
         'Menorahs stay on display at table #15 during the festival.',
         'Judging is on visual impact, creativity and craftsmanship, with the builder’s age in mind.',
-        'We’ll announce the winners after the festival on our social media and by email. Please pick up your menorah before you leave the festival.'
+        'We’ll announce the winners at the festival between 7:45 and 8:00 PM. Please pick up your menorah before you leave the festival.'
       ],
       prizes: [
         'Best Menorah wins the festival trophy, awarded every year.',
-        'Great prizes for the runners-up, announced after the festival.',
+        'Great prizes for the runners-up, announced at the festival between 7:45 and 8:00 PM.',
         'Every child who enters gets a Chanukah gift.'
       ],
       rules: [
@@ -140,7 +140,7 @@
       title: 'Train Rides',
       intro: 'All aboard! Kids and families can ride the festival train all evening. Find it at stop #7 on the map.',
       facts: ['Stop #7 on the Map', '6–8 PM'],
-      /* Gelt Drop is map #16. The 7:45–8 PM window is on the schedule; contest winners are announced after the festival (Nov 12). */
+      /* Gelt Drop is map #16. The 7:45–8:00 PM window is on the schedule; contest and dreidel winners are also announced between 7:45 and 8:00 PM. */
       gelt: {
         title: 'Gelt Drop',
         intro: 'The grand finale! Watch chocolate gelt and gifts parachute down from the sky.',
