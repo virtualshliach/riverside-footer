@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-15b-draft';
+  var VERSION = 'cf26-2026-11-15c-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -149,7 +149,7 @@
     },
 
     about: [
-      'The festival has grown into one of the premier holiday celebrations in the Inland Empire, sharing Chanukah\u2019s universal message, embracing cultural diversity, and promoting understanding. Each year, the festival is graced by the participation of many elected officials and civic leaders. It is a meaningful evening not only for the Jewish community but for the community at large.'
+      'The festival has grown into one of the premier holiday celebrations in Southern California, sharing Chanukah\u2019s universal message, embracing cultural diversity, and promoting understanding. Each year, the festival is graced by the participation of many elected officials and civic leaders. It is a meaningful evening not only for the Jewish community but for the community at large.'
     ],
     stats: [
       { big: '22nd', small: 'year of light in Riverside' },
@@ -2320,7 +2320,7 @@
     if (!CFG.america250) return null;
     var s = section('activities');
     var w = el('div', 'cf-wrap');
-    w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
+    w.appendChild(heading('What to expect', 'An evening of light for all of Southern California and beyond',
       'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
     var cards = el('div', 'cf-hl');
     CFG.highlights.forEach(function (x, i) {
@@ -2345,7 +2345,7 @@
     var s = section('event');
     var w = el('div', 'cf-wrap');
     if (CFG.america250) w.appendChild(heading('Plan your evening', 'Schedule & Festival Map', null, true));
-    else w.appendChild(heading('What to expect', 'An evening of light for the whole Inland Empire and beyond',
+    else w.appendChild(heading('What to expect', 'An evening of light for all of Southern California and beyond',
       'Bring the whole family to downtown Riverside on the 4th night of Chanukah.', true));
 
     if (CFG.america250) {
