@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-12c-draft';
+  var VERSION = 'cf26-2026-11-15a-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -387,10 +387,12 @@
     SHARE: {
       /* every share points at the public address; tags added per button (see shareUrl) */
       url: 'https://chanukahfestival.org/',
-      /* line breaks make it readable in texts, WhatsApp and email */
-      text: 'Join us at Riverside\u2019s 22nd Annual Chanukah Festival!\n\n\ud83d\udcc5 Monday, Dec 7, 6–8 PM\n\ud83d\udccd Riverside Historic Courthouse\n\nGrand Menorah Lighting, live music, latkes, donuts and kids\u2019 activities. Free for everyone.\n\nCome early: the first 300 guests get a free Chanukah gift!',
-      emailSubject: 'You\u2019re invited: Riverside Chanukah Festival, Dec 7',
-      emailEnd: 'Hope to see you there!',
+      /* Invitation sent by the Share buttons (Nov 15). {link} = the festival link with its
+         share tag. Text messages: short, plain. WhatsApp: same, *bold* title. Email: full. */
+      text: 'Join me at the Inland Empire\u2019s largest Chanukah Festival! \ud83d\udd4e\n\n\ud83d\udcc5 Monday, Dec 7, 6\u20138 PM\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
+      waText: 'Join me at the Inland Empire\u2019s largest *Chanukah Festival!* \ud83d\udd4e\n\n\ud83d\udcc5 *Monday, Dec 7, 6\u20138 PM*\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
+      emailSubject: 'Join me at the Chanukah Festival, Monday, Dec 7',
+      emailBody: 'Hi!\n\nI\u2019d love for you to join me at the Chanukah Festival, the Inland Empire\u2019s largest Chanukah celebration.\n\nWhen: Monday, December 7, 2026, 6\u20138 PM\nWhere: Riverside Historic Courthouse, 4050 Main St., Riverside, CA 92501\n\nWhat\u2019s there:\n\u2022 The Grand Menorah Lighting\n\u2022 Live music with Aaron Holder\n\u2022 Traditional Chanukah food\n\u2022 Kids\u2019 activities, crafts and the Gelt Drop\n\nFree admission, and everyone is welcome. Come early: the first 300 guests get a free Chanukah gift.\n\nSchedule, map and parking: {link}\n\nHope to see you there!',
       /* the festival's own social pages (not Jewish Riverside's or the shul's) */
       facebook: 'https://www.facebook.com/chanukahfestival/',
       instagram: 'https://www.instagram.com/chanukahfestival/',
@@ -1125,6 +1127,20 @@
       /* share band + footer */
       '#cf26 .cf-share{background:radial-gradient(ellipse 60% 120% at 0% 100%,rgba(233,185,73,.55),rgba(233,185,73,0) 60%),radial-gradient(ellipse 60% 120% at 100% 100%,rgba(26,164,173,.75),rgba(26,164,173,0) 60%),' + NAVY + ';padding:84px 0}',
       '#cf26 .cf-sharebtns{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;margin-top:26px}',
+      /* Share pop-up (top Share button) */
+      '#cf26 .cf-shp .cf-dm-box{height:auto;max-width:560px;background:' + NAVY + ';color:#fff}',
+      '#cf26 .cf-shp-hd{background:' + DEEP + ';border-bottom:1px solid rgba(233,185,73,.35)}',
+      '#cf26 .cf-shp-hd b{font-size:1.25rem;line-height:1.2}',
+      '#cf26 .cf-shp-hd span{margin-top:3px;line-height:1.35}',
+      '#cf26 img.cf-shp-men{width:44px !important;height:auto !important;max-width:44px;flex:none}',
+      '#cf26 .cf-shp-body{padding:6px 22px 22px;overflow-y:auto}',
+      '#cf26 .cf-shp .cf-sharebtns{display:grid !important;grid-template-columns:minmax(0,1fr) minmax(0,1fr) !important;gap:10px;margin-top:18px}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn{width:100%;display:flex !important;margin:0;height:50px;min-height:50px;padding:0 14px;gap:9px;font-size:.95rem;justify-content:center}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-ic{width:19px;height:19px;flex:0 0 19px;color:' + DEEP + ';fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-sic .cf-fill{fill:currentColor;stroke:none}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-native{grid-column:1 / -1;display:flex !important}',
+      '#cf26 .cf-shp .cf-sharenote{color:#fff;text-align:center;font-size:.9rem;margin:12px 0 0;min-height:0;white-space:pre-line}',
+      '@media (max-width:620px){#cf26 .cf-shp{padding:14px}#cf26 .cf-shp .cf-dm-box{height:auto;max-height:94vh;border-radius:18px;overflow-y:auto}#cf26 .cf-shp-hd{padding:14px 14px 12px 16px;gap:10px}#cf26 img.cf-shp-men{width:34px !important;max-width:34px}#cf26 .cf-shp-hd b{font-size:1.08rem}#cf26 .cf-shp-hd span{font-size:.8rem}#cf26 .cf-shp-body{padding:4px 14px 16px}#cf26 .cf-shp .cf-sharebtns .cf-btn{font-size:.85rem;padding:0 10px;gap:7px}}',
       '#cf26 .cf-follow{margin-top:14px}',
       '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
       '#cf26 .cf-fb{background:' + TEAL + ';color:' + DEEP + ';box-shadow:0 8px 24px rgba(60,199,180,.25)}',
@@ -2097,20 +2113,7 @@
     var sh = el('button', 'cf-btn cf-cream', 'Share');
     sh.type = 'button';
     sh.insertBefore(icon('share'), sh.firstChild);
-    sh.addEventListener('click', function () {
-      /* phones: the native share sheet; elsewhere: the share section */
-      function toSection() {
-        var t = document.getElementById('cf-share');
-        if (t) t.scrollIntoView({ behavior: 'smooth' });
-      }
-      if (navigator.share) {
-        var pr = navigator.share({ title: 'Chanukah Festival', text: T(CFG.SHARE.text), url: shareUrl('native', 'festival-top') });
-        /* cancelled by the person: stay put; share sheet not allowed here: use the section */
-        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') toSection(); });
-        return;
-      }
-      toSection();
-    });
+    sh.addEventListener('click', function () { openSharePop(); });
     ctas.appendChild(sh);
 
     var info = el('div', 'cf-wrap cf-info');
@@ -2803,7 +2806,14 @@
     d.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="cf-sic">' + SHARE_ICONS[name] + '</svg>';
     return d.firstChild;
   }
-  function shareButtons(msg, page) {
+  /* the invitation with this button's tagged link filled in */
+  function invite(tpl, src, page) {
+    var u = shareUrl(src, page);
+    var t = T(tpl);
+    return t.indexOf('{link}') >= 0 ? t.split('{link}').join(u) : t + '\n\n' + u;
+  }
+  function shareButtons(page) {
+    var S = CFG.SHARE;
     var box = el('div');
     var row = el('div', 'cf-sharebtns');
     var note = el('p', 'cf-sharenote');
@@ -2812,67 +2822,114 @@
     function track(method) {
       try { if (window.gtag) window.gtag('event', 'share_click', { method: method, page: page || 'festival' }); } catch (e) {}
     }
-    function body(src) { return msg + '\n\n' + shareUrl(src, page); }
-
-    /* the phone share sheet: phones and tablets only; computers use the buttons below */
+    /* phones and tablets: Text, WhatsApp, Email, Facebook, Instagram, Copy, then More Apps.
+       computers: Gmail in place of Instagram (Instagram has no web share), no share sheet,
+       because the Windows/Mac share sheet sends only the bare link to Gmail. */
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
-    if (navigator.share && touch) {
-      var nb = el('button', 'cf-btn cf-gold cf-native', 'Share');
-      nb.type = 'button';
-      nb.insertBefore(icon('share'), nb.firstChild);
-      nb.addEventListener('click', function () {
-        track('native');
-        var pr = navigator.share({ title: 'Chanukah Festival', text: msg, url: shareUrl('native', page) });
-        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') say('Use one of the buttons below to share.'); });
-      });
-      row.appendChild(nb);
+    function appNote(e, what) {
+      if (PREVIEW) { e.preventDefault(); say('On the real site this opens ' + what + ' with the invitation filled in.'); }
     }
-    var wa = link('cf-btn cf-wa', 'https://wa.me/?' + qs({ text: body('whatsapp') }), 'WhatsApp', true);
+
+    var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(invite(S.text, 'sms', page)), 'Text Message');
+    sms.insertBefore(shareIcon('chat'), sms.firstChild);
+    sms.addEventListener('click', function (e) { track('sms'); appNote(e, 'your Messages app'); });
+
+    var wa = link('cf-btn cf-wa', 'https://wa.me/?' + qs({ text: invite(S.waText || S.text, 'whatsapp', page) }), 'WhatsApp', true);
     wa.insertBefore(shareIcon('wa'), wa.firstChild);
     wa.addEventListener('click', function () { track('whatsapp'); });
-    var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text Message');
-    sms.insertBefore(shareIcon('chat'), sms.firstChild);
-    sms.addEventListener('click', function (e) {
-      track('sms');
-      /* the preview window can't open apps; on the real site this opens Messages */
-      if (PREVIEW) { e.preventDefault(); say('On the real site this opens your Messages app with the invitation filled in.'); }
-    });
-    var em = link('cf-btn cf-ghost', 'mailto:?subject=' + encodeURIComponent(CFG.SHARE.emailSubject) + AMP + 'body=' +
-      encodeURIComponent(body('email') + '\n\n' + CFG.SHARE.emailEnd), 'Email');
+
+    var emBody = invite(S.emailBody || S.text, 'email', page);
+    var em = link('cf-btn cf-ghost', 'mailto:?subject=' + encodeURIComponent(S.emailSubject) + AMP + 'body=' + encodeURIComponent(emBody), touch ? 'Email' : 'Other Email');
     em.insertBefore(shareIcon('mail'), em.firstChild);
-    em.addEventListener('click', function (e) {
-      track('email');
-      if (PREVIEW) { e.preventDefault(); say('On the real site this opens your email app (Gmail works too) with the invitation filled in.'); }
-    });
-    var cp = el('button', 'cf-btn cf-ghost', 'Copy Link');
+    em.addEventListener('click', function (e) { track('email'); appNote(e, 'your email app'); });
+
+    var gm = null;
+    if (!touch) {
+      gm = link('cf-btn cf-ghost', 'https://mail.google.com/mail/?' + qs({ view: 'cm', fs: '1', su: S.emailSubject, body: invite(S.emailBody || S.text, 'gmail', page) }), 'Gmail', true);
+      gm.insertBefore(shareIcon('mail'), gm.firstChild);
+      gm.addEventListener('click', function () { track('gmail'); });
+    }
+
+    var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page) }), 'Facebook', true);
+    fb.insertBefore(shareIcon('fb'), fb.firstChild);
+    fb.addEventListener('click', function () { track('facebook'); });
+
+    var ig = null;
+    if (touch) {
+      ig = el('button', 'cf-btn cf-ig', 'Instagram');
+      ig.type = 'button';
+      ig.insertBefore(shareIcon('ig'), ig.firstChild);
+      ig.addEventListener('click', function () {
+        track('instagram');
+        copyText(shareUrl('instagram', page)).then(function () { say('Link copied. Paste it in your Instagram story or message.'); },
+          function () { say('Copy this link for Instagram: ' + shareUrl('instagram', page)); });
+      });
+    }
+
+    /* copies the whole invitation (with the link), ready to paste anywhere */
+    var cp = el('button', 'cf-btn cf-ghost', 'Copy Invitation');
     cp.type = 'button';
     cp.insertBefore(shareIcon('link'), cp.firstChild);
     cp.addEventListener('click', function () {
       track('copy');
-      copyText(shareUrl('copy', page)).then(function () { say('Link copied!'); setTimeout(function () { say(''); }, 2000); },
-        function () { say('Copy this link: ' + shareUrl('copy', page)); });
+      var t = invite(S.text, 'copy', page);
+      copyText(t).then(function () { say('Invitation copied! Paste it in any message.'); setTimeout(function () { say(''); }, 3000); },
+        function () { say(t); });
     });
-    var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page) }), 'Facebook', true);
-    fb.insertBefore(shareIcon('fb'), fb.firstChild);
-    fb.addEventListener('click', function () { track('facebook'); });
-    /* Instagram has no web share link: phone share sheet, else copy the link */
-    var ig = el('button', 'cf-btn cf-ig', 'Instagram');
-    ig.type = 'button';
-    ig.insertBefore(shareIcon('ig'), ig.firstChild);
-    ig.addEventListener('click', function () {
-      track('instagram');
-      function copyIt() {
-        copyText(shareUrl('instagram', page)).then(function () { say('Link copied. Paste it in your Instagram story or bio.'); },
-          function () { say('Copy this link for Instagram: ' + shareUrl('instagram', page)); });
-      }
-      if (!navigator.share) return copyIt();
-      var pr = navigator.share({ title: 'Chanukah Festival', text: msg, url: shareUrl('instagram', page) });
-      if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') copyIt(); });
-    });
-    /* order: most used first (texting), utility last */
-    add(row, sms, wa, em, fb, ig, cp);
+
+    var nb = null;
+    if (navigator.share && touch) {
+      nb = el('button', 'cf-btn cf-ghost cf-native', 'More Apps');
+      nb.type = 'button';
+      nb.insertBefore(icon('share'), nb.firstChild);
+      nb.addEventListener('click', function () {
+        track('native');
+        /* the link goes inside the text: some apps drop a separate url, others drop the text */
+        var pr = navigator.share({ title: S.emailSubject, text: invite(S.text, 'native', page) });
+        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') say('Use one of the buttons above to share.'); });
+      });
+    }
+    add(row, sms, wa, gm || ig, em, fb, cp);
+    if (nb) row.appendChild(nb);
     add(box, row, note);
     return box;
+  }
+
+  /* Share pop-up for the Share button at the top of the page */
+  function openSharePop() {
+    if (document.getElementById('cf-sharepop')) return;
+    var prevFocus = document.activeElement;
+    var ov = el('div', 'cf-dm cf-shp');
+    ov.id = 'cf-sharepop';
+    ov.setAttribute('role', 'dialog');
+    ov.setAttribute('aria-modal', 'true');
+    ov.setAttribute('aria-label', 'Invite your family and friends');
+    var bx = el('div', 'cf-dm-box');
+    var hd = el('div', 'cf-dm-hd cf-shp-hd');
+    var men = document.createElement('img');
+    men.className = 'cf-shp-men'; men.src = asset('festival-menorah.svg'); men.alt = '';
+    var ht = el('div');
+    add(ht, el('b', null, 'Invite Your Family and Friends'), el('span', null, 'Pick how to send it. The invitation is already written for you.'));
+    var x = el('button', 'cf-dm-x'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.appendChild(icon('x'));
+    add(hd, men, ht, x);
+    var bd = el('div', 'cf-shp-body');
+    bd.appendChild(shareButtons('festival-top'));
+    add(bx, hd, bd);
+    ov.appendChild(bx);
+    root.appendChild(ov);
+    document.documentElement.style.overflow = 'hidden';
+    x.focus();
+    try { if (window.gtag) window.gtag('event', 'cta_click', { label: 'share_open' }); } catch (e) {}
+    function close() {
+      if (ov.parentNode) ov.parentNode.removeChild(ov);
+      document.documentElement.style.overflow = '';
+      document.removeEventListener('keydown', onKey);
+      if (prevFocus && prevFocus.focus) try { prevFocus.focus(); } catch (e) {}
+    }
+    function onKey(e) { if (e.key === 'Escape') close(); }
+    x.addEventListener('click', close);
+    ov.addEventListener('click', function (e) { if (e.target === ov) close(); });
+    document.addEventListener('keydown', onKey);
   }
 
   function buildShare() {
@@ -2880,7 +2937,7 @@
     s.id = 'cf-share';
     var w = el('div', 'cf-wrap cf-center');
     w.appendChild(heading('Spread the light', 'Invite your family and friends', 'One tap sends the invitation with the festival link.', true));
-    w.appendChild(shareButtons(T(CFG.SHARE.text), 'festival'));
+    w.appendChild(shareButtons('festival'));
     var kit = buildKit();
     if (kit) w.appendChild(kit);
     s.appendChild(w);
