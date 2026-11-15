@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-15a-draft';
+  var VERSION = 'cf26-2026-11-15b-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -389,10 +389,10 @@
       url: 'https://chanukahfestival.org/',
       /* Invitation sent by the Share buttons (Nov 15). {link} = the festival link with its
          share tag. Text messages: short, plain. WhatsApp: same, *bold* title. Email: full. */
-      text: 'Join me at the Inland Empire\u2019s largest Chanukah Festival! \ud83d\udd4e\n\n\ud83d\udcc5 Monday, Dec 7, 6\u20138 PM\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
-      waText: 'Join me at the Inland Empire\u2019s largest *Chanukah Festival!* \ud83d\udd4e\n\n\ud83d\udcc5 *Monday, Dec 7, 6\u20138 PM*\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
+      text: 'Join me at the Southern California\u2019s largest Chanukah Festival! \ud83d\udd4e\n\n\ud83d\udcc5 Monday, Dec 7, 6\u20138 PM\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
+      waText: 'Join me at the Southern California\u2019s largest *Chanukah Festival!* \ud83d\udd4e\n\n\ud83d\udcc5 *Monday, Dec 7, 6\u20138 PM*\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
       emailSubject: 'Join me at the Chanukah Festival, Monday, Dec 7',
-      emailBody: 'Hi!\n\nI\u2019d love for you to join me at the Chanukah Festival, the Inland Empire\u2019s largest Chanukah celebration.\n\nWhen: Monday, December 7, 2026, 6\u20138 PM\nWhere: Riverside Historic Courthouse, 4050 Main St., Riverside, CA 92501\n\nWhat\u2019s there:\n\u2022 The Grand Menorah Lighting\n\u2022 Live music with Aaron Holder\n\u2022 Traditional Chanukah food\n\u2022 Kids\u2019 activities, crafts and the Gelt Drop\n\nFree admission, and everyone is welcome. Come early: the first 300 guests get a free Chanukah gift.\n\nSchedule, map and parking: {link}\n\nHope to see you there!',
+      emailBody: 'Hi!\n\nI\u2019d love for you to join me at the Chanukah Festival, the Southern California\u2019s largest Chanukah celebration.\n\nWhen: Monday, December 7, 2026, 6\u20138 PM\nWhere: Riverside Historic Courthouse, 4050 Main St., Riverside, CA 92501\n\nWhat\u2019s there:\n\u2022 The Grand Menorah Lighting\n\u2022 Live music with Aaron Holder\n\u2022 Traditional Chanukah food\n\u2022 Kids\u2019 activities, crafts and the Gelt Drop\n\nFree admission, and everyone is welcome. Come early: the first 300 guests get a free Chanukah gift.\n\nSchedule, map and parking: {link}\n\nHope to see you there!',
       /* the festival's own social pages (not Jewish Riverside's or the shul's) */
       facebook: 'https://www.facebook.com/chanukahfestival/',
       instagram: 'https://www.instagram.com/chanukahfestival/',
@@ -1139,6 +1139,17 @@
       '#cf26 .cf-shp .cf-sharebtns .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-ic{width:19px;height:19px;flex:0 0 19px;color:' + DEEP + ';fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}',
       '#cf26 .cf-shp .cf-sharebtns .cf-sic .cf-fill{fill:currentColor;stroke:none}',
       '#cf26 .cf-shp .cf-sharebtns .cf-native{grid-column:1 / -1;display:flex !important}',
+      /* each app in its own color (Nov 15): text gold, WhatsApp green, Gmail red, email teal, Facebook blue, Instagram gradient */
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-tx{background:' + GOLD + ';color:' + DEEP + '}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-wa{background:#1DAA61;color:#fff}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-gm{background:#D93025;color:#fff}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-em{background:#107A8C;color:#fff}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-fb{background:#1877F2;color:#fff;box-shadow:0 8px 24px rgba(24,119,242,.25)}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-ig{background:linear-gradient(45deg,#F58529,#DD2A7B 50%,#8134AF);color:#fff}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-cp{background:#f3eee6;color:' + DEEP + '}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-native{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);box-shadow:none}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-wa .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-gm .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-em .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-fb .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-ig .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-native .cf-ic{color:#fff}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}',
       '#cf26 .cf-shp .cf-sharenote{color:#fff;text-align:center;font-size:.9rem;margin:12px 0 0;min-height:0;white-space:pre-line}',
       '@media (max-width:620px){#cf26 .cf-shp{padding:14px}#cf26 .cf-shp .cf-dm-box{height:auto;max-height:94vh;border-radius:18px;overflow-y:auto}#cf26 .cf-shp-hd{padding:14px 14px 12px 16px;gap:10px}#cf26 img.cf-shp-men{width:34px !important;max-width:34px}#cf26 .cf-shp-hd b{font-size:1.08rem}#cf26 .cf-shp-hd span{font-size:.8rem}#cf26 .cf-shp-body{padding:4px 14px 16px}#cf26 .cf-shp .cf-sharebtns .cf-btn{font-size:.85rem;padding:0 10px;gap:7px}}',
       '#cf26 .cf-follow{margin-top:14px}',
@@ -2794,7 +2805,7 @@
   /* share button icons from invite style A (outline, 18px, gold; filled parts use .cf-fill) */
   var SHARE_ICONS = {
     chat: '<path d="M5.2 5.2h13.6A1.8 1.8 0 0 1 20.6 7v8.2a1.8 1.8 0 0 1-1.8 1.8H9.1L5 19.8V7A1.8 1.8 0 0 1 5.2 5.2z"/>',
-    wa: '<path d="M7.15 4.9c.25-.7.95-1.15 1.7-1.05l1.55.2c.55.07.95.54.95 1.1v1.85c0 .4-.22.76-.57.95l-1.05.58c.85 2.05 2.42 3.62 4.5 4.5l.58-1.05c.19-.35.55-.57.95-.57h1.85c.56 0 1.03.4 1.1.95l.2 1.55c.1.75-.35 1.45-1.05 1.7-1.15.4-2.55.15-4.15-.7-2.7-1.45-4.85-3.6-6.3-6.3-.85-1.6-1.1-3-.7-4.16z"/>',
+    wa: '<path d="M12 3.3a8.7 8.7 0 0 0-7.5 13.1L3.4 20.6l4.3-1.1A8.7 8.7 0 1 0 12 3.3z"/><path class="cf-fill" transform="translate(12.1 12) scale(.56) translate(-12.6 -11)" d="M7.15 4.9c.25-.7.95-1.15 1.7-1.05l1.55.2c.55.07.95.54.95 1.1v1.85c0 .4-.22.76-.57.95l-1.05.58c.85 2.05 2.42 3.62 4.5 4.5l.58-1.05c.19-.35.55-.57.95-.57h1.85c.56 0 1.03.4 1.1.95l.2 1.55c.1.75-.35 1.45-1.05 1.7-1.15.4-2.55.15-4.15-.7-2.7-1.45-4.85-3.6-6.3-6.3-.85-1.6-1.1-3-.7-4.16z"/>',
     mail: '<rect x="4" y="6.2" width="16" height="11.6" rx="1.8"/><path d="M5.2 7.4 12 12.3l6.8-4.9"/>',
     fb: '<path class="cf-fill" transform="translate(12 12) scale(1.12) translate(-12 -12)" d="M13.85 20.4V12.9h2.55l.4-3.05h-2.95V8.1c0-.82.22-1.38 1.48-1.38h1.57V3.85A18.6 18.6 0 0 0 13.3 3.7c-2.28 0-3.85 1.38-3.85 3.92v2.23H7.15V12.9h2.3v7.5h4.4z"/>',
     ig: '<rect x="4.4" y="4.4" width="15.2" height="15.2" rx="4.4"/><circle cx="12" cy="12" r="3.5"/><circle class="cf-fill" cx="16.6" cy="7.4" r="1"/>',
@@ -2830,7 +2841,7 @@
       if (PREVIEW) { e.preventDefault(); say('On the real site this opens ' + what + ' with the invitation filled in.'); }
     }
 
-    var sms = link('cf-btn cf-ghost', 'sms:?' + AMP + 'body=' + encodeURIComponent(invite(S.text, 'sms', page)), 'Text Message');
+    var sms = link('cf-btn cf-ghost cf-tx', 'sms:?' + AMP + 'body=' + encodeURIComponent(invite(S.text, 'sms', page)), 'Text Message');
     sms.insertBefore(shareIcon('chat'), sms.firstChild);
     sms.addEventListener('click', function (e) { track('sms'); appNote(e, 'your Messages app'); });
 
@@ -2839,13 +2850,13 @@
     wa.addEventListener('click', function () { track('whatsapp'); });
 
     var emBody = invite(S.emailBody || S.text, 'email', page);
-    var em = link('cf-btn cf-ghost', 'mailto:?subject=' + encodeURIComponent(S.emailSubject) + AMP + 'body=' + encodeURIComponent(emBody), touch ? 'Email' : 'Other Email');
+    var em = link('cf-btn cf-ghost cf-em', 'mailto:?subject=' + encodeURIComponent(S.emailSubject) + AMP + 'body=' + encodeURIComponent(emBody), touch ? 'Email' : 'Other Email');
     em.insertBefore(shareIcon('mail'), em.firstChild);
     em.addEventListener('click', function (e) { track('email'); appNote(e, 'your email app'); });
 
     var gm = null;
     if (!touch) {
-      gm = link('cf-btn cf-ghost', 'https://mail.google.com/mail/?' + qs({ view: 'cm', fs: '1', su: S.emailSubject, body: invite(S.emailBody || S.text, 'gmail', page) }), 'Gmail', true);
+      gm = link('cf-btn cf-ghost cf-gm', 'https://mail.google.com/mail/?' + qs({ view: 'cm', fs: '1', su: S.emailSubject, body: invite(S.emailBody || S.text, 'gmail', page) }), 'Gmail', true);
       gm.insertBefore(shareIcon('mail'), gm.firstChild);
       gm.addEventListener('click', function () { track('gmail'); });
     }
@@ -2867,7 +2878,7 @@
     }
 
     /* copies the whole invitation (with the link), ready to paste anywhere */
-    var cp = el('button', 'cf-btn cf-ghost', 'Copy Invitation');
+    var cp = el('button', 'cf-btn cf-ghost cf-cp', 'Copy Invitation');
     cp.type = 'button';
     cp.insertBefore(shareIcon('link'), cp.firstChild);
     cp.addEventListener('click', function () {

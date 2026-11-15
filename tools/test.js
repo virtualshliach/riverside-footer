@@ -616,7 +616,7 @@ var SITES = {
     ok(![].some.call(vh.d.querySelectorAll('a[href]'), function (a) { return /volunteer/i.test(a.getAttribute('href')); }), 'hidden: the festival page has no link to the volunteer form');
 
     console.log('riverside: hidden Text share page chanukahfestival.org/?text');
-    var TXMSG = 'Join us for the Inland Empire\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
+    var TXMSG = 'Join us for Southern California\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
     var TXSMS = 'sms:?&body=' + encodeURIComponent(TXMSG);
     var tx = await load('riverside', 'https://chanukahfestival.org/?text', { wait: 700 });
     var txReq = projectRequests(tx);

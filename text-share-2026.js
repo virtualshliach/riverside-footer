@@ -9,7 +9,7 @@
   'use strict';
   if (window.TS26 && window.TS26.version) return;
 
-  var VERSION = 'ts26-2026-11-15b';
+  var VERSION = 'ts26-2026-11-15c';
   var PV = window.TS26_PREVIEW || null;
   var DEMO = !!(PV && PV.demo);
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
@@ -20,7 +20,7 @@
   var BASE = SELF_SRC ? SELF_SRC.split('?')[0].replace(/[^\/]+$/, '') : 'https://virtualshliach.github.io/riverside-footer/';
 
   /* Exact invitation from the festival emails (curly apostrophe, en dash in the time). */
-  var MSG = 'Join us for the Inland Empire\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
+  var MSG = 'Join us for Southern California\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
   var SMS = 'sms:?&body=' + encodeURIComponent(MSG);
 
   var CFG = {
