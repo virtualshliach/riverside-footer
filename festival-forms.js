@@ -17,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-14a';
+  var VERSION = 'festival-forms 2026-11-14b';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -160,6 +160,17 @@
       R + '.cff-done h3{font-family:' + DISP + ';font-size:1.35rem;color:' + NAVY + ';margin-bottom:8px}',
       R + '.cff-done p{color:#4a5d64;margin:8px auto;max-width:440px}',
       R + '.cff-done .cff-btn{margin-top:18px}',
+      /* Menorah Contest thank-you: invite family and friends */
+      R + '.cff-inv{background:#f6fafb;border:1.5px solid #e2ebee;border-radius:16px;padding:18px 16px 16px;margin:16px auto 14px;max-width:520px}',
+      R + '.cff-inv h4{text-wrap:balance;font-family:' + DISP + ';font-size:1.2rem;line-height:1.25;color:' + NAVY + ';margin-bottom:6px}',
+      R + '.cff-inv p{margin:0 auto 12px;text-wrap:balance}',
+      R + '.cff-msg{background:#fff;border-left:4px solid ' + GOLD + ';border-radius:8px;padding:10px 12px;text-align:left;font-size:15px;line-height:1.45;color:#33474f;margin-bottom:14px}',
+      R + '.cff-share{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}',
+      R + '.cff-sbtn{display:flex;align-items:center;justify-content:center;min-height:46px;padding:10px 12px;border-radius:999px;font-weight:700;font-size:.95rem;text-decoration:none;background:#fff;color:' + NAVY + ';border:1.5px solid ' + NAVY + ';white-space:nowrap}',
+      R + '.cff-sbtn.main{background:' + GOLD + ';border-color:' + GOLD + ';color:' + DEEP + '}',
+      R + '.cff-sbtn:hover,' + R + '.cff-sbtn:focus{background:' + GOLD + ';border-color:' + GOLD + ';color:' + DEEP + '}',
+      R + '.cff-done .cff-sm{font-size:.9rem;color:#6b7f86}',
+      R + '.cff-follow.sm .cff-fbtn{padding:6px 12px;font-size:.78rem}',
       R + '.cff-follow{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px auto 6px;max-width:460px}',
       R + '.cff-fbtn{display:inline-flex;align-items:center;padding:9px 16px;border-radius:999px;border:1.5px solid ' + NAVY + ';color:' + NAVY + ';background:#fff;font-weight:700;font-size:.85rem;text-decoration:none;white-space:nowrap}',
       R + '.cff-fbtn:hover,' + R + '.cff-fbtn:focus{background:' + GOLD + ';border-color:' + GOLD + ';color:' + DEEP + '}',
@@ -428,7 +439,70 @@
       heard: 'Other', more: more, source: 'volunteer-2026' };
   }
 
+  /* Who entered, in the registrant's own voice: "I", "Maya", "Maya and Eli", "Maya and I". */
+  function menorahWho(d) {
+    var me = (d.first + ' ' + d.last).toLowerCase().replace(/\s+/g, ' ').trim(), self = false, others = [];
+    (d.entrants || []).forEach(function (e) {
+      if ((e.first + ' ' + e.last).toLowerCase().replace(/\s+/g, ' ').trim() === me) self = true;
+      else others.push(e.first.trim());
+    });
+    function join(a) { return a.length < 2 ? a.join('') : a.slice(0, -1).join(', ') + ' and ' + a[a.length - 1]; }
+    if (self && !others.length) return { who: 'I', cheer: 'me', you: 'you', whose: 'your menorah' };
+    if (self) return { who: join(others) + ' and I', cheer: 'us', you: 'you', whose: 'your menorahs' };
+    if (others.length === 1) return { who: others[0], cheer: 'us', you: others[0], whose: others[0] + '’s menorah' };
+    return { who: join(others), cheer: 'us', you: others.length === 2 ? join(others) : 'them', whose: 'their menorahs' };
+  }
+  function inviteBox(d) {
+    var w = menorahWho(d);
+    var url = 'https://chanukahfestival.org';
+    var msg = w.who + ' entered the Menorah Contest at the Chanukah Festival! Come cheer ' + w.cheer + ' on! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Winners are announced 7:45–8 PM. Free for everyone: chanukahfestival.org';
+    var box = el('div', 'cff-inv');
+    add(box, el('h4', null, 'Who’s coming to cheer ' + w.you + ' on?'),
+      el('p', null, 'Invite family and friends to come see ' + w.whose + ' and be there when the winners are announced.'),
+      el('div', 'cff-msg', msg));
+    var g = el('div', 'cff-share');
+    function btn(label, href, main, onClick) {
+      var a = el('a', 'cff-sbtn' + (main ? ' main' : ''), label);
+      a.href = href || '#';
+      if (/^https?:/.test(a.href)) { a.target = '_blank'; a.rel = 'noopener'; }
+      a.addEventListener('click', function (e) {
+        try { if (window.gtag) window.gtag('event', 'contest_share', { method: label }); } catch (x) {}
+        emit('share', { method: label });
+        if (onClick) { e.preventDefault(); onClick(a); }
+      });
+      g.appendChild(a);
+    }
+    var touch = window.matchMedia && window.matchMedia('(pointer:coarse)').matches;
+    if (touch) btn('Text', 'sms:?&body=' + encodeURIComponent(msg), true);
+    btn('WhatsApp', 'https://wa.me/?text=' + encodeURIComponent(msg), !touch);
+    if (navigator.share) btn('More apps', null, false, function () { navigator.share({ text: msg }).catch(function () {}); });
+    btn('Email', 'mailto:?subject=' + encodeURIComponent('Come to the Chanukah Festival on Dec 7!') + '&body=' + encodeURIComponent(msg));
+    btn('Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url));
+    btn('Copy message', null, false, function (a) {
+      function done() { a.textContent = 'Copied!'; setTimeout(function () { a.textContent = 'Copy message'; }, 2000); }
+      if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msg).then(done, function () { window.prompt('Copy this message:', msg); });
+      else window.prompt('Copy this message:', msg);
+    });
+    /* odd number of buttons: the last one spans the row so nothing sits alone */
+    if (g.children.length % 2) g.lastChild.style.gridColumn = '1 / -1';
+    box.appendChild(g);
+    return box;
+  }
+
   function thanksView(kind, d, res) {
+    if (kind === 'menorah') {
+      var m = el('div', 'cff-done');
+      add(m, el('div', 'cff-ok', '✓'), el('h3', null, 'You’re registered, ' + d.first + '!'), inviteBox(d),
+        el('p', null, 'Drop Off: Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).'),
+        res.emailed ? el('p', 'cff-sm', 'A confirmation with all the details is on its way to ' + d.email + '.') : null,
+        el('p', 'cff-sm', 'Follow us for photos from the festival:'));
+      var fm = el('div', 'cff-follow sm');
+      FOLLOW.forEach(function (f) {
+        var a = el('a', 'cff-fbtn', f[0]); a.href = f[1]; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('aria-label', f[2]); fm.appendChild(a);
+      });
+      m.appendChild(fm);
+      return m;
+    }
     var v = el('div', 'cff-done');
     var title, lines;
     if (kind === 'menorah') {
