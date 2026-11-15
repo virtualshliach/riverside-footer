@@ -18,7 +18,7 @@
      "Page Not Found" page (tagged utm_campaign=chanukahfestival.org). Until that forwarding is fixed at
      ChabadOne, send those visitors straight to the festival page. */
   if (/(^|\.)jewishriverside\.com$/i.test(window.location.hostname) && /utm_campaign=chanukahfestival\.org/i.test(window.location.hash + window.location.search)) {
-    window.location.replace('https://www.chanukahfestival.org/');
+    window.location.replace('https://www.chanukahfestival.org/?home');
     return;
   }
 
