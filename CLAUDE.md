@@ -86,6 +86,12 @@ aligned, on this site or in a ChabadOne form:
 
 ## Rules
 
+- **Every form carries the brand header.** Any form on any of our sites (chanukahfestival.org,
+  jewishriverside.com, and any future site), pop-up or page, opens with the program's branding
+  (festival menorah or Chabad JCC logo) plus the form's title, like the Menorah Contest pop-up.
+  In `festival-forms.js` and `stripe-donate.js` the festival banner is now the default header;
+  never ship a form with a plain title bar. Brand rules apply across all our sites and marketing
+  unless a rule is explicitly site-specific.
 - **Past events stay on.** Never remove a page from `PAGES` unless the person asks to
   turn that page off.
 - **Drafts** point at a draft page id. Switch to the live id only when asked to go live.
