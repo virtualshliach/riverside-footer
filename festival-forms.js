@@ -17,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-12c';
+  var VERSION = 'festival-forms 2026-11-14a';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -48,6 +48,7 @@
   var FORMS = {
     menorah: {
       title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.', button: 'Register',
+      banner: { kick: '22nd Annual Chanukah Festival', tag: 'Trophy and prizes · Every child gets a gift' },
       rules: ['Open to all ages, in two groups: 12 and under, and 13 and up',
         'Free to enter. Register By Friday, Dec 4',
         'Nine branches including the shamash: eight in a straight line at an even height, with the shamash higher or lower',
@@ -109,6 +110,15 @@
       R + '.cff-hd{display:flex;align-items:center;gap:14px;padding:16px 18px 14px 22px;background:' + NAVY + ';color:#fff}',
       R + '.cff-hd b{display:block;font-family:' + DISP + ';font-size:1.2rem;line-height:1.25}',
       R + '.cff-hd span{display:block;font-size:.85rem;color:' + MUTED + '}',
+      /* photo-style banner header (Menorah Contest): festival menorah + title, same look as the contest social graphic */
+      R + '.cff-hd.cff-ban{position:relative;gap:18px;padding:20px 64px 18px 22px;min-height:132px;border-top:4px solid ' + GOLD + ';background:radial-gradient(circle at 86px 50%,rgba(233,185,73,.22),rgba(233,185,73,0) 120px),linear-gradient(120deg,#123140,' + DEEP + ' 70%)}',
+      R + '.cff-ban .cff-x{position:absolute;top:12px;right:12px}',
+      R + '.cff-ban svg{width:128px;height:auto;flex:none;filter:drop-shadow(0 0 14px rgba(60,199,180,.35))}',
+      R + '.cff-ban i{display:block;font-style:normal;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:4px}',
+      R + '.cff-ban b{font-size:1.75rem;line-height:1.1;margin-bottom:4px}',
+      R + '.cff-ban span{font-size:.92rem}',
+      R + '.cff-ban em{display:block;font-style:normal;font-weight:700;font-size:.88rem;color:' + GOLD + ';margin-top:4px}',
+      '@media (max-width:620px){' + R + '.cff-hd.cff-ban{min-height:0;gap:14px;padding:16px 56px 14px 16px}' + R + '.cff-ban svg{width:76px}' + R + '.cff-ban b{font-size:1.45rem}' + R + '.cff-ban i{display:none}' + R + '.cff-ban span{font-size:.85rem}' + R + '.cff-ban em{font-size:.82rem}}',
       R + '.cff-x{margin-left:auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);color:#fff;font-size:22px;line-height:1;flex:none}',
       R + '.cff-body{flex:1;min-height:0;overflow-y:auto;padding:20px 22px 24px;-webkit-overflow-scrolling:touch}',
       '.cff-inline{background:#fff;border-radius:20px;max-width:680px;margin:0 auto 22px;box-shadow:0 8px 30px rgba(15,39,48,.12)}',
@@ -455,6 +465,25 @@
     return v;
   }
 
+  /* The festival menorah (festival-menorah.svg, simplified), drawn inline so the banner needs no image download. */
+  function menorahSvg() {
+    var xs = [72, 250, 421, 599, 951, 1128, 1299, 1477], arms = '', flames = '';
+    var y = [[652, 945], [541, 760], [448, 596], [341, 414]];
+    xs.forEach(function (x, n) {
+      var r = y[n < 4 ? n : 7 - n];
+      arms += '<polyline points="' + x + ',169 ' + x + ',' + r[0] + ' 775,' + r[1] + '"/>';
+      flames += '<path d="M' + x + ',70c6,19 21,32 18,48c-3,14-33,14-36,0c-3-16 12-29 18-48z"/>';
+    });
+    flames += '<path d="M775,18c7,25 23,43 20,64c-3,18-37,18-40,0c-3-21 13-39 20-64z"/>';
+    var w = document.createElement('div');
+    w.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1550 1000" aria-hidden="true" focusable="false">' +
+      '<defs><linearGradient id="cffmg" x1="0" y1="119" x2="0" y2="985" gradientUnits="userSpaceOnUse">' +
+      '<stop offset="0" stop-color="#28cecc"/><stop offset=".44" stop-color="#8cc78d"/><stop offset=".67" stop-color="#dbc25b"/><stop offset="1" stop-color="#efc14f"/></linearGradient></defs>' +
+      '<g fill="none" stroke="url(#cffmg)" stroke-width="40">' + arms + '<line x1="775" y1="119" x2="775" y2="985" stroke-width="47"/></g>' +
+      '<g fill="#fff">' + flames + '</g></svg>';
+    return w.firstChild;
+  }
+
   /* Builds one form. mode 'pop' (with header + close) or 'inline'. */
   function makeForm(kind, mode, opts) {
     css();
@@ -465,7 +494,10 @@
     if (mode === 'pop') {
       hd = el('div', 'cff-hd');
       x = el('button', 'cff-x', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Close');
-      add(hd, add(el('div'), el('b', null, D.title), el('span', null, D.sub)), x);
+      if (D.banner) {
+        hd.className += ' cff-ban';
+        add(hd, menorahSvg(), add(el('div'), el('i', null, D.banner.kick), el('b', null, D.title), el('span', null, D.sub), el('em', null, D.banner.tag)), x);
+      } else add(hd, add(el('div'), el('b', null, D.title), el('span', null, D.sub)), x);
     }
     var body = el('div', 'cff-body');
     var err = el('div', 'cff-err'); err.setAttribute('role', 'alert');
