@@ -302,9 +302,17 @@ var SITES = {
     var shareA = [].map.call(r.d.querySelectorAll('#cf-share a'), function (a) { return a.textContent.trim() + '>' + a.getAttribute('href'); });
     ok(!shareA.some(function (t) { return /^Follow on/.test(t); }), 'no Follow buttons in the share section (brief Nov 5)');
     var waA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /wa\.me/.test(a.href); })[0];
+    /* Nov 15: top Share button opens the invite pop-up with the full invitation and an email subject */
+    var topSh = [].filter.call(r.d.querySelectorAll('.cf-ctas button'), function (b) { return /Share/.test(b.textContent); })[0];
+    if (topSh) topSh.click();
+    var pop = r.d.getElementById('cf-sharepop');
+    ok(!!pop, 'top Share button opens the invite pop-up');
+    var gmA = pop && [].filter.call(pop.querySelectorAll('a'), function (a) { return /mail\.google\.com/.test(a.href); })[0];
+    ok(!!gmA && /su=Join/.test(gmA.href) && /body=Hi/.test(gmA.href) && /gmail-top/.test(decodeURIComponent(gmA.href)), 'pop-up Gmail has subject, full invitation and tagged link');
+    if (pop) pop.parentNode.removeChild(pop);
     /* 11p: invite style A and the desktop-only picture kit */
     var sb = [].map.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(sb.join('|') === 'Text Message|WhatsApp|Email|Facebook|Instagram|Copy Link', 'share buttons in order (' + sb.join('|') + ')');
+    ok(sb.join('|') === 'Text Message|WhatsApp|Gmail|Other Email|Facebook|Copy Invitation', 'share buttons in order (' + sb.join('|') + ')');
     ok([].every.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { var i = b.querySelector('svg'); return i && /cf-sic/.test(i.getAttribute('class')) && i.namespaceURI === 'http://www.w3.org/2000/svg'; }),
       'every share button has its style A icon');
     var shCss = r.d.getElementById('cf26-style').textContent;
