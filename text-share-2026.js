@@ -9,7 +9,7 @@
   'use strict';
   if (window.TS26 && window.TS26.version) return;
 
-  var VERSION = 'ts26-2026-11-15a';
+  var VERSION = 'ts26-2026-11-15b';
   var PV = window.TS26_PREVIEW || null;
   var DEMO = !!(PV && PV.demo);
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
@@ -20,7 +20,7 @@
   var BASE = SELF_SRC ? SELF_SRC.split('?')[0].replace(/[^\/]+$/, '') : 'https://virtualshliach.github.io/riverside-footer/';
 
   /* Exact invitation from the festival emails (curly apostrophe, en dash in the time). */
-  var MSG = 'Join us for Riverside\u2019s Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Free family fun, live music and the Grand Menorah Lighting. Details: chanukahfestival.org';
+  var MSG = 'Join us for the Inland Empire\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
   var SMS = 'sms:?&body=' + encodeURIComponent(MSG);
 
   var CFG = {
@@ -93,7 +93,7 @@
       R + '.ts-top{max-width:680px;margin:0 auto;text-align:right;padding:12px 0 0}',
       R + '.ts-logo{display:block;max-width:420px;margin:2px auto 0}',
       R + '.ts-logo img{display:block;width:100%;height:auto}',
-      R + '.ts-bh{font-size:13px;color:#fff;letter-spacing:.04em;font-family:' + FONT + '}',
+      R + '.ts-bh{font-size:15px;font-weight:700;color:#fff;letter-spacing:.04em;font-family:' + FONT + '}',
       R + '.ts-hero{max-width:680px;margin:10px auto 22px;text-align:center}',
       R + '.ts-kick{font-family:' + FONT + ';color:#f3dcb4;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;line-height:1.3}',
       R + 'h1{font-family:' + FONT + ';font-weight:800;color:#fff;font-size:34px;line-height:1.15;margin-top:4px}',
