@@ -40,6 +40,7 @@
     ['Festival on Instagram', 'https://www.instagram.com/chanukahfestival/', 'Follow the Chanukah Festival on Instagram (opens in a new tab)']
   ];
 
+  var BANNER_KICK = '22nd Annual Chanukah Festival';
   var DISP = '"Arvo","Rockwell","Roboto Slab",Georgia,serif';
   var BODY = '"Montserrat","Helvetica Neue",Arial,sans-serif';
 
@@ -79,7 +80,7 @@
     },
     /* Same questions as volunteer-2026.js (the client's volunteer page, Nov 12 2026) */
     volunteer: {
-      title: 'Volunteer With Us', sub: 'Chanukah Festival · Monday, Dec 7, 2026', button: 'Sign me up',
+      title: 'Volunteer With Us', sub: 'Monday, December 7, 2026', button: 'Sign me up',
       intro: 'Help us light up downtown Riverside! Pick what you’d like to do, and we’ll be in touch with the details.',
       roles: ['Early setup (12–4 PM)', 'Setup (from about 4 PM)', 'Gift tables', 'Kids’ activities', 'Food and latkes', 'Greeting and info', 'Cleanup (after 8 PM)', 'Wherever I’m needed'],
       privacy: 'We use this only to plan festival volunteers. We never share it.'
@@ -110,7 +111,7 @@
       R + '.cff-hd{display:flex;align-items:center;gap:14px;padding:16px 18px 14px 22px;background:' + NAVY + ';color:#fff}',
       R + '.cff-hd b{display:block;font-family:' + DISP + ';font-size:1.2rem;line-height:1.25}',
       R + '.cff-hd span{display:block;font-size:.85rem;color:' + MUTED + '}',
-      /* photo-style banner header (Menorah Contest): festival menorah + title, same look as the contest social graphic */
+      /* photo-style banner header (every pop-up form): festival menorah + title, same look as the contest social graphic */
       R + '.cff-hd.cff-ban{position:relative;gap:18px;padding:20px 64px 18px 22px;min-height:132px;border-top:4px solid ' + GOLD + ';background:radial-gradient(circle at 86px 50%,rgba(233,185,73,.22),rgba(233,185,73,0) 120px),linear-gradient(120deg,#123140,' + DEEP + ' 70%)}',
       R + '.cff-ban .cff-x{position:absolute;top:12px;right:12px}',
       R + '.cff-ban svg{width:128px;height:auto;flex:none;filter:drop-shadow(0 0 14px rgba(60,199,180,.35))}',
@@ -118,7 +119,7 @@
       R + '.cff-ban b{font-size:1.75rem;line-height:1.1;margin-bottom:4px}',
       R + '.cff-ban span{font-size:.92rem}',
       R + '.cff-ban em{display:block;font-style:normal;font-weight:700;font-size:.88rem;color:' + GOLD + ';margin-top:4px}',
-      '@media (max-width:620px){' + R + '.cff-hd.cff-ban{min-height:0;gap:14px;padding:16px 56px 14px 16px}' + R + '.cff-ban svg{width:76px}' + R + '.cff-ban b{font-size:1.45rem}' + R + '.cff-ban i{display:none}' + R + '.cff-ban span{font-size:.85rem}' + R + '.cff-ban em{font-size:.82rem}}',
+      '@media (max-width:620px){' + R + '.cff-hd.cff-ban{min-height:0;gap:14px;padding:16px 56px 14px 16px}' + R + '.cff-ban svg{width:76px}' + R + '.cff-ban b{font-size:1.45rem}' + R + '.cff-ban i{font-size:.6rem;letter-spacing:.1em;margin-bottom:2px}' + R + '.cff-ban span{font-size:.85rem}' + R + '.cff-ban em{font-size:.82rem}}',
       R + '.cff-x{margin-left:auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);color:#fff;font-size:22px;line-height:1;flex:none}',
       R + '.cff-body{flex:1;min-height:0;overflow-y:auto;padding:20px 22px 24px;-webkit-overflow-scrolling:touch}',
       '.cff-inline{background:#fff;border-radius:20px;max-width:680px;margin:0 auto 22px;box-shadow:0 8px 30px rgba(15,39,48,.12)}',
@@ -568,10 +569,10 @@
     if (mode === 'pop') {
       hd = el('div', 'cff-hd');
       x = el('button', 'cff-x', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Close');
-      if (D.banner) {
-        hd.className += ' cff-ban';
-        add(hd, menorahSvg(), add(el('div'), el('i', null, D.banner.kick), el('b', null, D.title), el('span', null, D.sub), el('em', null, D.banner.tag)), x);
-      } else add(hd, add(el('div'), el('b', null, D.title), el('span', null, D.sub)), x);
+      /* Every pop-up form carries the festival banner (menorah + festival name + form title): standing rule, Nov 15 2026 */
+      var B = D.banner || {};
+      hd.className += ' cff-ban';
+      add(hd, menorahSvg(), add(el('div'), el('i', null, B.kick || BANNER_KICK), el('b', null, D.title), el('span', null, D.sub), B.tag ? el('em', null, B.tag) : null), x);
     }
     var body = el('div', 'cff-body');
     var err = el('div', 'cff-err'); err.setAttribute('role', 'alert');

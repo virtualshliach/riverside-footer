@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFStripe && window.CFStripe.version) return;
 
-  var VERSION = 'stripe-donate 2026-11-09a';
+  var VERSION = 'stripe-donate 2026-11-15a';
 
   var CFG = {
     /* Google Apps Script web app URL (Deploy > Web app). */
@@ -24,7 +24,7 @@
     /* Stripe publishable key: pk_test_... while testing, pk_live_... when live. */
     PUBLISHABLE_KEY: 'pk_live_51UYlhp2QWZswqSbMqqbP4VThYws1ixIKxYcau1pdtRs4bkIKPNdMH7xLa78dhL4a2IgXRGCmEyKP5oEqRwO0Rtl800l1adSlBc',
 
-    TITLE: 'Support the Chanukah Festival',
+    TITLE: 'Support the Festival',
     SUB: 'Your gift keeps the festival free for the whole community.',
     ORG: 'Chabad Jewish Community Center of Riverside',
     PHONE: '951-222-2005',
@@ -80,6 +80,15 @@
       R + '.cfs-hd{display:flex;align-items:center;gap:14px;padding:16px 18px 14px 22px;background:' + NAVY + ';color:#fff}',
       R + '.cfs-hd b{display:block;font-family:' + DISP + ';font-size:1.2rem;line-height:1.25}',
       R + '.cfs-hd span{display:block;font-size:.85rem;color:' + MUTED + '}',
+      /* photo-style banner header (every pop-up form): festival menorah + title, same look as the contest social graphic */
+      R + '.cfs-hd.cfs-ban{position:relative;gap:18px;padding:20px 64px 18px 22px;min-height:132px;border-top:4px solid ' + GOLD + ';background:radial-gradient(circle at 86px 50%,rgba(233,185,73,.22),rgba(233,185,73,0) 120px),linear-gradient(120deg,#123140,' + DEEP + ' 70%)}',
+      R + '.cfs-ban .cfs-x{position:absolute;top:12px;right:12px}',
+      R + '.cfs-ban svg{width:128px;height:auto;flex:none;filter:drop-shadow(0 0 14px rgba(60,199,180,.35))}',
+      R + '.cfs-ban i{display:block;font-style:normal;font-size:.72rem;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:4px}',
+      R + '.cfs-ban b{font-size:1.75rem;line-height:1.1;margin-bottom:4px}',
+      R + '.cfs-ban span{font-size:.92rem}',
+      R + '.cfs-ban em{display:block;font-style:normal;font-weight:700;font-size:.88rem;color:' + GOLD + ';margin-top:4px}',
+      '@media (max-width:620px){' + R + '.cfs-hd.cfs-ban{min-height:0;gap:14px;padding:16px 56px 14px 16px}' + R + '.cfs-ban svg{width:76px}' + R + '.cfs-ban b{font-size:1.45rem}' + R + '.cfs-ban i{font-size:.6rem;letter-spacing:.1em;margin-bottom:2px}' + R + '.cfs-ban span{font-size:.85rem}' + R + '.cfs-ban em{font-size:.82rem}}',
       R + '.cfs-x{margin-left:auto;width:40px;height:40px;border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.1);color:#fff;font-size:22px;line-height:1;flex:none}',
       R + '.cfs-steps{display:flex;gap:6px;padding:12px 22px;border-bottom:1px solid #e6eef0;background:#f6fafb}',
       R + '.cfs-st{display:flex;align-items:center;gap:8px;flex:1;font-size:.82rem;font-weight:600;color:#7a8d93}',
@@ -179,6 +188,25 @@
   /* ---------- the pop-up ---------- */
   var M = null;
 
+  /* The festival menorah (festival-menorah.svg, simplified), drawn inline so the banner needs no image download. */
+  function menorahSvg() {
+    var xs = [72, 250, 421, 599, 951, 1128, 1299, 1477], arms = '', flames = '';
+    var y = [[652, 945], [541, 760], [448, 596], [341, 414]];
+    xs.forEach(function (x, n) {
+      var r = y[n < 4 ? n : 7 - n];
+      arms += '<polyline points="' + x + ',169 ' + x + ',' + r[0] + ' 775,' + r[1] + '"/>';
+      flames += '<path d="M' + x + ',70c6,19 21,32 18,48c-3,14-33,14-36,0c-3-16 12-29 18-48z"/>';
+    });
+    flames += '<path d="M775,18c7,25 23,43 20,64c-3,18-37,18-40,0c-3-21 13-39 20-64z"/>';
+    var w = document.createElement('div');
+    w.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1550 1000" aria-hidden="true" focusable="false">' +
+      '<defs><linearGradient id="cfsmg" x1="0" y1="119" x2="0" y2="985" gradientUnits="userSpaceOnUse">' +
+      '<stop offset="0" stop-color="#28cecc"/><stop offset=".44" stop-color="#8cc78d"/><stop offset=".67" stop-color="#dbc25b"/><stop offset="1" stop-color="#efc14f"/></linearGradient></defs>' +
+      '<g fill="none" stroke="url(#cfsmg)" stroke-width="40">' + arms + '<line x1="775" y1="119" x2="775" y2="985" stroke-width="47"/></g>' +
+      '<g fill="#fff">' + flames + '</g></svg>';
+    return w.firstChild;
+  }
+
   function build() {
     css();
     var st = { step: 1, amount: 0, monthly: false, busy: false, sig: '', start: null, attempt: '' };
@@ -188,7 +216,9 @@
 
     var hd = el('div', 'cfs-hd');
     var x = el('button', 'cfs-x', '×'); x.type = 'button'; x.setAttribute('aria-label', 'Close');
-    add(hd, add(el('div'), el('b', null, CFG.TITLE), el('span', null, CFG.SUB)), x);
+    /* Festival banner header on every form (standing rule, Nov 15 2026) */
+    hd.className += ' cfs-ban';
+    add(hd, menorahSvg(), add(el('div'), el('i', null, '22nd Annual Chanukah Festival'), el('b', null, CFG.TITLE), el('span', null, CFG.SUB)), x);
 
     var steps = el('div', 'cfs-steps');
     var stepEls = ['Amount', 'Your details', 'Payment'].map(function (t, i) {
