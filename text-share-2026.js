@@ -9,7 +9,7 @@
   'use strict';
   if (window.TS26 && window.TS26.version) return;
 
-  var VERSION = 'ts26-2026-11-12a';
+  var VERSION = 'ts26-2026-11-15a';
   var PV = window.TS26_PREVIEW || null;
   var DEMO = !!(PV && PV.demo);
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
@@ -28,7 +28,8 @@
     festivalUrl: 'https://chanukahfestival.org/',
     host: 'Chabad Jewish Community Center of Riverside',
     logo: 'chabad-jcc-logo-white-gold.png',
-    KICK: '22nd Annual Chanukah Festival',
+    festLogo: 'festival-email-header-v2.png',
+    festAlt: '22nd Annual Chanukah Festival',
     TITLE: 'Text a friend',
     INTRO: 'Opens your Messages app with this invitation filled in.'
   };
@@ -39,8 +40,8 @@
   var pathOk = (L.pathname === '/' || L.pathname === '') && /[?&]text(?:[=&]|$)/i.test(L.search);
   if (!DEMO && !(hostOk && pathOk)) return;
 
-  /* festival brand, Arial so it reads the same on every device */
-  var NAVY = '#0A5769', DEEP = '#08414f', TEAL = '#107A8C', GOLD = '#B08141', LIGHT = '#E2F4F7', MUTED = '#d7eef2';
+  /* Chanukah Festival brand (same as chanukahfestival.org and the festival emails), Arial so it reads the same on every device */
+  var NIGHT = '#0f2730', NAVY = '#0f2730', DEEP = '#0b1f27', TEAL = '#1f8f95', GOLD = '#e9b949', LIGHT = '#f2f5f6', MUTED = '#cfe3e8';
   var FONT = 'Arial,Helvetica,sans-serif';
 
   function log(m) { if (window.console) console.log('[Text share ' + VERSION + '] ' + m); }
@@ -87,26 +88,30 @@
     var rules = [
       'html,body{background:' + LIGHT + ' !important;margin:0 !important;padding:0 !important}',
       'body > *:not(#ts26){display:none !important}',
-      '#ts26{display:block !important;min-height:100vh;background:linear-gradient(180deg,' + NAVY + ' 0,' + TEAL + ' 280px,' + LIGHT + ' 280px);font-family:' + FONT + ';color:#fff;-webkit-font-smoothing:antialiased;padding:0 16px 56px;box-sizing:border-box}',
+      '#ts26{display:block !important;min-height:100vh;background:linear-gradient(180deg,' + NIGHT + ' 0,' + NIGHT + ' 330px,' + LIGHT + ' 330px);font-family:' + FONT + ';color:#fff;-webkit-font-smoothing:antialiased;padding:0 16px 56px;box-sizing:border-box}',
       R + '*{box-sizing:border-box;margin:0;padding:0}',
-      R + '.ts-top{max-width:680px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;padding:16px 0 6px}',
-      R + '.ts-top img{height:44px;width:auto;display:block}',
+      R + '.ts-top{max-width:680px;margin:0 auto;text-align:right;padding:12px 0 0}',
+      R + '.ts-logo{display:block;max-width:420px;margin:2px auto 0}',
+      R + '.ts-logo img{display:block;width:100%;height:auto}',
       R + '.ts-bh{font-size:13px;color:#fff;letter-spacing:.04em;font-family:' + FONT + '}',
-      R + '.ts-hero{max-width:680px;margin:18px auto 22px;text-align:center}',
+      R + '.ts-hero{max-width:680px;margin:10px auto 22px;text-align:center}',
       R + '.ts-kick{font-family:' + FONT + ';color:#f3dcb4;font-size:13px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;line-height:1.3}',
-      R + 'h1{font-family:' + FONT + ';font-weight:800;color:#fff;font-size:36px;line-height:1.15;margin-top:8px}',
+      R + 'h1{font-family:' + FONT + ';font-weight:800;color:#fff;font-size:34px;line-height:1.15;margin-top:4px}',
       R + '.ts-intro{color:' + MUTED + ';font-weight:400;font-size:16px;line-height:1.55;margin:14px auto 0;max-width:36ch}',
-      R + '.ts-card{max-width:680px;margin:0 auto;background:#fff;color:' + DEEP + ';border-radius:20px;box-shadow:0 18px 50px rgba(10,87,105,.22);border-top:5px solid ' + GOLD + ';font-size:16px;line-height:1.5;text-align:left;padding:26px 28px 28px}',
-      R + '.ts-sms{display:flex;width:100%;align-items:center;justify-content:center;padding:18px 26px;border-radius:999px;font-family:' + FONT + ';font-weight:700;font-size:1.15rem;letter-spacing:.02em;background:' + GOLD + ';color:#fff;box-shadow:0 8px 22px rgba(176,129,65,.32);text-decoration:none;text-align:center}',
+      R + '.ts-card{max-width:680px;margin:0 auto;background:#fff;color:' + DEEP + ';border-radius:20px;box-shadow:0 18px 50px rgba(15,39,48,.22);border-top:5px solid ' + GOLD + ';font-size:16px;line-height:1.5;text-align:left;padding:26px 28px 28px}',
+      R + '.ts-sms{display:flex;width:100%;align-items:center;justify-content:center;padding:18px 26px;border-radius:999px;font-family:' + FONT + ';font-weight:700;font-size:1.15rem;letter-spacing:.02em;background:' + GOLD + ';color:' + DEEP + ';box-shadow:0 8px 22px rgba(233,185,73,.32);text-decoration:none;text-align:center}',
       R + '.ts-lab{font-size:.8rem;font-weight:700;color:#4a5d64;letter-spacing:.02em;margin:22px 0 8px}',
       R + '.ts-msg{width:100%;min-height:132px;padding:14px 14px;font-family:' + FONT + ';font-size:1rem;line-height:1.55;color:' + NAVY + ';background:' + LIGHT + ';border:1.5px solid #d5e2e6;border-radius:12px;resize:none;outline:none}',
-      R + '.ts-msg:focus{border-color:' + TEAL + ';box-shadow:0 0 0 3px rgba(16,122,140,.18)}',
-      R + '.ts-copy{display:flex;width:100%;align-items:center;justify-content:center;margin-top:12px;padding:14px 26px;border-radius:999px;font-family:' + FONT + ';font-weight:700;font-size:1rem;letter-spacing:.02em;background:#fff;color:' + NAVY + ';border:2px solid ' + TEAL + ';cursor:pointer}',
+      R + '.ts-msg:focus{border-color:' + TEAL + ';box-shadow:0 0 0 3px rgba(31,143,149,.18)}',
+      R + '.ts-copy{display:flex;width:100%;align-items:center;justify-content:center;margin-top:12px;padding:14px 26px;border-radius:999px;font-family:' + FONT + ';font-weight:700;font-size:1rem;letter-spacing:.02em;background:#fff;color:' + NAVY + ';border:2px solid ' + NAVY + ';cursor:pointer}',
       R + '.ts-copy.ts-copied{background:' + LIGHT + ';border-color:' + GOLD + '}',
       R + '.ts-status{min-height:1.2em;margin-top:8px;font-size:.85rem;color:' + TEAL + ';text-align:center}',
       R + '.ts-foot{max-width:680px;margin:22px auto 0;text-align:center;font-size:.95rem;color:#33474f;font-family:' + FONT + '}',
       R + '.ts-foot a{color:' + NAVY + ';font-weight:700;text-decoration:none}',
-      '@media (max-width:560px){' + R + 'h1{font-size:30px}' + R + '.ts-card{padding:22px 18px 22px}' + R + '.ts-top img{height:38px}}'
+      R + '.ts-proj{max-width:680px;margin:34px auto 0;text-align:center;font-family:' + FONT + ';font-size:.85rem;color:#5b6e75}',
+      R + '.ts-proj a{display:inline-block;margin-top:10px;background:' + NIGHT + ';border-radius:12px;padding:12px 18px}',
+      R + '.ts-proj img{display:block;height:40px;width:auto}',
+      '@media (max-width:560px){' + R + 'h1{font-size:30px}' + R + '.ts-card{padding:22px 18px 22px}' + R + '.ts-logo{max-width:320px}}'
     ];
     var st = document.createElement('style');
     st.id = 'ts26-css';
@@ -151,13 +156,13 @@
     root.setAttribute('role', 'main');
 
     var top = el('div', 'ts-top');
-    var logoA = link(null, CFG.festivalUrl);
-    var logo = document.createElement('img'); logo.src = BASE + CFG.logo; logo.alt = CFG.host; logo.width = 120; logo.height = 44;
+    add(top, el('span', 'ts-bh', 'B"H'));
+    var logoA = link('ts-logo', CFG.festivalUrl);
+    var logo = document.createElement('img'); logo.src = BASE + CFG.festLogo; logo.alt = CFG.festAlt; logo.width = 420; logo.height = 133;
     logoA.appendChild(logo);
-    add(top, logoA, el('span', 'ts-bh', 'B"H'));
 
     var hero = el('div', 'ts-hero');
-    add(hero, el('div', 'ts-kick', CFG.KICK), el('h1', null, CFG.TITLE), el('p', 'ts-intro', CFG.INTRO));
+    add(hero, el('h1', null, CFG.TITLE), el('p', 'ts-intro', CFG.INTRO));
 
     var card = el('div', 'ts-card');
     var smsBtn = link('ts-sms', SMS, 'Tap to text a friend');
@@ -184,7 +189,15 @@
     var foot = el('p', 'ts-foot');
     add(foot, link(null, CFG.festivalUrl, 'Back to the festival page'));
 
-    add(root, top, hero, card, foot);
+    /* "A project of" the Chabad JCC, with its logo (white logo on a dark tile) */
+    var proj = el('div', 'ts-proj');
+    var orgA = link(null, 'https://www.jewishriverside.com/');
+    orgA.target = '_blank'; orgA.rel = 'noopener';
+    var org = document.createElement('img'); org.src = BASE + CFG.logo; org.alt = CFG.host; org.width = 110; org.height = 40;
+    orgA.appendChild(org);
+    add(proj, el('div', null, 'A project of ' + CFG.host), orgA);
+
+    add(root, top, logoA, hero, card, foot, proj);
     return root;
   }
 

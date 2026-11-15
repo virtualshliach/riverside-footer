@@ -620,7 +620,8 @@ var SITES = {
     ok(tx.d.getElementById('ts26-copy') && tx.d.getElementById('ts26-copy').textContent === 'Copy message', 'Copy message button is shown');
     ok([].some.call(tx.d.querySelectorAll('#ts26 a'), function (a) { return a.getAttribute('href') === 'https://chanukahfestival.org/' && /Back to the festival page/.test(a.textContent); }), 'link back to https://chanukahfestival.org/');
     ok(/Arial/.test(tx.d.getElementById('ts26-css').textContent) && !/Montserrat/.test(tx.d.getElementById('ts26-css').textContent), 'page uses Arial, not Montserrat');
-    ok(!/\u2014/.test(tx.d.getElementById('ts26').textContent) && /Chanukah/.test(tx.d.getElementById('ts26').textContent) && !/Hanukkah/i.test(tx.d.getElementById('ts26').textContent), 'no em dashes; spelled Chanukah');
+    ok(!/\u2014/.test(tx.d.getElementById('ts26').textContent) && /Chanukah/.test(tx.d.getElementById('ts26').textContent + tx.d.querySelector('#ts26 .ts-logo img').alt) && !/Hanukkah/i.test(tx.d.getElementById('ts26').textContent), 'no em dashes; spelled Chanukah');
+    ok(/festival-email-header-v2\.png$/.test(tx.d.querySelector('#ts26 .ts-logo img').src) && /A project of Chabad Jewish Community Center of Riverside/.test(tx.d.querySelector('#ts26 .ts-proj').textContent), 'festival logo on top, A project of the Chabad JCC at the bottom');
     ok(!tx.w.TS26.smsAttempted, 'desktop: Messages is not opened automatically');
     var copied = [];
     tx.w.navigator.clipboard = { writeText: function (t) { copied.push(t); return Promise.resolve(); } };
