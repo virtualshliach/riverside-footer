@@ -144,8 +144,8 @@ function page(opts) {
   t.w.CFForms.open('volunteer');
   ov = t.d.querySelector('.cff-ov');
   var vlab = [].map.call(ov.querySelectorAll('.cff-lab, legend'), function (x) { return x.textContent; }).join('|');
-  ok(ov && /Volunteer With Us/.test(ov.querySelector('.cff-hd b').textContent) && /^First name \*\|Last name \*\|Email \*\|Phone \*\|How would you like to help\? \*\|Notes/.test(vlab), 'opens with his fields: name, email, phone, roles, notes (' + vlab + ')');
-  var vroles = [].map.call(ov.querySelectorAll('.cff-tick'), function (x) { return x.textContent; }).join('|');
+  ok(ov && /Volunteer With Us/.test(ov.querySelector('.cff-hd b').textContent) && /^First name \*\|Last name \*\|Email \*\|Phone \*\|How would you like to help\? \*\|When can you be there\?\|Notes/.test(vlab), 'opens with his fields: name, email, phone, roles, times (optional), notes (' + vlab + ')');
+  var vroles = [].map.call(ov.querySelectorAll('.cff-set')[0].querySelectorAll('.cff-tick'), function (x) { return x.textContent; }).join('|');
   ok(vroles === 'Early setup (12–4 PM)|Setup (from about 4 PM)|Gift tables|Kids’ activities|Food and latkes|Greeting and info|Cleanup (after 8 PM)|Wherever I’m needed', 'his eight roles, in his order');
   var n0 = t.posts.length;
   t.set(t.byLabel(ov, 'First name')[0], 'Maya'); t.set(t.byLabel(ov, 'Last name')[0], 'Cohen');
@@ -169,6 +169,31 @@ function page(opts) {
   vf.set(vf.byLabel(ov, 'Email')[0], 'maya@example.com'); vf.set(vf.byLabel(ov, 'Phone')[0], '951-555-0100');
   vf.tick(ov, 'Gift tables'); vf.go(ov); await wait(80);
   ok(vf_posts.length === 2 && vf_posts[1].kind === 'mailing' && vf_posts[1].interests.join('|') === 'Volunteering|Volunteer: Gift tables' && /Thank you, Maya!/.test(ov.textContent), 'Apps Script without the volunteer kind: saved as a Mailing List entry (same as his page)');
+
+  console.log('Volunteer invite links (?volunteer&a=yes|other|no)');
+  var iy = page({ url: 'https://chanukahfestival.org/?volunteer&a=yes&f=Belinda&l=Becerra&e=bhb%40example.com&p=951-555-2227&r=Food%20Booth' });
+  iy.w.CFForms.open('volunteer'); ov = iy.d.querySelector('.cff-ov');
+  ok(iy.byLabel(ov, 'First name')[0].value === 'Belinda' && iy.byLabel(ov, 'Email')[0].value === 'bhb@example.com' && iy.byLabel(ov, 'Phone')[0].value === '951-555-2227', 'yes: name, email and phone filled in');
+  var ticked = [].filter.call(ov.querySelectorAll('.cff-tick input'), function (c) { return c.checked; }).map(function (c) { return c.parentNode.textContent; });
+  ok(ticked.join('|') === 'Food and latkes' && /Welcome back, Belinda!/.test(ov.textContent), 'yes: last year’s Food Booth ticks Food and latkes, welcome line');
+  var n1 = iy.posts.length; iy.go(ov); await wait(30);
+  ok(iy.posts.length === n1 && /when you can be there/.test(iy.err(ov)), 'yes: asks for times before sending');
+  iy.tick(ov, '6–8 PM (during the festival)'); iy.go(ov); await wait(50);
+  var yp = iy.posts[iy.posts.length - 1].body;
+  ok(yp.kind === 'volunteer' && yp.answer === 'yes' && yp.invited === true && yp.past === 'Food Booth' && yp.times.join('|') === '6–8 PM (during the festival)' && /Thank you, Belinda!/.test(ov.textContent), 'yes: sent with answer, times and last year’s job');
+  var is = page({ url: 'https://chanukahfestival.org/?volunteer&a=yes&f=Ron&r=Security' });
+  is.w.CFForms.open('volunteer'); ov = is.d.querySelector('.cff-ov');
+  var sec = [].filter.call(ov.querySelectorAll('.cff-tick'), function (x) { return x.textContent === 'Security'; })[0];
+  ok(sec && sec.querySelector('input').checked, 'yes: a job not on the list (Security) gets its own ticked box');
+  var io = page({ url: 'https://chanukahfestival.org/?volunteer&a=other&f=Sean&r=Setup' });
+  io.w.CFForms.open('volunteer'); ov = io.d.querySelector('.cff-ov');
+  ok(![].some.call(ov.querySelectorAll('.cff-tick input'), function (c) { return c.checked; }) && /Pick what you’d like to do this year/.test(ov.textContent), 'other: nothing pre-ticked, asks what they’d like');
+  var ino = page({ url: 'https://chanukahfestival.org/?volunteer&a=no&f=Sandy&l=Dubin&e=s%40example.com' });
+  ino.w.CFForms.open('volunteer'); ov = ino.d.querySelector('.cff-ov');
+  ok(ino.posts.length === 0 && ov.querySelector('.cff-ft .cff-btn').textContent === 'Let us know' && !ov.querySelector('.cff-set'), 'no: nothing sent until tapped; short form, no roles');
+  ino.go(ov); await wait(50);
+  var np = ino.posts[0] && ino.posts[0].body;
+  ok(np && np.answer === 'no' && np.roles.join() === 'Can’t make it this year' && np.email === 's@example.com' && /Thank you for letting us know, Sandy/.test(ov.textContent), 'no: sent as "Can’t make it this year", thank-you shows');
 
   console.log('problems');
   var se = page({ reply: { ok: false, error: 'Too many attempts. Please wait a little while and try again.' } });

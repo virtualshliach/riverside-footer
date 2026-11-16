@@ -17,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-14b';
+  var VERSION = 'festival-forms 2026-11-15a';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -83,6 +83,7 @@
       title: 'Volunteer With Us', sub: 'Monday, December 7, 2026', button: 'Sign me up',
       intro: 'Help us light up downtown Riverside! Pick what you’d like to do, and we’ll be in touch with the details.',
       roles: ['Early setup (12–4 PM)', 'Setup (from about 4 PM)', 'Gift tables', 'Kids’ activities', 'Food and latkes', 'Greeting and info', 'Cleanup (after 8 PM)', 'Wherever I’m needed'],
+      times: ['12–4 PM (early setup)', '4–6 PM (setup)', '6–8 PM (during the festival)', 'After 8 PM (cleanup)'],
       privacy: 'We use this only to plan festival volunteers. We never share it.'
     }
   };
@@ -378,26 +379,93 @@
     };
   }
 
+  /* Personal invite links from the volunteer email/text (Nov 15 2026):
+       /?volunteer&a=yes&f=First&l=Last&e=email&p=phone&r=Food Booth
+     a = yes (same job as last year), other (a different job) or no (can't this year);
+     r = last year's job(s), comma-separated, in the volunteer list's own words.
+     Only fills in the form; nothing is sent until the person taps the button. */
+  var JOB_MAP = {
+    'food booth': 'Food and latkes', 'food': 'Food and latkes', 'food and latkes': 'Food and latkes',
+    'gift shop': 'Gift tables', 'gift tables': 'Gift tables',
+    'arts and crafts': 'Kids’ activities', 'arts & crafts': 'Kids’ activities', 'art’s and crafts': 'Kids’ activities', 'art\'s and crafts': 'Kids’ activities',
+    'kids crafts': 'Kids’ activities', 'kids’ crafts': 'Kids’ activities', 'kids activities': 'Kids’ activities', 'kids’ activities': 'Kids’ activities',
+    'dreidel': 'Kids’ activities', 'dreidel table': 'Kids’ activities', 'dreidel guess': 'Kids’ activities',
+    'greeter': 'Greeting and info', 'greeters': 'Greeting and info', 'greeting and info': 'Greeting and info',
+    'setup': 'Setup (from about 4 PM)', 'set up': 'Setup (from about 4 PM)', 'early setup': 'Early setup (12–4 PM)',
+    'cleanup': 'Cleanup (after 8 PM)', 'clean up': 'Cleanup (after 8 PM)'
+  };
+  function inviteParams() {
+    var q = {};
+    try {
+      var sp = new URLSearchParams(location.search);
+      ['a', 'f', 'l', 'e', 'p', 'r'].forEach(function (k) { var v = sp.get(k); if (v) q[k] = String(v).replace(/\s+/g, ' ').trim().slice(0, k === 'r' ? 120 : 80); });
+    } catch (e) {}
+    q.a = /^(yes|other|no)$/i.test(q.a || '') ? q.a.toLowerCase() : '';
+    q.jobs = (q.r || '').split(/\s*[,;]\s*/).filter(Boolean).slice(0, 4);
+    return q;
+  }
+  function jobLabel(j) {
+    var k = j.toLowerCase().replace(/\s+/g, ' ').trim();
+    return JOB_MAP[k] || j;
+  }
+  /* tick the boxes whose label matches */
+  function tickLabels(fs, labels) {
+    [].forEach.call(fs.querySelectorAll('.cff-tick'), function (w) {
+      var t = (w.querySelector('span') || {}).textContent || '';
+      if (labels.indexOf(t) > -1) { var c = w.querySelector('input'); if (c) c.checked = true; }
+    });
+  }
+
   function buildVolunteer(body) {
     var D = FORMS.volunteer;
+    var inv = inviteParams();
     var g = el('div', 'cff-grid');
     var f = {
-      first: field('First name', 'text', { req: true, half: true, ac: 'given-name', max: 60 }),
-      last: field('Last name', 'text', { req: true, half: true, ac: 'family-name', max: 60 }),
-      email: field('Email', 'email', { req: true, half: true, ac: 'email', max: 120 }),
-      phone: field('Phone', 'tel', { req: true, half: true, ac: 'tel', im: 'tel', max: 30 })
+      first: field('First name', 'text', { req: true, half: true, ac: 'given-name', max: 60, value: inv.f }),
+      last: field('Last name', 'text', { req: true, half: true, ac: 'family-name', max: 60, value: inv.l }),
+      email: field('Email', 'email', { req: true, half: true, ac: 'email', max: 120, value: inv.e }),
+      phone: field('Phone', 'tel', { req: true, half: true, ac: 'tel', im: 'tel', max: 30, value: inv.p })
     };
-    var roles = group('How would you like to help?', D.roles, { req: true, cols: true });
+    var hi = inv.f ? inv.f + '!' : 'back!';
+
+    /* "Can't this year": just their name and an optional note */
+    if (inv.a === 'no') {
+      var nn = field('Anything you’d like to tell us? (optional)', 'textarea', { max: 500 });
+      add(g, f.first.w, f.last.w, nn.w);
+      add(body, el('p', 'cff-p', 'Thank you for all your help in the past, ' + (inv.f || 'friend') + '. We understand, and we’ll miss you this year. Tap the button below to let us know.'), g);
+      return {
+        button: 'Let us know',
+        check: function () { return firstMissing([f.first, f.last]); },
+        data: function () {
+          return { first: f.first.v(), last: f.last.v(), email: f.email.v(), phone: f.phone.v(), roles: ['Can’t make it this year'], times: [],
+            notes: nn.v(), answer: 'no', invited: true, past: inv.r || '' };
+        }
+      };
+    }
+
+    var jobs = inv.jobs.map(jobLabel);
+    var opts = D.roles.slice();
+    /* last year's job that isn't on the list (Security, Transportation, ASL...) gets its own box */
+    if (inv.a === 'yes') jobs.forEach(function (j) { if (opts.indexOf(j) < 0) opts.splice(opts.length - 1, 0, j); });
+    var roles = group('How would you like to help?', opts, { req: true, cols: true });
+    if (inv.a === 'yes') tickLabels(roles.w, jobs);
+    var times = group('When can you be there?', D.times, { req: !!inv.a, cols: true });
     var notes = field('Notes', 'textarea', { max: 500, placeholder: 'Anything we should know? Arrival time, a friend you’re coming with… (optional)' });
-    add(g, f.first.w, f.last.w, f.email.w, f.phone.w, roles.w, notes.w);
-    add(body, el('p', 'cff-p', D.intro), g, el('p', 'cff-small', D.privacy));
+    add(g, f.first.w, f.last.w, f.email.w, f.phone.w, roles.w, times.w, notes.w);
+    var intro = inv.a === 'yes' ? 'Welcome back, ' + hi + ' We’ve filled in your details and last year’s job. Choose when you can be there and tap Sign me up.'
+      : inv.a === 'other' ? 'Welcome back, ' + hi + ' Pick what you’d like to do this year and when you can be there.'
+      : D.intro;
+    add(body, el('p', 'cff-p', intro), g, el('p', 'cff-small', D.privacy));
     return {
       check: function () {
         return firstMissing([f.first, f.last, f.email, f.phone]) || emailBad(f.email) ||
-          (roles.values().length ? '' : 'Please choose at least one way you’d like to help.');
+          (roles.values().length ? '' : 'Please choose at least one way you’d like to help.') ||
+          (inv.a && !times.values().length ? 'Please choose when you can be there.' : '');
       },
       data: function () {
-        return { first: f.first.v(), last: f.last.v(), email: f.email.v(), phone: f.phone.v(), roles: roles.values(), notes: notes.v() };
+        var d = { first: f.first.v(), last: f.last.v(), email: f.email.v(), phone: f.phone.v(), roles: roles.values(), times: times.values(), notes: notes.v() };
+        if (inv.a) { d.answer = inv.a; d.invited = true; d.past = inv.r || ''; }
+        return d;
       }
     };
   }
@@ -432,7 +500,9 @@
       .then(function (r) { return r.json(); });
   }
   function volunteerAsMailing(req) {
-    var more = ('Festival volunteer: ' + req.roles.join(', ') + (req.notes ? ' | Notes: ' + req.notes : '')).slice(0, 300);
+    var more = ('Festival volunteer: ' + req.roles.join(', ') + (req.times && req.times.length ? ' | Times: ' + req.times.join(', ') : '') +
+      (req.answer ? ' | Invite answer: ' + req.answer + (req.past ? ' (last year: ' + req.past + ')' : '') : '') +
+      (req.notes ? ' | Notes: ' + req.notes : '')).slice(0, 300);
     return { action: 'form', kind: 'mailing', website: req.website, page: req.page,
       first: req.first, last: req.last, email: req.email, phone: req.phone,
       challah: false, addr1: '', addr2: '', city: '', state: '', zip: '', texts: false, birthday: '',
@@ -515,6 +585,9 @@
       title = 'Thanks for your guess, ' + d.first + '!';
       lines = ['Your guess: ' + d.guess + '. We’ll announce the winner at the festival between 7:45 and 8:00 PM.', 'Follow us for photos and more from the festival:',
         res.emailed ? 'A confirmation is on its way to ' + d.email + '.' : 'Good luck!'];
+    } else if (kind === 'volunteer' && d.answer === 'no') {
+      title = 'Thank you for letting us know, ' + d.first + '.';
+      lines = ['We’ll miss you this year. We hope you’ll still come and enjoy the festival on Monday, Dec 7!'];
     } else if (kind === 'volunteer') {
       title = 'Thank you, ' + d.first + '!';
       lines = ['You’re on our volunteer team for the Chanukah Festival. We’ll be in touch before Dec 7 with when to arrive and where to meet.',
@@ -583,7 +656,8 @@
     add(trap, el('span', null, 'Leave this empty'), trapIn);
     body.appendChild(trap);
     var ft = el('div', 'cff-ft');
-    var go = el('button', 'cff-btn', D.button); go.type = 'button';
+    var BTN = api.button || D.button;
+    var go = el('button', 'cff-btn', BTN); go.type = 'button';
     ft.appendChild(go);
     add(wrap, hd, body, ft);
 
@@ -598,7 +672,7 @@
       var req = Object.assign({ action: 'form', kind: kind, website: trapIn.value, page: location.href.split('#')[0].slice(0, 300) }, d);
       busy = true; go.disabled = true; go.textContent = 'Sending…';
       send(req).then(function (r) {
-        busy = false; go.disabled = false; go.textContent = D.button;
+        busy = false; go.disabled = false; go.textContent = BTN;
         if (!r || !r.ok) return setErr((r && r.error) || 'Something went wrong. Please try again.');
         emit('sent', { kind: kind, req: req, res: r });
         try { if (window.gtag) window.gtag('event', 'form_sent', { form: kind }); } catch (e) {}
@@ -612,7 +686,7 @@
           ft.appendChild(c);
         } else ft.style.display = 'none';
       }, function () {
-        busy = false; go.disabled = false; go.textContent = D.button;
+        busy = false; go.disabled = false; go.textContent = BTN;
         setErr('We couldn’t send that. Please check your connection and try again, or call us at ' + CFG.PHONE + '.');
       });
     });
