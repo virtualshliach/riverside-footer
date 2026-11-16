@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-15c-draft';
+  var VERSION = 'cf26-2026-11-15d-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -389,10 +389,10 @@
       url: 'https://chanukahfestival.org/',
       /* Invitation sent by the Share buttons (Nov 15). {link} = the festival link with its
          share tag. Text messages: short, plain. WhatsApp: same, *bold* title. Email: full. */
-      text: 'Join me at the Southern California\u2019s largest Chanukah Festival! \ud83d\udd4e\n\n\ud83d\udcc5 Monday, Dec 7, 6\u20138 PM\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
-      waText: 'Join me at the Southern California\u2019s largest *Chanukah Festival!* \ud83d\udd4e\n\n\ud83d\udcc5 *Monday, Dec 7, 6\u20138 PM*\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
+      text: 'Join me at Southern California\u2019s largest Chanukah Festival! \ud83d\udd4e\n\n\ud83d\udcc5 Monday, Dec 7, 6\u20138 PM\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
+      waText: 'Join me at Southern California\u2019s largest *Chanukah Festival!* \ud83d\udd4e\n\n\ud83d\udcc5 *Monday, Dec 7, 6\u20138 PM*\n\ud83d\udccd Riverside Historic Courthouse, 4050 Main St., Riverside\n\nGrand Menorah Lighting, live music, traditional Chanukah food and kids\u2019 activities. Free admission, all are welcome!\n\nCome early: the first 300 guests get a free Chanukah gift.\n\nDetails: {link}',
       emailSubject: 'Join me at the Chanukah Festival, Monday, Dec 7',
-      emailBody: 'Hi!\n\nI\u2019d love for you to join me at the Chanukah Festival, the Southern California\u2019s largest Chanukah celebration.\n\nWhen: Monday, December 7, 2026, 6\u20138 PM\nWhere: Riverside Historic Courthouse, 4050 Main St., Riverside, CA 92501\n\nWhat\u2019s there:\n\u2022 The Grand Menorah Lighting\n\u2022 Live music with Aaron Holder\n\u2022 Traditional Chanukah food\n\u2022 Kids\u2019 activities, crafts and the Gelt Drop\n\nFree admission, and everyone is welcome. Come early: the first 300 guests get a free Chanukah gift.\n\nSchedule, map and parking: {link}\n\nHope to see you there!',
+      emailBody: 'Hi!\n\nI\u2019d love for you to join me at the Chanukah Festival, Southern California\u2019s largest Chanukah celebration.\n\nWhen: Monday, December 7, 2026, 6\u20138 PM\nWhere: Riverside Historic Courthouse, 4050 Main St., Riverside, CA 92501\n\nWhat\u2019s there:\n\u2022 The Grand Menorah Lighting\n\u2022 Live music with Aaron Holder\n\u2022 Traditional Chanukah food\n\u2022 Kids\u2019 activities, crafts and the Gelt Drop\n\nFree admission, and everyone is welcome. Come early: the first 300 guests get a free Chanukah gift.\n\nSchedule, map and parking: {link}\n\nHope to see you there!',
       /* the festival's own social pages (not Jewish Riverside's or the shul's) */
       facebook: 'https://www.facebook.com/chanukahfestival/',
       instagram: 'https://www.instagram.com/chanukahfestival/',
