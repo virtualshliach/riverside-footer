@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-15d-draft';
+  var VERSION = 'cf26-2026-11-15e-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -1185,6 +1185,17 @@
       '#cf26 .cf-sic .cf-fill{fill:currentColor;stroke:none}',
       /* phones and tablets with a share sheet: the native Share button leads, full width, gold border */
       '#cf26 #cf-share .cf-sharebtns .cf-native{border-color:' + GOLD + '}',
+      /* Spread the light: same app colors as the Share pop-up (Nov 15) */
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-tx,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-tx:hover{background:' + GOLD + ';color:' + DEEP + ';border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-wa,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-wa:hover{background:#1DAA61;color:#fff;border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-gm,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-gm:hover{background:#D93025;color:#fff;border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-em,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-em:hover{background:#107A8C;color:#fff;border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-fb,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-fb:hover{background:#1877F2;color:#fff;border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-ig,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-ig:hover{background:linear-gradient(45deg,#F58529,#DD2A7B 50%,#8134AF);color:#fff;border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-cp,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-cp:hover{background:#f3eee6;color:' + DEEP + ';border-color:transparent}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-tx .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-cp .cf-sic{color:' + DEEP + '}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-wa .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-gm .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-em .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-fb .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-ig .cf-sic{color:#fff}',
+      '#cf26 #cf-share .cf-sharebtns .cf-btn:not(.cf-native):hover{filter:brightness(1.08);box-shadow:0 6px 18px rgba(0,0,0,.25)}',
       '@media (min-width:601px) and (max-width:900px){#cf26 #cf-share .cf-sharebtns{display:grid;grid-template-columns:repeat(3,190px);justify-content:center}#cf26 #cf-share .cf-sharebtns .cf-btn{width:100%}}',
       '@media (max-width:600px){#cf26 .cf-share{padding:48px 0}#cf26 #cf-share .cf-kicker{font-size:10px;letter-spacing:.24em;margin-bottom:12px}' +
         '#cf26 #cf-share .cf-h2{font-size:28px;line-height:1.2;margin-bottom:12px;padding:0 4px}#cf26 #cf-share .cf-lead{font-size:13.5px;padding:0 8px}' +
