@@ -34,6 +34,7 @@ who owns this repository.
 | `stripe-donate.js` | Donate pop-up with Stripe (card, Google Pay, Link, Cash App Pay, bank). Loaded by the festival page (draft and live) when `STRIPE_DONATE` is on. Backend: Google Apps Script web app in the org's "Chanukah Festival" Google Sheet (Donations tab, receipts) | **Live** |
 | `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page (draft and live) when `OWN_FORMS` is on, and by the Guess page (`dreidel-2026.js`). `chanukahfestival.org/?guess` opens the Dreidel form | **Live** |
 | `volunteer-2026.js` | Hidden volunteer sign-up at chanukahfestival.org/volunteer and `/?volunteer` (noindex, community emails only) | **Live** |
+| `ignite-2026.js` + `ignite/` | 7621668 Ignite Riverside year-end campaign. Shows the client-review mockup `ignite/index.html` (dummy data, no payments, preview switcher bar) full screen | **Mockup** (replace with the real build before launch) |
 | `text-share-2026.js` | Hidden SMS share page at chanukahfestival.org/?text (noindex). Opens Messages with the festival invitation; fallback: "Tap to text a friend", "Copy message", and a link back to the festival page. Used by the Text button in festival emails, because Gmail on Android strips `sms:` links | **Live** |
 
 ## Working together (two people push to this repository)

@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-15i';
+  var V = '2026-11-16a';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -25,7 +25,9 @@
     /* Dreidel Guessing Contest (JewishRiverside.com/Guess, booth banner QR). Form + thank-you page. */
     '5738793': { file: 'dreidel-2026.js', onResponse: true },
     /* Join Our Mailing List form: California as the default state. */
-    '5333083': { file: 'mailing-list.js' }
+    '5333083': { file: 'mailing-list.js' },
+    /* Ignite Riverside year-end campaign - client-review MOCKUP (dummy data, no payments). */
+    '7621668': { file: 'ignite-2026.js', cover: '#042a34', coverId: 'ig26-cover' }
   };
 
   /* domain roots that should load a project without an aid in the URL */

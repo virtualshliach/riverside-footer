@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Ignite Riverside — Year-End Campaign Mockup</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900&family=Frank+Ruhl+Libre:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0a5769; --teal-d:#063b48; --teal-dd:#042a34; --teal-l:#e6f0f2;
+  --gold:#b08141; --gold-l:#e2b866; --gold-ll:#f7e2b0; --cream:#fbf6ee;
+  --ink:#1d2a2f; --muted:#5d6b70; --line:#e3e7e8; --white:#fff;
+  --r:14px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;font-family:Mulish,Arial,sans-serif;color:var(--ink);background:#fff;line-height:1.55;-webkit-font-smoothing:antialiased}
+img{max-width:100%;display:block}
+button{font-family:inherit;cursor:pointer}
+a{color:inherit}
+.wrap{max-width:1140px;margin:0 auto;padding:0 22px}
+
+/* ---------- mockup controls ---------- */
+.mock{position:sticky;top:0;z-index:60;background:#1b1b1b;color:#ddd;font-size:12px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:7px 10px}
+.mock b{color:#ffd27a;letter-spacing:.08em}
+.mock button{background:#333;color:#eee;border:1px solid #555;border-radius:20px;padding:4px 12px;font-size:12px}
+.mock button.on{background:#ffd27a;color:#111;border-color:#ffd27a;font-weight:800}
+
+/* ---------- top strip ---------- */
+.strip{background:var(--teal-dd);color:#cfe2e6;font-size:12px;letter-spacing:.06em;text-transform:uppercase;padding:8px 0}
+.strip .wrap{display:flex;justify-content:space-between;align-items:center}
+.strip a{text-decoration:none;font-weight:700}
+.strip img{height:26px}
+
+/* ---------- hero ---------- */
+.chead{background:var(--teal-dd);color:#fff;position:relative;z-index:3}
+.chead-in{position:relative;display:flex;align-items:center;justify-content:space-between;gap:20px;padding:18px 30px 14px}
+.chead .org img{height:34px;opacity:.9}
+.bh{position:absolute;top:6px;right:12px;color:#fff;font-size:12px;opacity:.75}
+.hero-top{display:flex;align-items:center;gap:16px}
+.hero-logo{flex:0 0 auto;width:108px;height:108px}
+.hero-txt{text-align:left;display:flex;flex-direction:column;align-items:flex-start}
+.hero h1,.chead h1{font-weight:900;font-size:32px;letter-spacing:.04em;margin:0;line-height:1;text-transform:uppercase;white-space:nowrap}
+.chead h1 span{color:var(--gold-l)}
+.chead .slogan{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:15px;line-height:1.35;font-style:italic;margin:6px 0 9px;color:#f1e9da;white-space:nowrap}
+.hero{position:relative;height:400px;overflow:hidden;background:var(--teal-dd)}
+.slide{position:absolute;inset:0;background-size:cover;background-position:center 35%;opacity:0;transform:scale(1.06);transition:opacity 1.4s ease,transform 7s ease}
+.slide.on{opacity:1;transform:scale(1)}
+.hero:before{content:"";position:absolute;left:0;right:0;top:0;height:120px;z-index:1;background:linear-gradient(180deg,var(--teal-dd) 0%,rgba(4,42,52,.55) 40%,rgba(4,42,52,0) 100%)}
+.hero:after{content:"";position:absolute;left:0;bottom:0;width:70%;height:50%;z-index:1;background:radial-gradient(ellipse at 0% 100%,rgba(4,42,52,.85) 0%,rgba(4,42,52,.45) 40%,rgba(4,42,52,0) 70%)}
+.hero-in{position:absolute;left:30px;bottom:22px;z-index:2;color:#fff}
+.pill{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(255,255,255,.55);border-radius:30px;padding:5px 12px;font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;background:rgba(255,255,255,.08);backdrop-filter:blur(4px)}
+.pill i{width:8px;height:8px;border-radius:50%;background:#58e08a;box-shadow:0 0 0 0 rgba(88,224,138,.7);animation:pulse 1.8s infinite}
+@keyframes pulse{70%{box-shadow:0 0 0 9px rgba(88,224,138,0)}100%{box-shadow:0 0 0 0 rgba(88,224,138,0)}}
+.cdwrap{display:flex;flex-direction:column;align-items:flex-start;gap:6px}
+.count{gap:6px}
+.count{display:flex;gap:8px}
+.count div{background:rgba(4,42,52,.35);border:1px solid rgba(255,255,255,.22);border-radius:9px;padding:6px 0;width:54px;text-align:center;backdrop-filter:blur(6px)}
+.count b{display:block;font-size:19px;font-weight:900;line-height:1}
+.count small{font-size:8px;letter-spacing:.15em;text-transform:uppercase;opacity:.8}
+.count-lab{order:-1;font-size:10px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;opacity:.9}
+.dots{position:absolute;bottom:16px;right:22px;z-index:3;display:flex;justify-content:center;gap:7px}
+.dots button{width:8px;height:8px;border-radius:50%;border:0;background:rgba(255,255,255,.45);padding:0}
+.dots button.on{background:#fff;width:22px;border-radius:5px}
+
+/* ---------- stats bar ---------- */
+.stats{background:var(--teal);color:#fff}
+.stats .wrap{display:grid;grid-template-columns:auto 1fr auto auto;gap:22px;align-items:center;padding-top:22px;padding-bottom:22px}
+.raised{font-size:40px;font-weight:900;line-height:1}
+.raised small{display:block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.75;margin-top:6px}
+.bar{height:16px;background:rgba(255,255,255,.18);border-radius:10px;position:relative;overflow:visible}
+.bar .fill{height:100%;border-radius:10px;background:linear-gradient(90deg,var(--gold),var(--gold-l));width:0;transition:width 1.6s cubic-bezier(.2,.8,.2,1);position:relative}
+.bar .fill:after{content:"";position:absolute;right:-6px;top:50%;width:22px;height:22px;margin-top:-11px;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(226,184,102,.45)}
+.bar-meta{display:flex;justify-content:space-between;font-size:12px;margin-top:9px;opacity:.85}
+.pct{text-align:right;justify-self:end;font-size:34px;font-weight:900;line-height:1}
+.pct small{display:block;font-size:11px;letter-spacing:.08em;text-transform:uppercase;font-weight:700;opacity:.8;margin-top:4px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;border:0;border-radius:40px;padding:15px 30px;font-weight:900;letter-spacing:.1em;text-transform:uppercase;font-size:14px;text-decoration:none;transition:transform .15s,box-shadow .15s}
+.btn:hover{transform:translateY(-1px)}
+.btn-gold{background:var(--gold);color:#fff;box-shadow:0 8px 20px rgba(176,129,65,.35)}
+.btn-gold:hover{background:#9f733a}
+.btn-teal{background:var(--teal);color:#fff}
+.btn-line{background:#fff;color:var(--teal);border:2px solid var(--teal)}
+.btn-sm{padding:10px 18px;font-size:12px}
+.live-note{background:var(--teal-d);color:#bcd7dd;font-size:12px;text-align:center;padding:8px}
+.live-note b{color:var(--gold-ll)}
+
+/* ---------- sections ---------- */
+section{padding:72px 0}
+.eyebrow{color:var(--gold);font-weight:900;letter-spacing:.2em;text-transform:uppercase;font-size:12px;text-align:center}
+h2{font-size:clamp(28px,3.6vw,40px);font-weight:900;color:var(--teal);text-align:center;margin:8px 0 10px;letter-spacing:.02em}
+.lead{text-align:center;color:var(--muted);max-width:640px;margin:0 auto 34px}
+.rule{width:60px;height:3px;background:var(--gold);margin:12px auto 18px;border-radius:2px}
+
+/* ---------- matchers ---------- */
+.matchers{background:var(--cream)}
+.match-banner{display:grid;grid-template-columns:1.2fr 1fr;gap:28px;align-items:center;background:linear-gradient(135deg,var(--teal-d),var(--teal));color:#fff;border-radius:22px;padding:34px 38px;margin-bottom:30px;position:relative;overflow:hidden}
+.match-banner:after{content:"2×";position:absolute;right:-10px;bottom:-60px;font-size:240px;font-weight:900;color:rgba(255,255,255,.06);line-height:1}
+.match-banner h3{margin:0 0 8px;font-size:28px;font-weight:900}
+.match-banner p{margin:0;opacity:.9}
+.mpool{position:relative;z-index:1}
+.mpool .num{font-size:44px;font-weight:900;color:var(--gold-ll);line-height:1}
+.mpool .sub{font-size:12px;letter-spacing:.1em;text-transform:uppercase;opacity:.8;margin:6px 0 12px}
+.mpool .bar{background:rgba(255,255,255,.2)}
+.mgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px}
+.mcard{background:#fff;border-radius:var(--r);padding:20px;border:1px solid #efe6d6;display:flex;gap:14px;align-items:center}
+.avatar{flex:0 0 52px;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#fff;background:var(--teal);font-size:18px}
+.avatar.gold{background:var(--gold)}
+.mcard b{display:block;color:var(--teal);font-size:15px;line-height:1.25}
+.mcard span{font-size:13px;color:var(--muted)}
+.mcard.add{border:2px dashed var(--gold);background:transparent;justify-content:center;text-align:center;cursor:pointer;color:var(--gold);font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:13px}
+
+/* ---------- teams ---------- */
+.tgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:18px}
+.team{border:1px solid var(--line);border-radius:var(--r);padding:20px;background:#fff;cursor:pointer;transition:box-shadow .2s,transform .2s;position:relative}
+.team:hover{box-shadow:0 12px 30px rgba(10,87,105,.12);transform:translateY(-2px)}
+.team .rank{position:absolute;top:14px;right:16px;font-size:12px;font-weight:900;color:var(--gold)}
+.team h4{margin:12px 0 2px;color:var(--teal);font-size:17px}
+.team .cap{font-size:13px;color:var(--muted);margin-bottom:12px}
+.team .tbar{height:8px;background:var(--teal-l);border-radius:6px;overflow:hidden}
+.team .tbar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#2b8ea3);border-radius:6px}
+.team .tnums{display:flex;justify-content:space-between;font-size:13px;margin-top:8px}
+.team .tnums b{color:var(--teal)}
+.team-actions{display:flex;justify-content:center;gap:12px;margin-top:28px;flex-wrap:wrap}
+
+/* ---------- donors ---------- */
+.donors{background:#f6f8f8}
+.dtools{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-bottom:22px}
+.dtools input,.dtools select{border:1px solid var(--line);background:#fff;border-radius:30px;padding:11px 18px;font:inherit;font-size:14px;min-width:200px}
+.dgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:12px}
+.donor{background:#fff;border-radius:12px;padding:14px 16px;display:flex;justify-content:space-between;gap:10px;border:1px solid #edf0f0}
+.donor b{display:block;font-size:14px}
+.donor small{color:var(--muted);font-size:12px}
+.donor .tag{display:inline-block;background:var(--teal-l);color:var(--teal);font-size:11px;font-weight:800;border-radius:10px;padding:1px 8px;margin-top:4px}
+.donor .ded{font-size:12px;color:var(--gold);font-style:italic;margin-top:3px}
+.donor .amt{font-weight:900;color:var(--teal);font-size:17px;white-space:nowrap}
+.donor .amt small{display:block;text-align:right;font-weight:700;font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.more{display:block;margin:20px auto 0;background:none;border:0;color:var(--teal);font-weight:900;letter-spacing:.12em;font-size:12px;text-transform:uppercase}
+.dnote{text-align:center;font-size:12px;color:var(--muted);margin:-18px 0 22px}
+
+/* ---------- story / impact ---------- */
+.story p.intro{font-family:'Frank Ruhl Libre',Georgia,serif;font-size:22px;line-height:1.6;color:var(--teal-d);text-align:center;max-width:780px;margin:0 auto 46px}
+.impacts{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+.imp{border-radius:var(--r);overflow:hidden;background:#fff;border:1px solid var(--line)}
+.imp .ph{aspect-ratio:4/3;background-size:cover;background-position:center}
+.imp div.tx{padding:18px 20px 22px}
+.imp h4{margin:0 0 6px;color:var(--teal);font-size:17px}
+.imp p{margin:0;font-size:14px;color:var(--muted)}
+
+/* ---------- tiers ---------- */
+.tiers{background:linear-gradient(160deg,var(--teal-d),var(--teal));color:#fff}
+.tiers h2{color:#fff}
+.tiers .lead{color:#cfe2e6}
+.tgrid2{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tier{display:flex;gap:14px;align-items:center;text-align:left;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.18);border-radius:var(--r);padding:16px 18px;color:#fff;transition:background .2s}
+.tier:hover{background:rgba(255,255,255,.14)}
+.tier .ic{flex:0 0 46px;height:46px;border-radius:50%;border:2px solid var(--gold-l);display:grid;place-items:center;color:var(--gold-ll);font-size:20px}
+.tier b{display:block;font-size:15px}
+.tier .p{color:var(--gold-ll);font-weight:900}
+.tier small{display:block;opacity:.75;font-size:12px}
+
+/* ---------- share / footer ---------- */
+.share{text-align:center;padding:56px 0}
+.share .row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.share .row a,.share .row button{border:1px solid var(--line);background:#fff;border-radius:30px;padding:10px 20px;font-weight:800;font-size:13px;text-decoration:none;color:var(--teal)}
+footer{background:var(--teal-dd);color:#bcd2d7;padding:44px 0 90px;font-size:14px}
+footer .wrap{display:grid;grid-template-columns:auto 1fr;gap:34px;align-items:center}
+footer img{height:70px}
+footer b{color:#fff}
+
+/* ---------- sticky bar ---------- */
+.sticky{position:fixed;left:0;right:0;bottom:0;z-index:40;visibility:hidden;background:var(--teal-d);color:#fff;transform:translateY(110%);transition:transform .35s;box-shadow:0 -6px 24px rgba(0,0,0,.2)}
+.sticky.show{transform:none;visibility:visible}
+.sticky .wrap{display:flex;align-items:center;gap:18px;padding-top:10px;padding-bottom:10px}
+.sticky .sraised{font-weight:900;font-size:20px;white-space:nowrap}
+.sticky .sraised small{display:block;font-size:10px;font-weight:700;letter-spacing:.08em;opacity:.75;text-transform:uppercase}
+.sticky .bar{flex:1;height:8px}
+.sticky .bar .fill:after{display:none}
+.sticky .stime{font-size:12px;opacity:.85;white-space:nowrap}
+
+/* ---------- modal ---------- */
+.ov{position:fixed;inset:0;z-index:80;background:rgba(4,30,37,.62);display:none;align-items:flex-start;justify-content:center;padding:28px 12px;overflow:auto;backdrop-filter:blur(3px)}
+.ov.show{display:flex}
+.modal{background:#fff;border-radius:18px;width:100%;max-width:620px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.35);animation:pop .25s ease}
+@keyframes pop{from{transform:translateY(14px);opacity:0}}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:14px 18px;background:var(--teal-dd);color:#fff;border-bottom:3px solid var(--gold)}
+.mbrand{display:flex;align-items:center;gap:12px}
+.mbrand img{width:52px;height:52px}
+.mbrand small{display:block;font-size:10px;font-weight:900;letter-spacing:.2em;text-transform:uppercase;color:var(--gold-l)}
+.mh h3{margin:0;color:#fff;font-weight:900;letter-spacing:.06em;text-transform:uppercase;font-size:19px;line-height:1.15}
+.x{flex:0 0 34px;width:34px;height:34px;border-radius:50%;border:1px solid rgba(255,255,255,.35);background:transparent;font-size:18px;line-height:1;color:#fff}
+.mbanner{border-bottom:1px solid rgba(255,255,255,.1)}
+.mbanner{background:var(--teal);color:#fff;text-align:center;padding:12px 18px}
+.mbanner b{font-size:16px}
+.mbanner small{display:block;opacity:.85;font-size:12px}
+.steps{display:flex;align-items:center;gap:10px;padding:16px 24px 6px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#a6b2b5}
+.steps span{display:flex;align-items:center;gap:7px}
+.steps span i{width:22px;height:22px;border-radius:50%;display:grid;place-items:center;font-style:normal;background:#eef1f2;color:#90a0a4}
+.steps span.on{color:var(--teal)}
+.steps span.on i{background:var(--teal);color:#fff}
+.steps hr{flex:1;border:0;border-top:1px solid var(--line)}
+.mb{padding:10px 24px 24px}
+.lbl{font-size:11px;font-weight:900;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:16px 0 8px}
+.amts{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.amts button{border:1.5px solid var(--line);background:#fff;border-radius:30px;padding:10px 0;font-weight:800;color:var(--ink);font-size:14px}
+.amts button.on{border-color:var(--teal);background:var(--teal-l);color:var(--teal)}
+.amtin{display:flex;align-items:center;border-bottom:2px solid var(--line);margin-top:12px;padding:6px 4px}
+.amtin span{font-size:22px;font-weight:800;color:var(--muted)}
+.amtin input{flex:1;border:0;outline:0;font:inherit;font-size:30px;font-weight:900;text-align:right;color:var(--ink);min-width:0}
+.amtin em{font-style:normal;font-size:11px;color:var(--muted);margin-left:6px}
+.sched{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.sched button{border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:12px 6px;font-weight:800;font-size:14px;color:var(--ink)}
+.sched button small{display:block;font-weight:600;font-size:11px;color:var(--muted);margin-top:2px}
+.sched button.on{border-color:var(--teal);background:var(--teal-l);color:var(--teal)}
+.splitrow{display:none;margin-top:10px;gap:6px;align-items:center;flex-wrap:wrap;font-size:13px;color:var(--muted)}
+.splitrow.show{display:flex}
+.splitrow button{border:1.5px solid var(--line);background:#fff;border-radius:20px;padding:6px 12px;font-weight:800;font-size:13px}
+.splitrow button.on{border-color:var(--teal);color:var(--teal);background:var(--teal-l)}
+.summary{background:#f4f7f7;border-radius:12px;margin-top:16px;overflow:hidden;text-align:center}
+.summary .org{padding:12px;font-weight:800;color:var(--teal-d)}
+.summary .org small{display:block;font-weight:600;color:var(--muted);font-size:12px}
+.summary .big{background:var(--teal);color:#fff;font-size:26px;font-weight:900;padding:10px}
+.summary .det{padding:10px 14px;font-size:12px;color:var(--muted)}
+.chk{display:flex;gap:10px;align-items:flex-start;font-size:14px;margin-top:14px;cursor:pointer}
+.chk input{margin-top:3px;width:17px;height:17px;accent-color:var(--teal)}
+select.f,input.f,textarea.f{width:100%;border:1px solid #d6dcde;border-radius:10px;padding:12px 14px;font:inherit;font-size:15px;background:#fff;outline:0}
+select.f:focus,input.f:focus,textarea.f:focus{border-color:var(--teal);box-shadow:0 0 0 3px rgba(10,87,105,.12)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.g3{display:grid;grid-template-columns:2fr 1fr 1fr;gap:10px}
+.mt{margin-top:10px}
+.full{width:100%;margin-top:18px}
+.back{background:none;border:0;color:var(--muted);font-weight:800;font-size:13px;margin-top:12px;width:100%}
+.alt{margin-top:20px;text-align:center;font-size:11px;font-weight:900;letter-spacing:.14em;color:var(--muted)}
+.alt-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.alt-grid button{display:flex;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);border-radius:10px;background:#fff;padding:10px 12px}
+.alt-grid b{display:block;font-size:13px;color:var(--teal)}
+.alt-grid small{font-size:12px;color:var(--muted)}
+/* stripe-like element */
+.pe{border:1px solid #d6dcde;border-radius:12px;padding:14px;margin-top:6px}
+.ptabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:14px}
+.ptabs button{border:1.5px solid #e0e5e6;background:#fff;border-radius:10px;padding:10px 6px;font-size:12px;font-weight:800;color:#4a575b;text-align:left}
+.ptabs button .pi{display:block;font-size:16px;margin-bottom:2px}
+.ptabs button.on{border-color:var(--teal);color:var(--teal);box-shadow:0 0 0 2px rgba(10,87,105,.12)}
+.linkbtn{width:100%;display:flex;align-items:center;justify-content:center;gap:7px;background:#00D66F;border:0;border-radius:8px;height:46px;color:#011E0F;font-weight:700;font-size:16px;transition:background .15s}
+.linkbtn:hover{background:#00C366}
+.linkbtn svg{display:block}
+.pe-or{display:flex;align-items:center;gap:10px;margin:14px 0;color:#8a989c;font-size:12px}
+.pe-or:before,.pe-or:after{content:"";flex:1;border-top:1px solid #e3e7e8}
+.ppane{display:none}.ppane.on{display:block}
+.pnote{font-size:13px;color:var(--muted);background:#f6f8f8;border-radius:10px;padding:12px}
+.secure{display:flex;justify-content:center;align-items:center;gap:6px;font-size:12px;color:var(--muted);margin-top:12px}
+.review{background:#f6f8f8;border-radius:12px;padding:12px 14px;font-size:14px}
+.review div{display:flex;justify-content:space-between;padding:3px 0}
+.review div b{color:var(--teal)}
+.thanks{text-align:center;padding:30px 24px 34px}
+.thanks img{width:110px;margin:0 auto 12px}
+.thanks h3{color:var(--teal);font-size:26px;margin:6px 0}
+.mockflag{background:#fff7e6;border:1px dashed #e0b45c;color:#8a6420;font-size:12px;border-radius:10px;padding:8px 12px;margin-top:12px;text-align:center}
+.teamhead{padding:6px 24px 0;text-align:center}
+.teamhead .avatar{margin:0 auto 10px;width:64px;height:64px;font-size:22px}
+.teamhead h4{margin:0;font-size:22px;color:var(--teal)}
+.teamhead p{margin:6px 0 0;color:var(--muted);font-size:14px;font-style:italic}
+
+@media(max-width:900px){
+  .stats .wrap{grid-template-columns:1fr 1fr}
+  .stats .barwrap{grid-column:1/-1;order:-1}
+  .stats .donatewrap{grid-column:1/-1}
+  .stats .donatewrap .btn{width:100%}
+  .match-banner{grid-template-columns:1fr;padding:26px}
+  .impacts,.tgrid2{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .impacts,.tgrid2{grid-template-columns:1fr}
+  .amts{grid-template-columns:repeat(3,1fr)}
+  .g2,.g3{grid-template-columns:1fr}
+  .ptabs{grid-template-columns:repeat(3,1fr)}
+  .hero{height:300px}
+  .hero:before{height:80px}
+  .hero:after{width:100%}
+  .hero-in{left:14px;bottom:16px}
+  .chead-in{padding:14px 14px 10px}
+  .chead .org{display:none}
+  .hero-top{gap:12px}
+  .hero-logo{width:clamp(84px,24vw,108px);height:clamp(84px,24vw,108px)}
+  .chead h1{font-size:clamp(20px,6.2vw,32px);letter-spacing:.02em}
+  .chead .slogan{font-size:clamp(12.5px,3.6vw,15px);margin:5px 0 7px}
+  .pill{font-size:9px;padding:4px 9px;letter-spacing:.06em}
+  .sticky .bar,.sticky .stime{display:none}
+  .sticky .wrap{justify-content:space-between}
+  footer .wrap{grid-template-columns:1fr;text-align:center}
+  footer img{margin:0 auto}
+  .alt-grid{grid-template-columns:1fr}
+}
+</style>
+</head>
+<body>
+
+<!-- Mockup-only control bar (not part of the real build) -->
+<div class="mock" id="mock">
+  <b>MOCKUP · DUMMY DATA</b>
+  <span>Preview the page:</span>
+  <button data-state="before">Before launch</button>
+  <button data-state="live" class="on">Live (hour 41)</button>
+  <button data-state="goal">Goal reached</button>
+  <button data-state="ended">Ended</button>
+  <span style="opacity:.5">|</span>
+  <button id="showReceipt">Receipt email</button>
+</div>
+
+<div class="chead"><div class="chead-in">
+  <div class="hero-top">
+    <img class="hero-logo" src="img/ignite-logo.svg" alt="Ignite Riverside">
+    <div class="hero-txt">
+      <h1>Ignite <span>Riverside</span></h1>
+      <div class="slogan">72 hours to light up our community —<br>every gift doubled.</div>
+      <div class="pill" id="heroPill"><i></i><span>Live now · every gift doubled</span></div>
+    </div>
+  </div>
+  <a class="org" href="https://www.jewishriverside.com" target="_top"><img src="img/riverside-logo-white.svg" alt="Chabad Jewish Community Center of Riverside"></a>
+  <div class="bh">ב״ה</div>
+</div></div>
+
+<header class="hero" id="hero">
+  <div class="slide" style="background-image:url(img/hero1.jpg)"></div>
+  <div class="slide" style="background-image:url(img/hero2.jpg)"></div>
+  <div class="slide" style="background-image:url(img/hero3.jpg)"></div>
+  <div class="slide" style="background-image:url(img/hero4.jpg)"></div>
+  <div class="slide" style="background-image:url(img/hero5.jpg)"></div>
+  <div class="hero-in">
+    <div class="cdwrap">
+      <div class="count" id="count">
+        <div><b id="cd-d">00</b><small>Days</small></div>
+        <div><b id="cd-h">00</b><small>Hours</small></div>
+        <div><b id="cd-m">00</b><small>Min</small></div>
+        <div><b id="cd-s">00</b><small>Sec</small></div>
+      </div>
+      <div class="count-lab" id="countLab">Left in the campaign</div>
+    </div>
+  </div>
+  <div class="dots" id="dots"></div>
+</header>
+
+<div class="stats" id="stats"><div class="wrap">
+  <div class="raised"><span id="raised">$0</span><small id="raisedSub">raised of $360,000</small></div>
+  <div class="barwrap">
+    <div class="bar"><div class="fill" id="fill"></div></div>
+    <div class="bar-meta"><span id="donorCount">0 donors</span><span>Goal $360,000</span></div>
+  </div>
+  <div class="pct"><span id="pct">0%</span><small>of goal</small></div>
+  <div class="donatewrap"><button class="btn btn-gold" data-donate>Donate now</button></div>
+</div></div>
+<div class="live-note" id="liveNote">Tuesday, Dec 1 at 9:00 AM → Friday, Dec 4 at 9:00 AM (Pacific) · <b>All gifts matched 2× by our matchers</b> · Updated just now</div>
+
+<!-- ============ MATCHERS ============ -->
+<section class="matchers" id="matchers"><div class="wrap">
+  <div class="eyebrow">Our Matchers</div>
+  <h2>Every dollar you give is doubled</h2>
+  <div class="rule"></div>
+  <div class="mgrid" id="mgrid"></div>
+</div></section>
+
+<!-- ============ TEAMS ============ -->
+<section id="teams"><div class="wrap">
+  <div class="eyebrow">Teams</div>
+  <h2>Pick a team. Push it to the top.</h2>
+  <div class="rule"></div>
+  <p class="lead">Every gift counts toward the main goal <em>and</em> toward the team you choose. Tap a team to see its page and give through it.</p>
+  <div class="tgrid" id="tgrid"></div>
+  <div class="team-actions">
+    <button class="btn btn-line btn-sm" id="startTeam">+ Start a team</button>
+    <button class="btn btn-teal btn-sm" data-donate>Give without a team</button>
+  </div>
+</div></section>
+
+<!-- ============ DONORS ============ -->
+<section class="donors" id="donors"><div class="wrap">
+  <div class="eyebrow">Our Community</div>
+  <h2 id="donorsTitle">0 Donors</h2>
+  <div class="rule"></div>
+  <p class="dnote">Amounts shown include the 2× match.</p>
+  <div class="dtools">
+    <input id="dsearch" placeholder="Search donors">
+    <select id="dteam"><option value="">All teams</option></select>
+    <select id="dsort"><option value="new">Newest</option><option value="big">Largest</option><option value="name">Name</option></select>
+  </div>
+  <div class="dgrid" id="dgrid"></div>
+  <button class="more" id="dmore">Load more ▾</button>
+</div></section>
+
+<!-- ============ STORY ============ -->
+<section class="story" id="story"><div class="wrap">
+  <div class="eyebrow">Why it matters</div>
+  <h2>One community. One light.</h2>
+  <div class="rule"></div>
+  <p class="intro">From the university students who find a Shabbat table at our home, to the toddlers singing their first Modeh Ani, to the family who needs a hot meal this week — Chabad of Riverside is where our community comes together. For 72 hours, every gift is doubled, and every dollar goes straight into the people who walk through our doors.</p>
+  <div class="impacts">
+    <div class="imp"><div class="ph" style="background-image:url(img/kids.jpg)"></div><div class="tx"><h4>Ignite a Child</h4><p>Jewish Academy, Kids Empire camp and holiday programs that give our children joy and pride in who they are.</p></div></div>
+    <div class="imp"><div class="ph" style="background-image:url(img/students.jpg)"></div><div class="tx"><h4>Ignite a Student</h4><p>Chabad at UCR: Shabbat dinners, learning and a home away from home for hundreds of students.</p></div></div>
+    <div class="imp"><div class="ph" style="background-image:url(img/teens.jpg)"></div><div class="tx"><h4>Ignite a Teen</h4><p>CTeen nights, trips and leadership that help our teenagers grow into confident young Jews.</p></div></div>
+    <div class="imp"><div class="ph" style="background-image:url(img/women.jpg)"></div><div class="tx"><h4>Ignite a Woman</h4><p>Women's Circle gatherings, classes and friendships that turn a city into a community.</p></div></div>
+    <div class="imp"><div class="ph" style="background-image:url(img/mikvah.jpg)"></div><div class="tx"><h4>Ignite a Home</h4><p>Our new community mikvah, mezuzahs and the traditions that build strong Jewish homes.</p></div></div>
+    <div class="imp"><div class="ph" style="background-image:url(img/family.jpg)"></div><div class="tx"><h4>Ignite a Family</h4><p>Social services, holiday meals and a phone that's always answered when a family is going through a hard time.</p></div></div>
+  </div>
+</div></section>
+
+<!-- ============ TIERS ============ -->
+<section class="tiers" id="tiers"><div class="wrap">
+  <div class="eyebrow" style="color:var(--gold-ll)">Sponsorship Opportunities</div>
+  <h2>Light the way</h2>
+  <p class="lead">Pay at once, monthly, or split your gift into easy payments. Each tier below is doubled by our matchers.</p>
+  <div class="tgrid2" id="tierGrid"></div>
+</div></section>
+
+<div class="share wrap">
+  <h2 style="font-size:26px">Help spread the light</h2>
+  <p class="lead" style="margin-bottom:0">Sharing this with one friend does more than you think.</p>
+  <div class="row">
+    <a href="#">WhatsApp</a><a href="#">Text</a><a href="#">Email</a><a href="#">Facebook</a><button id="copyLink">Copy link</button>
+  </div>
+</div>
+
+<footer><div class="wrap">
+  <img src="img/riverside-logo-white.svg" alt="">
+  <div>
+    <b>Chabad Jewish Community Center of Riverside</b><br>
+    889 S University Dr, Riverside, CA 92507 · jewishriverside.com<br>
+    Phone: (000) 000-0000 · Email: info@jewishriverside.com · Tax ID: 00-0000000<br>
+    <small style="opacity:.7">Contributions are tax-deductible to the extent allowed by law. (Placeholder contact details.)</small>
+  </div>
+</div></footer>
+
+<div class="sticky" id="sticky"><div class="wrap">
+  <div class="sraised"><span id="sRaised">$0</span><small id="sSub">of $360,000 · 2× match</small></div>
+  <div class="bar"><div class="fill" id="sFill"></div></div>
+  <div class="stime" id="sTime"></div>
+  <button class="btn btn-gold btn-sm" data-donate>Donate</button>
+</div></div>
+
+<!-- ============ DONATE MODAL ============ -->
+<div class="ov" id="ov"><div class="modal" role="dialog" aria-modal="true">
+  <div class="mh"><div class="mbrand"><img src="img/ignite-logo.svg" alt=""><div><small>Ignite Riverside</small><h3 id="mTitle">Donate now</h3></div></div><button class="x" data-close>×</button></div>
+  <div class="mbanner" id="mBanner"><b>Your $360 becomes $720</b><small>Every gift is matched 2× during the campaign</small></div>
+  <div class="steps" id="steps">
+    <span data-s="1" class="on"><i>1</i>Amount</span><hr>
+    <span data-s="2"><i>2</i>Details</span><hr>
+    <span data-s="3"><i>3</i>Payment</span>
+  </div>
+
+  <!-- step 1 -->
+  <div class="mb" data-step="1">
+    <div class="lbl">Choose an amount</div>
+    <div class="amts" id="amts">
+      <button data-a="180">$180</button><button data-a="360" class="on">$360</button><button data-a="720">$720</button><button data-a="1800">$1,800</button><button data-a="">Other</button>
+    </div>
+    <div class="amtin"><span>$</span><input id="amt" inputmode="decimal" value="360"><em>USD</em></div>
+
+    <div class="lbl">How would you like to give?</div>
+    <div class="sched" id="sched">
+      <button data-m="one" class="on">One time<small id="sm-one">$360 today</small></button>
+      <button data-m="monthly">Monthly<small id="sm-monthly">$360/mo</small></button>
+      <button data-m="split">Split payments<small id="sm-split">$30 × 12</small></button>
+    </div>
+    <div class="splitrow" id="splitrow">Split into
+      <button data-n="3">3</button><button data-n="6">6</button><button data-n="10">10</button><button data-n="12" class="on">12</button>
+      monthly payments
+    </div>
+
+    <div class="lbl">Count my gift toward a team</div>
+    <select class="f" id="teamSel"><option value="">No team — general campaign</option></select>
+
+    <div class="summary">
+      <div class="org">Chabad Jewish Community Center of Riverside<small>will receive</small></div>
+      <div class="big" id="sumBig">$720.00</div>
+      <div class="det" id="sumDet">Your $360 gift is matched 2× — counts as $720 toward the goal.</div>
+    </div>
+    <label class="chk"><input type="checkbox" id="fees"> <span id="feesTxt">I'd like to add $10.80 to cover processing fees</span></label>
+    <button class="btn btn-teal full" data-next="2">Continue</button>
+
+    <div class="alt">— OR CHOOSE A SPONSORSHIP —</div>
+    <div class="alt-grid" id="altTiers"></div>
+  </div>
+
+  <!-- step 2 -->
+  <div class="mb" data-step="2" hidden>
+    <div class="lbl">Your details</div>
+    <div class="g2"><input class="f" placeholder="First name"><input class="f" placeholder="Last name"></div>
+    <div class="g2 mt"><input class="f" type="email" placeholder="Email"><input class="f" placeholder="Phone"></div>
+    <input class="f mt" placeholder="Street address">
+    <div class="g3 mt"><input class="f" placeholder="City"><input class="f" placeholder="State"><input class="f" placeholder="Zip"></div>
+    <div class="lbl">How should we list you on the donor wall?</div>
+    <input class="f" id="dispName" placeholder="Display name (e.g. The Cohen Family)">
+    <label class="chk"><input type="checkbox" id="anon"> Show my gift as Anonymous</label>
+    <div class="lbl">Dedication (optional)</div>
+    <input class="f" placeholder="In honor of / in memory of…">
+    <label class="chk"><input type="checkbox" checked> Send me news and updates by email</label>
+    <button class="btn btn-teal full" data-next="3">Continue to payment</button>
+    <button class="back" data-next="1">← Back</button>
+  </div>
+
+  <!-- step 3 -->
+  <div class="mb" data-step="3" hidden>
+    <div class="review" id="review"></div>
+    <div class="lbl">Payment</div>
+    <div class="pe">
+      <button type="button" class="linkbtn" id="linkBtn" aria-label="Pay with Link"><span>Pay with</span><svg viewBox="0 0 72 26" height="24" aria-hidden="true"><text x="0" y="21" font-family="Arial Black,Arial,sans-serif" font-weight="900" font-size="25" letter-spacing="-.5" fill="#011E0F">link</text><path d="M59 6 l9 8 -9 8" fill="none" stroke="#011E0F" stroke-width="3.2" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+      <div class="pe-or"><span>Or pay another way</span></div>
+      <div class="ptabs" id="ptabs">
+        <button data-p="card" class="on"><span class="pi">▭</span>Card</button>
+        <button data-p="gpay"><span class="pi">G</span>Google Pay</button>
+        <button data-p="bank"><span class="pi">⌂</span>Bank (ACH)</button>
+      </div>
+      <div class="ppane on" data-pp="card">
+        <input class="f" placeholder="Card number   1234 1234 1234 1234">
+        <div class="g2 mt"><input class="f" placeholder="MM / YY"><input class="f" placeholder="CVC"></div>
+        <div class="g2 mt"><select class="f"><option>United States</option></select><input class="f" placeholder="ZIP"></div>
+      </div>
+      <div class="ppane" data-pp="gpay"><div class="pnote">A Google Pay sheet opens when you press Donate.</div></div>
+      <div class="ppane" data-pp="bank"><div class="pnote">Securely connect your bank. Bank payments take 3–5 business days to clear; your receipt is emailed when they do.</div></div>
+    </div>
+    <div class="secure">🔒 Secured by Stripe · your card details never touch our site</div>
+    <button class="btn btn-gold full" id="payBtn">Donate $360.00</button>
+    <button class="back" data-next="2">← Back</button>
+    <div class="mockflag">Mockup — no payment is taken.</div>
+  </div>
+
+  <!-- thank you -->
+  <div class="thanks" data-step="4" hidden>
+    <img src="img/ignite-logo.svg" alt="">
+    <h3>Thank you!</h3>
+    <p id="thxTxt">Your gift has been doubled and added to the campaign.</p>
+    <p style="font-size:13px;color:var(--muted)">A receipt is on its way to your email. <a href="#" id="thxReceipt" style="color:var(--teal);font-weight:800">See sample receipt</a></p>
+    <div class="share" style="padding:6px 0 0"><div class="row"><a href="#">Share on WhatsApp</a><button data-close>Back to campaign</button></div></div>
+  </div>
+</div></div>
+
+<!-- ============ TEAM MODAL ============ -->
+<div class="ov" id="tov"><div class="modal">
+  <div class="mh"><div class="mbrand"><img src="img/ignite-logo.svg" alt=""><div><small>Ignite Riverside</small><h3>Team page</h3></div></div><button class="x" data-close>×</button></div>
+  <div class="teamhead" id="teamHead"></div>
+  <div class="mb">
+    <div class="bar" style="background:var(--teal-l);height:12px"><div class="fill" id="tFill" style="background:linear-gradient(90deg,var(--teal),#2b8ea3)"></div></div>
+    <div class="bar-meta" style="color:var(--muted)"><span id="tRaised"></span><span id="tGoal"></span></div>
+    <button class="btn btn-gold full" id="tDonate">Donate to this team</button>
+    <div class="lbl">Team donors</div>
+    <div class="dgrid" id="tDonors" style="grid-template-columns:1fr 1fr"></div>
+  </div>
+</div></div>
+
+<!-- ============ START TEAM / MATCHER MODAL ============ -->
+<div class="ov" id="fov"><div class="modal">
+  <div class="mh"><div class="mbrand"><img src="img/ignite-logo.svg" alt=""><div><small>Ignite Riverside</small><h3 id="fTitle">Start a team</h3></div></div><button class="x" data-close>×</button></div>
+  <div class="mb" id="fBody"></div>
+</div></div>
+
+<!-- ============ RECEIPT PREVIEW (mockup) ============ -->
+<div class="ov" id="rov"><div class="modal" style="max-width:660px;background:#eef2f3">
+  <div class="mh"><div class="mbrand"><img src="img/ignite-logo.svg" alt=""><div><small>Mockup</small><h3>Receipt email</h3></div></div><button class="x" data-close>×</button></div>
+  <div style="padding:20px 14px">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;font-family:Mulish,Arial,sans-serif;color:#1d2a2f">
+  <tr><td style="background:#042a34;padding:22px 26px;border-bottom:3px solid #b08141">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0"><tr>
+      <td width="76" valign="middle"><img src="img/ignite-logo.svg" width="68" height="68" alt="Ignite Riverside" style="display:block"></td>
+      <td valign="middle" style="padding-left:12px">
+        <div style="font-size:22px;font-weight:900;letter-spacing:2px;color:#ffffff;line-height:1">IGNITE <span style="color:#e2b866">RIVERSIDE</span></div>
+        <div style="font-family:Georgia,serif;font-style:italic;font-size:13px;color:#f1e9da;margin-top:5px">72 hours to light up our community</div>
+      </td>
+      <td align="right" valign="middle"><img src="img/riverside-logo-white.svg" width="96" alt="Chabad Jewish Community Center of Riverside" style="display:block"></td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding:28px 28px 8px">
+    <div style="font-size:24px;font-weight:900;color:#0a5769">Thank you, David!</div>
+    <p style="font-size:15px;line-height:1.6;margin:10px 0 0">Your gift to the Ignite Riverside campaign has been received — and thanks to our matchers, it has been <b>doubled</b>. Together we're lighting up Riverside.</p>
+  </td></tr>
+  <tr><td style="padding:18px 28px">
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#f4f7f7;border-radius:10px">
+      <tr><td style="padding:16px 18px 6px;font-size:11px;font-weight:900;letter-spacing:2px;color:#5d6b70">YOUR GIFT</td></tr>
+      <tr><td style="padding:0 18px 14px">
+        <table width="100%" cellpadding="4" cellspacing="0" border="0" style="font-size:14px">
+          <tr><td>Amount</td><td align="right"><b>$360.00</b></td></tr>
+          <tr><td>Schedule</td><td align="right"><b>One time</b></td></tr>
+          <tr><td>Team</td><td align="right"><b>Jewish Academy Parents</b></td></tr>
+          <tr><td>Dedication</td><td align="right"><b>In honor of our parents</b></td></tr>
+          <tr><td>Paid with</td><td align="right"><b>Visa ending 4242</b></td></tr>
+          <tr><td>Date</td><td align="right"><b>December 2, 2026</b></td></tr>
+          <tr><td>Confirmation</td><td align="right"><b>IGN-48213</b></td></tr>
+        </table>
+      </td></tr>
+      <tr><td style="background:#0a5769;color:#ffffff;text-align:center;padding:12px;border-radius:0 0 10px 10px;font-size:15px;font-weight:800">With the 2× match, your gift counts as <span style="color:#f7e2b0">$720</span></td></tr>
+    </table>
+  </td></tr>
+  <tr><td style="padding:4px 28px 18px;font-size:13px;line-height:1.55;color:#5d6b70">
+    If you chose monthly or split payments, each payment will be charged on the same day each month and you'll receive a receipt every time.
+  </td></tr>
+  <tr><td align="center" style="padding:6px 28px 26px">
+    <a href="#" style="display:inline-block;background:#b08141;color:#ffffff;text-decoration:none;font-weight:900;letter-spacing:2px;font-size:13px;padding:13px 26px;border-radius:30px">SHARE THE CAMPAIGN</a>
+  </td></tr>
+  <tr><td style="background:#042a34;color:#bcd2d7;padding:18px 28px;font-size:12px;line-height:1.6">
+    <b style="color:#ffffff">Chabad Jewish Community Center of Riverside</b><br>
+    889 S University Dr, Riverside, CA 92507 · Tax ID 00-0000000<br>
+    No goods or services were provided in exchange for this contribution. Please keep this receipt for your tax records.
+  </td></tr>
+</table>
+  </div>
+</div></div>
+
+<script>
+(function(){
+  /* ---------------- campaign config (dummy) ---------------- */
+  var CFG = {
+    goal: 360000, match: 2, pool: 180000,
+    start: new Date('2026-12-01T09:00:00-08:00'),
+    end:   new Date('2026-12-04T09:00:00-08:00'),
+    feePct: 0.03
+  };
+  var MATCHERS = [
+    ['The Cohen Family','$50,000'],['The Levy Family Foundation','$36,000'],['Anonymous','$25,000'],
+    ['Dr. & Mrs. Katz','$18,000'],['The Shapiro Family','$18,000'],['In memory of Sarah bas Moshe','$18,000'],
+    ['The Friedman Family','$15,000']
+  ];
+  var TEAMS = [
+    {id:'academy', name:'Jewish Academy Parents', cap:'Rachel M.', goal:60000, raised:48210, msg:'For our kids and their teachers!'},
+    {id:'ucr', name:'Chabad at UCR Alumni', cap:'Daniel S.', goal:50000, raised:41880, msg:'The Shabbat table that changed our college years.'},
+    {id:'teens', name:'Team CTeen', cap:'Avi & Leah', goal:25000, raised:21460, msg:'Teens leading the way.'},
+    {id:'women', name:"Women's Circle", cap:'Miriam K.', goal:40000, raised:27350, msg:'Together we shine brighter.'},
+    {id:'mikvah', name:'Friends of the Mikvah', cap:'Esther G.', goal:36000, raised:22140, msg:'Building the future of Jewish family life.'},
+    {id:'shabbat', name:'Shabbat Regulars', cap:'Josh & Dina', goal:30000, raised:18920, msg:'Every week, a full table.'},
+    {id:'torah', name:'Tuesday Torah Class', cap:'Prof. Weiss', goal:20000, raised:12600, msg:'Learning lights the way.'},
+    {id:'mommies', name:'Mommies & Munchkins', cap:'Chana B.', goal:18000, raised:9840, msg:'Little ones, big light!'}
+  ];
+  var TIERS = [
+    ['Pillar of Light','36,000','❖'],['Menorah Sponsor','18,000','✦'],['Torah Circle','12,000','◆'],
+    ['Shamash Society','7,200','✧'],['Golden Flame','5,400','◈'],['Silver Flame','3,600','◇'],
+    ['Bronze Flame','1,800','○'],['Supporter','720','♡'],['Friend','360','☆']
+  ];
+
+  /* ---------------- dummy donors ---------------- */
+  var FN=['David','Sarah','Michael','Rachel','Josh','Leah','Daniel','Miriam','Ari','Dina','Yossi','Chaya','Ben','Esther','Noam','Rivka','Eli','Hannah','Sam','Talia','Adam','Naomi','Jake','Shira'];
+  var LN=['Cohen','Levy','Katz','Shapiro','Friedman','Gold','Stern','Rosen','Klein','Weiss','Berg','Adler','Mizrahi','Peretz','Segal','Azoulay','Bloom','Fine','Hirsch','Kaplan'];
+  var AM=[18,36,54,72,100,118,180,180,250,360,360,500,540,720,1000,1800,2500,3600,5400];
+  var DED=['In honor of our parents','In memory of Yosef ben Avraham','For a refuah shleimah','In honor of Rabbi & Rebbetzin','',''];
+  var seed=7; function rnd(){seed=(seed*16807)%2147483647;return (seed-1)/2147483646;}
+  function pick(a){return a[Math.floor(rnd()*a.length)];}
+  var DONORS=[];
+  for(var i=0;i<60;i++){
+    var t=rnd()<.82?pick(TEAMS).id:'';
+    var mode=rnd()<.18?'monthly':(rnd()<.15?'split':'one');
+    var a=mode==='monthly'?pick([18,36,52,72,100,180,250,360]):pick(AM);
+    DONORS.push({
+      name: rnd()<.07?'Anonymous':(rnd()<.25?'The '+pick(LN)+' Family':pick(FN)+' '+pick(LN)),
+      amt:a, mode:mode, team:t, ded:rnd()<.3?pick(DED):'', mins:Math.floor(i*38+rnd()*30)
+    });
+  }
+  function credited(d){ return (d.mode==='monthly'?d.amt*12:d.amt)*CFG.match; }
+
+  /* ---------------- helpers ---------------- */
+  function $(s,r){return (r||document).querySelector(s);}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+  function money(n,dec){return '$'+Number(n).toLocaleString('en-US',{minimumFractionDigits:dec?2:0,maximumFractionDigits:dec?2:0});}
+  function ago(m){ if(m<60) return m+' min ago'; var h=Math.floor(m/60); return h<24? h+' hr ago' : Math.floor(h/24)+' day'+(h>=48?'s':'')+' ago'; }
+  function initials(s){return s.replace(/^The /,'').split(/[ &]+/).filter(Boolean).slice(0,2).map(function(w){return w[0];}).join('').toUpperCase();}
+  function teamName(id){var t=TEAMS.filter(function(x){return x.id===id;})[0];return t?t.name:'';}
+
+  /* ---------------- state (mockup switcher) ---------------- */
+  var STATE='live', RAISED=0;
+  var STATES={
+    before:{raised:0,donors:0,offsetH:null},
+    live:{raised:214860,donors:412,offsetH:41},
+    goal:{raised:372540,donors:803,offsetH:66},
+    ended:{raised:391220,donors:861,offsetH:72}
+  };
+  function setState(s){
+    STATE=s; var st=STATES[s]; RAISED=st.raised;
+    $$('#mock button[data-state]').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-state')===s);});
+    var pct=Math.round(RAISED/CFG.goal*100);
+    $('#raised').textContent= s==='before' ? 'Dec 1' : money(RAISED);
+    $('#raisedSub').textContent= s==='before' ? 'launching at 9:00 AM PT' : 'raised of '+money(CFG.goal);
+    $('#pct').textContent= pct+'%';
+    $('#fill').style.width=Math.min(100,pct)+'%';
+    $('#sFill').style.width=Math.min(100,pct)+'%';
+    $('#sRaised').textContent= s==='before' ? 'Launching Dec 1' : money(RAISED);
+    $('#donorCount').textContent= st.donors+' donors';
+    $('#donorsTitle').textContent= st.donors.toLocaleString()+' Donors';
+    var pill=$('#heroPill span');
+    if(s==='before'){pill.textContent='Launching Tuesday, Dec 1 · 9:00 AM PT'; $('#heroPill i').style.background='#ffd27a';}
+    else if(s==='live'){pill.textContent='Live now · every gift doubled'; $('#heroPill i').style.background='#58e08a';}
+    else if(s==='goal'){pill.textContent='Goal reached! Keep the light going'; $('#heroPill i').style.background='#58e08a';}
+    else {pill.textContent='Thank you, Riverside! · gifts still welcome'; $('#heroPill i').style.background='#aaa';}
+    $('#countLab').textContent= s==='before'?'Until we launch': (s==='ended'?'Campaign complete':'Left in the campaign');
+    $$('.dgrid .donor').length; renderDonors(true); renderTeams();
+    tick();
+  }
+
+  /* ---------------- countdown ---------------- */
+  function pad(n){return (n<10?'0':'')+n;}
+  var fakeStartMs=Date.now();
+  function tick(){
+    var st=STATES[STATE], diff;
+    if(STATE==='before'){ diff=CFG.start-Date.now(); if(diff<0) diff=3*864e5; }
+    else if(STATE==='ended'){ diff=0; }
+    else { diff=(72-st.offsetH)*36e5 - (Date.now()-fakeStartMs); if(diff<0) diff=0; }
+    var s=Math.floor(diff/1000), d=Math.floor(s/86400); s-=d*86400; var h=Math.floor(s/3600); s-=h*3600; var m=Math.floor(s/60); s-=m*60;
+    $('#cd-d').textContent=pad(d);$('#cd-h').textContent=pad(h);$('#cd-m').textContent=pad(m);$('#cd-s').textContent=pad(s);
+    $('#sTime').textContent= STATE==='ended' ? 'Campaign ended' : (STATE==='before'?'Starts in ':'Ends in ')+(d*24+h)+'h '+pad(m)+'m';
+  }
+  setInterval(tick,1000);
+
+  /* ---------------- hero carousel ---------------- */
+  var slides=$$('.slide'), cur=0, dots=$('#dots');
+  slides.forEach(function(_,i){var b=document.createElement('button');b.onclick=function(){show(i);};dots.appendChild(b);});
+  function show(i){slides[cur].classList.remove('on');dots.children[cur].classList.remove('on');cur=i;slides[cur].classList.add('on');dots.children[cur].classList.add('on');}
+  show(0); setInterval(function(){show((cur+1)%slides.length);},6000);
+
+  /* ---------------- matchers ---------------- */
+  var mg=$('#mgrid');
+  MATCHERS.forEach(function(m,i){
+    var c=document.createElement('div');c.className='mcard';
+    c.innerHTML='<div class="avatar '+(i%2?'gold':'')+'">'+(m[0]==='Anonymous'?'★':initials(m[0]))+'</div><div><b>'+m[0]+'</b><span>Matching up to '+m[1]+'</span></div>';
+    mg.appendChild(c);
+  });
+
+  /* ---------------- teams ---------------- */
+  function renderTeams(){
+    var g=$('#tgrid'); g.innerHTML='';
+    var scale= STATE==='before'?0:RAISED/STATES.live.raised;
+    TEAMS.slice().sort(function(a,b){return b.raised-a.raised;}).forEach(function(t,i){
+      var r=Math.round(t.raised*scale), p=Math.min(100,Math.round(r/t.goal*100));
+      var c=document.createElement('div');c.className='team';
+      c.innerHTML='<div class="rank">#'+(i+1)+'</div><div class="avatar'+(i%2?' gold':'')+'">'+initials(t.name)+'</div><h4>'+t.name+'</h4><div class="cap">Captain: '+t.cap+'</div><div class="tbar"><i style="width:'+p+'%"></i></div><div class="tnums"><span><b>'+money(r)+'</b> raised</span><span>'+p+'% of '+money(t.goal)+'</span></div>';
+      c.onclick=function(){openTeam(t,r,p);};
+      g.appendChild(c);
+    });
+  }
+  var ts=$('#teamSel'), tf=$('#dteam');
+  TEAMS.forEach(function(t){ts.add(new Option(t.name,t.id));tf.add(new Option(t.name,t.id));});
+
+  /* ---------------- donors ---------------- */
+  var shown=12;
+  function donorCard(d){
+    var tag=d.team?'<span class="tag">'+teamName(d.team)+'</span>':'';
+    var mode=d.mode==='monthly'?'<small>monthly</small>':(d.mode==='split'?'<small>pledge</small>':'');
+    return '<div class="donor"><div><b>'+d.name+'</b><small>'+ago(d.mins)+'</small><br>'+tag+(d.ded?'<div class="ded">'+d.ded+'</div>':'')+'</div><div class="amt">'+money(credited(d))+mode+'</div></div>';
+  }
+  function renderDonors(reset){
+    if(reset) shown=12;
+    var q=$('#dsearch').value.toLowerCase(), tm=$('#dteam').value, so=$('#dsort').value;
+    var list= STATE==='before'?[]:DONORS.filter(function(d){return (!q||d.name.toLowerCase().indexOf(q)>-1)&&(!tm||d.team===tm);});
+    list.sort(function(a,b){return so==='big'?credited(b)-credited(a):(so==='name'?a.name.localeCompare(b.name):a.mins-b.mins);});
+    $('#dgrid').innerHTML= list.length? list.slice(0,shown).map(donorCard).join('') : '<p style="grid-column:1/-1;text-align:center;color:var(--muted)">'+(STATE==='before'?'Be the first to give when we launch — or give early now.':'No donors match your search.')+'</p>';
+    $('#dmore').style.display= list.length>shown?'block':'none';
+  }
+  $('#dsearch').oninput=function(){renderDonors(true);};
+  $('#dteam').onchange=function(){renderDonors(true);};
+  $('#dsort').onchange=function(){renderDonors(true);};
+  $('#dmore').onclick=function(){shown+=12;renderDonors();};
+
+  /* ---------------- tiers ---------------- */
+  TIERS.forEach(function(t){
+    var n=+t[1].replace(/,/g,'');
+    var b=document.createElement('button');b.className='tier';
+    b.innerHTML='<span class="ic">'+t[2]+'</span><span><b>'+t[0]+'</b><span class="p">$'+t[1]+'</span>'+(n>=1800?'<small>or 12 × '+money(n/12,true)+'</small>':'<small>&nbsp;</small>')+'</span>';
+    b.onclick=function(){openDonate({amount:n,mode:n>=1800?'split':'one',label:t[0]});};
+    $('#tierGrid').appendChild(b);
+    var a=document.createElement('button');
+    a.innerHTML='<span style="font-size:18px">'+t[2]+'</span><span><b>'+t[0]+'</b><small>$'+t[1]+'</small></span>';
+    a.onclick=function(){setAmt(n);};
+    $('#altTiers').appendChild(a);
+  });
+
+  /* ---------------- donate modal ---------------- */
+  var D={amount:360,mode:'one',n:12,team:''};
+  function openOv(id){$('#'+id).classList.add('show');document.body.style.overflow='hidden';}
+  function closeAll(){$$('.ov').forEach(function(o){o.classList.remove('show');});document.body.style.overflow='';}
+  $$('[data-close]').forEach(function(b){b.onclick=closeAll;});
+  $$('.ov').forEach(function(o){o.addEventListener('click',function(e){if(e.target===o)closeAll();});});
+  document.addEventListener('keydown',function(e){if(e.key==='Escape')closeAll();});
+
+  function openDonate(opt){
+    opt=opt||{};
+    closeAll();
+    if(opt.amount) setAmt(opt.amount,true);
+    if(opt.mode) setMode(opt.mode);
+    if(opt.team!==undefined){D.team=opt.team;ts.value=opt.team;}
+    $('#mTitle').textContent= opt.label||'Donate now';
+    go(1); openOv('ov');
+  }
+  $$('[data-donate]').forEach(function(b){b.onclick=function(){openDonate({});};});
+
+  function setAmt(n,silent){
+    D.amount=n; $('#amt').value=n;
+    $$('#amts button').forEach(function(b){b.classList.toggle('on',+b.getAttribute('data-a')===n);});
+    if(!$$('#amts button.on').length) $$('#amts button')[4].classList.add('on');
+    calc();
+  }
+  $$('#amts button').forEach(function(b){b.onclick=function(){var a=b.getAttribute('data-a'); if(a) setAmt(+a); else {$$('#amts button').forEach(function(x){x.classList.remove('on');});b.classList.add('on');$('#amt').focus();$('#amt').select();}};});
+  $('#amt').oninput=function(){D.amount=parseFloat(this.value.replace(/[^0-9.]/g,''))||0; $$('#amts button').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-a')==='');}); calc();};
+  function setMode(m){D.mode=m;$$('#sched button').forEach(function(b){b.classList.toggle('on',b.getAttribute('data-m')===m);});$('#splitrow').classList.toggle('show',m==='split');calc();}
+  $$('#sched button').forEach(function(b){b.onclick=function(){setMode(b.getAttribute('data-m'));};});
+  $$('#splitrow button').forEach(function(b){b.onclick=function(){D.n=+b.getAttribute('data-n');$$('#splitrow button').forEach(function(x){x.classList.toggle('on',x===b);});calc();};});
+  ts.onchange=function(){D.team=ts.value;};
+  $('#fees').onchange=calc;
+
+  function calc(){
+    var a=D.amount||0, fee=$('#fees').checked?a*CFG.feePct:0;
+    var charge, big, det, banner;
+    $('#sm-one').textContent=money(a)+' today';
+    $('#sm-monthly').textContent=money(a)+'/mo';
+    $('#sm-split').textContent=money(a/D.n,true)+' × '+D.n;
+    if(D.mode==='one'){
+      charge=a+fee; big=money(a*CFG.match,true);
+      det='Your '+money(a)+' gift is matched 2× — counts as '+money(a*CFG.match)+' toward the goal.';
+      banner='Your '+money(a)+' becomes '+money(a*CFG.match);
+    } else if(D.mode==='monthly'){
+      charge=a+fee; big=money(a+fee,true)+' / month';
+      det='Monthly gifts count as 12 months: '+money(a)+' × 12 × 2 match = '+money(a*12*CFG.match)+' toward the goal. Cancel anytime.';
+      banner='Your '+money(a)+'/mo becomes '+money(a*12*CFG.match)+' this year';
+    } else {
+      charge=(a+fee)/D.n; big=money(charge,true)+' × '+D.n+' months';
+      det='Your full '+money(a)+' pledge is matched 2× and paid over '+D.n+' months — counts as '+money(a*CFG.match)+' toward the goal now.';
+      banner='Your '+money(a)+' becomes '+money(a*CFG.match);
+    }
+    $('#sumBig').textContent=big; $('#sumDet').textContent=det;
+    $('#mBanner').innerHTML='<b>'+banner+'</b><small>Every gift is matched 2× during the campaign</small>';
+    $('#feesTxt').textContent='I\'d like to add '+money(a*CFG.feePct,true)+(D.mode==='one'?'':(D.mode==='monthly'?' a month':' in total'))+' to cover processing fees';
+    $('#payBtn').textContent= D.mode==='one' ? 'Donate '+money(charge,true) : (D.mode==='monthly'?'Donate '+money(charge,true)+' monthly':'Pay first installment · '+money(charge,true));
+    D.charge=charge;
+  }
+  function go(s){
+    $$('[data-step]').forEach(function(p){p.hidden=+p.getAttribute('data-step')!==s;});
+    $('#steps').style.display= s===4?'none':'flex';
+    $('#mBanner').style.display= s===4?'none':'block';
+    $$('#steps span').forEach(function(x){x.classList.toggle('on',+x.getAttribute('data-s')<=s);});
+    if(s===3){
+      var modeTxt= D.mode==='one'?'One time':(D.mode==='monthly'?'Monthly':'Split · '+D.n+' payments');
+      $('#review').innerHTML='<div><span>Gift</span><b>'+money(D.amount)+'</b></div><div><span>Schedule</span><b>'+modeTxt+'</b></div><div><span>Team</span><b>'+(teamName(D.team)||'General campaign')+'</b></div><div><span>Charged today</span><b>'+money(D.charge,true)+'</b></div>';
+    }
+    $('.modal',$('#ov')).scrollIntoView({block:'start'});
+  }
+  $$('[data-next]').forEach(function(b){b.onclick=function(){go(+b.getAttribute('data-next'));};});
+  $$('#ptabs button').forEach(function(b){b.onclick=function(){var p=b.getAttribute('data-p');$$('#ptabs button').forEach(function(x){x.classList.toggle('on',x===b);});$$('.ppane').forEach(function(x){x.classList.toggle('on',x.getAttribute('data-pp')===p);});};});
+  $('#linkBtn').onclick=function(){$('#payBtn').click();};
+  $('#payBtn').onclick=function(){
+    var b=this;b.textContent='Processing…';b.disabled=true;
+    setTimeout(function(){
+      b.disabled=false;
+      var mult=D.mode==='monthly'?12:1;
+      $('#thxTxt').textContent='Your gift was matched 2× and added '+money(D.amount*mult*CFG.match)+' to the campaign'+(D.team?' — and to '+teamName(D.team)+'.':'.');
+      go(4);
+    },1100);
+  };
+
+  /* ---------------- team modal ---------------- */
+  function openTeam(t,r,p){
+    $('#teamHead').innerHTML='<div class="avatar">'+initials(t.name)+'</div><h4>'+t.name+'</h4><div style="color:var(--muted);font-size:13px">Captain: '+t.cap+'</div><p>“'+t.msg+'”</p>';
+    $('#tFill').style.width=p+'%';
+    $('#tRaised').textContent=money(r)+' raised';
+    $('#tGoal').textContent=p+'% of '+money(t.goal);
+    var ds= STATE==='before'?[]:DONORS.filter(function(d){return d.team===t.id;}).slice(0,8);
+    $('#tDonors').innerHTML= ds.length?ds.map(donorCard).join(''):'<p style="color:var(--muted);font-size:14px">No gifts yet — be the first!</p>';
+    $('#tDonate').onclick=function(){openDonate({team:t.id,label:'Give to '+t.name});};
+    openOv('tov');
+  }
+
+  /* ---------------- start team / become matcher ---------------- */
+  $('#startTeam').onclick=function(){
+    $('#fTitle').textContent='Start a team';
+    $('#fBody').innerHTML='<p style="color:var(--muted);margin-top:0">Rally your friends. Your team gets its own page and a spot on the leaderboard.</p><div class="g2"><input class="f" placeholder="Your name"><input class="f" placeholder="Email"></div><input class="f mt" id="ntName" placeholder="Team name"><input class="f mt" id="ntGoal" placeholder="Team goal (e.g. 10000)"><textarea class="f mt" rows="2" placeholder="A line about why you\'re giving"></textarea><button class="btn btn-teal full" id="ntGo">Create my team</button><div class="mockflag">Mockup — a real team request would go to the campaign sheet for approval.</div>';
+    openOv('fov');
+    $('#ntGo').onclick=function(){
+      var n=$('#ntName').value.trim()||'New Team', g=parseFloat($('#ntGoal').value)||10000;
+      TEAMS.push({id:'t'+Date.now(),name:n,cap:'You',goal:g,raised:0,msg:'Join our team!'});
+      ts.add(new Option(n,TEAMS[TEAMS.length-1].id)); tf.add(new Option(n,TEAMS[TEAMS.length-1].id));
+      renderTeams(); closeAll(); document.getElementById('teams').scrollIntoView();
+    };
+  };
+  function openMatcher(){
+    $('#fTitle').textContent='Become a matcher';
+    $('#fBody').innerHTML='<p style="color:var(--muted);margin-top:0">Matchers make every gift count twice. Pledge an amount and the rabbi will be in touch.</p><div class="g2"><input class="f" placeholder="Name / family name"><input class="f" placeholder="Phone"></div><input class="f mt" placeholder="Email"><input class="f mt" placeholder="Matching pledge (e.g. 18000)"><label class="chk"><input type="checkbox"> List me as Anonymous</label><button class="btn btn-gold full" data-close>Send my pledge</button><div class="mockflag">Mockup — nothing is sent.</div>';
+    $$('[data-close]',$('#fBody')).forEach(function(b){b.onclick=closeAll;});
+    openOv('fov');
+  }
+
+  /* ---------------- sticky bar + misc ---------------- */
+  var stats=$('#stats');
+  window.addEventListener('scroll',function(){ $('#sticky').classList.toggle('show', stats.getBoundingClientRect().bottom<0); },{passive:true});
+  $('#copyLink').onclick=function(){var b=this;try{navigator.clipboard.writeText('https://www.jewishriverside.com/ignite').then(function(){b.textContent='Copied!';},function(){b.textContent='jewishriverside.com/ignite';});}catch(e){b.textContent='jewishriverside.com/ignite';}};
+  $$('#mock button[data-state]').forEach(function(b){b.onclick=function(){setState(b.getAttribute('data-state'));};});
+  $('#thxReceipt').onclick=function(e){e.preventDefault();closeAll();openOv('rov');};
+  $('#showReceipt').onclick=function(){closeAll();openOv('rov');};
+
+  setAmt(360); setState('live');
+})();
+</script>
+</body>
+</html>
