@@ -172,8 +172,11 @@
   }
 
   /* ---------- share ---------- */
-  function shareUrl(src) {
-    return CFG.festivalUrl + '?s=' + src + '-contest'; /* footer.js turns s into the analytics campaign */
+  /* Shortest link (Nov 16): chanukahfestival.org?<app>c (see SHARE_APP in chanukah-2026-draft.js);
+     footer.js turns the code into the analytics campaign. full = true adds https:// (Facebook). */
+  var SHARE_APP = { sms: 't', whatsapp: 'w', email: 'e', facebook: 'f', instagram: 'i', copy: 'c', native: 'a' };
+  function shareUrl(src, full) {
+    return (full ? 'https://' : '') + CFG.festivalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') + '?' + (SHARE_APP[src] || '') + 'c';
   }
   function track(m) { try { if (window.gtag) window.gtag('event', 'share_click', { method: m, page: 'contest-thanks' }); } catch (e) {} }
   function shareBlock() {
@@ -188,7 +191,7 @@
       nb.insertBefore(icon('share'), nb.firstChild);
       nb.addEventListener('click', function () {
         track('native');
-        var pr = navigator.share({ title: 'Menorah Contest', text: CFG.SHARE_TEXT, url: shareUrl('native') });
+        var pr = navigator.share({ title: 'Menorah Contest', text: CFG.SHARE_TEXT, url: shareUrl('native', true) });
         if (pr && pr.catch) pr.catch(function () {});
       });
       row.appendChild(nb);
@@ -205,7 +208,7 @@
     var sms = btn('mc-plain', 'sms:?' + AMP + 'body=' + encodeURIComponent(body('sms')), 'Text Message', 'chat', 'sms');
     var wa = btn('mc-wa', 'https://wa.me/?' + qs({ text: body('whatsapp') }), 'WhatsApp', 'wa', 'whatsapp', true);
     var em = btn('mc-plain', 'mailto:?subject=' + encodeURIComponent(CFG.EMAIL_SUBJECT) + AMP + 'body=' + encodeURIComponent(body('email') + '\n\nHope to see you there!'), 'Email', 'mail', 'email');
-    var fb = btn('mc-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook') }), 'Facebook', 'fb', 'facebook', true);
+    var fb = btn('mc-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', true) }), 'Facebook', 'fb', 'facebook', true);
     var ig = el('button', 'mc-btn mc-line mc-ig', 'Instagram'); ig.type = 'button';
     ig.insertBefore(icon('ig'), ig.firstChild);
     var cp = el('button', 'mc-btn mc-line mc-plain', 'Copy Link'); cp.type = 'button';

@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-16a';
+  var V = '2026-11-16b';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -146,8 +146,15 @@
     window.gtag = function () { window.dataLayer.push(arguments); };
     window.gtag('js', new Date());
     var gcfg = { page_title: document.title, anonymize_ip: true };
-    /* short share links (?s=whatsapp-contest) count as the share campaign */
+    /* share links count as the share campaign. Shortest form (Nov 16): ?wt = app + place
+       (app: t Text, w WhatsApp, e Email, g Gmail, f Facebook, i Instagram, c Copy, a More apps;
+       place: none festival page, t top of it, c Menorah Contest thank-you, d Dreidel thank-you).
+       Older links (?s=whatsapp-top) still count. */
+    var SHARE_APP = { t: 'sms', w: 'whatsapp', e: 'email', g: 'gmail', f: 'facebook', i: 'instagram', c: 'copy', a: 'native' };
+    var SHARE_PLACE = { '': 'festival', t: 'top', c: 'contest', d: 'dreidel' };
     var sm = /[?&]s=([a-z]+)(?:-([a-z0-9]+))?(?:&|$)/.exec(window.location.search);
+    var sk = /^\?([a-z])([a-z]?)(?:&|$)/.exec(window.location.search);
+    if (!sm && sk && SHARE_APP[sk[1]] && SHARE_PLACE[sk[2]]) sm = [sk[0], SHARE_APP[sk[1]], SHARE_PLACE[sk[2]] === 'festival' ? '' : SHARE_PLACE[sk[2]]];
     if (sm) { gcfg.campaign_source = sm[1]; gcfg.campaign_medium = 'share'; gcfg.campaign_name = 'chanukah2026'; gcfg.campaign_content = sm[2] || 'festival'; }
     window.gtag('config', GA4_ID, gcfg);
     var ga = document.createElement('script');

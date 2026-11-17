@@ -290,7 +290,7 @@ var SITES = {
     var DG_NATIVE = '<div id="dg-native"><h2>Thanks for your guess!</h2><p>The winner of the $180 prize is announced between 7:45 and 8 PM at the Chanukah Festival.</p><p>Good luck, and enjoy the festival!</p></div>';
     var dgr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/5738793/jewish/Dreidel-Guessing-Contest.htm', { shell: SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container">' + DG_NATIVE + '</div>'), wait: 600 });
     ok(!!dgr.d.getElementById('dg26') && !dgr.errors.length && dgr.d.getElementById('dg-native').style.display === 'none', 'dreidel thank-you card replaces the plain message');
-    ok(dgr.d.querySelectorAll('#dg26 .mc-row a, #dg26 .mc-row button').length >= 6 && /s%3Dwhatsapp-dreidel|s=whatsapp-dreidel/.test(dgr.d.getElementById('dg26').innerHTML), 'dreidel thank-you has the share buttons with short tracking links');
+    ok(dgr.d.querySelectorAll('#dg26 .mc-row a, #dg26 .mc-row button').length >= 6 && /chanukahfestival\.org%3Fwd(%0A|$|")|chanukahfestival\.org\?wd\b/.test(dgr.d.getElementById('dg26').innerHTML) && !/s%3D|s=whatsapp/.test(dgr.d.getElementById('dg26').innerHTML), 'dreidel thank-you has the share buttons with the shortest links (?wd)');
     var dgF = [].map.call(dgr.d.querySelectorAll('#dg26 .mc-follow a'), function (a) { return a.getAttribute('href') + '|' + a.target + '|' + (a.getAttribute('aria-label') || ''); });
     ok(dgF.length === 5 && dgF.every(function (t) { return /\|_blank\|Follow .+ \(opens in a new tab\)$/.test(t); }) &&
       ['https://www.facebook.com/JewishRiverside', 'https://www.instagram.com/jewishriverside', 'https://x.com/Jewishriverside', 'https://www.facebook.com/chanukahfestival/', 'https://www.instagram.com/chanukahfestival/'].every(function (u, i) { return dgF[i].indexOf(u + '|') === 0; }),
@@ -308,7 +308,7 @@ var SITES = {
     var pop = r.d.getElementById('cf-sharepop');
     ok(!!pop, 'top Share button opens the invite pop-up');
     var gmA = pop && [].filter.call(pop.querySelectorAll('a'), function (a) { return /mail\.google\.com/.test(a.href); })[0];
-    ok(!!gmA && /su=Join/.test(gmA.href) && /body=Hi/.test(gmA.href) && /gmail-top/.test(decodeURIComponent(gmA.href)), 'pop-up Gmail has subject, full invitation and tagged link');
+    ok(!!gmA && /su=Join/.test(gmA.href) && /body=Hi/.test(gmA.href) && /chanukahfestival\.org\?gt\b/.test(decodeURIComponent(gmA.href)), 'pop-up Gmail has subject, full invitation and tagged link');
     if (pop) pop.parentNode.removeChild(pop);
     /* 11p: invite style A and the desktop-only picture kit */
     var sb = [].map.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { return b.textContent.trim(); });
@@ -331,7 +331,9 @@ var SITES = {
     ok(bh && bh.closest('.cf-nav') && !bh.closest('.cf-hero') && !bh.closest('.cf-vid'), 'B"H sits in the sticky menu bar, not over the hero');
     ok(/#cf26 \.cf-bh\{[^}]*right:10px/.test(shCss) && /#cf26 \.cf-nav \.cf-wrap\{[^}]*padding-right:48px/.test(shCss) && !/#cf26 \.cf-bh\{[^}]*left:18px/.test(shCss),
       'B"H is a small mark in the top-right corner of the menu bar');
-    ok(waA && /chanukahfestival\.org%2F%3Fs%3Dwhatsapp(%26|$)/i.test(waA.href) && !/utm_/.test(waA.href), 'WhatsApp invite carries the short tagged ChanukahFestival.org link');
+    ok(waA && /chanukahfestival\.org%3Fw(t)?(%0A|%20|$)/i.test(waA.href) && !/utm_|https%3A|s%3D/.test(waA.href), 'WhatsApp invite carries the shortest ChanukahFestival.org link (?w / ?wt)');
+    var fbA = [].filter.call(r.d.querySelectorAll('#cf-share a'), function (a) { return /facebook\.com\/sharer/.test(a.href); })[0];
+    ok(fbA && /u=https%3A%2F%2Fchanukahfestival\.org%3Ff(&|$)/.test(fbA.href), 'Facebook share gets the full short address (https://chanukahfestival.org?f)');
     ok(/%0A%0A/.test(waA.href), 'invite text has line breaks');
     ok(!/\u2014|[^0-9]\u2013|\u2013[^0-9]/.test(r.d.getElementById('cf26').textContent), 'dashes only in number ranges (6\u20138 PM), never in sentences');
     var allA = [].map.call(r.d.querySelectorAll('#cf26 a'), function (a) { return a.getAttribute('href') || ''; }).join(' ');

@@ -2805,11 +2805,17 @@
 
   /* ---------- share ---------- */
   /* The public link with tracking tags, so each kind of share can be counted. */
-  /* Short, readable link: ?s=<where it was shared>[-<page>]. footer.js turns s into the
-     analytics campaign (source = before the dash, content = after), so no long utm_ tags. */
-  function shareUrl(source, page) {
-    var p = (page || 'festival').replace(/^festival-?/, '');
-    return CFG.SHARE.url + '?s=' + source + (p ? '-' + p : '');
+  /* Shortest link (Nov 16): chanukahfestival.org?<app><place>, e.g. ?wt = WhatsApp, top of the page.
+     App: t Text, w WhatsApp, e Email, g Gmail, f Facebook, i Instagram, c Copy, a More apps.
+     Place: none = bottom of the festival page, t = top. footer.js turns the code into the
+     analytics campaign. No https:// in messages (every app still makes it a link);
+     full = true adds it where a full address is required (Facebook's share page). */
+  var SHARE_APP = { sms: 't', whatsapp: 'w', email: 'e', gmail: 'g', facebook: 'f', instagram: 'i', copy: 'c', native: 'a' };
+  var SHARE_PLACE = { festival: '', 'festival-top': 't' };
+  function shareUrl(source, page, full) {
+    var host = CFG.SHARE.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+    var code = (SHARE_APP[source] || '') + (SHARE_PLACE[page || 'festival'] || '');
+    return (full ? 'https://' : '') + host + (code ? '?' + code : '');
   }
   /* One set of invite buttons. Used on the festival page; the same set goes on every
      thank-you page. msg: the prefilled invitation; page: tag for analytics. */
@@ -2872,7 +2878,7 @@
       gm.addEventListener('click', function () { track('gmail'); });
     }
 
-    var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page) }), 'Facebook', true);
+    var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page, true) }), 'Facebook', true);
     fb.insertBefore(shareIcon('fb'), fb.firstChild);
     fb.addEventListener('click', function () { track('facebook'); });
 
