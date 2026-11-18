@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-17a';
+  var V = '2026-11-18a';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -59,7 +59,7 @@
   /* Short links on the festival's own site: chanukahfestival.org/guess, /dreidel, /menorah, /menorah-contest, /donate.
      ChabadOne has no such pages, so they reach its "Page Not Found" page with the address kept;
      send them to the festival page, which opens the matching form (?guess, ?menorah, ?donate). */
-  var SHORT = { guess: 'guess', guest: 'guess', dreidel: 'guess', menorah: 'menorah', 'menorah-contest': 'menorah', donate: 'donate', volunteer: 'volunteer' };
+  var SHORT = { guess: 'guess', guest: 'guess', dreidel: 'guess', menorah: 'menorah', 'menorah-contest': 'menorah', donate: 'donate', support: 'donate', volunteer: 'volunteer' };
   var sm = /^\/([a-z-]+)\/?$/i.exec(window.location.pathname);
   var sh = (window.location.hostname || '').toLowerCase().replace(/^www\./, '');
   if (sm && HOSTS[sh] && Object.prototype.hasOwnProperty.call(SHORT, sm[1].toLowerCase())) {
