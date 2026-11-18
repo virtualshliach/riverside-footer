@@ -55,6 +55,7 @@ function load(site, url, opts) {
       w.console.warn = function () { logs.push('warn ' + [].join.call(arguments, ' ')); };
       w.console.log = function () { logs.push([].join.call(arguments, ' ')); };
       w.addEventListener('error', function (e) { errors.push(e.message); });
+      if (opts.before) opts.before(w);
       if (opts.userAgent) {
         try { Object.defineProperty(w.navigator, 'userAgent', { get: function () { return opts.userAgent; }, configurable: true }); } catch (e) {}
       }
@@ -250,6 +251,8 @@ var SITES = {
     var ldj = null; try { ldj = JSON.parse(ld.textContent); } catch (e) {}
     ok(ldj && ldj['@type'] === 'Event' && /2026-12-07T18:00/.test(ldj.startDate) && ldj.location.name === 'Riverside Historic Courthouse' && ldj.isAccessibleForFree === true, 'schema.org Event data: date, place, free');
     ok(typeof r.w.gtag === 'function' && r.w.dataLayer.some(function (x) { return x[0] === 'config' && x[1] === 'G-7T1ZM87VNH'; }), 'Google Analytics on: festival page configured for G-7T1ZM87VNH');
+    var gx = await load('riverside', 'https://www.chanukahfestival.org/', { wait: 300, before: function (w) { w.dataLayer = []; w.gtag = function () { w.dataLayer.push(arguments); }; w.gtag('config', 'G-FBPBS0JXYJ'); } });
+    ok(gx.w.dataLayer.some(function (x) { return x[0] === 'config' && x[1] === 'G-7T1ZM87VNH'; }) && gx.w.dataLayer.some(function (x) { return x[0] === 'config' && x[1] === 'G-FBPBS0JXYJ'; }), 'page already has ChabadOne\'s Google tag: ours is added next to it');
 
     console.log('riverside: Kids Menorah Contest thank-you page');
     /* the platform's confirmation as set in ChabadOne (Nov 6): a div with a headline and three lines */

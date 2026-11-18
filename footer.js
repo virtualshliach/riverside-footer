@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-18b';
+  var V = '2026-11-18c';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -141,10 +141,16 @@
     if (el && el.parentNode) el.parentNode.removeChild(el);
   }
 
-  if (/^G-[A-Z0-9]{4,}$/.test(GA4_ID) && !window.gtag) {
+  /* ChabadOne pages already run their own Google tag (another GA4 ID). Ours is added next to it:
+     one gtag.js handles several IDs, and events without send_to go to every configured ID. */
+  if (/^G-[A-Z0-9]{4,}$/.test(GA4_ID) && !window.CF26_GA4) {
+    window.CF26_GA4 = GA4_ID;
+    var hadTag = typeof window.gtag === 'function';
     window.dataLayer = window.dataLayer || [];
-    window.gtag = function () { window.dataLayer.push(arguments); };
-    window.gtag('js', new Date());
+    if (!hadTag) {
+      window.gtag = function () { window.dataLayer.push(arguments); };
+      window.gtag('js', new Date());
+    }
     var gcfg = { page_title: document.title, anonymize_ip: true };
     /* share links count as the share campaign. Shortest form (Nov 16): ?wt = app + place
        (app: t Text, w WhatsApp, e Email, g Gmail, f Facebook, i Instagram, c Copy, a More apps;
@@ -157,10 +163,13 @@
     if (!sm && sk && SHARE_APP[sk[1]] && SHARE_PLACE[sk[2]]) sm = [sk[0], SHARE_APP[sk[1]], SHARE_PLACE[sk[2]] === 'festival' ? '' : SHARE_PLACE[sk[2]]];
     if (sm) { gcfg.campaign_source = sm[1]; gcfg.campaign_medium = 'share'; gcfg.campaign_name = 'chanukah2026'; gcfg.campaign_content = sm[2] || 'festival'; }
     window.gtag('config', GA4_ID, gcfg);
-    var ga = document.createElement('script');
-    ga.async = true;
-    ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
-    (document.head || document.documentElement).appendChild(ga);
+    var gtagLoaded = [].some.call(document.scripts, function (sc) { return /googletagmanager\.com\/gtag\/js/.test(sc.src || ''); });
+    if (!gtagLoaded) {
+      var ga = document.createElement('script');
+      ga.async = true;
+      ga.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA4_ID;
+      (document.head || document.documentElement).appendChild(ga);
+    }
   }
 
   load(page.file);
