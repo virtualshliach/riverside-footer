@@ -249,7 +249,7 @@ var SITES = {
     var ld = r.d.getElementById('cf26-ld');
     var ldj = null; try { ldj = JSON.parse(ld.textContent); } catch (e) {}
     ok(ldj && ldj['@type'] === 'Event' && /2026-12-07T18:00/.test(ldj.startDate) && ldj.location.name === 'Riverside Historic Courthouse' && ldj.isAccessibleForFree === true, 'schema.org Event data: date, place, free');
-    ok(!r.requests.some(function (u) { return /googletagmanager/.test(u); }) && !r.w.gtag, 'analytics stays off until a GA4 ID is set');
+    ok(typeof r.w.gtag === 'function' && r.w.dataLayer.some(function (x) { return x[0] === 'config' && x[1] === 'G-7T1ZM87VNH'; }), 'Google Analytics on: festival page configured for G-7T1ZM87VNH');
 
     console.log('riverside: Kids Menorah Contest thank-you page');
     /* the platform's confirmation as set in ChabadOne (Nov 6): a div with a headline and three lines */
