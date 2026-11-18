@@ -107,7 +107,7 @@
     /* Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
     CONTEST: {
       url: 'https://chanukahfestival.org/?menorah',
-      intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
+      intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and everyone who enters gets a Chanukah gift!',
       facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8:00 PM'],
       how: [
         'Register By Friday, Dec 4.',
@@ -120,7 +120,7 @@
       prizes: [
         'Best Menorah wins the festival trophy, awarded every year.',
         'Great prizes for the runners-up, announced at the festival between 7:45 and 8:00 PM.',
-        'Every child who enters gets a Chanukah gift.'
+        'Everyone who enters gets a Chanukah gift.'
       ],
       rules: [
         'Open to all ages, in two groups: 12 and under, and 13 and up.',

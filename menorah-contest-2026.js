@@ -258,7 +258,7 @@
     var dl = el('dl');
     CFG.STEPS.forEach(function (r) { add(dl, el('dt', null, r[0]), el('dd', null, r[1])); });
     var gift = el('p', 'mc-gift');
-    add(gift, el('b', null, 'Every child who enters gets a Chanukah gift.'));
+    add(gift, el('b', null, 'Everyone who enters gets a Chanukah gift.'));
     add(s1, el('h2', null, 'Bringing the menorah'), dl, gift);
 
     var s2 = el('section', 'mc-sec');
@@ -371,7 +371,7 @@
       el('h2', null, 'Menorah Contest'),
       whenLine(),
       chips,
-      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!'),
+      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. The best menorah wins the festival trophy, and everyone who enters gets a Chanukah gift!'),
       more);
     return h;
   }
