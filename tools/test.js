@@ -505,7 +505,7 @@ var SITES = {
     st.d.querySelector('.cf-nav .cf-don').dispatchEvent(new st.w.MouseEvent('click', { bubbles: true, cancelable: true }));
     ok(st.w.CFStripe && st.w.CFStripe.ready && st.d.getElementById('cfs') && !/cfs-off/.test(st.d.getElementById('cfs').className) && !st.d.querySelector('.cf-fp'),
       'draft: Donate opens the Stripe pop-up (stripe-donate.js)');
-    var stC = [].filter.call(st.d.querySelectorAll('#cf26 a[href]'), function (a) { return /7606745/.test(a.href); })[0];
+    var stC = [].filter.call(st.d.querySelectorAll('#cf26 a[href]'), function (a) { return /[?&]menorah(?:[=&]|$)/.test(a.href); })[0];
     stC.dispatchEvent(new st.w.MouseEvent('click', { bubbles: true, cancelable: true }));
     var ov1 = st.d.querySelector('.cff-ov');
     ok(st.w.CFForms && st.w.CFForms.ready && ov1 && /Menorah Contest/.test(ov1.querySelector('.cff-hd b').textContent) && !st.d.querySelector('.cf-fp iframe'),
@@ -535,7 +535,7 @@ var SITES = {
     ok(fr.style.height === '1234px' && /cf-fp-ready/.test(fp.d.querySelector('.cf-fp .cf-dm-box').className), 'the form page sets the pop-up height and shows the form');
     fp.d.dispatchEvent(new fp.w.KeyboardEvent('keydown', { key: 'Escape' }));
     ok(!fp.d.querySelector('.cf-fp'), 'Escape closes the form pop-up');
-    var cl = [].filter.call(fp.d.querySelectorAll('#cf26 a[href]'), function (a) { return /7606745/.test(a.href); });
+    var cl = [].filter.call(fp.d.querySelectorAll('#cf26 a[href]'), function (a) { return /[?&]menorah(?:[=&]|$)/.test(a.href); });
     ok(cl.length > 0, 'page has Menorah Contest links (' + cl.length + ')');
     fpClick(cl[0]);
     fr = fp.d.querySelector('.cf-fp iframe');

@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'mc26-2026-11-12b';
+  var VERSION = 'mc26-2026-11-17a';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -34,7 +34,7 @@
       ['Display', 'Menorahs stay on display at the table during the festival'],
       ['Winners', 'Announced at the festival between 7:45 and 8:00 PM. Please pick up your menorah before you leave the festival']
     ],
-    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced at the festival between 7:45 and 8:00 PM. All ages can enter free: https://www.jewishriverside.com/7606745',
+    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced at the festival between 7:45 and 8:00 PM. All ages can enter free: https://chanukahfestival.org/?menorah',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 

@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-15e-draft';
+  var VERSION = 'cf26-2026-11-17a-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -106,7 +106,7 @@
 
     /* Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
     CONTEST: {
-      url: 'https://www.jewishriverside.com/7606745',
+      url: 'https://chanukahfestival.org/?menorah',
       intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and every child who enters gets a Chanukah gift!',
       facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8:00 PM'],
       how: [
@@ -1254,7 +1254,7 @@
     var h = (a.getAttribute('href') || '').toLowerCase(), c = ' ' + (a.className || '') + ' ';
     if (/calendar\.google|\.ics|data:text\/calendar/.test(h)) return /google/.test(h) ? 'calendar_google' : 'calendar_ics';
     if (/facebook\.com\/events/.test(h)) return 'rsvp_facebook';
-    if (/7606745/.test(h)) return 'register_contest';
+    if (/7606745/.test(h) || /[?&]menorah(?:[=&]|$)/.test(h)) return 'register_contest';
     if (/donate|#donate/.test(h) || / cf-donate /.test(c)) return 'donate';
     if (/festival-map-2026\.pdf/.test(h)) return 'map_pdf';
     if (/festival-map/.test(h)) return 'map_open';
@@ -1521,6 +1521,8 @@
       var a = CFG.FORM_POPS[keys[i]].aid;
       if (new RegExp('jewishriverside\\.com/(?:' + a + '(?:\\D|$)|.*[/=]' + a + '(?:\\D|$))', 'i').test(href)) return keys[i];
     }
+    /* Register to Enter now points at ?menorah; still open the contest pop-up in place. */
+    if (/[?&]menorah(?:[=&]|$)/i.test(href)) return 'contest';
     return null;
   }
   /* our own forms (festival-forms.js, loaded at boot) */
