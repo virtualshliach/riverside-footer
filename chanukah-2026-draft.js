@@ -574,6 +574,38 @@
     });
   }
 
+  /* copies right away, inside the tap, so the browser allows it even when the tap then
+     opens another app (Facebook); falls back to the async clipboard */
+  function copyNow(s) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = s; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.fontSize = '16px';
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, s.length);
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) return true;
+    } catch (e) {}
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(s); return true; } } catch (e) {}
+    return false;
+  }
+  /* one floating message at the bottom of the screen (above pop-ups) */
+  var toastEl = null, toastT = null;
+  function toast(t, ms) {
+    if (!toastEl) {
+      toastEl = el('div', 'cf-toast');
+      toastEl.setAttribute('role', 'status');
+      toastEl.setAttribute('aria-live', 'polite');
+      (root || document.body).appendChild(toastEl);
+    }
+    toastEl.textContent = t;
+    toastEl.offsetWidth; /* restart the fade */
+    toastEl.className = 'cf-toast on';
+    clearTimeout(toastT);
+    toastT = setTimeout(function () { toastEl.className = 'cf-toast'; }, ms || 4000);
+  }
+
   var ICONS = {
     menorah: 'M12 3c.8 1 1 1.7.5 2.4-.3.4-.8.6-1 .1C11.3 5 11.5 4 12 3zM4 9v4a8 8 0 0 0 16 0V9M7.5 9v4a4.5 4.5 0 0 0 9 0V9M12 7v14M8 21h8',
     food: 'M5 11h14a7 7 0 0 1-14 0zM8 7c0-1 1-1.5 1-2.5M12 7c0-1 1-1.5 1-2.5M16 7c0-1 1-1.5 1-2.5M9 21h6',
@@ -1151,6 +1183,16 @@
       '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-wa .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-gm .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-em .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-fb .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-ig .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-native .cf-ic{color:#fff}',
       '#cf26 .cf-shp .cf-sharebtns .cf-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}',
       '#cf26 .cf-shp .cf-sharenote{color:#fff;text-align:center;font-size:.9rem;margin:12px 0 0;min-height:0;white-space:pre-line}',
+      /* Nov 18: the pop-up never grows past the visible screen (iPhone Safari toolbars); if it is
+         taller, the buttons scroll inside it instead of spilling out below */
+      '#cf26 .cf-shp .cf-dm-box{max-height:calc(100vh - 28px);max-height:calc(100dvh - 28px)}',
+      '#cf26 .cf-shp .cf-shp-body{flex:0 1 auto;min-height:0}',
+      '#cf26 .cf-shp .cf-sharenote:empty{margin:0}',
+      /* short "copied" messages float as a toast over the screen, so they never change the
+         size of the pop-up or the share section (the Instagram note spilled out on iPhone) */
+      '#cf26 .cf-toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,12px);z-index:2147482600;max-width:min(92vw,440px);width:max-content;background:' + GOLD + ';color:' + DEEP + ';font-weight:700;font-size:.92rem;line-height:1.35;text-align:center;padding:12px 20px;border-radius:14px;box-shadow:0 12px 32px rgba(0,0,0,.45);opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease}',
+      '#cf26 .cf-toast.on{opacity:1;transform:translate(-50%,0)}',
+      '@media (prefers-reduced-motion:reduce){#cf26 .cf-toast{transition:none}}',
       '@media (max-width:620px){#cf26 .cf-shp{padding:14px}#cf26 .cf-shp .cf-dm-box{height:auto;max-height:94vh;border-radius:18px;overflow-y:auto}#cf26 .cf-shp-hd{padding:14px 14px 12px 16px;gap:10px}#cf26 img.cf-shp-men{width:34px !important;max-width:34px}#cf26 .cf-shp-hd b{font-size:1.08rem}#cf26 .cf-shp-hd span{font-size:.8rem}#cf26 .cf-shp-body{padding:4px 14px 16px}#cf26 .cf-shp .cf-sharebtns .cf-btn{font-size:.85rem;padding:0 10px;gap:7px}}',
       '#cf26 .cf-follow{margin-top:14px}',
       '#cf26 .cf-follow .cf-btn{font-size:.92rem}',
@@ -2857,7 +2899,7 @@
        because the Windows/Mac share sheet sends only the bare link to Gmail. */
     var touch = !!(window.matchMedia && window.matchMedia('(pointer: coarse)').matches);
     function appNote(e, what) {
-      if (PREVIEW) { e.preventDefault(); say('On the real site this opens ' + what + ' with the invitation filled in.'); }
+      if (PREVIEW) { e.preventDefault(); toast('On the real site this opens ' + what + ' with the invitation filled in.'); }
     }
 
     var sms = link('cf-btn cf-ghost cf-tx', 'sms:?' + AMP + 'body=' + encodeURIComponent(invite(S.text, 'sms', page)), 'Text Message');
@@ -2882,7 +2924,15 @@
 
     var fb = link('cf-btn cf-fb', 'https://www.facebook.com/sharer/sharer.php?' + qs({ u: shareUrl('facebook', page, true) }), 'Facebook', true);
     fb.insertBefore(shareIcon('fb'), fb.firstChild);
-    fb.addEventListener('click', function () { track('facebook'); });
+    /* Facebook never lets a site fill in the text of a post, and its iPhone app can open an
+       empty post with no link. So on phones the tap also copies the whole invitation (with the
+       link): they paste it into the post and Facebook builds the link preview from it. */
+    fb.addEventListener('click', function (e) {
+      track('facebook');
+      if (PREVIEW) { e.preventDefault(); }
+      if (touch && copyNow(invite(S.text, 'facebook', page))) toast('Invitation copied. Paste it into your Facebook post.', 6000);
+      else if (PREVIEW) toast('On the real site this opens Facebook with the festival link.');
+    });
 
     var ig = null;
     if (touch) {
@@ -2891,7 +2941,7 @@
       ig.insertBefore(shareIcon('ig'), ig.firstChild);
       ig.addEventListener('click', function () {
         track('instagram');
-        copyText(shareUrl('instagram', page)).then(function () { say('Link copied. Paste it in your Instagram story or message.'); },
+        copyText(shareUrl('instagram', page)).then(function () { say(''); toast('Link copied. Paste it in your Instagram story or message.', 5000); },
           function () { say('Copy this link for Instagram: ' + shareUrl('instagram', page)); });
       });
     }
@@ -2903,7 +2953,7 @@
     cp.addEventListener('click', function () {
       track('copy');
       var t = invite(S.text, 'copy', page);
-      copyText(t).then(function () { say('Invitation copied! Paste it in any message.'); setTimeout(function () { say(''); }, 3000); },
+      copyText(t).then(function () { say(''); toast('Invitation copied! Paste it in any message.'); },
         function () { say(t); });
     });
 
@@ -2916,7 +2966,7 @@
         track('native');
         /* the link goes inside the text: some apps drop a separate url, others drop the text */
         var pr = navigator.share({ title: S.emailSubject, text: invite(S.text, 'native', page) });
-        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') say('Use one of the buttons above to share.'); });
+        if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') toast('Use one of the buttons above to share.'); });
       });
     }
     add(row, sms, wa, gm || ig, em, fb, cp);
