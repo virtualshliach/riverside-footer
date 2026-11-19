@@ -17,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-19c';
+  var VERSION = 'festival-forms 2026-11-19d';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */

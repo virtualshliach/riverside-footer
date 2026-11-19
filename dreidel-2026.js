@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'dg26-2026-11-19c';
+  var VERSION = 'dg26-2026-11-19d';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {

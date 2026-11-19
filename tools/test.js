@@ -257,7 +257,7 @@ var SITES = {
     console.log('riverside: Kids Menorah Contest thank-you page');
     /* the platform's confirmation as set in ChabadOne (Nov 6): a div with a headline and three lines */
     var MC_NATIVE = '<div id="mc-native"><h2>You\u2019re registered for the Kids Menorah Contest!</h2><p><b>Drop-off:</b> Monday, Dec 7, 5:45\u20136:15 PM at the Menorah Contest table (#15 on the festival map)</p>' +
-      '<p><b>Where:</b> Riverside Historic Courthouse, 4050 Main St., Riverside</p><p><b>Winners:</b> announced 7:45\u20138 PM</p><p>Every child who enters gets a Chanukah gift. See you at the festival!</p></div>';
+      '<p><b>Where:</b> Riverside Historic Courthouse, 4050 Main St., Riverside</p><p><b>Winners:</b> announced at the festival at 8:00 PM</p><p>Every child who enters gets a Chanukah gift. See you at the festival!</p></div>';
     var mcShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container"><div class="pagetools">Print</div>' + MC_NATIVE + '</div>');
     var mcr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/7606745/jewish/Kids-Menorah-Contest.htm', { shell: mcShell, wait: 600 });
     ok(projectRequests(mcr).some(function (u) { return /menorah-contest-2026\.js/.test(u); }), 'contest code loads on its thank-you page');
@@ -290,7 +290,7 @@ var SITES = {
     ok(/win \$180/i.test(dg2.d.getElementById('dg26-hero').textContent) && /The winner is announced at the festival at 8:00 PM\./.test(dg2.d.getElementById('dg26-hero').textContent) && !/after the festival/.test(dg2.d.getElementById('dg26-hero').textContent), 'dreidel intro: $180 and the winner announced at the festival at 8:00 PM');
     ok(dg2.d.getElementById('5738793').style.display !== 'none' && dg2.d.getElementById('5738793').querySelectorAll('input,textarea,button').length === 4, 'dreidel native form and fields untouched');
     ok(dg2.d.querySelector('#id_17 textarea').getAttribute('inputmode') === 'numeric', 'the guess opens the number keypad');
-    var DG_NATIVE = '<div id="dg-native"><h2>Thanks for your guess!</h2><p>The winner of the $180 prize is announced between 7:45 and 8 PM at the Chanukah Festival.</p><p>Good luck, and enjoy the festival!</p></div>';
+    var DG_NATIVE = '<div id="dg-native"><h2>Thanks for your guess!</h2><p>The winner of the $180 prize is announced at 8:00 PM at the Chanukah Festival.</p><p>Good luck, and enjoy the festival!</p></div>';
     var dgr = await load('riverside', 'https://www.jewishriverside.com/templates/ArticleCcoResponse/aid/5738793/jewish/Dreidel-Guessing-Contest.htm', { shell: SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container">' + DG_NATIVE + '</div>'), wait: 600 });
     ok(!!dgr.d.getElementById('dg26') && !dgr.errors.length && dgr.d.getElementById('dg-native').style.display === 'none', 'dreidel thank-you card replaces the plain message');
     ok(dgr.d.querySelectorAll('#dg26 .mc-row a, #dg26 .mc-row button').length >= 6 && /chanukahfestival\.org%3Fwd(%0A|$|")|chanukahfestival\.org\?wd\b/.test(dgr.d.getElementById('dg26').innerHTML) && !/s%3D|s=whatsapp/.test(dgr.d.getElementById('dg26').innerHTML), 'dreidel thank-you has the share buttons with the shortest links (?wd)');

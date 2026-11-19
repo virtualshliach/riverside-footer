@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-19c';
+  var VERSION = 'cf26-2026-11-19d';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -102,7 +102,7 @@
           [12, 'Police Mustang', 'Riverside’s display Mustang cruiser'],
           [13, 'Inflatable Menorah', 'Left lawn'],
           [14, 'Inflatable Dreidel', 'Right lawn'],
-          [18, 'Grand Menorah', 'Photos 6–7 PM and after the menorah lighting'] ] }
+          [18, 'Grand Menorah', 'Photos during the evening and after the menorah lighting'] ] }
       ],
       ROAMING: 'LED Robot · Dreidel Mascot · Stilt Walker · Juggler'
     },
