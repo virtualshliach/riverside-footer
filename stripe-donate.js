@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFStripe && window.CFStripe.version) return;
 
-  var VERSION = 'stripe-donate 2026-11-15a';
+  var VERSION = 'stripe-donate 2026-11-19a';
 
   var CFG = {
     /* Google Apps Script web app URL (Deploy > Web app). */
@@ -28,7 +28,18 @@
     SUB: 'Your gift keeps the festival free for the whole community.',
     ORG: 'Chabad Jewish Community Center of Riverside',
     PHONE: '951-222-2005',
-    AMOUNTS: [18, 36, 72, 180, 360, 1000],
+    AMOUNTS: [36, 72, 180, 360],
+    /* Sponsor levels (Nov 19 2026). Benefits are not shown on the site, on purpose. */
+    TIERS: [
+      { name: 'Presenting Sponsor', amount: 10000 },
+      { name: 'Co-Sponsor', amount: 5000 },
+      { name: 'Festival Partner', amount: 2500 },
+      { name: 'Lamplighter', amount: 1000 },
+      { name: 'Friend of the Festival', amount: 500 }
+    ],
+    /* Sponsor questions go to this mailbox. Kept in parts and joined on click, so spam bots
+       scanning the page never see a whole address. */
+    ASK_USER: 'hanukkahfestival', ASK_DOMAIN: 'jewishriverside.com',
     MIN: 5,
     MAX: 25000,
     /* Shown on the done screen for bank payments. */
@@ -105,7 +116,17 @@
       R + '.cfs-seg{display:flex;background:#eef4f6;border-radius:999px;padding:4px;margin-bottom:16px}',
       R + '.cfs-seg button{flex:1;padding:10px 12px;border-radius:999px;font-weight:700;color:#4a5d64;font-size:.95rem}',
       R + '.cfs-seg button.on{background:#fff;color:' + NAVY + ';box-shadow:0 2px 8px rgba(15,39,48,.15)}',
-      R + '.cfs-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}',
+      R + '.cfs-chips{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}',
+      '@media (max-width:420px){' + R + '.cfs-chips{grid-template-columns:repeat(2,1fr)}}',
+      R + '.cfs-tiers{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}',
+      R + '.cfs-tier{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;padding:13px 16px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';text-align:left}',
+      R + '.cfs-tier:hover{border-color:' + TEAL + '}',
+      R + '.cfs-tier.on{border-color:' + GOLD + ';background:#fff8e6;box-shadow:0 0 0 2px ' + GOLD + '}',
+      R + '.cfs-tier b{font-weight:700;font-size:1rem}',
+      R + '.cfs-tier span{font-weight:700;font-size:1.05rem;white-space:nowrap}',
+      R + '.cfs-ask{font-size:.85rem;color:#4a5d64;margin:4px 0 20px}',
+      R + '.cfs-ask a{color:#0A5769;font-weight:700}',
+      R + '.cfs-or{font-family:' + DISP + ';font-size:1.05rem;color:' + NAVY + ';margin:0 0 12px}',
       R + '.cfs-chip{padding:16px 8px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:700;font-size:1.1rem}',
       R + '.cfs-chip:hover{border-color:' + TEAL + '}',
       R + '.cfs-chip.on{border-color:' + GOLD + ';background:#fff8e6;box-shadow:0 0 0 2px ' + GOLD + '}',
@@ -233,34 +254,55 @@
 
     /* step 1: amount */
     var p1 = el('div', 'cfs-pane');
-    p1.appendChild(el('h3', null, 'Choose your gift'));
+    p1.appendChild(el('h3', null, 'Become a Sponsor'));
+    var tiers = el('div', 'cfs-tiers');
+    var tierPick = null;
     var seg = el('div', 'cfs-seg');
     var bOnce = el('button', 'on', 'One time'); bOnce.type = 'button';
     var bMon = el('button', null, 'Monthly'); bMon.type = 'button';
     add(seg, bOnce, bMon);
-    function setMonthly(on) { st.monthly = on; bOnce.className = on ? '' : 'on'; bMon.className = on ? 'on' : ''; sumLine(); }
+    function setMonthly(on) { if (on && tierPick) return; st.monthly = on; bOnce.className = on ? '' : 'on'; bMon.className = on ? 'on' : ''; sumLine(); }
     bOnce.addEventListener('click', function () { setMonthly(false); });
     bMon.addEventListener('click', function () { setMonthly(true); });
     var chips = el('div', 'cfs-chips');
     var other = document.createElement('input');
     other.type = 'number'; other.min = String(CFG.MIN); other.step = '1'; other.setAttribute('inputmode', 'decimal');
     other.className = 'cfs-in'; other.id = 'cfs-other'; other.placeholder = 'Other amount';
-    function pickAmt(a, btn) {
+    function pickAmt(a, btn, tier) {
       st.amount = a;
+      tierPick = tier || null;
+      st.tier = tierPick ? tierPick.name : '';
       [].forEach.call(chips.querySelectorAll('button'), function (b) { b.className = 'cfs-chip' + (b === btn ? ' on' : ''); });
+      [].forEach.call(tiers.querySelectorAll('button'), function (b) { b.className = 'cfs-tier' + (b === btn ? ' on' : ''); });
       if (btn) other.value = '';
+      if (tierPick) { st.monthly = false; bOnce.className = 'on'; bMon.className = ''; }
+      if (recogW) recogW.style.display = tierPick ? '' : 'none';
       sumLine();
     }
+    CFG.TIERS.forEach(function (t) {
+      var b = add(el('button', 'cfs-tier'), el('b', null, t.name), el('span', null, money(t.amount))); b.type = 'button';
+      b.addEventListener('click', function () { pickAmt(t.amount, b, t); });
+      tiers.appendChild(b);
+    });
+    var ask = el('p', 'cfs-ask');
+    var askA = el('a', null, 'Email us'); askA.href = '#';
+    askA.addEventListener('click', function (e) {
+      e.preventDefault();
+      location.href = 'mailto:' + CFG.ASK_USER + String.fromCharCode(64) + CFG.ASK_DOMAIN + '?subject=' + encodeURIComponent('Chanukah Festival sponsorship');
+    });
+    add(ask, document.createTextNode('Questions about sponsoring? '), askA, document.createTextNode('.'));
     CFG.AMOUNTS.forEach(function (a) {
       var b = el('button', 'cfs-chip', money(a)); b.type = 'button';
       b.addEventListener('click', function () { pickAmt(a, b); });
       chips.appendChild(b);
     });
     other.addEventListener('input', function () { pickAmt(Math.round((parseFloat(other.value) || 0) * 100) / 100, null); });
-    add(p1, seg, chips, add(el('label', 'cfs-other'), el('span', null, '$'), other));
+    seg.style.display = 'none';   /* one-time only: a once-a-year event (Nov 19 2026) */
+    add(p1, tiers, ask, el('p', 'cfs-or', 'Or give any amount'), seg, chips, add(el('label', 'cfs-other'), el('span', null, '$'), other));
 
     /* step 2: details */
     var inputs = {};
+    var recogW = null;
     function field(key, label, type, o) {
       o = o || {};
       var w = el('label', 'cfs-fld' + (o.half ? ' half' : ''));
@@ -282,7 +324,9 @@
       field('last', 'Last name', 'text', { req: true, half: true, ac: 'family-name', max: 60 }),
       field('email', 'Email (for your receipt)', 'email', { req: true, ac: 'email', max: 120 }),
       field('phone', 'Phone', 'tel', { ac: 'tel', max: 30 }),
+      (recogW = field('recog', 'Name for sponsor recognition (as it should appear)', 'text', { max: 120 })),
       field('note', 'Dedication or note (optional)', 'textarea', { max: 400 }));
+    recogW.style.display = 'none';
     var trap = el('label', 'cfs-trap');
     var trapIn = document.createElement('input'); trapIn.type = 'text'; trapIn.tabIndex = -1; trapIn.setAttribute('autocomplete', 'off');
     add(trap, el('span', null, 'Leave this empty'), trapIn);
@@ -312,7 +356,7 @@
     document.body.appendChild(ov);
 
     function sumLine() {
-      var t = st.amount > 0 ? money(st.amount) + (st.monthly ? ' a month' : ' one time') : '';
+      var t = st.amount > 0 ? (tierPick ? tierPick.name + ', ' + money(st.amount) : money(st.amount) + (st.monthly ? ' a month' : ' one time')) : '';
       sumEl.textContent = st.step < 4 ? t : '';
       sum3.textContent = t ? 'Your gift: ' + t : '';
       if (st.step === 3) next.textContent = st.amount > 0 ? 'Donate ' + money(st.amount) + (st.monthly ? ' a month' : '') : 'Donate';
@@ -349,7 +393,9 @@
       return '';
     }
     function donor() {
-      return { first: v('first'), last: v('last'), email: v('email'), phone: v('phone'), note: v('note') };
+      var note = v('note');
+      if (tierPick) note = (tierPick.name + ' (' + money(tierPick.amount) + ')' + (v('recog') ? '. Recognition: ' + v('recog') : '') + (note ? '. Note: ' + note : '')).slice(0, 400);
+      return { first: v('first'), last: v('last'), email: v('email'), phone: v('phone'), note: note };
     }
 
     /* Create (or reuse) the Stripe payment for exactly these details, then show Stripe's box. */
@@ -543,7 +589,9 @@
         if (p.email) inputs.email.el.value = p.email;
         var hit = null;
         [].forEach.call(chips.querySelectorAll('button'), function (b) { if (b.textContent === money(st.amount)) hit = b; });
-        if (hit) pickAmt(st.amount, hit); else { other.value = st.amount || ''; pickAmt(st.amount, null); }
+        var tHit = null;
+        CFG.TIERS.forEach(function (t, i) { if (!st.monthly && t.amount === st.amount) tHit = [t, tiers.children[i]]; });
+        if (tHit) pickAmt(st.amount, tHit[1], tHit[0]); else if (hit) pickAmt(st.amount, hit); else { other.value = st.amount || ''; pickAmt(st.amount, null); }
       },
       state: st
     };

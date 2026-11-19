@@ -142,12 +142,26 @@ function page(opts) {
   var at = ach.d.getElementById('cfs').textContent;
   ok(/up to 4 business days/.test(at) && /as soon as it clears/.test(at), 'bank: tells the donor it takes a few days and the receipt follows');
 
+  console.log('sponsor levels');
+  var sp = page({});
+  sp.w.CFStripe.open();
+  var tb = [].slice.call(sp.d.querySelectorAll('#cfs .cfs-tier'));
+  ok(tb.map(function (b) { return b.textContent; }).join('|') === 'Presenting Sponsor$10,000|Co-Sponsor$5,000|Festival Partner$2,500|Lamplighter$1,000|Friend of the Festival$500', 'five sponsor levels in order');
+  ok(sp.d.querySelector('#cfs .cfs-seg').style.display === 'none', 'no Monthly option');
+  ok(!/@/.test(sp.d.getElementById('cfs').innerHTML) && /Email us/.test(sp.d.querySelector('#cfs .cfs-ask').textContent), 'sponsor questions link, no email address in the page');
+  ok(sp.d.getElementById('cfs-recog').parentNode.style.display === 'none', 'recognition name hidden for plain gifts');
+  sp.click(tb[2]); sp.click(sp.next());
+  ok(sp.d.getElementById('cfs-recog').parentNode.style.display === '', 'recognition name shown for a sponsor');
+  sp.details(); sp.type('cfs-recog', 'The Cohen Family'); sp.click(sp.next()); await wait(60);
+  var sps = sp.posts.filter(function (p) { return p.body.action === 'start'; }); var sb = sps[sps.length - 1];
+  ok(sb && sb.body.amount === 2500 && sb.body.mode === 'once' && /^Festival Partner \(\$2,500\)\. Recognition: The Cohen Family/.test(sb.body.note), 'sponsor gift sends level and recognition name in the note');
+
   console.log('server says no');
   var se = page({ startError: 'Too many attempts. Please wait a little while and try again.' });
-  se.w.CFStripe.open(); se.click(se.chip('$18')); se.click(se.next()); se.details(); se.click(se.next()); await wait(60);
+  se.w.CFStripe.open(); se.click(se.chip('$36')); se.click(se.next()); se.details(); se.click(se.next()); await wait(60);
   ok(se.onPane() === 2 && /Too many attempts/.test(se.err()) && !se.next().disabled, 'server error shown on step 2, can try again');
   var nf = page({ fetchFail: true });
-  nf.w.CFStripe.open(); nf.click(nf.chip('$18')); nf.click(nf.next()); nf.details(); nf.click(nf.next()); await wait(60);
+  nf.w.CFStripe.open(); nf.click(nf.chip('$36')); nf.click(nf.next()); nf.details(); nf.click(nf.next()); await wait(60);
   ok(nf.onPane() === 2 && /couldn.t reach the payment system/.test(nf.err()), 'offline: plain message');
 
   console.log('back from Cash App');
