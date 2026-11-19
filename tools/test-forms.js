@@ -82,7 +82,7 @@ function page(opts) {
   ok(p && p.ct === 'text/plain;charset=utf-8' && p.body.action === 'form' && p.body.kind === 'menorah', 'sent to Apps Script as a menorah entry');
   ok(p.body.entrants.length === 2 && p.body.entrants[0].title === 'Lego Lights' && p.body.entrants[1].age === '4' && p.body.phone === '951-555-0111' && p.body.website === '', 'two entrants with ages and title, trap empty');
   ok(/You’re registered, Rivka!/.test(ov.textContent) && /5:45–6:15 PM/.test(ov.textContent) && /on its way to rivka@example\.com/.test(ov.textContent), 'thank-you with drop-off time and email note');
-  ok(ov.querySelectorAll('.cff-follow a[target="_blank"][aria-label]').length === 5 && /announce the winners at the festival between 7:45 and 8:00 PM/.test(ov.textContent) && /Follow us for photos and more from the festival/.test(ov.textContent) && !/after the festival/.test(ov.textContent), 'menorah pop-up thank-you: winners at the festival between 7:45 and 8:00 PM, 5 follow buttons');
+  ok(ov.querySelectorAll('.cff-follow a[target="_blank"][aria-label]').length === 5 && /announce the winners at the festival at 8:00 PM/.test(ov.textContent) && /Follow us for photos from the festival/.test(ov.textContent) && !/after the festival/.test(ov.textContent), 'menorah pop-up thank-you: winners at the festival at 8:00 PM, 5 follow buttons');
   t.click(ov.querySelector('.cff-ft .cff-btn'));
   ok(!ov.parentNode && t.d.documentElement.style.overflow === '', 'Close removes the pop-up');
 
@@ -115,8 +115,8 @@ function page(opts) {
   ok(p.kind === 'dreidel' && p.guess === '412' && p.past.join('|') === 'I celebrate Chanukah|Other: Work party' && p.connection[0] === 'I love the Chanukah Festival' && p.heard[0] === 'Social media' && p.updates === true && p.favorite === 'The music', 'dreidel answers sent, Other text included');
   ok(/Thanks for your guess, Sam!/.test(ov.textContent) && /Your guess: 412/.test(ov.textContent), 'thank-you shows the guess');
   var fo = [].map.call(ov.querySelectorAll('.cff-follow a'), function (a) { return a.getAttribute('href') + '|' + a.target + '|' + a.getAttribute('rel') + '|' + (a.getAttribute('aria-label') || ''); });
-  ok(fo.length === 5 && /^https:\/\/www\.facebook\.com\/JewishRiverside\|_blank\|noopener\|Follow /.test(fo[0]) && /^https:\/\/x\.com\/Jewishriverside\|/.test(fo[2]) && /announce the winner at the festival between 7:45 and 8:00 PM/.test(ov.textContent) && /Follow us for photos and more from the festival/.test(ov.textContent) && !/after the festival/.test(ov.textContent),
-    'dreidel thank-you: winner at the festival between 7:45 and 8:00 PM, follow buttons (new tab, labeled)');
+  ok(fo.length === 5 && /^https:\/\/www\.facebook\.com\/JewishRiverside\|_blank\|noopener\|Follow /.test(fo[0]) && /^https:\/\/x\.com\/Jewishriverside\|/.test(fo[2]) && /announce the winner at the festival at 8:00 PM/.test(ov.textContent) && /Follow us for photos and more from the festival/.test(ov.textContent) && !/after the festival/.test(ov.textContent),
+    'dreidel thank-you: winner at the festival at 8:00 PM, follow buttons (new tab, labeled)');
   ok(!/300 guests/.test(ov.textContent), 'dreidel pop-up thank-you: no first-300-guests gift line');
   t.w.CFForms.close();
 

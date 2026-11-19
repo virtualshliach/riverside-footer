@@ -17,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-15a';
+  var VERSION = 'festival-forms 2026-11-19c';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -56,7 +56,7 @@
         'No food. Bring a wax candle or oil',
         'It must stand on its own and must not break, fall or melt when lit',
         'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK)',
-        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes, announced at the festival between 7:45 and 8:00 PM. Everyone who enters gets a Chanukah gift',
+        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes, announced at the festival at 8:00 PM. Everyone who enters gets a Chanukah gift',
         'Drop Off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
     },
     dreidel: {
@@ -318,7 +318,7 @@
     var heard = group('How did you hear about the Chanukah Festival?', D.heard, { req: true });
     var upd = tick('I would like to receive news and updates by email');
     add(g, f.first.w, f.last.w, f.phone.w, f.email.w, f.guess.w, past.w, fav.w, conn.w, heard.w, upd.w);
-    add(body, el('p', 'cff-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced at the festival between 7:45 and 8:00 PM.'), g);
+    add(body, el('p', 'cff-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced at the festival at 8:00 PM.'), g);
     return {
       check: function () {
         return firstMissing([f.first, f.last, f.phone, f.email, f.guess]) || emailBad(f.email) ||
@@ -526,7 +526,7 @@
   function inviteBox(d) {
     var w = menorahWho(d);
     var url = 'https://chanukahfestival.org';
-    var msg = w.who + ' entered the Menorah Contest at the Chanukah Festival! Come cheer ' + w.cheer + ' on! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Winners are announced 7:45–8 PM. Free for everyone: chanukahfestival.org';
+    var msg = w.who + ' entered the Menorah Contest at the Chanukah Festival! Come cheer ' + w.cheer + ' on! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Winners are announced at 8:00 PM. Free for everyone: chanukahfestival.org';
     var box = el('div', 'cff-inv');
     add(box, el('h4', null, 'Who’s coming to cheer ' + w.you + ' on?'),
       el('p', null, 'Invite family and friends to come see ' + w.whose + ' and be there when the winners are announced.'),
@@ -565,6 +565,7 @@
       var m = el('div', 'cff-done');
       add(m, el('div', 'cff-ok', '✓'), el('h3', null, 'You’re registered, ' + d.first + '!'), inviteBox(d),
         el('p', null, 'Drop Off: Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).'),
+        el('p', null, 'We’ll announce the winners at the festival at 8:00 PM.'),
         res.emailed ? el('p', 'cff-sm', 'A confirmation with all the details is on its way to ' + d.email + '.') : null,
         el('p', 'cff-sm', 'Follow us for photos from the festival:'));
       var fm = el('div', 'cff-follow sm');
@@ -579,11 +580,11 @@
     if (kind === 'menorah') {
       title = 'You’re registered, ' + d.first + '!';
       lines = ['Drop Off your menorah on Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map).',
-        'We’ll announce the winners at the festival between 7:45 and 8:00 PM.', 'Follow us for photos and more from the festival:',
+        'We’ll announce the winners at the festival at 8:00 PM.', 'Follow us for photos and more from the festival:',
         res.emailed ? 'A confirmation with all the details is on its way to ' + d.email + '.' : 'See you at the festival!'];
     } else if (kind === 'dreidel') {
       title = 'Thanks for your guess, ' + d.first + '!';
-      lines = ['Your guess: ' + d.guess + '. We’ll announce the winner at the festival between 7:45 and 8:00 PM.', 'Follow us for photos and more from the festival:',
+      lines = ['Your guess: ' + d.guess + '. We’ll announce the winner at the festival at 8:00 PM.', 'Follow us for photos and more from the festival:',
         res.emailed ? 'A confirmation is on its way to ' + d.email + '.' : 'Good luck!'];
     } else if (kind === 'volunteer' && d.answer === 'no') {
       title = 'Thank you for letting us know, ' + d.first + '.';

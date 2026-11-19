@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'dg26-2026-11-12c';
+  var VERSION = 'dg26-2026-11-19c';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
@@ -40,11 +40,11 @@
     place: 'Riverside Historic Courthouse, 4050 Main St, Riverside, CA 92501',
     STEPS: [
       ['Prize', '$180'],
-      ['Winner', 'Announced at the festival between 7:45 and 8:00 PM'],
+      ['Winner', 'Announced at the festival at 8:00 PM'],
       ['Where', 'Riverside Historic Courthouse, 4050 Main St.'],
       ['Entries', 'One entry per person']
     ],
-    SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced at the festival between 7:45 and 8:00 PM.\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome join us!',
+    SHARE_TEXT: 'I just guessed how many dreidels are in the jar for a chance to win $180 at Riverside’s Chanukah Festival! The winner is announced at the festival at 8:00 PM.\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome join us!',
     EMAIL_SUBJECT: 'Join me at the Riverside Chanukah Festival, Dec 7'
   };
 
@@ -177,7 +177,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: '22nd Annual Chanukah Festival',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Dreidel Guessing Contest: the winner is announced at the festival between 7:45 and 8:00 PM. ' + CFG.festivalUrl
+      details: 'Dreidel Guessing Contest: the winner is announced at the festival at 8:00 PM. ' + CFG.festivalUrl
     });
   }
 
@@ -293,7 +293,7 @@
       fr.appendChild(a);
     });
     add(s0, el('h2', null, 'Follow us'),
-      el('p', 'mc-p', 'We’ll announce the winner at the festival between 7:45 and 8:00 PM. Follow us for photos and more from the festival.'), fr);
+      el('p', 'mc-p', 'We’ll announce the winner at the festival at 8:00 PM. Follow us for photos and more from the festival.'), fr);
 
     add(bd, s1, s0, s2, s3);
 
@@ -406,7 +406,7 @@
       el('h2', null, 'Dreidel Guessing Contest'),
       whenLine(),
       chips,
-      el('p', 'mh-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced at the festival between 7:45 and 8:00 PM.'),
+      el('p', 'mh-p', 'How many dreidels are in the jar? Make your best guess for a chance to win $180! One entry per person. The winner is announced at the festival at 8:00 PM.'),
       more);
     return h;
   }

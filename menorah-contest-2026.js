@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'mc26-2026-11-17a';
+  var VERSION = 'mc26-2026-11-19c';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
 
   function ch() { return String.fromCharCode.apply(null, arguments); }
@@ -32,9 +32,9 @@
       ['When', 'Monday, Dec 7, 5:45–6:15 PM'],
       ['Where', 'Menorah Contest table, #15 on the festival map, at the Riverside Historic Courthouse (4050 Main St.)'],
       ['Display', 'Menorahs stay on display at the table during the festival'],
-      ['Winners', 'Announced at the festival between 7:45 and 8:00 PM. Please pick up your menorah before you leave the festival']
+      ['Winners', 'Announced at the festival at 8:00 PM. Please pick up your menorah before you leave the festival']
     ],
-    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced at the festival between 7:45 and 8:00 PM. All ages can enter free: https://chanukahfestival.org/?menorah',
+    SHARE_TEXT: 'We’re entering the Menorah Contest at Riverside’s Chanukah Festival!\n\n📅 Monday, Dec 7, 6–8 PM\n📍 Riverside Historic Courthouse\n\nCome cheer us on! Winners are announced at the festival at 8:00 PM. All ages can enter free: https://chanukahfestival.org/?menorah',
     EMAIL_SUBJECT: 'Come cheer us on at the Chanukah Festival, Dec 7'
   };
 
@@ -167,7 +167,7 @@
     return 'https://calendar.google.com/calendar/render?' + qs({
       action: 'TEMPLATE', text: 'Chanukah Festival + Menorah Contest',
       dates: f(CFG.startUTC) + '/' + f(CFG.endUTC), location: CFG.place,
-      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners are announced at the festival between 7:45 and 8:00 PM. ' + CFG.festivalUrl
+      details: 'Bring the menorah to table #15 between 5:45 and 6:15 PM. Winners are announced at the festival at 8:00 PM. ' + CFG.festivalUrl
     });
   }
 
@@ -285,7 +285,7 @@
       fr.appendChild(a);
     });
     add(s0, el('h2', null, 'Follow us'),
-      el('p', 'mc-p', 'We’ll announce the winners at the festival between 7:45 and 8:00 PM. Follow us for photos and more from the festival.'), fr);
+      el('p', 'mc-p', 'We’ll announce the winners at the festival at 8:00 PM. Follow us for photos and more from the festival.'), fr);
 
     add(bd, s1, s0, s2, s3);
 

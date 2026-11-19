@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-17a-draft';
+  var VERSION = 'cf26-2026-11-19c-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -59,15 +59,18 @@
       { img: 'hl-performer.jpg', title: 'Fun for the Whole Family', text: 'Street performers, kids\u2019 crafts, train rides and activities for all ages.' }
     ],
     /* ASL note under the Schedule in Event details (moved from the pill, Nov 11). */
-    aslNote: { lead: 'ASL interpretation.', text: 'An ASL interpreter will be on stage and shown on the big screens during the official program.' },
+    aslNote: { lead: 'ASL interpretation during the official program.' },
 
-    /* Exactly five rows (brief Nov 5). */
+    /* Public schedule confirmed Nov 19, 2026, 10:32 AM PT. Event window stays 6–8 PM.
+       Do not call 6:00 'program'. Do not publish a clock time for the lighting or official program,
+       and do not publish fire-juggler show times. */
     SCHEDULE: [
       ['5:45 PM', 'Come early! The first 300 guests get a free Chanukah gift'],
-      ['6:00 PM', 'Festival opens with food, music, kids’ activities and more'],
-      ['7:00 PM', 'Official program with the Grand Menorah Lighting', true],
-      ['7:45–8:00 PM', 'Children’s Gelt Drop, and Menorah Contest & Dreidel Winners Announced'],
-      ['8:00 PM', 'Festival ends']
+      ['6:00 PM', 'The Festival goes live! Festival Street opens with the fire juggler, LED robot, train rides, face painting, the gift shop, food and more'],
+      ['6:15 PM', 'Aaron Holder in concert'],
+      ['', 'Grand Menorah Lighting during the evening', true],
+      ['7:50 PM', 'Children’s Gelt Drop'],
+      ['8:00 PM', 'Menorah Contest & Dreidel Winners Announced']
     ],
 
     /* Festival map v15 (approved Nov 5). Files live next to this one in the repo.
@@ -85,10 +88,10 @@
           [3, 'Kids Crafts', 'Two craft areas'],
           [4, 'Face Painting', ''],
           [5, 'Balloon Twisting', ''],
-          [6, 'Dreidel Guessing', 'Win $180! Winner announced at the festival between 7:45 and 8:00 PM'],
+          [6, 'Dreidel Guessing', 'Win $180! Winner announced at the festival at 8:00 PM'],
           [7, 'Train Rides', ''],
-          [15, 'Menorah Contest', 'All entries on display. Winners announced at the festival between 7:45 and 8:00 PM'],
-          [16, 'Children’s Gelt Drop', '7:45 PM on the left lawn'] ] },
+          [15, 'Menorah Contest', 'All entries on display. Winners announced at the festival at 8:00 PM'],
+          [16, 'Children’s Gelt Drop', '7:50 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
           [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
           [9, 'Gift Shop', ''],
@@ -108,18 +111,18 @@
     CONTEST: {
       url: 'https://chanukahfestival.org/?menorah',
       intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. The best menorah wins the festival trophy, and everyone who enters gets a Chanukah gift!',
-      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 7:45–8:00 PM'],
+      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 8:00 PM'],
       how: [
         'Register By Friday, Dec 4.',
         'Build your menorah at home, following the rules below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
         'Menorahs stay on display at table #15 during the festival.',
         'Judging is on visual impact, creativity and craftsmanship, with the builder’s age in mind.',
-        'We’ll announce the winners at the festival between 7:45 and 8:00 PM. Please pick up your menorah before you leave the festival.'
+        'We’ll announce the winners at the festival at 8:00 PM. Please pick up your menorah before you leave the festival.'
       ],
       prizes: [
         'Best Menorah wins the festival trophy, awarded every year.',
-        'Great prizes for the runners-up, announced at the festival between 7:45 and 8:00 PM.',
+        'Great prizes for the runners-up, announced at the festival at 8:00 PM.',
         'Everyone who enters gets a Chanukah gift.'
       ],
       rules: [
@@ -140,11 +143,11 @@
       title: 'Train Rides',
       intro: 'All aboard! Kids and families can ride the festival train all evening. Find it at stop #7 on the map.',
       facts: ['Stop #7 on the Map', '6–8 PM'],
-      /* Gelt Drop is map #16. The 7:45–8:00 PM window is on the schedule; contest and dreidel winners are also announced between 7:45 and 8:00 PM. */
+      /* Gelt Drop is map #16 at 7:50 PM. Contest and dreidel winners are announced at 8:00 PM. */
       gelt: {
         title: 'Gelt Drop',
         intro: 'The grand finale! Watch chocolate gelt and gifts parachute down from the sky.',
-        facts: ['7:45–8 PM', '#16 on the Map']
+        facts: ['7:50 PM', '#16 on the Map']
       }
     },
 
@@ -917,6 +920,7 @@
       '#cf26 .cf-sched li:last-child{border-bottom:0}',
       '#cf26 .cf-sched time{font-weight:700;color:' + GOLD + ';font-variant-numeric:tabular-nums;white-space:nowrap}',
       '#cf26 .cf-sched li.cf-key-row span{font-weight:700;color:#fff}',
+      '#cf26 .cf-sched li.cf-sched-highlight{grid-template-columns:minmax(0,1fr)}',
       '#cf26 .cf-ev-info .cf-kicker + .cf-sched{margin-top:0}',
       '#cf26 .cf-ev-sub{margin-top:26px}',
       /* map inside the event card */
@@ -2433,15 +2437,18 @@
     var sk = el('div', 'cf-kicker cf-ev-sub', 'Schedule');
     var sl = el('ol', 'cf-sched');
     CFG.SCHEDULE.forEach(function (r) {
-      var li = el('li', r[2] ? 'cf-key-row' : null);
-      add(li, el('time', null, r[0]), el('span', null, r[1]));
+      var timed = !!r[0];
+      var li = el('li', (r[2] ? 'cf-key-row' : '') + (timed ? '' : ' cf-sched-highlight'));
+      if (timed) add(li, el('time', null, r[0]), el('span', null, r[1]));
+      else add(li, el('span', null, r[1]));
       sl.appendChild(li);
     });
     add(info, sk, sl);
     if (CFG.aslNote) {
       var an = el('p', 'cf-ev-note');
       var at = el('span');
-      add(at, el('b', null, CFG.aslNote.lead), document.createTextNode(' ' + CFG.aslNote.text));
+      add(at, el('b', null, CFG.aslNote.lead));
+      if (CFG.aslNote.text) add(at, document.createTextNode(' ' + CFG.aslNote.text));
       add(an, icon('asl'), at);
       info.appendChild(an);
     }
