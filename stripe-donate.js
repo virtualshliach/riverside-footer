@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFStripe && window.CFStripe.version) return;
 
-  var VERSION = 'stripe-donate 2026-11-19a';
+  var VERSION = 'stripe-donate 2026-11-19b';
 
   var CFG = {
     /* Google Apps Script web app URL (Deploy > Web app). */
@@ -39,7 +39,7 @@
     ],
     /* Sponsor questions go to this mailbox. Kept in parts and joined on click, so spam bots
        scanning the page never see a whole address. */
-    ASK_USER: 'hanukkahfestival', ASK_DOMAIN: 'jewishriverside.com',
+    ASK_USER: 'chanukahfestival', ASK_DOMAIN: 'jewishriverside.com',
     MIN: 5,
     MAX: 25000,
     /* Shown on the done screen for bank payments. */
