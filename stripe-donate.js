@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFStripe && window.CFStripe.version) return;
 
-  var VERSION = 'stripe-donate 2026-11-19c';
+  var VERSION = 'stripe-donate 2026-11-19d';
 
   var CFG = {
     /* Google Apps Script web app URL (Deploy > Web app). */
@@ -38,8 +38,8 @@
       { name: 'Friend of the Festival', amount: 500 }
     ],
     /* Sponsor questions go to this mailbox (shown in the pop-up as text and a mailto link).
-       Switch to info@chanukahfestival.org once that domain's email is set up. */
-    ASK_USER: 'chanukahfestival', ASK_DOMAIN: 'jewishriverside.com',
+       Later this moves to support@chanukahfestival.org. */
+    ASK_USER: 'info', ASK_DOMAIN: 'chanukahfestival.org',
     MIN: 5,
     MAX: 25000,
     /* Shown on the done screen for bank payments. */

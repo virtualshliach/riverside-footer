@@ -149,7 +149,7 @@ function page(opts) {
   ok(tb.map(function (b) { return b.textContent; }).join('|') === 'Presenting Sponsor$10,000|Co-Sponsor$5,000|Festival Partner$2,500|Lamplighter$1,000|Friend of the Festival$500', 'five sponsor levels in order');
   ok(sp.d.querySelector('#cfs .cfs-seg').style.display === 'none', 'no Monthly option');
   var askEl = sp.d.querySelector('#cfs .cfs-ask'), askLink = askEl.querySelector('a');
-  ok(askEl.textContent === 'Questions about sponsoring? Email chanukahfestival@jewishriverside.com' && askLink.getAttribute('href') === 'mailto:chanukahfestival@jewishriverside.com?subject=Chanukah%20Festival%20sponsorship', 'sponsor questions: address shown as text, plain mailto link');
+  ok(askEl.textContent === 'Questions about sponsoring? Email info@chanukahfestival.org' && askLink.getAttribute('href') === 'mailto:info@chanukahfestival.org?subject=Chanukah%20Festival%20sponsorship', 'sponsor questions: address shown as text, plain mailto link');
   ok(sp.d.getElementById('cfs-recog').parentNode.style.display === 'none', 'recognition name hidden for plain gifts');
   sp.click(tb[2]); sp.click(sp.next());
   ok(sp.d.getElementById('cfs-recog').parentNode.style.display === '', 'recognition name shown for a sponsor');
