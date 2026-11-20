@@ -16,7 +16,7 @@
   'use strict';
   if (window.CFStripe && window.CFStripe.version) return;
 
-  var VERSION = 'stripe-donate 2026-11-19b';
+  var VERSION = 'stripe-donate 2026-11-19c';
 
   var CFG = {
     /* Google Apps Script web app URL (Deploy > Web app). */
@@ -37,8 +37,8 @@
       { name: 'Lamplighter', amount: 1000 },
       { name: 'Friend of the Festival', amount: 500 }
     ],
-    /* Sponsor questions go to this mailbox. Kept in parts and joined on click, so spam bots
-       scanning the page never see a whole address. */
+    /* Sponsor questions go to this mailbox (shown in the pop-up as text and a mailto link).
+       Switch to info@chanukahfestival.org once that domain's email is set up. */
     ASK_USER: 'chanukahfestival', ASK_DOMAIN: 'jewishriverside.com',
     MIN: 5,
     MAX: 25000,
@@ -285,12 +285,12 @@
       tiers.appendChild(b);
     });
     var ask = el('p', 'cfs-ask');
-    var askA = el('a', null, 'Email us'); askA.href = '#';
-    askA.addEventListener('click', function (e) {
-      e.preventDefault();
-      location.href = 'mailto:' + CFG.ASK_USER + String.fromCharCode(64) + CFG.ASK_DOMAIN + '?subject=' + encodeURIComponent('Chanukah Festival sponsorship');
-    });
-    add(ask, document.createTextNode('Questions about sponsoring? '), askA, document.createTextNode('.'));
+    /* Address shown as text and as a plain mailto link, so it can be clicked or copied
+       (a click handler fails silently on computers with no email app). */
+    var askAddr = CFG.ASK_USER + String.fromCharCode(64) + CFG.ASK_DOMAIN;
+    var askA = el('a', null, askAddr);
+    askA.href = 'mailto:' + askAddr + '?subject=' + encodeURIComponent('Chanukah Festival sponsorship');
+    add(ask, document.createTextNode('Questions about sponsoring? Email '), askA);
     CFG.AMOUNTS.forEach(function (a) {
       var b = el('button', 'cfs-chip', money(a)); b.type = 'button';
       b.addEventListener('click', function () { pickAmt(a, b); });
