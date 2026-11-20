@@ -315,7 +315,11 @@ var SITES = {
     if (pop) pop.parentNode.removeChild(pop);
     /* 11p: invite style A and the desktop-only picture kit */
     var sb = [].map.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { return b.textContent.trim(); });
-    ok(sb.join('|') === 'Text Message|WhatsApp|Gmail|Other Email|Facebook|Copy Invitation', 'share buttons in order (' + sb.join('|') + ')');
+    /* Nov 19: on computers one Email button (menu: Gmail, Outlook, Yahoo, Other email app) and Instagram */
+    ok(sb.join('|') === 'Text Message|WhatsApp|Instagram|Email|Facebook|Copy Invitation', 'share buttons in order (' + sb.join('|') + ')');
+    var emMenu = r.d.querySelector('#cf-share .cf-emmenu');
+    var emItems = emMenu ? [].map.call(emMenu.querySelectorAll('a'), function (a) { return a.textContent.trim(); }) : [];
+    ok(!!emMenu && emMenu.hidden && emItems.join('|') === 'Gmail|Outlook|Yahoo|Other email app', 'Email menu starts closed and lists Gmail, Outlook, Yahoo, Other email app');
     ok([].every.call(r.d.querySelectorAll('#cf-share .cf-sharebtns .cf-btn'), function (b) { var i = b.querySelector('svg'); return i && /cf-sic/.test(i.getAttribute('class')) && i.namespaceURI === 'http://www.w3.org/2000/svg'; }),
       'every share button has its style A icon');
     var shCss = r.d.getElementById('cf26-style').textContent;

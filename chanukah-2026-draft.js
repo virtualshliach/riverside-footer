@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-19d-draft';
+  var VERSION = 'cf26-2026-11-19e-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -1186,6 +1186,19 @@
       '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-native{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55);box-shadow:none}',
       '#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-wa .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-gm .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-em .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-fb .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-ig .cf-sic,#cf26 .cf-shp .cf-sharebtns .cf-btn.cf-native .cf-ic{color:#fff}',
       '#cf26 .cf-shp .cf-sharebtns .cf-btn:hover{filter:brightness(1.08);transform:translateY(-1px)}',
+      /* computers: Email opens a small menu right under its row (Gmail, Outlook, Yahoo, Other email app) */
+      '#cf26 .cf-shp .cf-sharebtns .cf-caret{width:16px;height:16px;flex:0 0 16px;margin-left:-2px;transition:transform .15s ease}',
+      '#cf26 .cf-shp .cf-sharebtns .cf-emtoggle[aria-expanded="true"] .cf-caret{transform:rotate(180deg)}',
+      '#cf26 .cf-shp .cf-emmenu{grid-column:1 / -1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;padding:10px;background:rgba(16,122,140,.22);border:1px solid rgba(16,122,140,.85);border-radius:14px}',
+      '#cf26 .cf-shp .cf-emmenu[hidden]{display:none}',
+      /* 400px and narrower (Nov 19 QA): a little less frame so every label keeps at least 14px of side room */
+      '@media (max-width:400px){#cf26 .cf-dm.cf-shp{padding:10px}#cf26 .cf-dm.cf-shp .cf-shp-body{padding:4px 10px 14px}#cf26 .cf-dm.cf-shp .cf-sharebtns .cf-btn.cf-btn{padding:0 10px;gap:6px}}',
+      '@media (max-width:380px){#cf26 .cf-dm.cf-shp .cf-sharebtns .cf-btn.cf-btn{font-size:.8rem;gap:5px}#cf26 .cf-dm.cf-shp .cf-sharebtns .cf-btn .cf-sic,#cf26 .cf-dm.cf-shp .cf-sharebtns .cf-btn .cf-ic{width:16px;height:16px;flex:0 0 16px}}',
+      /* no orphaned last word in the pop-up title and line under it (Nov 19 QA) */
+      '#cf26 .cf-shp-hd b{text-wrap:balance}#cf26 .cf-shp-hd span{text-wrap:pretty}',
+      '#cf26 .cf-shp .cf-emitem{display:flex;align-items:center;justify-content:center;text-align:center;height:42px;padding:0 10px;border-radius:10px;background:#f3eee6;color:' + DEEP + ';font-weight:700;font-size:.9rem;line-height:1.15;text-decoration:none;white-space:nowrap}',
+      '#cf26 .cf-shp .cf-emitem:hover,#cf26 .cf-shp .cf-emitem:focus-visible{background:#fff;color:' + DEEP + ';outline:none;box-shadow:0 0 0 2px ' + GOLD + '}',
+      '@media (max-width:620px){#cf26 .cf-shp .cf-emitem{font-size:.85rem;padding:0 8px}}',
       '#cf26 .cf-shp .cf-sharenote{color:#fff;text-align:center;font-size:.9rem;margin:12px 0 0;min-height:0;white-space:pre-line}',
       /* Nov 18: the pop-up never grows past the visible screen (iPhone Safari toolbars); if it is
          taller, the buttons scroll inside it instead of spilling out below */
@@ -1242,6 +1255,18 @@
       '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-tx .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-cp .cf-sic{color:' + DEEP + '}',
       '#cf26 #cf-share .cf-sharebtns .cf-btn.cf-wa .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-gm .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-em .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-fb .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn.cf-ig .cf-sic{color:#fff}',
       '#cf26 #cf-share .cf-sharebtns .cf-btn:not(.cf-native):hover{filter:brightness(1.08);box-shadow:0 6px 18px rgba(0,0,0,.25)}',
+      /* Spread the light on computers (Nov 19): Email opens a small menu on its own line under the buttons
+         (right under the Email row on narrow windows); Instagram takes the old Gmail spot */
+      '#cf26 #cf-share .cf-sharebtns.cf-deskpop{flex-wrap:wrap}',
+      '#cf26 #cf-share .cf-caret{width:15px;height:15px;flex:0 0 15px;margin-left:-2px;color:#fff;transition:transform .15s ease}',
+      '#cf26 #cf-share .cf-emtoggle[aria-expanded="true"] .cf-caret{transform:rotate(180deg)}',
+      '#cf26 #cf-share .cf-emmenu{order:1;flex:0 0 100%;grid-column:1 / -1;justify-self:center;width:100%;max-width:640px;box-sizing:border-box;margin:2px auto 0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;padding:10px;background:rgba(16,122,140,.22);border:1px solid rgba(16,122,140,.85);border-radius:14px}',
+      '#cf26 #cf-share .cf-emmenu[hidden]{display:none}',
+      '#cf26 #cf-share .cf-emitem{display:flex;align-items:center;justify-content:center;text-align:center;height:42px;padding:0 10px;border-radius:10px;background:#f3eee6;color:' + DEEP + ';font-weight:700;font-size:13px;line-height:1.15;text-decoration:none;white-space:nowrap}',
+      '#cf26 #cf-share .cf-emitem:hover,#cf26 #cf-share .cf-emitem:focus-visible{background:#fff;color:' + DEEP + ';outline:none;box-shadow:0 0 0 2px ' + GOLD + '}',
+      '#cf26 #cf-share .cf-h2,#cf26 #cf-share .cf-lead{text-wrap:pretty}',
+      '@media (max-width:380px){#cf26 #cf-share .cf-sharebtns .cf-btn.cf-btn{gap:6px}#cf26 #cf-share .cf-sharebtns .cf-btn .cf-sic,#cf26 #cf-share .cf-sharebtns .cf-btn .cf-ic{width:16px;height:16px;flex:0 0 16px}}',
+      '@media (max-width:600px){#cf26 #cf-share .cf-emmenu{order:0;margin:0;max-width:none;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}#cf26 #cf-share .cf-emitem{font-size:12.5px;padding:0 8px}}',
       '@media (min-width:601px) and (max-width:900px){#cf26 #cf-share .cf-sharebtns{display:grid;grid-template-columns:repeat(3,190px);justify-content:center}#cf26 #cf-share .cf-sharebtns .cf-btn{width:100%}}',
       '@media (max-width:600px){#cf26 .cf-share{padding:48px 0}#cf26 #cf-share .cf-kicker{font-size:10px;letter-spacing:.24em;margin-bottom:12px}' +
         '#cf26 #cf-share .cf-h2{font-size:28px;line-height:1.2;margin-bottom:12px;padding:0 4px}#cf26 #cf-share .cf-lead{font-size:13.5px;padding:0 8px}' +
@@ -2922,8 +2947,58 @@
     em.insertBefore(shareIcon('mail'), em.firstChild);
     em.addEventListener('click', function (e) { track('email'); appNote(e, 'your email app'); });
 
+    /* Top Share pop-up and Spread the light on computers (Nov 19): one Email button that opens a small menu
+       (Gmail, Outlook, Yahoo, Other email app), and an Instagram button in the freed slot.
+       Phones and tablets keep the buttons below exactly as before (native share). */
+    var deskPop = !touch && (page === 'festival-top' || page === 'festival');
+    var emMenu = null, ig = null;
+    if (deskPop) {
+      var emSubj = S.emailSubject, emGm = invite(S.emailBody || S.text, 'gmail', page);
+      em = el('button', 'cf-btn cf-ghost cf-em cf-emtoggle', 'Email');
+      em.type = 'button';
+      em.setAttribute('aria-expanded', 'false');
+      em.setAttribute('aria-controls', 'cf-emmenu-' + page);
+      em.insertBefore(shareIcon('mail'), em.firstChild);
+      var caret = document.createElement('div');
+      caret.innerHTML = '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-hidden="true" class="cf-sic cf-caret"><path d="M6.5 9.5 12 15l5.5-5.5"/></svg>';
+      em.appendChild(caret.firstChild);
+      emMenu = el('div', 'cf-emmenu');
+      emMenu.id = 'cf-emmenu-' + page;
+      emMenu.hidden = true;
+      var emItems = [
+        ['Gmail', 'https://mail.google.com/mail/?' + qs({ view: 'cm', fs: '1', su: emSubj, body: emGm }), 'gmail', true],
+        ['Outlook', 'https://outlook.live.com/mail/0/deeplink/compose?' + qs({ subject: emSubj, body: emBody }), 'outlook', true],
+        ['Yahoo', 'https://compose.mail.yahoo.com/?' + qs({ subject: emSubj, body: emBody }), 'yahoo', true],
+        ['Other email app', 'mailto:?subject=' + encodeURIComponent(emSubj) + AMP + 'body=' + encodeURIComponent(emBody), 'email', false]
+      ];
+      emItems.forEach(function (it) {
+        var a = link('cf-emitem', it[1], it[0], it[3]);
+        a.addEventListener('click', function (e) { track(it[2]); if (!it[3]) appNote(e, 'your email app'); });
+        emMenu.appendChild(a);
+      });
+      em.addEventListener('click', function () {
+        var open = emMenu.hidden;
+        emMenu.hidden = !open;
+        em.setAttribute('aria-expanded', open ? 'true' : 'false');
+        if (open) track('email_menu');
+      });
+
+      ig = el('button', 'cf-btn cf-ig', 'Instagram');
+      ig.type = 'button';
+      ig.insertBefore(shareIcon('ig'), ig.firstChild);
+      ig.addEventListener('click', function () {
+        track('instagram');
+        var igLink = 'https://chanukahfestival.org';
+        /* open Instagram inside the click so the browser allows the new tab */
+        if (!PREVIEW) window.open('https://www.instagram.com', '_blank', 'noopener');
+        if (copyNow(igLink)) { say(''); toast('Link copied. Paste it in your Instagram story or post.', 5000); }
+        else copyText(igLink).then(function () { say(''); toast('Link copied. Paste it in your Instagram story or post.', 5000); },
+          function () { say('Copy this link for Instagram: ' + igLink); });
+      });
+    }
+
     var gm = null;
-    if (!touch) {
+    if (!touch && !deskPop) {
       gm = link('cf-btn cf-ghost cf-gm', 'https://mail.google.com/mail/?' + qs({ view: 'cm', fs: '1', su: S.emailSubject, body: invite(S.emailBody || S.text, 'gmail', page) }), 'Gmail', true);
       gm.insertBefore(shareIcon('mail'), gm.firstChild);
       gm.addEventListener('click', function () { track('gmail'); });
@@ -2941,7 +3016,6 @@
       else if (PREVIEW) toast('On the real site this opens Facebook with the festival link.');
     });
 
-    var ig = null;
     if (touch) {
       ig = el('button', 'cf-btn cf-ig', 'Instagram');
       ig.type = 'button';
@@ -2976,7 +3050,10 @@
         if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') toast('Use one of the buttons above to share.'); });
       });
     }
-    add(row, sms, wa, gm || ig, em, fb, cp);
+    if (deskPop) row.className += ' cf-deskpop';
+    add(row, sms, wa, gm || ig, em);
+    if (emMenu) row.appendChild(emMenu);
+    add(row, fb, cp);
     if (nb) row.appendChild(nb);
     add(box, row, note);
     return box;
@@ -2996,7 +3073,7 @@
     var men = document.createElement('img');
     men.className = 'cf-shp-men'; men.src = asset('festival-menorah.svg'); men.alt = '';
     var ht = el('div');
-    add(ht, el('b', null, 'Invite Your Family and Friends'), el('span', null, 'Pick how to send it. The invitation is already written for you.'));
+    add(ht, el('b', null, 'Invite Your Family and Friends'), el('span', null, 'Pick how to send it. The invitation is already written\u00a0for\u00a0you.'));
     var x = el('button', 'cf-dm-x'); x.type = 'button'; x.setAttribute('aria-label', 'Close'); x.appendChild(icon('x'));
     add(hd, men, ht, x);
     var bd = el('div', 'cf-shp-body');
@@ -3023,7 +3100,7 @@
     var s = el('section', 'cf-share');
     s.id = 'cf-share';
     var w = el('div', 'cf-wrap cf-center');
-    w.appendChild(heading('Spread the light', 'Invite your family and friends', 'One tap sends the invitation with the festival link.', true));
+    w.appendChild(heading('Spread the light', 'Invite your family and friends', 'One tap sends the invitation with the festival\u00a0link.', true));
     w.appendChild(shareButtons('festival'));
     var kit = buildKit();
     if (kit) w.appendChild(kit);
