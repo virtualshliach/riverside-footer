@@ -152,7 +152,7 @@ function page(opts) {
   ok(askEl.firstChild.textContent + askLink.textContent === 'Questions about sponsoring? Email info@chanukahfestival.org' && askLink.getAttribute('href') === 'mailto:info@chanukahfestival.org?subject=Chanukah%20Festival%20sponsorship', 'sponsor questions: address shown as text, plain mailto link');
   var mp = askEl.querySelector('.cfs-mpick');
   ok(mp && mp.style.display === 'none' && [].map.call(mp.children, function (x) { return x.textContent; }).join('|') === 'Gmail|Outlook|Yahoo|Email app|Copy address', 'sponsor questions: computer chooser (hidden until clicked)');
-  ok(/mail\.google\.com\/mail\/\?view=cm&fs=1&to=info%40chanukahfestival\.org&subject=Chanukah%20Festival%20sponsorship/.test(mp.children[0].href), 'Gmail option opens a compose window to the right address');
+  ok(/mail\.google\.com\/mail\/\?view=cm&fs=1&to=info%40chanukahfestival\.org&su=Chanukah%20Festival%20sponsorship/.test(mp.children[0].href), 'Gmail option opens a compose window to the right address');
   ok(sp.d.getElementById('cfs-recog').parentNode.style.display === 'none', 'recognition name hidden for plain gifts');
   sp.click(tb[2]); sp.click(sp.next());
   ok(sp.d.getElementById('cfs-recog').parentNode.style.display === '', 'recognition name shown for a sponsor');
