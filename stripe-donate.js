@@ -304,7 +304,7 @@
       askPick.appendChild(a); return a;
     }
     var q = 'to=' + encodeURIComponent(askAddr) + '&subject=' + encodeURIComponent(askSubj);
-    mOpt('Gmail', 'https://mail.google.com/mail/?view=cm&fs=1&' + q);
+    mOpt('Gmail', 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(askAddr) + '&su=' + encodeURIComponent(askSubj));   /* Gmail calls the subject su */
     mOpt('Outlook', 'https://outlook.live.com/mail/0/deeplink/compose?' + q);
     mOpt('Yahoo', 'https://compose.mail.yahoo.com/?' + q);
     var mApp = mOpt('Email app', askA.href); mApp.removeAttribute('target');

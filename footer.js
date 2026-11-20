@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-19j';
+  var V = '2026-11-19k';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
