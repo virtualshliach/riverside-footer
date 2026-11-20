@@ -126,6 +126,9 @@
       R + '.cfs-tier span{font-weight:700;font-size:1.05rem;white-space:nowrap}',
       R + '.cfs-ask{font-size:.85rem;color:#4a5d64;margin:4px 0 20px}',
       R + '.cfs-ask a{color:#0A5769;font-weight:700}',
+      R + '.cfs-mpick{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}',
+      R + '.cfs-mpick a,' + R + '.cfs-mpick button{padding:7px 14px;border-radius:999px;border:1.5px solid #d5e2e6;background:#fff;color:#0A5769;font-weight:700;font-size:.85rem;text-decoration:none;cursor:pointer}',
+      R + '.cfs-mpick a:hover,' + R + '.cfs-mpick button:hover{border-color:' + TEAL + '}',
       R + '.cfs-or{font-family:' + DISP + ';font-size:1.05rem;color:' + NAVY + ';margin:0 0 12px}',
       R + '.cfs-chip{padding:16px 8px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:700;font-size:1.1rem}',
       R + '.cfs-chip:hover{border-color:' + TEAL + '}',
@@ -291,6 +294,37 @@
     var askA = el('a', null, askAddr);
     askA.href = 'mailto:' + askAddr + '?subject=' + encodeURIComponent('Chanukah Festival sponsorship');
     add(ask, document.createTextNode('Questions about sponsoring? Email '), askA);
+    /* On a computer, a mailto link does nothing when no email app is set up (most people use
+       Gmail or Outlook in the browser). So on computers a click opens a small chooser instead.
+       Phones keep the plain mailto link, which opens their mail app. */
+    var askSubj = 'Chanukah Festival sponsorship';
+    var askPick = el('div', 'cfs-mpick'); askPick.style.display = 'none';
+    function mOpt(label, url) {
+      var a = el('a', null, label); a.href = url; a.target = '_blank'; a.rel = 'noopener';
+      askPick.appendChild(a); return a;
+    }
+    var q = 'to=' + encodeURIComponent(askAddr) + '&subject=' + encodeURIComponent(askSubj);
+    mOpt('Gmail', 'https://mail.google.com/mail/?view=cm&fs=1&' + q);
+    mOpt('Outlook', 'https://outlook.live.com/mail/0/deeplink/compose?' + q);
+    mOpt('Yahoo', 'https://compose.mail.yahoo.com/?' + q);
+    var mApp = mOpt('Email app', askA.href); mApp.removeAttribute('target');
+    var mCopy = el('button', null, 'Copy address'); mCopy.type = 'button';
+    mCopy.addEventListener('click', function () {
+      function done() { mCopy.textContent = 'Copied!'; setTimeout(function () { mCopy.textContent = 'Copy address'; }, 2000); }
+      try { navigator.clipboard.writeText(askAddr).then(done, function () { fallbackCopy(); }); } catch (e) { fallbackCopy(); }
+      function fallbackCopy() {
+        var t = el('textarea'); t.value = askAddr; t.style.position = 'fixed'; t.style.opacity = '0';
+        document.body.appendChild(t); t.select(); try { document.execCommand('copy'); done(); } catch (e2) {} document.body.removeChild(t);
+      }
+    });
+    askPick.appendChild(mCopy);
+    function onComputer() { try { return window.matchMedia('(hover: hover) and (pointer: fine)').matches; } catch (e) { return false; } }
+    askA.addEventListener('click', function (e) {
+      if (!onComputer()) return;
+      e.preventDefault();
+      askPick.style.display = askPick.style.display === 'none' ? '' : 'none';
+    });
+    ask.appendChild(askPick);
     CFG.AMOUNTS.forEach(function (a) {
       var b = el('button', 'cfs-chip', money(a)); b.type = 'button';
       b.addEventListener('click', function () { pickAmt(a, b); });
