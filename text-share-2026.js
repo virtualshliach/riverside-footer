@@ -9,7 +9,7 @@
   'use strict';
   if (window.TS26 && window.TS26.version) return;
 
-  var VERSION = 'ts26-2026-11-15c';
+  var VERSION = 'ts26-2026-11-19a';
   var PV = window.TS26_PREVIEW || null;
   var DEMO = !!(PV && PV.demo);
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
@@ -19,8 +19,8 @@
   }
   var BASE = SELF_SRC ? SELF_SRC.split('?')[0].replace(/[^\/]+$/, '') : 'https://virtualshliach.github.io/riverside-footer/';
 
-  /* Exact invitation from the festival emails (curly apostrophe, en dash in the time). */
-  var MSG = 'Join us for Southern California\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
+  /* Same invitation as the festival emails' WhatsApp and Email buttons (Nov 19 2026 wording). */
+  var MSG = "Hi!\n\nI'd love for you to join me at the Chanukah Festival in downtown Riverside! There'll be live music with Aaron Holder, traditional food, train rides, a fire juggler, and a new Menorah Contest\u2014a festive evening for all ages.\n\nAdmission is free, and everyone is welcome. You don't have to celebrate Chanukah to come enjoy the evening!\n\nMonday, December 7, 2026 \u2022 6\u20138 PM\nRiverside Historic Courthouse\n4050 Main St., Riverside, CA 92501\n\nTake a look: chanukahfestival.org\n\nHope you can join me!";
   var SMS = 'sms:?&body=' + encodeURIComponent(MSG);
 
   var CFG = {
@@ -101,7 +101,7 @@
       R + '.ts-card{max-width:680px;margin:0 auto;background:#fff;color:' + DEEP + ';border-radius:20px;box-shadow:0 18px 50px rgba(15,39,48,.22);border-top:5px solid ' + GOLD + ';font-size:16px;line-height:1.5;text-align:left;padding:26px 28px 28px}',
       R + '.ts-sms{display:flex;width:100%;align-items:center;justify-content:center;padding:18px 26px;border-radius:999px;font-family:' + FONT + ';font-weight:700;font-size:1.15rem;letter-spacing:.02em;background:' + GOLD + ';color:' + DEEP + ';box-shadow:0 8px 22px rgba(233,185,73,.32);text-decoration:none;text-align:center}',
       R + '.ts-lab{font-size:.8rem;font-weight:700;color:#4a5d64;letter-spacing:.02em;margin:22px 0 8px}',
-      R + '.ts-msg{width:100%;min-height:132px;padding:14px 14px;font-family:' + FONT + ';font-size:1rem;line-height:1.55;color:' + NAVY + ';background:' + LIGHT + ';border:1.5px solid #d5e2e6;border-radius:12px;resize:none;outline:none}',
+      R + '.ts-msg{width:100%;min-height:340px;padding:14px 14px;font-family:' + FONT + ';font-size:1rem;line-height:1.55;color:' + NAVY + ';background:' + LIGHT + ';border:1.5px solid #d5e2e6;border-radius:12px;resize:none;outline:none}',
       R + '.ts-msg:focus{border-color:' + TEAL + ';box-shadow:0 0 0 3px rgba(31,143,149,.18)}',
       R + '.ts-copy{display:flex;width:100%;align-items:center;justify-content:center;margin-top:12px;padding:14px 26px;border-radius:999px;font-family:' + FONT + ';font-weight:700;font-size:1rem;letter-spacing:.02em;background:#fff;color:' + NAVY + ';border:2px solid ' + NAVY + ';cursor:pointer}',
       R + '.ts-copy.ts-copied{background:' + LIGHT + ';border-color:' + GOLD + '}',

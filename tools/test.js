@@ -622,7 +622,7 @@ var SITES = {
     ok(![].some.call(vh.d.querySelectorAll('a[href]'), function (a) { return /volunteer/i.test(a.getAttribute('href')); }), 'hidden: the festival page has no link to the volunteer form');
 
     console.log('riverside: hidden Text share page chanukahfestival.org/?text');
-    var TXMSG = 'Join us for Southern California\u2019s largest Chanukah Festival! Monday, Dec 7, 6–8 PM at the Riverside Historic Courthouse. Live music, traditional Chanukah food, kids\u2019 activities and the Grand Menorah Lighting. Free and all are welcome! Details: chanukahfestival.org';
+    var TXMSG = "Hi!\n\nI'd love for you to join me at the Chanukah Festival in downtown Riverside! There'll be live music with Aaron Holder, traditional food, train rides, a fire juggler, and a new Menorah Contest\u2014a festive evening for all ages.\n\nAdmission is free, and everyone is welcome. You don't have to celebrate Chanukah to come enjoy the evening!\n\nMonday, December 7, 2026 \u2022 6\u20138 PM\nRiverside Historic Courthouse\n4050 Main St., Riverside, CA 92501\n\nTake a look: chanukahfestival.org\n\nHope you can join me!";
     var TXSMS = 'sms:?&body=' + encodeURIComponent(TXMSG);
     var tx = await load('riverside', 'https://chanukahfestival.org/?text', { wait: 700 });
     var txReq = projectRequests(tx);
