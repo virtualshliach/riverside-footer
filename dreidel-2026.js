@@ -8,7 +8,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'dg26-2026-11-19d';
+  var VERSION = 'dg26-2026-11-19i';
   var PREVIEW = false; /*__PREVIEW_HOOK__*/
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
@@ -189,6 +189,21 @@
     return (full ? 'https://' : '') + CFG.festivalUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') + '?' + (SHARE_APP[src] || '') + 'd';
   }
   function track(m) { try { if (window.gtag) window.gtag('event', 'share_click', { method: m, page: 'dreidel-thanks' }); } catch (e) {} }
+  /* copy right inside the tap (iPhone allows clipboard writes only there) */
+  function copyNow(s) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = s; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.fontSize = '16px';
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, s.length);
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) return true;
+    } catch (e) {}
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(s); return true; } } catch (e) {}
+    return false;
+  }
   function shareBlock() {
     var box = el('div');
     var row = el('div', 'mc-row');
@@ -229,6 +244,11 @@
     }
     ig.addEventListener('click', function () { copyIt('instagram', 'Link copied. Paste it in your Instagram story or bio.'); });
     cp.addEventListener('click', function () { copyIt('copy', 'Link copied!'); });
+    /* Facebook never lets a site fill in a post, and its iPhone app can open an empty post with
+       no link. On phones the tap also copies the whole invitation (with the link) to paste in. */
+    fb.addEventListener('click', function () {
+      if (touch && copyNow(body('facebook'))) say('Invitation copied. Paste it into your Facebook post.');
+    });
     add(row, sms, wa, em, fb, ig, cp);
     add(box, row, note);
     return box;

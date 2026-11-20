@@ -17,7 +17,7 @@
   'use strict';
   if (window.CFForms && window.CFForms.version) return;
 
-  var VERSION = 'festival-forms 2026-11-19d';
+  var VERSION = 'festival-forms 2026-11-19i';
 
   var CFG = {
     /* Same Google Apps Script web app as stripe-donate.js */
@@ -523,6 +523,21 @@
     if (others.length === 1) return { who: others[0], cheer: 'us', you: others[0], whose: others[0] + '’s menorah' };
     return { who: join(others), cheer: 'us', you: others.length === 2 ? join(others) : 'them', whose: 'their menorahs' };
   }
+  /* copy right inside the tap (iPhone allows clipboard writes only there) */
+  function copyNow(s) {
+    try {
+      var ta = document.createElement('textarea');
+      ta.value = s; ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed'; ta.style.left = '-9999px'; ta.style.fontSize = '16px';
+      document.body.appendChild(ta);
+      ta.select(); ta.setSelectionRange(0, s.length);
+      var ok = document.execCommand('copy');
+      document.body.removeChild(ta);
+      if (ok) return true;
+    } catch (e) {}
+    try { if (navigator.clipboard && navigator.clipboard.writeText) { navigator.clipboard.writeText(s); return true; } } catch (e) {}
+    return false;
+  }
   function inviteBox(d) {
     var w = menorahWho(d);
     var url = 'https://chanukahfestival.org';
@@ -549,6 +564,12 @@
     if (navigator.share) btn('More apps', null, false, function () { navigator.share({ text: msg }).catch(function () {}); });
     btn('Email', 'mailto:?subject=' + encodeURIComponent('Come to the Chanukah Festival on Dec 7!') + '&body=' + encodeURIComponent(msg));
     btn('Facebook', 'https://www.facebook.com/sharer/sharer.php?u=' + encodeURIComponent(url));
+    /* Facebook can open an empty post on iPhone: on phones the tap also copies the invitation */
+    (function (a) {
+      a.addEventListener('click', function () {
+        if (touch && copyNow(msg)) { a.textContent = 'Copied! Paste in post'; setTimeout(function () { a.textContent = 'Facebook'; }, 4000); }
+      });
+    })(g.lastChild);
     btn('Copy message', null, false, function (a) {
       function done() { a.textContent = 'Copied!'; setTimeout(function () { a.textContent = 'Copy message'; }, 2000); }
       if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(msg).then(done, function () { window.prompt('Copy this message:', msg); });
