@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-19d-draft';
+  var VERSION = 'cf26-2026-11-19m-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -79,32 +79,32 @@
       web: 'festival-map-2026-web.jpg',
       full: 'festival-map-2026.png',
       pdf: 'festival-map-2026.pdf',
-      alt: 'Visitor map of Chanukah Festival 2026 at the Riverside Historic Courthouse on Main Street between 10th and 11th, Dec 7, 6–8 PM, with numbered booths including #15 Menorah Contest and #16 Gelt Drop.',
+      alt: 'Visitor map of Chanukah Festival 2026 at the Riverside Historic Courthouse on Main Street between 10th and 11th, Dec 7, 6–8 PM, with numbered booths including #15 Menorah Contest, #16 Fire Show and #18 Gelt Drop, and entrances on both sidewalks at 10th and 11th.',
       KEY: [
-        { group: 'Stage {amp} Show', color: '#c8102e', items: [
-          [1, 'Upper Stage {amp} Dais', 'Top of the courthouse steps'],
-          [2, 'Main Stage', 'Live music'] ] },
         { group: 'Kids', color: '#00857c', items: [
-          [3, 'Kids Crafts', 'Two craft areas'],
-          [4, 'Face Painting', ''],
-          [5, 'Balloon Twisting', ''],
-          [6, 'Dreidel Guessing', 'Win $180! Winner announced at the festival at 8:00 PM'],
-          [7, 'Train Rides', ''],
+          [4, 'Kids Crafts', 'Two craft areas'],
+          [7, 'Face Painting', ''],
+          [8, 'Balloon Twisting', ''],
+          [9, 'Mini Train Rides', ''],
           [15, 'Menorah Contest', 'All entries on display. Winners announced at the festival at 8:00 PM'],
-          [16, 'Children’s Gelt Drop', '7:50 PM on the left lawn'] ] },
+          [17, 'Dreidel Guessing', 'Win $180! Winner announced at the festival at 8:00 PM'],
+          [18, 'Children’s Gelt Drop', '7:50 PM on the left lawn'] ] },
         { group: 'Food {amp} Shopping', color: '#e0661b', items: [
-          [8, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'],
-          [9, 'Gift Shop', ''],
-          [10, 'Cocktail Tables', 'High-tops at each end'],
-          [17, 'Food Truck', ''] ] },
+          [2, 'Cocktail Tables', 'Standing eating area at each end'],
+          [3, 'Gift Shop', ''],
+          [5, 'Food', 'Potato latkes, chicken soup, sufganiyot, hot cocoa and tea. All food is kosher'] ] },
         { group: 'Photo Spots', color: '#2a5ea8', items: [
-          [11, 'Fire Truck', 'On 10th St.'],
-          [12, 'Police Mustang', 'Riverside’s display Mustang cruiser'],
-          [13, 'Inflatable Menorah', 'Left lawn'],
-          [14, 'Inflatable Dreidel', 'Right lawn'],
-          [18, 'Grand Menorah', 'Photos during the evening and after the menorah lighting'] ] }
+          [1, 'Fire Truck', 'On 10th St.'],
+          [6, 'Police Mustang', 'Riverside’s display Mustang cruiser'],
+          [10, 'Inflatable Menorah', 'Left lawn'],
+          [11, 'Inflatable Dreidel', 'Right lawn'],
+          [14, 'Grand Menorah', 'Photos during the evening and after the menorah lighting'] ] },
+        { group: 'Stage {amp} Show', color: '#c8102e', items: [
+          [12, 'Main Stage', 'Live music'],
+          [13, 'Upper Stage {amp} Dais', 'Top of the courthouse steps'],
+          [16, 'Fire Show', 'Fire juggler on the sidewalk'] ] }
       ],
-      ROAMING: 'LED Robot · Dreidel Mascot · Stilt Walker · Juggler'
+      ROAMING: 'LED Robot · Dreidel Mascot'
     },
 
     /* Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
@@ -143,11 +143,11 @@
       title: 'Train Rides',
       intro: 'All aboard! Kids and families can ride the festival train all evening. Find it at stop #7 on the map.',
       facts: ['Stop #7 on the Map', '6–8 PM'],
-      /* Gelt Drop is map #16 at 7:50 PM. Contest and dreidel winners are announced at 8:00 PM. */
+      /* Gelt Drop is map #18 at 7:50 PM. Contest and dreidel winners are announced at 8:00 PM. */
       gelt: {
         title: 'Gelt Drop',
         intro: 'The grand finale! Watch chocolate gelt and gifts parachute down from the sky.',
-        facts: ['7:50 PM', '#16 on the Map']
+        facts: ['7:50 PM', '#18 on the Map']
       }
     },
 
