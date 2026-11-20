@@ -673,6 +673,43 @@ var SITES = {
     var txNo = await load('riverside', 'https://chanukahfestival.org/?texture', { wait: 400 });
     ok(!projectRequests(txNo).some(function (u) { return /text-share/.test(u); }) && !txNo.d.getElementById('ts26') && txNo.d.getElementById('cf26'), '?texture is not treated as the text-share page');
 
+    console.log('riverside: Instagram on phones opens the share sheet (draft copy)');
+    var DRP = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7553387/jewish/Draft.htm';
+    function phoneBefore(shareCalls, shareResult) {
+      return function (w) {
+        w.matchMedia = function (q) { return { matches: /pointer:\s*coarse/.test(q), media: q, addListener: function () {}, removeListener: function () {}, addEventListener: function () {}, removeEventListener: function () {} }; };
+        if (shareCalls) w.navigator.share = function (d) { shareCalls.push(d); return shareResult ? shareResult() : Promise.resolve(); };
+        w.__copied = [];
+        try { Object.defineProperty(w.navigator, 'clipboard', { configurable: true, value: { writeText: function (t) { w.__copied.push(t); return Promise.resolve(); } } }); } catch (e) {}
+      };
+    }
+    var calls = [];
+    var ph = await load('riverside', DRP, { wait: 900, before: phoneBefore(calls) });
+    var phIgs = [].slice.call(ph.d.querySelectorAll('#cf-share .cf-ig'));
+    ok(phIgs.length === 1 && !ph.d.querySelector('#cf-share .cf-emmenu'), 'phone: Spread the light has the Instagram button and the plain Email button (no menu)');
+    if (phIgs[0]) phIgs[0].click();
+    await wait(50);
+    ok(calls.length === 1 && calls[0].url === 'https://chanukahfestival.org' && /Chanukah Festival/.test(calls[0].title) && /Join me at/.test(calls[0].text) && !/Details:/.test(calls[0].text),
+      'phone: Spread the light Instagram calls navigator.share with title, invitation text and https://chanukahfestival.org');
+    ok(!ph.d.querySelector('.cf-toast.on') && ph.w.__copied.length === 0, 'phone: share sheet path shows no "Link copied" note and copies nothing');
+    var phTop = [].filter.call(ph.d.querySelectorAll('.cf-ctas button'), function (b) { return /Share/.test(b.textContent); })[0];
+    if (phTop) phTop.click();
+    var phPopIg = ph.d.querySelector('#cf-sharepop .cf-ig');
+    if (phPopIg) phPopIg.click();
+    await wait(50);
+    ok(!!phPopIg && calls.length === 2 && calls[1].url === 'https://chanukahfestival.org', 'phone: top Share pop-up Instagram calls navigator.share too');
+    var calls2 = [];
+    var phc = await load('riverside', DRP, { wait: 900, before: phoneBefore(calls2, function () { var e = new Error('cancel'); e.name = 'AbortError'; return Promise.reject(e); }) });
+    phc.d.querySelector('#cf-share .cf-ig').click();
+    await wait(80);
+    ok(calls2.length === 1 && !phc.d.querySelector('.cf-toast.on') && phc.w.__copied.length === 0, 'phone: closing the share sheet does nothing else (no copy, no note)');
+    var phn = await load('riverside', DRP, { wait: 900, before: phoneBefore(null) });
+    phn.d.querySelector('#cf-share .cf-ig').click();
+    await wait(80);
+    ok(phn.w.__copied[0] === 'https://chanukahfestival.org' && /Link copied/.test((phn.d.querySelector('.cf-toast.on') || {}).textContent || ''), 'phone without a share sheet (not Android or iPhone): copies the link and shows the note');
+    var dk = await load('riverside', DRP, { wait: 900 });
+    ok(!!dk.d.querySelector('#cf-share .cf-emmenu') && !!dk.d.querySelector('#cf-share .cf-ig'), 'computer: Spread the light keeps the Email menu and Instagram button');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],

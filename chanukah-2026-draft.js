@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'cf26-2026-11-19e-draft';
+  var VERSION = 'cf26-2026-11-20a-draft';
   var SELF_SRC = (document.currentScript && document.currentScript.src) || '';
   if (!SELF_SRC) {
     var ss = document.getElementsByTagName('script');
@@ -3020,10 +3020,31 @@
       ig = el('button', 'cf-btn cf-ig', 'Instagram');
       ig.type = 'button';
       ig.insertBefore(shareIcon('ig'), ig.firstChild);
+      /* phones (Nov 20): open the phone's share sheet so they can pick Instagram. No share sheet:
+         copy the link and open the Instagram app (Android intent, iPhone instagram://). Anything
+         else: copy the link with a note. */
       ig.addEventListener('click', function () {
         track('instagram');
-        copyText(shareUrl('instagram', page)).then(function () { say(''); toast('Link copied. Paste it in your Instagram story or message.', 5000); },
-          function () { say('Copy this link for Instagram: ' + shareUrl('instagram', page)); });
+        var igLink = 'https://chanukahfestival.org';
+        function copyNote() {
+          copyText(igLink).then(function () { say(''); toast('Link copied. Paste it in your Instagram story or message.', 5000); },
+            function () { say('Copy this link for Instagram: ' + igLink); });
+        }
+        function openApp() {
+          var ua = navigator.userAgent || '';
+          var app = /Android/i.test(ua) ? 'intent://instagram.com/#Intent;scheme=https;package=com.instagram.android;S.browser_fallback_url=' + encodeURIComponent('https://www.instagram.com') + ';end'
+            : /iPhone|iPad|iPod/i.test(ua) ? 'instagram://app' : '';
+          if (!app) { copyNote(); return; }
+          if (copyNow(igLink)) toast('Link copied. Paste it in your Instagram story or message.', 5000);
+          if (!PREVIEW) window.location.href = app;
+        }
+        if (navigator.share) {
+          var pr;
+          try { pr = navigator.share({ title: S.emailSubject, text: T(S.text).replace(/\s*Details:\s*\{link\}\s*$/, '').split('{link}').join(igLink), url: igLink }); } catch (e) { openApp(); return; }
+          if (pr && pr.catch) pr.catch(function (e) { if (!e || e.name !== 'AbortError') openApp(); });
+        } else {
+          openApp();
+        }
       });
     }
 
