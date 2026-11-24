@@ -83,7 +83,9 @@
       title: 'Volunteer With Us', sub: 'Monday, December 7, 2026', button: 'Sign me up',
       intro: 'Help us light up downtown Riverside! Pick what you’d like to do, and we’ll be in touch with the details.',
       roles: ['Early setup (12–4 PM)', 'Setup (from about 4 PM)', 'Gift tables', 'Kids’ activities', 'Food and latkes', 'Greeting and info', 'Cleanup (after 8 PM)', 'Wherever I’m needed'],
-      times: ['12–4 PM (early setup)', '4–6 PM (setup)', '6–8 PM (during the festival)', 'After 8 PM (cleanup)'],
+      /* Jobs before the festival (Nov 23 2026) */
+      before: ['Spread the word to friends and family', 'Share on social media', 'Connect us with a local business sponsor', 'Errands before the festival'],
+      times: ['Before Dec 7 (flexible)', '12–4 PM (early setup)', '4–6 PM (setup)', '6–8 PM (during the festival)', 'After 8 PM (cleanup)'],
       privacy: 'We use this only to plan festival volunteers. We never share it.'
     }
   };
@@ -149,6 +151,7 @@
       R + '.cff-tick input{width:22px;height:22px;margin-top:2px;accent-color:' + TEAL + ';flex:none}',
       R + '.cff-cols{columns:2;column-gap:18px}',
       R + '.cff-cols .cff-tick{break-inside:avoid}',
+      R + '.cff-part{font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#0a6f64;margin:10px 0 2px}',
       R + '.cff-ent{border:1.5px solid #e2ebee;border-radius:14px;padding:14px;margin-top:4px;flex:1 1 100%}',
       R + '.cff-ent h4{font-family:' + DISP + ';color:' + NAVY + ';font-size:1rem;margin-bottom:10px}',
       R + '.cff-sub{flex:1 1 100%;display:flex;flex-wrap:wrap;gap:12px;padding:12px 14px;background:#f6fafb;border-radius:12px}',
@@ -446,12 +449,23 @@
     var jobs = inv.jobs.map(jobLabel);
     var opts = D.roles.slice();
     /* last year's job that isn't on the list (Security, Transportation, ASL...) gets its own box */
-    if (inv.a === 'yes') jobs.forEach(function (j) { if (opts.indexOf(j) < 0) opts.splice(opts.length - 1, 0, j); });
+    if (inv.a === 'yes') jobs.forEach(function (j) { if (opts.indexOf(j) < 0 && D.before.indexOf(j) < 0) opts.splice(opts.indexOf('Wherever I’m needed'), 0, j); });
     var roles = group('How would you like to help?', opts, { req: true, cols: true });
+    /* two parts under one question: festival day, then before the festival */
+    var dayBox = roles.w.querySelector('.cff-cols');
+    roles.w.insertBefore(el('div', 'cff-part', 'On festival day, Monday, Dec 7'), dayBox);
+    var bBox = el('div', 'cff-cols');
+    var bTicks = D.before.map(function (t) { var k = tick(t); bBox.appendChild(k.w); return { t: t, c: k.c }; });
+    add(roles.w, el('div', 'cff-part', 'Before the festival'), bBox);
+    var dayValues = roles.values;
+    roles.values = function () {
+      return dayValues.call(roles).concat(bTicks.filter(function (k) { return k.c.checked; }).map(function (k) { return k.t; }));
+    };
     if (inv.a === 'yes') tickLabels(roles.w, jobs);
     var times = group('When can you be there?', D.times, { req: !!inv.a, cols: true });
+    var talent = field('Have a talent, skill or service you can share?', 'text', { max: 200, placeholder: 'Photography, music, signs, printing, a truck… (optional)' });
     var notes = field('Notes', 'textarea', { max: 500, placeholder: 'Anything we should know? Arrival time, a friend you’re coming with… (optional)' });
-    add(g, f.first.w, f.last.w, f.email.w, f.phone.w, roles.w, times.w, notes.w);
+    add(g, f.first.w, f.last.w, f.email.w, f.phone.w, roles.w, times.w, talent.w, notes.w);
     var intro = inv.a === 'yes' ? 'Welcome back, ' + hi + ' We’ve filled in your details and last year’s job. Choose when you can be there and tap Sign me up.'
       : inv.a === 'other' ? 'Welcome back, ' + hi + ' Pick what you’d like to do this year and when you can be there.'
       : D.intro;
@@ -463,7 +477,10 @@
           (inv.a && !times.values().length ? 'Please choose when you can be there.' : '');
       },
       data: function () {
-        var d = { first: f.first.v(), last: f.last.v(), email: f.email.v(), phone: f.phone.v(), roles: roles.values(), times: times.values(), notes: notes.v() };
+        /* the talent answer rides in Notes, so the Sheet keeps it without a new column */
+        var tl = talent.v(), nt = notes.v();
+        var d = { first: f.first.v(), last: f.last.v(), email: f.email.v(), phone: f.phone.v(), roles: roles.values(), times: times.values(),
+          notes: (tl ? 'Talent/service: ' + tl + (nt ? ' | ' : '') : '') + nt };
         if (inv.a) { d.answer = inv.a; d.invited = true; d.past = inv.r || ''; }
         return d;
       }

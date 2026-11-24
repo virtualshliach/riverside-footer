@@ -144,19 +144,23 @@ function page(opts) {
   t.w.CFForms.open('volunteer');
   ov = t.d.querySelector('.cff-ov');
   var vlab = [].map.call(ov.querySelectorAll('.cff-lab, legend'), function (x) { return x.textContent; }).join('|');
-  ok(ov && /Volunteer With Us/.test(ov.querySelector('.cff-hd b').textContent) && /^First name \*\|Last name \*\|Email \*\|Phone \*\|How would you like to help\? \*\|When can you be there\?\|Notes/.test(vlab), 'opens with his fields: name, email, phone, roles, times (optional), notes (' + vlab + ')');
-  var vroles = [].map.call(ov.querySelectorAll('.cff-set')[0].querySelectorAll('.cff-tick'), function (x) { return x.textContent; }).join('|');
+  ok(ov && /Volunteer With Us/.test(ov.querySelector('.cff-hd b').textContent) && /^First name \*\|Last name \*\|Email \*\|Phone \*\|How would you like to help\? \*\|When can you be there\?\|Have a talent, skill or service you can share\?\|Notes/.test(vlab), 'opens with his fields: name, email, phone, roles, times (optional), talent, notes (' + vlab + ')');
+  var vroles = [].map.call(ov.querySelectorAll('.cff-set')[0].querySelectorAll('.cff-cols')[0].querySelectorAll('.cff-tick'), function (x) { return x.textContent; }).join('|');
   ok(vroles === 'Early setup (12–4 PM)|Setup (from about 4 PM)|Gift tables|Kids’ activities|Food and latkes|Greeting and info|Cleanup (after 8 PM)|Wherever I’m needed', 'his eight roles, in his order');
+  var vsubs = [].map.call(ov.querySelectorAll('.cff-set')[0].querySelectorAll('.cff-part'), function (x) { return x.textContent; }).join('|');
+  ok(vroles.length && vsubs === 'On festival day, Monday, Dec 7|Before the festival', 'roles in two parts: festival day, then before the festival');
   var n0 = t.posts.length;
   t.set(t.byLabel(ov, 'First name')[0], 'Maya'); t.set(t.byLabel(ov, 'Last name')[0], 'Cohen');
   t.set(t.byLabel(ov, 'Email')[0], 'maya@example.com'); t.set(t.byLabel(ov, 'Phone')[0], '951-555-0100');
   t.go(ov); await wait(30);
   ok(t.posts.length === n0 && /at least one/.test(t.err(ov)), 'no role chosen: not sent, asks for one');
   t.tick(ov, 'Early setup (12–4 PM)'); t.tick(ov, 'Food and latkes');
+  t.tick(ov, 'Share on social media');
+  t.set(t.byLabel(ov, 'Have a talent, skill or service you can share?')[0], 'Photography');
   t.set(t.byLabel(ov, 'Notes')[0], 'I can come at 4.');
   t.go(ov); await wait(50);
   var vp = t.posts[t.posts.length - 1].body;
-  ok(vp.action === 'form' && vp.kind === 'volunteer' && vp.first === 'Maya' && vp.phone === '951-555-0100' && vp.roles.join('|') === 'Early setup (12–4 PM)|Food and latkes' && vp.notes === 'I can come at 4.' && vp.website === '', 'sent to the Sheet as a volunteer entry, same as his page');
+  ok(vp.action === 'form' && vp.kind === 'volunteer' && vp.first === 'Maya' && vp.phone === '951-555-0100' && vp.roles.join('|') === 'Early setup (12–4 PM)|Food and latkes|Share on social media' && vp.notes === 'Talent/service: Photography | I can come at 4.' && vp.website === '', 'sent to the Sheet as a volunteer entry, same as his page');
   ok(/Thank you, Maya!/.test(ov.textContent) && /volunteer team/.test(ov.textContent), 'thank-you shows');
   t.w.CFForms.close();
   var vf = page({ before: function (w) {
