@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-23a';
+  var V = '2026-11-25a';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -27,7 +27,9 @@
     /* Join Our Mailing List form: California as the default state. */
     '5333083': { file: 'mailing-list.js' },
     /* Ignite Riverside year-end campaign - client-review MOCKUP (dummy data, no payments). */
-    '7621668': { file: 'ignite-2026.js', cover: '#042a34', coverId: 'ig26-cover' }
+    '7621668': { file: 'ignite-2026.js', cover: '#042a34', coverId: 'ig26-cover' },
+    /* Donate page ("Donate 2.0"): step-by-step Stripe donate form; each gift is also sent to the page's ChabadOne form. */
+    '7643000': { file: 'donate-2026.js' }
   };
 
   /* domain roots that should load a project without an aid in the URL */
