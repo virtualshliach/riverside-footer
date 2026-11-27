@@ -32,13 +32,21 @@
    Apps Script (action 'remindLater', a "Remind later" tab; no email is sent). Never on steps 2 to 4, never
    after a gift, never in the hidden ChabadOne copy.
 
+   Tribute eCard ("Let them know", Nov 26, 2026): with a dedication, the donor can ask us to email a card to someone
+   (their name, email and a message up to 250 characters). Sent with the gift as tribute_email / tribute_name / tribute_msg;
+   the Apps Script emails the card once the gift is paid (the live script ignores these fields until the new one is deployed).
+   The card never shows the amount. Email only; there is no postal card.
+
+   "Make it monthly": after a one-time gift, the thank-you offers once to start the same gift monthly. Yes opens the
+   payment step again, prefilled and labeled "every month, starting today"; nothing is charged until the donor confirms.
+
    No flash of the old page: header.js hides these pages (#dn26-cover) before they are drawn.
    This file removes every #dn26-cover once its form is on the page, or as soon as it knows it
    can't draw it. header.js and footer.js each also drop the cover after 8 seconds no matter what. */
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26j';
+  var VERSION = 'donate-2026 2026-11-26k';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -110,6 +118,7 @@
     NUDGE_IDLE_MS: 20000,          /* "Complete your gift" bar: idle time on step 1 after choosing an amount */
     NUDGE_KEY: 'dn26-nudge',       /* sessionStorage: the bar was shown this session */
     GAVE_KEY: 'dn26-gave',         /* sessionStorage: a gift was made this session */
+    MM_KEY: 'dn26-mm',             /* sessionStorage: the "make it monthly" card was shown this session */
     MAX: 25000,
     BANK_DAYS: '4 business days',
     /* ChabadOne form fields on page 7643000 (read from the live page, Nov 25 2026) */
@@ -282,6 +291,27 @@
         R + '.dn-hd img{width:150px;margin:0 auto}' + R + '.dn-hd>div{width:100%}' + R + '.dn-hd span{max-width:300px;margin:0 auto;text-wrap:balance}' + R + '.dn-hd i{text-wrap:balance;line-height:1.5;margin-bottom:6px}' +
         R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
         R + '.dn-pgrid .dn-fund{min-height:66px}' + R + '.dn-chk{padding:12px 14px;font-size:14.7px}' + R + '.dn-dedbox{padding:12px 14px 14px}}',
+      /* "Let them know (optional)": inside the dedication box, under the name */
+      R + '.dn-trchk{display:flex;align-items:flex-start;gap:10px;margin-top:14px;cursor:pointer;font-weight:600;color:' + NAVY + ';font-size:15.2px;line-height:1.35}',
+      R + '.dn-trchk input{flex:none;width:20px;height:20px;margin:0;accent-color:' + NAVY + ';cursor:pointer}',
+      R + '.dn-trchk input:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:2px}',
+      R + '.dn-trchk small{display:block;font-size:13.1px;font-weight:400;color:#5b6e75;margin-top:2px;text-wrap:balance}',
+      R + '.dn-trbox{margin-top:12px;display:flex;flex-direction:column;gap:12px}',
+      R + '.dn-trbox[hidden]{display:none}',
+      R + 'textarea.dn-in{resize:vertical;min-height:84px;line-height:1.45;font-family:inherit}',
+      R + '.dn-trcount{align-self:flex-end;font-size:12.5px;color:#6b7f86;margin-top:-6px;font-variant-numeric:tabular-nums}',
+      /* payment step: monthly note under the summary */
+      R + '.dn-sum3x{display:block;font-weight:600;color:#4a5d64;font-size:14.4px;margin-top:2px}',
+      R + '.dn-mon3{font-size:13.6px;color:#4a5d64;margin:-6px 0 14px;padding:0 14px}',
+      R + '.dn-mon3[hidden]{display:none}',
+      /* thank-you: "Would you like to make this a monthly gift?" */
+      R + '.dn-mm{margin:22px auto 4px;max-width:460px;padding:18px 18px 16px;border-radius:14px;background:#fff8e6;border:1px solid #f1d58f;text-align:center}',
+      R + '.dn-mm h4{margin:0 0 4px;font-family:' + DISP + ';font-size:18.4px;line-height:1.3;color:' + NAVY + ';text-wrap:balance}',
+      R + '.dn-done .dn-mm p{margin:0 auto 14px;color:#4a5d64;font-size:15.2px;text-wrap:balance}',
+      R + '.dn-mmb{display:flex;flex-direction:column;align-items:center;gap:8px}',
+      R + '.dn-done .dn-mmb .dn-btn{margin-top:0}',
+      R + '.dn-mmno{font-weight:600;color:#4a5d64;text-decoration:underline;padding:8px 12px;font-size:14.4px}',
+      R + '.dn-trdone{font-size:14.4px}',
       /* payment step on phones: the summary above the payment box says it, so the footer keeps room for Give */
       '@media (max-width:480px){' + R + '.dn-ft.dn-on3 .dn-sum{display:none}' + R + '.dn-ft.dn-on3 .dn-gold{margin-left:auto}}',
       /* header: light and airy, left-aligned, navy logo (option A, chosen Nov 26, 2026); .dn-hd.dn-hx outranks the older .dn-hd rules at every width */
@@ -372,7 +402,7 @@
     return {
       first: g.first, last: g.last, email: g.email, phone: g.phone || '',
       amount: Number(g.amount).toFixed(2), frequency: g.monthly ? 'Monthly' : 'One-time', fund: g.fund || 'General',
-      dedication: g.ded && g.dedname ? (g.ded === 'memory' ? 'In memory of ' : 'In honor of ') + g.dedname : '',
+      dedication: g.ded && g.dedname ? (g.ded === 'memory' ? 'In memory of ' : 'In honor of ') + g.dedname + (g.tr && g.tr.email ? '. eCard to ' + g.tr.email : '') : '',
       method: method || '', stripeId: g.id, status: status
     };
   }
@@ -593,7 +623,42 @@
     var dedLab = el('span', null, 'In honor of *');
     var dedW = add(el('label', 'dn-fld dn-dedname'), dedLab, dedName);
     dedW.setAttribute('for', dedName.id);
-    add(dedBox, dSeg, dedW);
+    /* "Let them know (optional)": a real checkbox; on, it opens the recipient's name, email and a short message */
+    var trChk = document.createElement('input');
+    trChk.type = 'checkbox'; trChk.id = 'dn26-trchk';
+    var trLab = add(el('label', 'dn-trchk'), trChk, add(el('span', null, 'Let them know (optional)'),
+      el('small', null, 'We’ll email them a card. Your gift amount is never\u00a0shown.')));
+    trLab.setAttribute('for', trChk.id);
+    var trBox = el('div', 'dn-trbox'); trBox.id = 'dn26-trbox'; trBox.hidden = true;
+    trChk.setAttribute('aria-controls', trBox.id); trChk.setAttribute('aria-expanded', 'false');
+    function trField(id, label, tag, type, max) {
+      var i = document.createElement(tag);
+      if (type) i.type = type;
+      i.className = 'dn-in'; i.id = id; i.maxLength = max; i.autocomplete = 'off';
+      var w = add(el('label', 'dn-fld'), el('span', null, label), i); w.setAttribute('for', id);
+      return [w, i];
+    }
+    var trN = trField('dn26-trname', 'Their name (optional)', 'input', 'text', 80);
+    var trE = trField('dn26-tremail', 'Their email *', 'input', 'email', 120);
+    var trM = trField('dn26-trmsg', 'Personal message (optional)', 'textarea', '', 250);
+    trM[1].rows = 3;
+    var trCount = el('p', 'dn-trcount', '0/250'); trCount.id = 'dn26-trcount';
+    trCount.setAttribute('aria-live', 'polite'); trM[1].setAttribute('aria-describedby', trCount.id);
+    trM[1].addEventListener('input', function () { trCount.textContent = String(trM[1].value.length) + '/250'; });
+    add(trBox, trN[0], trE[0], trM[0], trCount);
+    function setTribute(on) {
+      trChk.checked = !!on; trChk.setAttribute('aria-expanded', on ? 'true' : 'false'); trBox.hidden = !on;
+    }
+    trChk.addEventListener('change', function () {
+      setTribute(trChk.checked);
+      if (trChk.checked) setTimeout(function () { try { trE[1].focus(); } catch (e) {} }, 30);
+    });
+    function trOn() { return !!(st.ded && trChk.checked); }
+    function trVal() {
+      if (!trOn()) return null;
+      return { email: String(trE[1].value || '').trim(), name: String(trN[1].value || '').trim(), msg: String(trM[1].value || '').trim().slice(0, 250) };
+    }
+    add(dedBox, dSeg, dedW, trLab, trBox);
     function pickDed(t) {
       st.ded = t;
       dedChk.checked = !!t; dedChk.setAttribute('aria-expanded', t ? 'true' : 'false');
@@ -601,6 +666,7 @@
       dedBox.hidden = !t;
       dBtns.forEach(function (b) { var on = b.getAttribute('data-d') === (t || dedType); b.className = on ? 'on' : ''; b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
       dedLab.textContent = (t === 'memory' ? 'In memory of' : 'In honor of') + ' *';
+      if (!t && typeof setTribute === 'function') setTribute(false);   /* unchecking the dedication turns "Let them know" off */
       dedName.placeholder = 'Full name';
       sumLine();
     }
@@ -636,7 +702,8 @@
     var p3 = el('div', 'dn-pane');
     var sum3 = el('div', 'dn-sum3');
     var peHost = el('div', 'dn-pe');
-    add(p3, el('h3', null, 'Payment'), sum3, peHost, el('p', 'dn-secure', '🔒 Secure payment by Stripe. Your card or bank details go straight to Stripe and are never stored by us.'));
+    var mon3 = el('p', 'dn-mon3', 'You can change or stop it any time.'); mon3.hidden = true;
+    add(p3, el('h3', null, 'Payment'), sum3, mon3, peHost, el('p', 'dn-secure', '🔒 Secure payment by Stripe. Your card or bank details go straight to Stripe and are never stored by us.'));
 
     /* --- step 4: thank you --- */
     var p4 = el('div', 'dn-pane dn-done');
@@ -665,7 +732,13 @@
       if (st.step === 3) next.textContent = st.amount > 0 ? 'Give ' + giftLine() : 'Give';
       var t = giftLine() + (st.fund && st.fund !== 'General' ? ' · ' + fundLabel(st.fund) : '');
       if (st.ded && v2('dedname')) t += ' · ' + (st.ded === 'memory' ? 'In memory of ' : 'In honor of ') + v2('dedname');
-      sum3.textContent = t;
+      mon3.hidden = !st.monthly;
+      if (st.monthly && st.amount > 0) {
+        /* monthly: "$36 every month, starting today" on its own line, then the fund and dedication */
+        var extra = t.slice(giftLine().length).replace(/^ · /, '');
+        sum3.textContent = money(st.amount) + ' every month, starting\u00a0today';
+        if (extra) sum3.appendChild(el('span', 'dn-sum3x', ' ' + extra));
+      } else sum3.textContent = t;
     }
     function v2() { return String(dedName.value || '').trim(); }
     function show(n) {
@@ -692,6 +765,9 @@
       if (st.amount < CFG.MIN) return 'The smallest gift is ' + money(CFG.MIN) + '.';
       if (st.amount > CFG.MAX) return 'For gifts over ' + money(CFG.MAX) + ', please call us at ' + CFG.PHONE + '.';
       if (st.ded && !v2()) { dedName.focus(); return 'Please enter the name for your dedication.'; }
+      var tv = trVal();
+      if (tv && !tv.email) { trE[1].focus(); return 'Please enter their email address, so we can send the card.'; }
+      if (tv && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tv.email)) { trE[1].focus(); return 'Please check their email address.'; }
       return '';
     }
     function check2() {
@@ -700,14 +776,14 @@
       return '';
     }
     function gift() {
-      return { amount: st.amount, monthly: st.monthly, fund: st.fund, ded: st.ded, dedname: st.ded ? v2() : '',
+      return { amount: st.amount, monthly: st.monthly, fund: st.fund, ded: st.ded, dedname: st.ded ? v2() : '', tr: trVal(),
         first: v('first'), last: v('last'), email: v('email'), phone: v('phone') };
     }
 
     var stripe = null, elements = null, pe = null;
     function prepare() {
       var g = gift();
-      var sig = [g.amount, g.monthly ? 'm' : 'o', g.fund, g.ded, g.dedname, g.first, g.last, g.email, g.phone].join('|');
+      var sig = [g.amount, g.monthly ? 'm' : 'o', g.fund, g.ded, g.dedname, g.first, g.last, g.email, g.phone, g.tr ? [g.tr.email, g.tr.name, g.tr.msg].join('/') : ''].join('|');
       if (st.start && st.sig === sig && (pe || DEMO)) { show(3); return; }
       if (st.sig !== sig) st.attempt = rid();
       peHost.innerHTML = '';
@@ -719,6 +795,8 @@
         first: g.first, last: g.last, email: g.email, phone: g.phone, note: ff.note, website: trapIn.value,
         page: location.href.split('#')[0].slice(0, 300) };
       if (ff.tag) req.tag = ff.tag;
+      /* tribute eCard: only when "Let them know" is on (the live Apps Script ignores these fields) */
+      if (g.tr) { req.tribute_email = g.tr.email; req.tribute_name = g.tr.name; req.tribute_msg = g.tr.msg; }
       api(req).then(function (r) {
         if (!r || !r.ok) throw new Error((r && r.error) || 'Something went wrong. Please try again.');
         st.start = r; st.sig = sig;
@@ -804,11 +882,42 @@
         el('p', null, bank
           ? 'Your bank payment is processing. A confirmation has been emailed to you.'
           : 'A confirmation has been emailed to you.'));
+      if (g.tr && g.tr.email) {
+        var who = g.tr.name || g.tr.email;
+        p4.appendChild(el('p', 'dn-trdone', bank ? 'Your card to ' + who + ' will be emailed once your bank payment\u00a0clears.' : 'We’re emailing your card to ' + who + '.'));
+      }
       var homeA = el('a', 'dn-btn dn-gold', 'Back to JewishRiverside.com'); homeA.href = '/';
+      /* "Make it monthly": once per session, only after a one-time gift we have the full details for */
+      if (!g.monthly && g.first && g.email && g.amount > 0 && !sget(CFG.MM_KEY)) {
+        sset(CFG.MM_KEY);
+        var mm = el('div', 'dn-mm'); mm.id = 'dn26-mm';
+        mm.setAttribute('role', 'region'); mm.setAttribute('aria-label', 'Make it monthly');
+        var yesB = el('button', 'dn-btn dn-gold', 'Yes, give ' + money(g.amount) + ' every month'); yesB.type = 'button';
+        var noB = el('button', 'dn-mmno', 'No, thanks'); noB.type = 'button';
+        add(mm, el('h4', null, 'Would you like to make this a monthly\u00a0gift?'), el('p', null, 'Monthly gifts help us plan for the year\u00a0ahead.'),
+          add(el('div', 'dn-mmb'), yesB, noB));
+        noB.addEventListener('click', function () { if (mm.parentNode) mm.parentNode.removeChild(mm); try { homeA.focus(); } catch (e) {} });
+        yesB.addEventListener('click', function () { makeMonthly(g); });
+        p4.appendChild(mm);
+        homeA.className = 'dn-btn dn-ghost';   /* one gold button at a time: the monthly offer leads */
+      }
       p4.appendChild(homeA);
       st.start = null; st.sig = '';
       show(4);
       try { if (window.gtag) window.gtag('event', 'donation', { value: Number(g.amount), currency: 'USD', monthly: !!g.monthly, page: PAGE.key, fund: g.fund }); } catch (e) {}
+    }
+    /* "Yes, give $X every month": a NEW monthly gift with the same amount, fund, dedication and donor details,
+       straight to the payment step. Nothing is charged until the donor presses Give there. "Let them know" is
+       turned off, because the card for this dedication already went with the one-time gift. */
+    function makeMonthly(g) {
+      setErr('');
+      p4.innerHTML = '';                    /* the old thank-you is done; the next one is drawn after payment */
+      st.amount = g.amount; setMonthly(true);
+      pickFund(g.fund || st.fund);
+      setTribute(false);
+      st.start = null; st.sig = '';
+      try { root.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
+      prepare();
     }
     /* Payment went through: thank the donor, tell the Apps Script, then send the details to ChabadOne. */
     function completed(pi, g) {

@@ -24,6 +24,7 @@ function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 var DONATE = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7643000/jewish/Donate-20.htm';
 var SHORT = 'https://www.jewishriverside.com/donation';
 var MATCHP = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7642564/jewish/2026-Matching-Campaign-Give-Now.htm';
+var PAGES_INTRO = 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.';
 var OLD6 = ['General', 'Adult Education', 'College Programs', 'Synagogue', 'Visitation', 'Youth Programs'];
 var LABELS = ['Annual Matching Campaign', 'Where it’s needed most', 'Adult Education', 'College Programs (Chabad at UCR)',
   'Synagogue', 'Youth Programs', 'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Shabbat & Holidays'];
@@ -206,7 +207,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26j$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26k$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -611,6 +612,131 @@ function headerOnly(url) {
   ok(!bar(gv2), 'gift made earlier this session: not shown');
   ok(/if \(window\.top !== window\) return false;/.test(SRC) && /window\.top !== window && \/cf-sync\/\.test\(window\.location\.hash\)\) \{ uncover\(\); return; \}/.test(SRC), 'never inside a frame: the #cf-sync copy exits before drawing, and the bar checks window.top');
 
+  console.log('tribute eCard: "Let them know (optional)"');
+  function ty(p, id, val) { var e = p.d.getElementById(id); e.value = val; e.dispatchEvent(new p.w.Event('input', { bubbles: true })); return e; }
+  var tp = await page(DONATE);
+  var trc = tp.d.getElementById('dn26-trchk'), trb = tp.d.getElementById('dn26-trbox');
+  ok(trc && trc.type === 'checkbox' && tp.d.getElementById('dn26-dedbox').contains(trc) && trc.compareDocumentPosition(tp.d.getElementById('dn26-dedname')) & 2, 'a real checkbox inside the dedication box, below the name field');
+  var trl = trc.closest('label');
+  ok(trl.getAttribute('for') === 'dn26-trchk' && /^Let them know \(optional\)/.test(trl.textContent) && /We’ll email them a card\. Your gift amount is never.shown\./.test(trl.textContent), 'label "Let them know (optional)" with helper "We’ll email them a card. Your gift amount is never shown."');
+  ok(!trc.checked && trb.hidden && trc.getAttribute('aria-expanded') === 'false' && trc.getAttribute('aria-controls') === 'dn26-trbox', 'off by default: fields hidden (aria-expanded=false)');
+  tp.d.getElementById('dn26-dedchk').click();
+  trc.click();
+  ok(trc.checked && !trb.hidden && trc.getAttribute('aria-expanded') === 'true', 'checked: name, email and message open (aria-expanded=true)');
+  var tn = tp.d.getElementById('dn26-trname'), te = tp.d.getElementById('dn26-tremail'), tm = tp.d.getElementById('dn26-trmsg'), tc = tp.d.getElementById('dn26-trcount');
+  ok(tn && tn.maxLength === 80 && tn.value === '' && te && te.type === 'email' && tm && tm.tagName === 'TEXTAREA' && tm.maxLength === 250, 'fields: their name (optional, empty, 80), their email (type email), message textarea (maxlength 250)');
+  ok([tn, te, tm].every(function (x) { var l = x.closest('label'); return l && l.getAttribute('for') === x.id; }) && /Their email \*/.test(te.closest('label').textContent) && /optional/.test(tn.closest('label').textContent), 'each field has its own label; email marked required, name optional');
+  ok(tc.textContent === '0/250' && tc.getAttribute('aria-live') === 'polite' && tm.getAttribute('aria-describedby') === 'dn26-trcount', 'counter "0/250", aria-live polite, tied to the message');
+  ty(tp, 'dn26-trmsg', 'Hello');
+  ok(tc.textContent === '5/250', 'counter updates while typing (5/250)');
+  ty(tp, 'dn26-dedname', 'Rachel Cohen');
+  btn(tp, '$36').click();
+  btn(tp, 'Continue').click();
+  ok(/Please enter their email address/.test(tp.d.querySelector('#dn26 .dn-err').textContent) && tp.d.activeElement === te, 'on with no email: "Please enter their email address, so we can send the card." and the email field gets focus');
+  ty(tp, 'dn26-tremail', 'rachel@');
+  btn(tp, 'Continue').click();
+  ok(/Please check their email address\./.test(tp.d.querySelector('#dn26 .dn-err').textContent) && tp.d.querySelector('#dn26 .dn-pane.on') === tp.d.querySelector('#dn26 .dn-pane'), 'bad email: "Please check their email address." and stays on step 1');
+
+  async function giveTr(o) {
+    var p = await page(o.url || DONATE, o.opts);
+    p.d.getElementById('dn26-dedchk').click();
+    if (o.memory) [].filter.call(p.d.querySelectorAll('#dn26-dedbox .dn-seg button'), function (b) { return b.textContent === 'In memory'; })[0].click();
+    ty(p, 'dn26-dedname', o.ded || 'Sarah Levi');
+    if (o.tr !== false) {
+      p.d.getElementById('dn26-trchk').click();
+      ty(p, 'dn26-trname', o.name == null ? 'Rachel Cohen' : o.name); ty(p, 'dn26-tremail', o.email || 'rachel@example.com'); ty(p, 'dn26-trmsg', o.msg == null ? 'With love.' : o.msg);
+    }
+    if (o.before) o.before(p);
+    if (o.monthly) btn(p, 'Monthly').click();
+    await give(p);
+    return p;
+  }
+  var T1 = await giveTr({});
+  var tb = startOf(T1).body;
+  ok(tb.tribute_email === 'rachel@example.com' && tb.tribute_name === 'Rachel Cohen' && tb.tribute_msg === 'With love.' && tb.ded === 'honor' && tb.dedname === 'Sarah Levi', 'start request: tribute_email, tribute_name, tribute_msg with the dedication');
+  ok(T1.T.frames[0].sent.input_9 === 'In honor of Sarah Levi. eCard to rachel@example.com', 'ChabadOne input_9: "In honor of Sarah Levi. eCard to rachel@example.com" (plain text note appended)');
+  ok(/We’re emailing your card to Rachel Cohen\./.test(T1.d.querySelector('#dn26 .dn-done').textContent), 'thank-you: "We’re emailing your card to Rachel Cohen."');
+  var T2 = await giveTr({ name: '', msg: '' });
+  ok(startOf(T2).body.tribute_name === '' && startOf(T2).body.tribute_msg === '' && /your card to rachel@example\.com/.test(T2.d.querySelector('#dn26 .dn-done').textContent), 'name and message optional: sent empty; thank-you names the email');
+  var T3 = await giveTr({ before: function (p) { p.d.getElementById('dn26-trchk').click(); } });
+  ok(!('tribute_email' in startOf(T3).body) && !('tribute_msg' in startOf(T3).body) && T3.T.frames[0].sent.input_9 === 'In honor of Sarah Levi', 'toggle turned off again: no tribute fields, ChabadOne unchanged');
+  var T4 = await giveTr({ before: function (p) { p.d.getElementById('dn26-dedchk').click(); } });
+  ok(!('tribute_email' in startOf(T4).body) && startOf(T4).body.ded === '', 'dedication unchecked: tribute fields left out too');
+  var T5 = await page(DONATE);
+  T5.d.getElementById('dn26-dedchk').click(); T5.d.getElementById('dn26-trchk').click();
+  T5.d.getElementById('dn26-dedchk').click();
+  ok(!T5.d.getElementById('dn26-trchk').checked && T5.d.getElementById('dn26-trbox').hidden, 'unchecking the dedication turns "Let them know" off');
+  T5.d.getElementById('dn26-dedchk').click();
+  ok(!T5.d.getElementById('dn26-trchk').checked, 'checking the dedication again: "Let them know" stays off until chosen');
+  var T6 = await giveTr({ monthly: true, memory: true, ded: 'Esther Gold' });
+  ok(startOf(T6).body.mode === 'monthly' && startOf(T6).body.tribute_email === 'rachel@example.com' && startOf(T6).body.ded === 'memory', 'monthly gift in memory with a card: mode monthly, tribute fields sent');
+  var T7 = await giveTr({ msg: 'x'.repeat(300) });
+  ok(startOf(T7).body.tribute_msg.length <= 250, 'message never over 250 characters');
+  ok(/tribute_email/.test(SRC) && !/postal|mail them a printed|by mail/i.test(SRC.replace(/no postal card/, '')), 'email only: no postal option anywhere');
+
+  console.log('payment step: monthly label');
+  var pl = await page(DONATE);
+  btn(pl, '$36').click(); btn(pl, 'Monthly').click(); btn(pl, 'Continue').click();
+  [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { pl.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  pl.d.querySelector('#dn26 .dn-gold').click(); await wait(80);
+  ok(pl.d.querySelector('#dn26 .dn-sum3').textContent.replace(/ /g, ' ') === '$36 every month, starting today', 'monthly summary: "$36 every month, starting today"');
+  var m3 = pl.d.querySelector('#dn26 .dn-mon3');
+  ok(m3 && !m3.hidden && m3.textContent === 'You can change or stop it any time.', 'monthly note: "You can change or stop it any time."');
+  var po = await page(DONATE);
+  btn(po, '$36').click(); btn(po, 'Continue').click();
+  [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { po.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  po.d.querySelector('#dn26 .dn-gold').click(); await wait(80);
+  ok(po.d.querySelector('#dn26 .dn-sum3').textContent === '$36' && po.d.querySelector('#dn26 .dn-mon3').hidden && btn(po, 'Give $36'), 'one time unchanged: "$36", no monthly note, button "Give $36"');
+
+  console.log('make it monthly');
+  var mk = await page(DONATE + '?designation=youth');
+  mk.d.getElementById('dn26-dedchk').click(); ty(mk, 'dn26-dedname', 'Sarah Levi');
+  mk.d.getElementById('dn26-trchk').click(); ty(mk, 'dn26-tremail', 'rachel@example.com');
+  await give(mk);
+  var mmc = mk.d.getElementById('dn26-mm');
+  ok(mmc && mk.d.querySelector('#dn26 .dn-done').contains(mmc), 'after a one-time gift: the card shows on the thank-you');
+  ok(mmc && mmc.querySelector('h4').textContent.replace(/ /g, ' ') === 'Would you like to make this a monthly gift?' && mmc.querySelector('p').textContent.replace(/ /g, ' ') === 'Monthly gifts help us plan for the year ahead.', 'card text: question and one line of why');
+  var yb = btn(mk, 'Yes, give $100 every month'), nb = btn(mk, 'No, thanks');
+  ok(yb && nb && yb.type === 'button' && nb.type === 'button', 'buttons "Yes, give $100 every month" and "No, thanks"');
+  ok(mk.w.sessionStorage.getItem('dn26-mm') === '1', 'marked shown for this session');
+  var nStart = mk.T.posts.filter(function (x) { return x.body.action === 'start'; }).length, nFin = mk.T.posts.filter(function (x) { return x.body.action === 'finish'; }).length;
+  yb.click(); await wait(120);
+  var starts = mk.T.posts.filter(function (x) { return x.body.action === 'start'; });
+  var ms = starts[starts.length - 1].body, os = starts[0].body;
+  ok(starts.length === nStart + 1 && ms.mode === 'monthly' && ms.amount === 100, 'Yes: a NEW monthly gift of the same amount is prepared (mode monthly, 100)');
+  ok(ms.fund === os.fund && ms.fund === 'Youth Programs' && ms.ded === 'honor' && ms.dedname === 'Sarah Levi' && ms.first === 'Test' && ms.last === 'Donor' && ms.email === 'test@example.com', 'same fund, dedication and donor details');
+  ok(!('tribute_email' in ms), 'no second card: "Let them know" is off for the monthly gift');
+  ok(ms.attempt && ms.attempt !== os.attempt, 'its own attempt id (a separate Stripe gift)');
+  ok(mk.d.querySelector('#dn26 .dn-pane.on') === mk.d.querySelectorAll('#dn26 .dn-pane')[2] && mk.d.querySelector('#dn26 .dn-ft').style.display === '', 'goes to the payment step');
+  ok(mk.d.querySelector('#dn26 .dn-sum3').textContent.replace(/ /g, ' ').indexOf('$100 every month, starting today') === 0 && !mk.d.querySelector('#dn26 .dn-mon3').hidden, 'payment step labeled "$100 every month, starting today" with the change-or-stop note');
+  ok(mk.T.posts.filter(function (x) { return x.body.action === 'finish'; }).length === nFin && btn(mk, 'Give $100 / month'), 'nothing charged by clicking Yes: waits for "Give $100 / month"');
+  ok(!mk.d.querySelector('#dn26 .dn-done').children.length, 'the old thank-you is cleared');
+  btn(mk, 'Give $100 / month').click(); await wait(400);
+  ok(/monthly gift of \$100/.test(mk.d.querySelector('#dn26 .dn-done').textContent) && !mk.d.getElementById('dn26-mm'), 'after confirming: monthly thank-you, and no card again');
+  var mk2 = await page(DONATE);
+  await give(mk2);
+  btn(mk2, 'No, thanks').click();
+  ok(!mk2.d.getElementById('dn26-mm') && mk2.T.posts.filter(function (x) { return x.body.action === 'start'; }).length === 1, 'No, thanks: card goes away, nothing started');
+  var mk3 = await page(DONATE);
+  btn(mk3, 'Monthly').click();
+  await give(mk3);
+  ok(!mk3.d.getElementById('dn26-mm'), 'never after a monthly gift');
+  var mk4 = await page(DONATE);
+  mk4.w.sessionStorage.setItem('dn26-mm', '1');
+  await give(mk4);
+  ok(!mk4.d.getElementById('dn26-mm'), 'shown once per session only');
+  var mk5 = await page(DONATE);
+  mk5.w.CFDonate.ui.thanks('succeeded', { amount: 50 });
+  ok(!mk5.d.getElementById('dn26-mm'), 'not shown when the donor details are unknown (return from a bank window without saved details)');
+  var mk6 = await page(DONATE);
+  mk6.w.CFDonate.ui.thanks('processing', { amount: 50, first: 'A', last: 'B', email: 'a@example.com', ded: 'honor', dedname: 'X', tr: { email: 'r@example.com', name: 'Rae', msg: '' } });
+  ok(/Your card to Rae will be emailed once your bank payment.clears\./.test(mk6.d.querySelector('#dn26 .dn-done').textContent), 'bank payment: "Your card to Rae will be emailed once your bank payment clears."');
+
+  console.log('header (option A is the default; no preview switch)');
+  var hMA = await page(MATCHP), hQ = await page(DONATE + '?dnhdr=B');
+  ok(/\bdn-hxA\b/.test(hMA.d.querySelector('#dn26 .dn-hd').className) && hMA.d.querySelector('h1').textContent === '2026 Annual Matching Campaign' && /^Give now to our 2026 Annual Matching Campaign\./.test(hMA.d.querySelector('#dn26 .dn-hd span').textContent), 'matching page: light header, H1 above the card kept, subtitle starts "Give now to our 2026 Annual Matching Campaign."');
+  ok(/\bdn-hxA\b/.test(hQ.d.querySelector('#dn26 .dn-hd').className) && !/dn-hxB/.test(hQ.d.querySelector('#dn26 .dn-hd').className), 'an old ?dnhdr=B link is harmless: still the light header');
+
   console.log('other pages');
   ok(!(await page('https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join.htm')).d.getElementById('dn26'), 'not shown on other pages');
   ok(!(await page(DONATE.replace('articlecco_cdo', 'ArticleCcoResponse'))).d.getElementById('dn26'), 'not shown on ChabadOne’s response page');
@@ -618,7 +744,7 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26j'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-26k'/.test(SRC), 'donate-2026.js VERSION bumped');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 
