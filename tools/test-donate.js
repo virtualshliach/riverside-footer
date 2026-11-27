@@ -26,9 +26,9 @@ var SHORT = 'https://www.jewishriverside.com/donation';
 var MATCHP = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7642564/jewish/2026-Matching-Campaign-Give-Now.htm';
 var OLD6 = ['General', 'Adult Education', 'College Programs', 'Synagogue', 'Visitation', 'Youth Programs'];
 var LABELS = ['Annual Matching Campaign', 'Where it’s needed most', 'Adult Education', 'College Programs (Chabad at UCR)',
-  'Synagogue', 'Youth Programs', 'Social Services', 'Chanukah Festival'];
+  'Synagogue', 'Youth Programs', 'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Shabbat & Holidays'];
 var VALUES = ['Annual Matching Campaign', 'General', 'Adult Education', 'College Programs', 'Synagogue', 'Youth Programs',
-  'Social Services', 'Chanukah Festival'];
+  'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Shabbat & Holidays'];
 
 /* a ChabadOne-shaped form; fundSelect: input_8 is a list of the 6 old funds (worst case) */
 function coForm(id, fundSelect) {
@@ -107,6 +107,11 @@ function funds(p) { return [].map.call(p.d.querySelectorAll('#dn26 .dn-funds .dn
 function labels(p) { return [].map.call(p.d.querySelectorAll('#dn26 .dn-funds .dn-fund'), function (b) { return b.textContent; }); }
 function chosen(p) { var b = p.d.querySelector('#dn26 .dn-funds .dn-fund.on'); return b && b.getAttribute('data-f'); }
 function pick(p, f) { [].filter.call(p.d.querySelectorAll('#dn26 .dn-fund'), function (x) { return x.getAttribute('data-f') === f; })[0].click(); }
+function tog(p) { return p.d.querySelector('#dn26 .dn-funds button.dn-more'); }
+function progs(p) { return p.d.getElementById('dn26-progs'); }
+function isOpen(p) { var t = tog(p), g = progs(p); return t.getAttribute('aria-expanded') === 'true' && /\bopen\b/.test(g.className) && !g.hasAttribute('inert') && !g.hasAttribute('aria-hidden'); }
+function isShut(p) { var t = tog(p), g = progs(p); return t.getAttribute('aria-expanded') === 'false' && !/\bopen\b/.test(g.className) && g.hasAttribute('inert') && g.getAttribute('aria-hidden') === 'true'; }
+function togText(p) { return tog(p).querySelector('span').textContent; }
 function btn(p, text) { return [].filter.call(p.d.querySelectorAll('#dn26 button'), function (b) { return b.textContent.trim() === text; })[0]; }
 async function give(p) {
   btn(p, '$100').click();
@@ -195,7 +200,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26d$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26e$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -226,18 +231,18 @@ function headerOnly(url) {
   console.log('chips: Donate 2.0 (7643000)');
   var a = await page(DONATE);
   ok(a.d.getElementById('dn26'), 'form is on the page');
-  ok(labels(a).join('|') === LABELS.join('|'), '8 choices, exact labels and order (' + labels(a).join(' | ') + ')');
+  ok(labels(a).join('|') === LABELS.join('|'), '10 choices, exact labels and order (' + labels(a).join(' | ') + ')');
   ok(funds(a).join('|') === VALUES.join('|'), 'fund values behind them (' + funds(a).join(' | ') + ')');
   var first = a.d.querySelector('#dn26 .dn-funds .dn-fund');
   ok(/\bdn-feat\b/.test(first.className) && first.getAttribute('data-f') === 'Annual Matching Campaign', 'Annual Matching Campaign is first and featured (class dn-feat)');
   ok(a.d.querySelectorAll('#dn26 .dn-fund.dn-feat').length === 1, 'only one featured choice');
   var css = a.d.getElementById('dn26-css').textContent;
   ok(/\.dn-fund\.dn-feat\{grid-column:1\/-1;[^}]*border:2px solid #e9b949/.test(css), 'featured choice: its own full-width row with a gold border');
-  ok(/\.dn-funds\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/.test(css) && /max-width:480px\)\{[^@]*\.dn-funds\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/.test(css), 'choices: equal boxes, 3 across, 2 across on phones');
+  ok(/\.dn-pgrid\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\);grid-auto-rows:1fr/.test(css) && /max-width:640px\)\{[^@]*\.dn-pgrid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/.test(css), 'programs: equal boxes, 4 across, 2 across up to 640px (phones)');
   ok(/\.dn-fund\{display:flex;align-items:center;justify-content:center;text-align:center;min-height:54px/.test(css), 'choices: same height, text centered');
   ok(/\.dn-ded\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/.test(css), 'dedication choices: 3 equal boxes');
   ok(/max-width:480px\)\{[^@]*\.dn-ded \.dn-fund\{white-space:nowrap/.test(css), 'phones: each dedication label stays on one line');
-  ok(a.d.querySelectorAll('#dn26 .dn-fund.dn-wide').length === 1 && a.d.querySelector('#dn26 .dn-fund.dn-wide').getAttribute('data-f') === 'General', 'Where it’s needed most has its own row (the other 6 fill even rows)');
+  ok(a.d.querySelectorAll('#dn26 .dn-fund.dn-wide').length === 1 && a.d.querySelector('#dn26 .dn-fund.dn-wide').getAttribute('data-f') === 'General', 'Where it’s needed most has its own row');
   ok(/max-width:480px\)\{[^@]*\.dn-hd\{flex-direction:column;text-align:center/.test(css), 'phones: header logo centered above the heading');
   ok(chosen(a) === 'General', 'default choice on Donate 2.0: Where it’s needed most (General)');
   ok(labels(a).indexOf('Visitation') < 0, 'Visitation no longer shown (Social Services replaces it)');
@@ -250,6 +255,42 @@ function headerOnly(url) {
   ok(chosen(a) === 'Annual Matching Campaign' && /\bdn-feat\b/.test(first.className) && /\bon\b/.test(first.className), 'the featured choice can be selected like the others');
   pick(a, 'General');
   ok(a.T.errors.length === 0, 'no script errors (' + a.T.errors.join('; ') + ')');
+
+  console.log('programs: collapsible grid');
+  var g = await page(DONATE);
+  var gt = tog(g), gp = progs(g);
+  var tops = [].map.call(g.d.querySelectorAll('#dn26 .dn-funds > .dn-fund'), function (b) { return b.getAttribute('data-f'); });
+  ok(tops.join('|') === 'Annual Matching Campaign|General', 'always shown: Annual Matching Campaign and Where it’s needed most (' + tops.join(' | ') + ')');
+  var inGrid = [].map.call(gp.querySelectorAll('.dn-pgrid .dn-fund'), function (b) { return b.getAttribute('data-f'); });
+  ok(inGrid.join('|') === VALUES.slice(2).join('|'), 'the 8 programs are in the grid, in order (' + inGrid.join(' | ') + ')');
+  ok(gt && gt.tagName === 'BUTTON' && gt.type === 'button' && gt.getAttribute('aria-controls') === 'dn26-progs' && gp, 'toggle is a real button (type=button) with aria-controls="dn26-progs"');
+  ok(gt.compareDocumentPosition(gp) & 4 && g.d.querySelector('#dn26 .dn-fund.dn-wide').compareDocumentPosition(gt) & 4, 'toggle sits below Where it’s needed most, the grid below the toggle');
+  ok(gt.querySelector('i[aria-hidden="true"]') && /\.dn-more\[aria-expanded="true"\] i\{transform:[^}]*rotate\(-135deg\)/.test(css), 'chevron (CSS) rotates when open');
+  ok(/\.dn-more:focus-visible[^{]*\{outline:3px solid/.test(css), 'visible focus style on the toggle');
+  ok(/prefers-reduced-motion:reduce\)\{[^@]*\.dn-progs/.test(css) && /\.dn-progs\{display:grid;grid-template-rows:0fr/.test(css) && /\.dn-progs\.open\{grid-template-rows:1fr\}/.test(css), 'smooth open (grid rows 0fr to 1fr), no motion if reduced motion is set');
+  ok(/\.dn-pgrid\{[^}]*visibility:hidden/.test(css) && /\.dn-progs\.open \.dn-pgrid\{visibility:visible/.test(css), 'closed grid is visibility:hidden (not focusable) after the slide');
+  ok(isShut(g) && togText(g) === 'Choose a specific program', 'default page: starts closed (aria-expanded=false, grid inert and hidden), "Choose a specific program"');
+  gt.click();
+  ok(isOpen(g), 'click opens it (aria-expanded=true)');
+  pick(g, 'Youth Programs');
+  ok(chosen(g) === 'Youth Programs' && togText(g) === 'Choose a specific program', 'pick Youth Programs while open');
+  gt.click();
+  ok(isShut(g) && togText(g) === 'Program: Youth Programs' && /\bsel\b/.test(gt.className), 'close: toggle reads "Program: Youth Programs" (selected style)');
+  ok(chosen(g) === 'Youth Programs' && /\bon\b/.test(gp.querySelector('[data-f="Youth Programs"]').className), 'Youth Programs is still selected (.on)');
+  pick(g, 'General');
+  ok(togText(g) === 'Choose a specific program' && !/\bsel\b/.test(gt.className) && isShut(g), 'pick Where it’s needed most: toggle text back, grid stays closed');
+  gt.click(); pick(g, 'College Programs'); gt.click();
+  ok(togText(g) === 'Program: College Programs (Chabad at UCR)', 'closed with College Programs: "' + togText(g) + '"');
+  pick(g, 'Annual Matching Campaign');
+  ok(togText(g) === 'Choose a specific program' && chosen(g) === 'Annual Matching Campaign', 'pick Annual Matching Campaign: toggle text back');
+  gt.click(); pick(g, 'Shabbat & Holidays'); gt.click();
+  ok(togText(g) === 'Program: Shabbat & Holidays', '"&" shows as is: "' + togText(g) + '"');
+  var gk = await page(DONATE + '?designation=mikvah');
+  ok(isOpen(gk) && chosen(gk) === 'Riverside Mikvah', '?designation=mikvah: starts open, Riverside Mikvah selected');
+  ok(isShut(await page(MATCHP)), 'matching page 7642564 (preset matching): starts closed');
+  var gy = await page(SHORT + '/designation/youth');
+  ok(isOpen(gy) && chosen(gy) === 'Youth Programs', '/donation/designation/youth: starts open with Youth Programs');
+  ok(isShut(await page(DONATE + '?designation=general')), '?designation=general: starts closed');
 
   console.log('request to the Apps Script and the ChabadOne form, per fund');
   for (var i = 0; i < VALUES.length; i++) {
@@ -287,11 +328,18 @@ function headerOnly(url) {
     'annual-matching-campaign': 'Annual Matching Campaign', general: 'General', college: 'College Programs', 'college-programs': 'College Programs',
     'college-programs-chabad-at-ucr': 'College Programs', youth: 'Youth Programs', 'youth-programs': 'Youth Programs', social: 'Social Services',
     'social-services': 'Social Services', visitation: 'Social Services', chanukah: 'Chanukah Festival', festival: 'Chanukah Festival',
-    'chanukah-festival': 'Chanukah Festival', 'adult-education': 'Adult Education', synagogue: 'Synagogue', 'Youth+Programs': 'Youth Programs', nonsense: 'General' };
+    'chanukah-festival': 'Chanukah Festival', mikvah: 'Riverside Mikvah', 'riverside-mikvah': 'Riverside Mikvah', shabbat: 'Shabbat & Holidays',
+    holidays: 'Shabbat & Holidays', 'shabbat-holidays': 'Shabbat & Holidays', 'shabbat-%26-holidays': 'Shabbat & Holidays', 'Shabbat+%26+Holidays': 'Shabbat & Holidays',
+    'Riverside+Mikvah': 'Riverside Mikvah', 'adult-education': 'Adult Education', synagogue: 'Synagogue', 'Youth+Programs': 'Youth Programs', nonsense: 'General' };
   for (var k in PRE) { var got = chosen(await page(DONATE + '?designation=' + k)); ok(got === PRE[k], '?designation=' + k + ' -> ' + got); }
   ok(chosen(await page(DONATE.replace(/\.htm$/, '.htm/designation/matching'))) === 'Annual Matching Campaign', '/designation/matching (ChabadOne path form)');
   ok(chosen(await page(SHORT + '?designation=matching')) === 'Annual Matching Campaign', 'jewishriverside.com/donation?designation=matching');
   ok(chosen(await page(SHORT + '/designation/youth')) === 'Youth Programs', 'jewishriverside.com/donation/designation/youth');
+
+  var s5 = await page(DONATE + '?designation=shabbat', { fundSelect: true });
+  await give(s5);
+  var sent5 = s5.T.frames[0] && s5.T.frames[0].sent;
+  ok(sent5 && sent5.input_8 === 'General' && sent5.input_9 === 'Fund: Shabbat & Holidays', 'Shabbat & Holidays: list set to General, "Fund: Shabbat & Holidays" in input_9 (' + JSON.stringify(sent5 && [sent5.input_8, sent5.input_9]) + ')');
 
   console.log('jewishriverside.com/donation (no page id in the address)');
   var dn = await page(SHORT);
@@ -308,7 +356,7 @@ function headerOnly(url) {
   var m = await page(MATCHP);
   ok(m.d.getElementById('co_content_container').contains(m.d.getElementById('dn26')), 'form sits inside the article');
   ok(chosen(m) === 'Annual Matching Campaign', 'preset fund: Annual Matching Campaign');
-  ok(labels(m).join('|') === LABELS.join('|'), 'same 8 choices');
+  ok(labels(m).join('|') === LABELS.join('|'), 'same 10 choices');
   ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign', 'page title: 2026 Annual Matching Campaign');
   ok(m.d.querySelector('#dn26 .dn-hd span').textContent === 'Give now to our 2026 Annual Matching Campaign. ' + 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.', 'matching subtitle: campaign lead-in, then the ripple sentence');
   ok(!/Jewish life growing|for every age/.test(m.d.querySelector('#dn26 .dn-hd').textContent), 'matching subtitle: old sentence gone');
@@ -334,7 +382,7 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26d'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-26e'/.test(SRC), 'donate-2026.js VERSION bumped');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 

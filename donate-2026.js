@@ -29,7 +29,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26d';
+  var VERSION = 'donate-2026 2026-11-26e';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -82,8 +82,12 @@
       ['Synagogue', 'Synagogue'],
       ['Youth Programs', 'Youth Programs'],
       ['Social Services', 'Social Services'],
-      ['Chanukah Festival', 'Chanukah Festival']
+      ['Chanukah Festival', 'Chanukah Festival'],
+      ['Riverside Mikvah', 'Riverside Mikvah'],
+      ['Shabbat & Holidays', 'Shabbat & Holidays']
     ],
+    /* the first two are always shown; the rest are the programs, behind "Choose a specific program" */
+    TOP_FUNDS: 2,
     /* The funds the LIVE Apps Script knows (its GEN.FUNDS, Nov 26 2026). Any other fund is recorded there as
        General, so for those the choice also goes in the note ("Applied to: ..."), which reaches Stripe, the Sheet
        and the receipt. Once the new Apps Script is live this changes nothing: it records the fund itself. */
@@ -91,7 +95,8 @@
     /* short names for ?designation=... (any fund also works as its value or label in dashes, e.g. youth-programs) */
     FUND_ALIAS: { matching: MATCH, match: MATCH, 'annual-matching': MATCH, general: 'General', college: 'College Programs',
       youth: 'Youth Programs', social: 'Social Services', 'social-services': 'Social Services', visitation: 'Social Services',
-      chanukah: 'Chanukah Festival', festival: 'Chanukah Festival' },
+      chanukah: 'Chanukah Festival', festival: 'Chanukah Festival', mikvah: 'Riverside Mikvah', 'riverside-mikvah': 'Riverside Mikvah',
+      shabbat: 'Shabbat & Holidays', holidays: 'Shabbat & Holidays', 'shabbat-holidays': 'Shabbat & Holidays' },
     MIN: 5,
     MAX: 25000,
     BANK_DAYS: '4 business days',
@@ -180,8 +185,26 @@
       R + '.dn-other{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:700;color:' + NAVY + '}',
       R + '.dn-other .dn-in{flex:1}',
       R + '.dn-mnote{font-size:13.6px;color:#4a5d64;margin-top:10px}',
-      /* "Apply my gift to" and the dedication: grids of equal boxes (3 across, 2 on phones), text centered, long labels wrap inside */
-      R + '.dn-funds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}',
+      /* "Apply my gift to": matching and "needed most" always shown (full width), then a button that opens the
+         programs: a grid of equal boxes (4 across, 2 up to 640px wide), text centered, long labels wrap inside */
+      R + '.dn-funds{display:grid;grid-template-columns:minmax(0,1fr)}' + R + '.dn-funds>.dn-wide,' + R + '.dn-funds>.dn-more{margin-top:8px}',
+      R + '.dn-more{display:flex;align-items:center;justify-content:center;gap:10px;width:100%;min-height:48px;padding:10px 14px;border-radius:12px;border:1.5px dashed #b9cbd1;background:#f6fafb;color:#4a5d64;font-weight:600;font-size:14.7px;line-height:1.25;text-align:center}',
+      R + '.dn-more:hover{border-color:' + TEAL + '}',
+      R + '.dn-more:focus-visible,' + R + '.dn-fund:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:2px}',
+      R + '.dn-more i{flex:none;width:9px;height:9px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:translateY(-2px) rotate(45deg);transition:transform .25s ease}',
+      R + '.dn-more[aria-expanded="true"] i{transform:translateY(2px) rotate(-135deg)}',
+      R + '.dn-more.sel{border-style:solid;border-color:' + NAVY + ';background:#fff;color:' + NAVY + ';font-weight:700}',
+      R + '.dn-more.sel b{flex:none;width:20px;height:20px;border-radius:50%;background:' + NAVY + ';color:#fff;font-size:12px;line-height:20px;text-align:center}',
+      R + '.dn-more b{display:none}' + R + '.dn-more.sel b{display:block}',
+      R + '.dn-progs{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s ease}',
+      R + '.dn-progs.open{grid-template-rows:1fr}',
+      /* the clip reaches 5px past each side so focus rings aren't cut off; the inner padding puts the boxes back in line
+         (and makes the 8px gap under the button, so a closed list adds no space) */
+      R + '.dn-progs>div{min-height:0;overflow:hidden;margin:0 -5px -5px}',
+      R + '.dn-pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:1fr;gap:8px;padding:8px 5px 5px;visibility:hidden;transition:visibility 0s linear .3s}',
+      R + '.dn-pgrid .dn-fund{padding-left:8px;padding-right:8px;text-wrap:balance}',
+      R + '.dn-progs.open .dn-pgrid{visibility:visible;transition:none}',
+      '@media (prefers-reduced-motion:reduce){' + R + '.dn-progs,' + R + '.dn-pgrid,' + R + '.dn-more i{transition:none !important}}',
       R + '.dn-fund{display:flex;align-items:center;justify-content:center;text-align:center;min-height:54px;padding:8px 10px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:600;font-size:14.7px;line-height:1.25}',
       R + '.dn-fund.dn-wide{grid-column:1/-1}',
       R + '.dn-fund{flex-direction:column}' + R + '.dn-fund small{display:block;font-size:12.5px;font-weight:600;opacity:.8;margin-top:1px}',
@@ -223,14 +246,15 @@
       /* preview-only stand-in for Stripe's box */
       R + '.dn-demo{border:1.5px dashed #b9cbd1;border-radius:12px;padding:14px}',
       R + '.dn-demo-note{font-size:12.5px;color:#7a8d93;margin-top:10px}',
+      '@media (max-width:640px){' + R + '.dn-pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}',
       '@media (max-width:620px){#dn26{margin:0 auto 24px}' + R + '.dn-card{border-radius:14px}' + R + '.dn-hd{gap:14px;padding:18px 16px}' + R + '.dn-hd img{width:78px}' +
         R + '.dn-hd h2{font-size:22.4px}' + R + '.dn-steps{padding:10px 16px}' + R + '.dn-st span{display:none}' + R + '.dn-st.on span{display:inline}' +
         R + '.dn-body{padding:18px 16px 20px}' + R + '.dn-ft{padding:12px 14px}' + R + '.dn-btn{padding:12px 18px}' + R + '.dn-fld.half{flex:1 1 100%}}',
       '@media (max-width:480px){' + R + '.dn-hd{flex-direction:column;text-align:center;gap:14px;padding:22px 18px;' +
         'background:radial-gradient(circle at 50% 44px,rgba(233,185,73,.2),rgba(233,185,73,0) 120px),linear-gradient(160deg,#123140,' + DEEP + ' 75%)}' +
         R + '.dn-hd img{width:150px;margin:0 auto}' + R + '.dn-hd>div{width:100%}' + R + '.dn-hd span{max-width:300px;margin:0 auto;text-wrap:balance}' + R + '.dn-hd i{text-wrap:balance;line-height:1.5;margin-bottom:6px}' +
-        R + '.dn-funds{grid-template-columns:repeat(2,minmax(0,1fr))}' + R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
-        R + '.dn-funds .dn-fund:not(.dn-feat):not(.dn-wide){min-height:66px}' + R + '.dn-ded{gap:6px}' + R + '.dn-ded .dn-fund{white-space:nowrap;font-size:13.2px;letter-spacing:-.01em;padding:6px 2px;min-height:48px}}' +
+        R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
+        R + '.dn-pgrid .dn-fund{min-height:66px}' + R + '.dn-ded{gap:6px}' + R + '.dn-ded .dn-fund{white-space:nowrap;font-size:13.2px;letter-spacing:-.01em;padding:6px 2px;min-height:48px}}' +
       '@media (max-width:374px){' + R + '.dn-ded .dn-fund{font-size:12.2px}}'
     ];
     var st = document.createElement('style');
@@ -420,10 +444,36 @@
     other.addEventListener('input', function () { pickAmt(Math.round(Number(other.value) * 100) / 100 || 0, null); });
     var otherW = add(el('label', 'dn-other'), el('span', null, '$'), other);
 
+    /* "Apply my gift to": matching (featured) and "needed most" always shown, the programs behind a button */
     var funds = el('div', 'dn-funds');
+    var more = el('button', 'dn-more'); more.type = 'button';
+    var moreTick = el('b', null, '✓'); moreTick.setAttribute('aria-hidden', 'true');
+    var moreT = el('span', null, 'Choose a specific program');
+    var moreChev = el('i'); moreChev.setAttribute('aria-hidden', 'true');
+    add(more, moreTick, moreT, moreChev);
+    var progs = el('div', 'dn-progs'); progs.id = 'dn26-progs';
+    var pgrid = el('div', 'dn-pgrid');
+    progs.appendChild(add(el('div'), pgrid));
+    more.setAttribute('aria-controls', progs.id);
+    function isProg(f) { for (var i = CFG.TOP_FUNDS; i < CFG.FUNDS.length; i++) if (CFG.FUNDS[i][0] === f) return true; return false; }
+    function moreText() {
+      var open = more.getAttribute('aria-expanded') === 'true', sel = !open && isProg(st.fund);
+      moreT.textContent = sel ? 'Program: ' + fundLabel(st.fund) : 'Choose a specific program';
+      more.className = 'dn-more' + (sel ? ' sel' : '');
+    }
+    function setProgs(open) {
+      more.setAttribute('aria-expanded', open ? 'true' : 'false');
+      progs.className = 'dn-progs' + (open ? ' open' : '');
+      /* closed: nothing inside can be reached by Tab or a screen reader (visibility:hidden after the slide, plus inert) */
+      if (open) { progs.removeAttribute('inert'); progs.removeAttribute('aria-hidden'); }
+      else { progs.setAttribute('inert', ''); progs.setAttribute('aria-hidden', 'true'); }
+      moreText();
+    }
+    more.addEventListener('click', function () { setProgs(more.getAttribute('aria-expanded') !== 'true'); });
     function pickFund(f) {
       st.fund = f;
-      [].forEach.call(funds.children, function (b) { b.className = 'dn-fund' + (b.getAttribute('data-feat') ? ' dn-feat' : '') + (b.getAttribute('data-wide') ? ' dn-wide' : '') + (b.getAttribute('data-f') === f ? ' on' : ''); });
+      [].forEach.call(funds.querySelectorAll('.dn-fund'), function (b) { b.className = 'dn-fund' + (b.getAttribute('data-feat') ? ' dn-feat' : '') + (b.getAttribute('data-wide') ? ' dn-wide' : '') + (b.getAttribute('data-f') === f ? ' on' : ''); });
+      moreText();
       sumLine();
     }
     CFG.FUNDS.forEach(function (f, i) {
@@ -431,10 +481,11 @@
       var b = el('button', 'dn-fund', sub ? f[1].slice(0, sub.index) : f[1]); b.type = 'button'; b.setAttribute('data-f', f[0]);
       if (sub) b.appendChild(el('small', null, ' (' + sub[1] + ')'));
       if (i === 0) b.setAttribute('data-feat', '1');
-      if (f[0] === 'General') b.setAttribute('data-wide', '1');   /* own row: the other 6 fill even rows of 3 (2 on phones) */
+      if (f[0] === 'General') b.setAttribute('data-wide', '1');
       b.addEventListener('click', function () { pickFund(f[0]); });
-      funds.appendChild(b);
+      (i < CFG.TOP_FUNDS ? funds : pgrid).appendChild(b);
     });
+    add(funds, more, progs);
 
     var ded = el('div', 'dn-ded');
     var dedName = document.createElement('input');
@@ -685,7 +736,7 @@
       return new Promise(function (res) { setTimeout(function () { res({ paymentIntent: { id: st.start.id, status: 'succeeded' } }); }, 700); });
     }
 
-    setMonthly(false); pickFund(presetFund()); pickDed('');
+    setMonthly(false); var pf = presetFund(); st.fund = pf; setProgs(isProg(pf)); pickFund(pf); pickDed('');
     show(1);
     return { root: root, show: show, setErr: setErr, thanks: thanks, completed: completed, state: st };
   }
