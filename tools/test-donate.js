@@ -206,7 +206,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26h$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26i$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -361,6 +361,8 @@ function headerOnly(url) {
   var m = await page(MATCHP);
   ok(m.d.getElementById('co_content_container').contains(m.d.getElementById('dn26')), 'form sits inside the article');
   ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign' && m.d.querySelector('#dn26 .dn-hd h2').textContent === 'Invest in a Vibrant Jewish Future', 'matching page: H1 2026 Annual Matching Campaign, H2 Invest in a Vibrant Jewish Future');
+  ok([a, m].every(function (p) { var h = p.d.querySelector('#dn26 .dn-hd'); return /\bdn-hx dn-hxA\b/.test(h.className) && !h.querySelector('i') && /chabad-jcc-logo-navy-gold\.png$/.test(h.querySelector('img').src) && h.querySelector('img').alt === 'Chabad Jewish Community Center of Riverside'; }), 'both pages: light header (option A), navy logo with the full name as alt text, no gold kicker line');
+  ok(fs.existsSync(path.join(ROOT, 'chabad-jcc-logo-navy-gold.png')), 'navy and gold logo file is in the repo');
   ok(chosen(m) === 'Annual Matching Campaign', 'preset fund: Annual Matching Campaign');
   ok(labels(m).join('|') === LABELS.join('|'), 'same 10 choices');
   ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign', 'page title: 2026 Annual Matching Campaign');
@@ -616,7 +618,7 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26h'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-26i'/.test(SRC), 'donate-2026.js VERSION bumped');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 

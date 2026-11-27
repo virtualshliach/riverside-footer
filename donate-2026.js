@@ -36,7 +36,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26h';
+  var VERSION = 'donate-2026 2026-11-26i';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -147,6 +147,7 @@
     return (me ? me.split('?')[0].replace(/[^\/]+$/, '') : 'https://virtualshliach.github.io/riverside-footer/') + name;
   }
   var LOGO = asset('chabad-jcc-logo-white-gold.png');
+  var LOGO_NAVY = asset('chabad-jcc-logo-navy-gold.png');   /* the light header (option A, chosen Nov 26, 2026) */
 
   /* ---------- styles ---------- */
   function css() {
@@ -260,7 +261,8 @@
       R + '.dn-btn[disabled]{opacity:.6;cursor:wait;transform:none}',
       R + '.dn-sum{flex:1;text-align:center;font-weight:700;color:' + NAVY + ';font-size:15.2px}',
       R + '.dn-done{text-align:center;padding:18px 6px 6px}',
-      R + '.dn-done p{color:#4a5d64;margin:8px auto;max-width:460px}',
+      R + '.dn-done p{color:#4a5d64;margin:8px auto;max-width:460px;text-wrap:balance}',
+      '@media (max-width:374px){' + R + '.dn-done .dn-btn{padding:12px 14px;font-size:14.7px}}',
       R + '.dn-done .dn-btn{margin-top:18px}',
       R + '.dn-ok{width:64px;height:64px;border-radius:50%;background:' + TEAL + ';color:#fff;font-size:32px;display:flex;align-items:center;justify-content:center;margin:0 auto 14px}',
       R + '.dn-ok.wait{background:' + GOLD + ';color:' + DEEP + '}',
@@ -278,6 +280,21 @@
         R + '.dn-hd img{width:150px;margin:0 auto}' + R + '.dn-hd>div{width:100%}' + R + '.dn-hd span{max-width:300px;margin:0 auto;text-wrap:balance}' + R + '.dn-hd i{text-wrap:balance;line-height:1.5;margin-bottom:6px}' +
         R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
         R + '.dn-pgrid .dn-fund{min-height:66px}' + R + '.dn-chk{padding:12px 14px;font-size:14.7px}' + R + '.dn-dedbox{padding:12px 14px 14px}}',
+      /* payment step on phones: the summary above the payment box says it, so the footer keeps room for Give */
+      '@media (max-width:480px){' + R + '.dn-ft.dn-on3 .dn-sum{display:none}' + R + '.dn-ft.dn-on3 .dn-gold{margin-left:auto}}',
+      /* header: light and airy, left-aligned, navy logo (option A, chosen Nov 26, 2026); .dn-hd.dn-hx outranks the older .dn-hd rules at every width */
+      R + '.dn-hd.dn-hx{display:block;gap:0;border-top:0}',
+      R + '.dn-hd.dn-hx h2{text-wrap:balance;letter-spacing:.005em}',
+      R + '.dn-hd.dn-hx h2::after{content:"";display:block;width:44px;height:3px;border-radius:2px;background:' + GOLD + ';margin:16px 0 14px}',
+      R + '.dn-hd.dn-hx span{text-wrap:pretty;line-height:1.55}',
+      R + '.dn-hd.dn-hxA{background:#fbf8f1;color:' + NAVY + ';padding:30px 34px 28px;text-align:left;border-bottom:1px solid #efe6d2}',
+      R + '.dn-hd.dn-hxA img{width:110px;margin:0 0 22px}',
+      R + '.dn-hd.dn-hxA h2{font-size:36px;line-height:1.15;color:' + NAVY + ';margin:0}',
+      R + '.dn-hd.dn-hxA span{font-size:16px;color:#55686f;max-width:520px;margin:0}',
+      '@media (max-width:620px){' + R + '.dn-hd.dn-hxA{padding:24px 20px 22px}' + R + '.dn-hd.dn-hxA img{width:104px;margin:0 0 18px}' + R + '.dn-hd.dn-hxA h2{font-size:30px}}',
+      '@media (max-width:480px){' + R + '.dn-hd.dn-hxA{flex-direction:column;text-align:left;background:#fbf8f1}' + R + '.dn-hd.dn-hxA span{max-width:none;margin:0;font-size:15.2px}}',
+      /* small phones (360): headline on two lines, not three */
+      '@media (max-width:379px){' + R + '.dn-hd.dn-hxA h2{font-size:26.5px}}',
       /* "Complete your gift" bar (outside #dn26, fixed to the bottom of the window) */
       '#dn26-nudge{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;font-family:' + BODY + ';color:#fff;background:' + NAVY + ';border-top:3px solid ' + GOLD + ';' +
         'box-shadow:0 -10px 30px rgba(11,31,39,.25);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));text-align:left;line-height:1.4;font-size:15.2px}',
@@ -455,9 +472,10 @@
     var root = el('div'); root.id = 'dn26';
     var card = el('div', 'dn-card');
 
-    var hd = el('div', 'dn-hd');
-    var logo = el('img'); logo.src = LOGO; logo.alt = CFG.ORG;
-    add(hd, logo, add(el('div'), el('i', null, CFG.ORG), el('h2', null, PAGE.h2),
+    var hd = el('div', 'dn-hd dn-hx dn-hxA');
+    var logo = el('img'); logo.src = LOGO_NAVY; logo.alt = CFG.ORG;
+    /* no gold kicker line: the logo says it, and its alt text keeps the full name for screen readers */
+    add(hd, logo, add(el('div'), el('h2', null, PAGE.h2),
       el('span', null, PAGE.intro)));
 
     var steps = el('div', 'dn-steps');
@@ -655,6 +673,7 @@
       steps.style.display = n === 4 ? 'none' : '';
       back.style.visibility = n === 1 || n === 4 ? 'hidden' : 'visible';
       ft.style.display = n === 4 ? 'none' : '';
+      ft.className = 'dn-ft' + (n === 3 ? ' dn-on3' : '');   /* payment step on phones: the summary above says it, so the footer keeps room for Give */
       next.textContent = 'Continue';
       sumLine();
       if (n > 1) { try { root.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {} }
