@@ -110,28 +110,28 @@
     /* Menorah Contest (new this year). Form: aid 7606745 (hidden page). */
     CONTEST: {
       url: 'https://chanukahfestival.org/?menorah',
-      intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. Guests vote at the festival, the favorite in each age group wins a festival trophy, and everyone who enters gets a Chanukah\u00a0gift!',
-      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at table #15', 'Winners Announced 8:00 PM'],
+      intro: 'Kids, teens and adults: build a unique menorah at home and bring it to the festival on Dec 7. Free to enter. Guests vote at the festival, the favorite in each age group wins a festival trophy, and everyone who enters gets a\u00a0Chanukah\u00a0gift!',
+      facts: ['Register By Dec 4', 'Drop Off 5:45–6:15 PM at\u00a0table\u00a0#15', 'Winners Announced 8:00 PM'],
       how: [
         'Register By Friday, Dec 4.',
-        'Build your menorah at home, following the rules below.',
+        'Build your menorah at home, following the\u00a0rules\u00a0below.',
         'Drop it off between 5:45 and 6:15 PM at the Menorah Contest table (#15 on the festival map). Please go straight there.',
-        'Menorahs stay on display at table #15 during the festival.',
+        'Menorahs stay on display at table #15 during\u00a0the\u00a0festival.',
         'Each menorah gets a number. Guests scan the code at the display and vote for a favorite and a runner-up in each age group. Voting closes at 7:50 PM.',
-        'We’ll announce the winners at the festival at 8:00 PM. Please pick up your menorah before you leave the festival.'
+        'We’ll announce the winners at the festival at 8:00 PM. Please pick up your menorah before you leave\u00a0the\u00a0festival.'
       ],
       prizes: [
         'The guests’ favorite in each age group wins a festival trophy, and the runners-up get great prizes, announced at the festival at 8:00\u00a0PM.',
-        'Everyone who enters gets a Chanukah gift.'
+        'Everyone who enters gets a\u00a0Chanukah\u00a0gift.'
       ],
       rules: [
         'Open to all ages, in two groups: 12 and under, and 13 and up.',
-        'Nine branches, including the shamash.',
+        'Nine branches, including\u00a0the\u00a0shamash.',
         'Eight branches in a straight line at an even height; the shamash higher or lower.',
         'No food.',
-        'Bring a wax candle or oil.',
-        'It must stand on its own and not break, fall or melt when lit.',
-        'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK).'
+        'Bring a wax candle\u00a0or\u00a0oil.',
+        'It must stand on its own and not break, fall or melt\u00a0when\u00a0lit.',
+        'One entry per person. Kids are the main builders of their menorah (adult help for safety\u00a0is\u00a0OK).'
       ]
     },
 

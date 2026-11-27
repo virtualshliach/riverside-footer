@@ -385,7 +385,7 @@
     var h = el('div'); h.id = 'mc26-hero';
     var chips = el('ul', 'mh-chips');
     ['All ages', 'Free to enter', 'Register By Dec 4'].forEach(function (t) { chips.appendChild(el('li', null, t)); });
-    var more = link('mh-a', CFG.festivalUrl + '#contest', 'Contest rules, prizes and the festival map', true);
+    var more = link('mh-a', CFG.festivalUrl + '#contest', 'Contest rules, prizes and the\u00a0festival\u00a0map', true);
     add(h,
       el('div', 'mh-kick', '22nd Annual Chanukah Festival'),
       el('h2', null, 'Menorah Contest'),

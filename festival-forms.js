@@ -51,11 +51,11 @@
       title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.', button: 'Register',
       banner: { kick: '22nd Annual Chanukah Festival', tag: 'Guest vote · Trophy for each age group · Gift\u00a0for\u00a0every\u00a0entry' },
       rules: ['Open to all ages, in two groups: 12 and under, and 13 and up',
-        'Free to enter. Register By Friday, Dec 4',
+        'Free to enter. Register By Friday,\u00a0Dec\u00a04',
         'Nine branches including the shamash: eight in a straight line at an even height, with the shamash higher or lower',
-        'No food. Bring a wax candle or oil',
-        'It must stand on its own and must not break, fall or melt when lit',
-        'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK)',
+        'No food. Bring a wax candle\u00a0or\u00a0oil',
+        'It must stand on its own and must not break, fall or melt\u00a0when\u00a0lit',
+        'One entry per person. Kids are the main builders of their menorah (adult help for safety\u00a0is\u00a0OK)',
         'Prizes: the guests’ favorite in each age group wins a festival trophy, and the runners-up get great prizes, announced at the festival at 8:00\u00a0PM. Everyone who enters gets a Chanukah gift',
         'Drop Off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
     },
@@ -263,7 +263,7 @@
     add(rules, el('b', null, 'Contest rules'), ul);
     var g = el('div', 'cff-grid');
     var f = {
-      first: field('Your first name', 'text', { req: true, half: true, ac: 'given-name', max: 60, hint: 'Parent or guardian, if you’re registering kids' }),
+      first: field('Your first name', 'text', { req: true, half: true, ac: 'given-name', max: 60, hint: 'Parent or guardian, if you’re\u00a0registering\u00a0kids' }),
       last: field('Your last name', 'text', { req: true, half: true, ac: 'family-name', max: 60 }),
       email: field('Email', 'email', { req: true, half: true, ac: 'email', max: 120, placeholder: 'ex: myname@example.com' }),
       phone: field('Phone', 'tel', { req: true, half: true, ac: 'tel', im: 'tel', max: 30 }),
