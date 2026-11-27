@@ -718,6 +718,45 @@ var SITES = {
     var dk = await load('riverside', DRP, { wait: 900 });
     ok(!!dk.d.querySelector('#cf-share .cf-emmenu') && !!dk.d.querySelector('#cf-share .cf-ig'), 'computer: Spread the light keeps the Email menu and Instagram button');
 
+    console.log('riverside: link click tracking (GA4, both IDs)');
+    var CT_LINKS = '<a id="ct1" href="/donation">Donate Now</a><a id="ct2" href="mailto:info@jewishriverside.com?subject=Hi">Email us</a>' +
+      '<a id="ct3" href="tel:9512222005">Call</a><a id="ct4" href="/templates/articlecco_cdo/aid/5333083/jewish/Join.htm"><span>Join our newsletter</span></a>' +
+      '<a id="ct5" href="https://chanukahfestival.org/">Festival</a><a id="ct6" href="/3737751">Programs</a><a id="ct7" href="https://jewishriverside.com/calendar">Calendar</a>' +
+      '<a id="ct8" href="https://www.charidy.com/jewishriverside"><img alt="Give" src="x.png"></a><a id="ct9" href="#top">Top</a>';
+    var ctShell = SHELL.replace('<div id="co_content_container">native</div>', '<div id="co_content_container">' + CT_LINKS + '</div>');
+    var ctTag = function (w) { w.dataLayer = []; w.gtag = function () { w.dataLayer.push(arguments); }; w.gtag('config', 'G-DXD2G9J87R'); w.gtag('config', 'G-V0WLX637CY'); };
+    function ctEvents(w) { return [].filter.call(w.dataLayer || [], function (x) { return x[0] === 'event'; }).map(function (x) { return x[1] + ':' + (x[2].link_type || '') + ':' + JSON.stringify(x[2].send_to); }); }
+    function ctClickAll(r) {
+      var before = [].map.call(r.d.querySelectorAll('#co_content_container a'), function (a) { return a.getAttribute('href'); });
+      var blocked = 0;
+      r.d.addEventListener('click', function (e) { if (e.defaultPrevented) blocked++; e.preventDefault(); });
+      [].forEach.call(r.d.querySelectorAll('#co_content_container a'), function (a) { a.click(); });
+      var after = [].map.call(r.d.querySelectorAll('#co_content_container a'), function (a) { return a.getAttribute('href'); });
+      return { same: JSON.stringify(before) === JSON.stringify(after), blocked: blocked };
+    }
+    var BOTH = JSON.stringify(['G-DXD2G9J87R', 'G-V0WLX637CY']);
+    var ct = await load('riverside', 'https://www.jewishriverside.com/', { shell: ctShell, wait: 250, before: ctTag });
+    var ctr = ctClickAll(ct), ce = ctEvents(ct.w);
+    ok(JSON.stringify(ce) === JSON.stringify(['donate_click:donate:' + BOTH, 'contact_click:email:' + BOTH, 'contact_click:phone:' + BOTH, 'newsletter_click:newsletter:' + BOTH, 'outbound_click:outbound:' + BOTH, 'donate_click:donate:' + BOTH]),
+      'home: donate, email, phone, newsletter, outbound and an image Give link each send one event to both IDs; own-site and # links send none ' + JSON.stringify(ce));
+    var ceMail = [].filter.call(ct.w.dataLayer, function (x) { return x[0] === 'event' && x[2].link_type === 'email'; })[0];
+    ok(ceMail && ceMail[2].link_url === 'mailto:info@jewishriverside.com' && ceMail[2].page_path === '/', 'mailto sent without its ?subject, with the page path');
+    ok(ctr.same && ctr.blocked === 0 && !ct.errors.length, 'click tracking changes no href, blocks no click, no errors');
+    ok(ct.w.__jrClickTrack === /var V = '([^']+)'/.exec(fs.readFileSync(path.join(ROOT, 'footer.js'), 'utf8'))[1] && ct.logs.some(function (l) { return /\[riverside-footer\] \d{4}-\d{2}-\d{2}[a-z] click tracking on/.test(l); }), 'click tracking logs the footer version');
+    ok(!ct.requests.some(function (u) { return /googletagmanager/.test(u); }) && projectRequests(ct).length === 0, 'home: no second gtag.js and no project file loaded');
+    var ct2 = await load('riverside', 'https://jewishriverside.com/', { shell: ctShell, wait: 250, before: ctTag, coScript: '<script src="' + PAGES_BASE + 'footer.js"></script>' });
+    ctClickAll(ct2);
+    ok(ctEvents(ct2.w).length === 6, 'footer.js loaded twice: still one event per click (' + ctEvents(ct2.w).length + ')');
+    var ct3 = await load('riverside', 'https://www.jewishriverside.com/', { shell: ctShell, wait: 100 });
+    ct3.d.addEventListener('click', function (e) { e.preventDefault(); });
+    ct3.d.getElementById('ct1').click();
+    ctTag(ct3.w);
+    await wait(450);
+    ok(JSON.stringify(ctEvents(ct3.w)) === JSON.stringify(['donate_click:donate:' + BOTH]), 'a click before the Google tag exists is sent once it appears');
+    var ct4 = await load('riverside', 'https://www.chanukahfestival.org/', { shell: ctShell, wait: 300, before: ctTag });
+    [].forEach.call(ct4.d.querySelectorAll('#co_content_container a'), function (a) { a.addEventListener('click', function (e) { e.preventDefault(); }); a.click(); });
+    ok(!ct4.w.__jrClickTrack && ![].some.call(ct4.w.dataLayer, function (x) { return x[0] === 'event' && /^(donate|contact|newsletter|outbound)_click$/.test(x[1]) && x[2] && x[2].send_to; }), 'chanukahfestival.org: no jewishriverside.com click tracking');
+
     console.log('riverside: pages that must load nothing');
     var quiet = [
       ['https://www.jewishriverside.com/', 'site home'],

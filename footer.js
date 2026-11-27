@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-27d';
+  var V = '2026-11-27e';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -51,6 +51,56 @@
      (GA4 property "Chanukah Festival", set up Nov 18 2026). Project files send
      share_click / cta_click events through window.gtag. */
   var GA4_ID = 'G-7T1ZM87VNH';
+
+  /* Link click tracking for jewishriverside.com (Shmuel's OK, Nov 27 2026). Runs on every page of
+     jewishriverside.com / www.jewishriverside.com only (this file also runs on chanukahfestival.org),
+     once per page. Sends GA4 events to the site's own tag G-DXD2G9J87R (loaded by the ChabadOne
+     footer box) and G-V0WLX637CY (property "Chabad Jewish Riverside - jewishriverside.com", 566026333;
+     its config line sits in the footer box right after G-DXD2G9J87R's). Uses the existing window.gtag
+     (waits up to 10 s for it), never loads gtag.js, never changes the page or an href, never blocks a click.
+     Events: donate_click, contact_click (mailto / tel / sms), newsletter_click, outbound_click. */
+  (function () {
+    var w = window, d = document;
+    if (!/^(www\.)?jewishriverside\.com$/i.test(w.location.hostname || '') || w.__jrClickTrack) return;
+    w.__jrClickTrack = V;
+    var TO = ['G-DXD2G9J87R', 'G-V0WLX637CY'], q = [], tries = 0,
+        OWN = /^(www\.)?jewishriverside\.com$/i,
+        DON = /donat|\/give(\b|\/|$)|giving|fundrais|charidy|\/sponsor/i,
+        DONTXT = /^\s*(donate|give|sponsor)/i,
+        NEWS = /subscri|newsletter|opt-?in|mailing-?list|sign-?up/i;
+    function flush() { while (q.length) { var e = q.shift(); try { w.gtag('event', e[0], e[1]); } catch (x) {} } }
+    function send(n, p) {
+      p.send_to = TO; p.page_path = w.location.pathname;
+      q.push([n, p]);
+      if (typeof w.gtag === 'function') flush();
+    }
+    (function waitTag() {
+      if (typeof w.gtag === 'function') { flush(); return; }
+      if (++tries < 50) setTimeout(waitTag, 200);
+    })();
+    function label(a) {
+      var t = a.getAttribute('aria-label') || a.innerText || a.textContent || a.title || '';
+      if (!t.replace(/\s/g, '')) { var im = a.querySelector('img[alt]'); if (im) t = im.getAttribute('alt'); }
+      return String(t).replace(/\s+/g, ' ').trim().slice(0, 100);
+    }
+    function track(e) {
+      try {
+        if (e.type === 'auxclick' && e.button !== 1) return;
+        var a = e.target && e.target.closest ? e.target.closest('a[href]') : null;
+        if (!a) return;
+        var h = a.getAttribute('href') || '', t = label(a), u = String(a.href).split('#')[0];
+        if (/^mailto:/i.test(h)) send('contact_click', { link_type: 'email', link_url: h.split('?')[0], link_text: t });
+        else if (/^(tel|sms):/i.test(h)) send('contact_click', { link_type: 'phone', link_url: h.split('?')[0], link_text: t });
+        else if (/^(javascript:|#)/i.test(h) || !/^https?:$/i.test(a.protocol)) return;
+        else if (DON.test(h) || DONTXT.test(t)) send('donate_click', { link_type: 'donate', link_url: u, link_text: t, link_domain: a.hostname, outbound: !OWN.test(a.hostname) });
+        else if (NEWS.test(h) || NEWS.test(t)) send('newsletter_click', { link_type: 'newsletter', link_url: u, link_text: t });
+        else if (!OWN.test(a.hostname)) send('outbound_click', { link_type: 'outbound', link_url: u, link_text: t, link_domain: a.hostname });
+      } catch (x) {}
+    }
+    d.addEventListener('click', track, true);
+    d.addEventListener('auxclick', track, true);
+    if (w.console) console.log('[' + SITE + '] ' + V + ' click tracking on');
+  })();
 
   var href = window.location.href;
   var isResponse = href.indexOf('ArticleCcoResponse') > -1;
