@@ -2644,7 +2644,7 @@ var money = s.total > 0
 Number(s.total).toLocaleString() + '</b></div>' +
 (s.dedNames ? '<p class="hh-hint" style="margin-top:9px">' +
 esc(s.dedType) + ' ' + esc(s.dedNames) + '</p>' : '') +
-'<p class="hh-hint">A receipt is on its way to your inbox.</p>'
+'<p class="hh-hint">Your receipt will be emailed to you.</p>'
 : '<p class="hh-hint" style="margin-top:16px">A confirmation is on its way to your inbox.</p>';
 wrap.innerHTML =
 '<div class="hh-conf"><div class="hh-modal">' +

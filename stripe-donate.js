@@ -5,7 +5,9 @@
    bank account). Card numbers go straight from that box to Stripe.
 
    Behind it is a Google Apps Script web app (ENDPOINT) that sets the amount with
-   Stripe, checks the payment, writes the Google Sheet and emails the receipt.
+   Stripe, checks the payment and writes the Google Sheet. It emails the donor an instant
+   confirmation (not the tax receipt) and a copy to rabbi@. The formal tax receipt is sent
+   separately, only after Rabbi Fuss approves it.
 
    Loaded by chanukah-2026(-draft).js when Donate is pressed, and on page load when
    the donor comes back from Cash App. Public file: no secret keys here, ever.
@@ -16,7 +18,7 @@
   'use strict';
   if (window.CFStripe && window.CFStripe.version) return;
 
-  var VERSION = 'stripe-donate 2026-11-19d';
+  var VERSION = 'stripe-donate 2026-11-26a';
 
   var CFG = {
     /* Google Apps Script web app URL (Deploy > Web app). */
@@ -539,8 +541,8 @@
           ? 'Your gift of ' + gift + ' is on its way. Bank payments take up to ' + CFG.BANK_DAYS + ' to clear.'
           : (g.monthly ? 'Your monthly gift of ' + money(g.amount) + ' is set up.' : 'Your gift of ' + gift + ' has been received.')),
         el('p', null, bank
-          ? 'We’ll email your receipt' + (g.email ? ' to ' + g.email : '') + ' as soon as it clears.'
-          : 'A receipt is on its way' + (g.email ? ' to ' + g.email : '') + '.'));
+          ? 'Your bank payment is processing. A confirmation has been emailed to you.'
+          : 'A confirmation has been emailed to you.'));
       var close = el('button', 'cfs-btn cfs-gold', 'Close'); close.type = 'button';
       close.addEventListener('click', closeM);
       p4.appendChild(close);
@@ -663,11 +665,11 @@
         m.show(1);
         m.setErr(rs === 'failed' || (pi && pi.status === 'requires_payment_method')
           ? 'Your payment wasn’t completed. Please try again or choose another payment method.'
-          : 'We couldn’t confirm your payment. If you were charged, you’ll get a receipt by email shortly.');
+          : 'We couldn’t confirm your payment. If you were charged, a confirmation will be emailed to you.');
       }
     }, function () {
       m.show(1);
-      m.setErr('We couldn’t confirm your payment. If you were charged, you’ll get a receipt by email shortly.');
+      m.setErr('We couldn’t confirm your payment. If you were charged, a confirmation will be emailed to you.');
       finish(id);
     });
   }

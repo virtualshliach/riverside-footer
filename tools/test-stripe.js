@@ -108,7 +108,9 @@ function page(opts) {
   ok(t.confirms.length === 1, 'double-click: payment confirmed once');
   ok(t.confirms[0].redirect === 'if_required' && /^https:\/\/chanukahfestival\.org\/\?cfs=return$/.test(t.confirms[0].confirmParams.return_url), 'stays on the page unless the method needs to leave (return_url ' + t.confirms[0].confirmParams.return_url + ')');
   ok(t.onPane() === 4 && /Thank you, Sarah!/.test(t.d.getElementById('cfs').textContent) && /\$180 has been received/.test(t.d.getElementById('cfs').textContent), 'thank-you shown');
-  ok(/receipt is on its way to sarah@example\.com/.test(t.d.getElementById('cfs').textContent), 'tells the donor a receipt is coming');
+  ok(/A confirmation has been emailed to you\./.test(t.d.getElementById('cfs').textContent), 'thank-you: "A confirmation has been emailed to you."');
+  ok(!/receipt will be emailed/i.test(t.d.getElementById('cfs').textContent), 'thank-you: no receipt promise');
+  ok(!/on its way to|shortly|as soon as/.test(t.d.getElementById('cfs').textContent.replace(/gift of \$[\d,]+ is on its way/, '')), 'no receipt timing promise on the thank-you');
   await wait(50);
   var f1 = t.posts.filter(function (p) { return p.body.action === 'finish'; });
   ok(f1.length === 1 && f1[0].body.id === 'pi_T1', 'finish reported to Apps Script with the payment id');
@@ -140,7 +142,7 @@ function page(opts) {
   ach.w.CFStripe.open(); ach.click(ach.chip('$360')); ach.click(ach.next()); ach.details(); ach.click(ach.next()); await wait(60);
   ach.click(ach.next()); await wait(60);
   var at = ach.d.getElementById('cfs').textContent;
-  ok(/up to 4 business days/.test(at) && /as soon as it clears/.test(at), 'bank: tells the donor it takes a few days and the receipt follows');
+  ok(/up to 4 business days/.test(at) && /Your bank payment is processing\. A confirmation has been emailed to you\./.test(at) && !/as soon as|has been received/.test(at), 'bank: "Your bank payment is processing. A confirmation has been emailed to you." (no "received" claim)');
 
   console.log('sponsor levels');
   var sp = page({});
@@ -196,6 +198,12 @@ function page(opts) {
   var don = w.document.querySelector('.cf-nav .cf-don');
   if (don) don.dispatchEvent(new w.MouseEvent('click', { bubbles: true }));
   ok(opened === 1 && !w.document.querySelector('.cf-dm') && !w.document.querySelector('.cf-fp iframe'), 'Donate opens the Stripe pop-up, not the ChabadOne one');
+
+  console.log('confirmation wording (instant confirmation; the tax receipt waits for approval)');
+  var RAW = fs.readFileSync(path.join(ROOT, 'stripe-donate.js'), 'utf8');
+  ok(!/A receipt is on its way|as soon as it clears|receipt by email shortly|you’ll get a receipt/.test(RAW), 'stripe-donate.js: old receipt timing phrases are gone');
+  ok((RAW.match(/We couldn’t confirm your payment\. If you were charged, a confirmation will be emailed to you\./g) || []).length === 2, 'stripe-donate.js: could-not-confirm message uses the new wording (both places)');
+  ok(!/receipt will be emailed/i.test(RAW), 'stripe-donate.js: no "receipt will be emailed" promise left');
 
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);

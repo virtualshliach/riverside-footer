@@ -2047,7 +2047,7 @@
       done.addEventListener('click', closeDonate);
       add(p4, el('div', 'cf-dm-ok', '✓'), el('h3', null, 'Thank you!'),
         el('p', null, 'Your ' + (st.monthly ? 'monthly ' : '') + 'gift of ' + money(st.amount) + ' helps keep the Chanukah Festival free for everyone.'),
-        el('p', null, 'A receipt is on its way to ' + v('email') + '.'), done);
+        el('p', null, 'Your receipt will be emailed to ' + v('email') + '.'), done);
       ['ccNum', 'ccCvv'].forEach(function (k) { inputs[k].el.value = ''; });
       show(4);
     }

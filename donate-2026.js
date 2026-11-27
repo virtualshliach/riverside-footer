@@ -10,7 +10,9 @@
 
    Money goes to Stripe through the same Google Apps Script web app as the Chanukah Festival
    (site: 'jr'), which writes the gift to the "Donations - JewishRiverside.com" tab of the
-   "Chanukah Festival" Google Sheet and emails the receipt from the Chabad JCC account.
+   "Chanukah Festival" Google Sheet. The Apps Script emails the donor an instant
+   confirmation (not the tax receipt) and a copy to rabbi@. The formal tax receipt is sent
+   separately, only after Rabbi Fuss approves it.
 
    After Stripe confirms the payment, the gift details (never card numbers) are also sent to
    ChabadOne: the page's own ChabadOne form (fields input_1 ... input_12) is filled in and
@@ -36,7 +38,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26i';
+  var VERSION = 'donate-2026 2026-11-26j';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -800,8 +802,8 @@
           ? 'Your gift of ' + amt + dedTxt + ' is on its way. Bank payments take up to ' + CFG.BANK_DAYS + ' to clear.'
           : (g.monthly ? 'Your monthly gift of ' + money(g.amount) + dedTxt + ' is set up.' : 'Your gift of ' + amt + dedTxt + ' has been received.')),
         el('p', null, bank
-          ? 'We’ll email your receipt' + (g.email ? ' to ' + g.email : '') + ' as soon as it clears.'
-          : 'A receipt is on its way' + (g.email ? ' to ' + g.email : '') + '.'));
+          ? 'Your bank payment is processing. A confirmation has been emailed to you.'
+          : 'A confirmation has been emailed to you.'));
       var homeA = el('a', 'dn-btn dn-gold', 'Back to JewishRiverside.com'); homeA.href = '/';
       p4.appendChild(homeA);
       st.start = null; st.sig = '';
@@ -1023,11 +1025,11 @@
         UI.show(1);
         UI.setErr(q.redirect_status === 'failed' || (pi && pi.status === 'requires_payment_method')
           ? 'Your payment wasn’t completed. Please try again or choose another payment method.'
-          : 'We couldn’t confirm your payment. If you were charged, you’ll get a receipt by email shortly.');
+          : 'We couldn’t confirm your payment. If you were charged, a confirmation will be emailed to you.');
       }
     }, function () {
       UI.show(1);
-      UI.setErr('We couldn’t confirm your payment. If you were charged, you’ll get a receipt by email shortly.');
+      UI.setErr('We couldn’t confirm your payment. If you were charged, a confirmation will be emailed to you.');
       finish(q.payment_intent);
     });
   }
