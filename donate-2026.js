@@ -2,7 +2,8 @@
    jewishriverside.com Donate page ("Donate 2.0", page 7643000). Loaded by footer.js.
 
    A step-by-step donate form on the page itself:
-     1. Gift: one-time or monthly, amount, what it's for, optional "in honor of / in memory of"
+     1. Gift: one-time or monthly, amount (monthly shows the yearly total), what it's for, and an optional
+        dedication (one checkbox; checked: In honor / In memory and the name)
      2. Your details: name, email, phone
      3. Payment: Stripe's own secure box (card, Google Pay, Link, Cash App Pay, bank account)
      4. Thank you
@@ -23,13 +24,19 @@
    /designation/matching) to preset the fund. Donate 2.0 is also at jewishriverside.com/donation
    (a ChabadOne short address with no page id in it, see PATHS).
 
+   "Complete your gift" bar: once per browser session, a visitor who chose an amount on step 1 and then
+   scrolled the Continue button out of view, or sat idle about 20 seconds without pressing it, sees a small
+   bar at the bottom ("I'm ready" / "Not today"). "Not today" offers "Remind me later": the email goes to the
+   Apps Script (action 'remindLater', a "Remind later" tab; no email is sent). Never on steps 2 to 4, never
+   after a gift, never in the hidden ChabadOne copy.
+
    No flash of the old page: header.js hides these pages (#dn26-cover) before they are drawn.
    This file removes every #dn26-cover once its form is on the page, or as soon as it knows it
    can't draw it. header.js and footer.js each also drop the cover after 8 seconds no matter what. */
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26e';
+  var VERSION = 'donate-2026 2026-11-26g';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -98,6 +105,9 @@
       chanukah: 'Chanukah Festival', festival: 'Chanukah Festival', mikvah: 'Riverside Mikvah', 'riverside-mikvah': 'Riverside Mikvah',
       shabbat: 'Shabbat & Holidays', holidays: 'Shabbat & Holidays', 'shabbat-holidays': 'Shabbat & Holidays' },
     MIN: 5,
+    NUDGE_IDLE_MS: 20000,          /* "Complete your gift" bar: idle time on step 1 after choosing an amount */
+    NUDGE_KEY: 'dn26-nudge',       /* sessionStorage: the bar was shown this session */
+    GAVE_KEY: 'dn26-gave',         /* sessionStorage: a gift was made this session */
     MAX: 25000,
     BANK_DAYS: '4 business days',
     /* ChabadOne form fields on page 7643000 (read from the live page, Nov 25 2026) */
@@ -184,7 +194,7 @@
       R + '.dn-chip.on{border-color:' + GOLD + ';background:#fff8e6;box-shadow:0 0 0 2px ' + GOLD + '}',
       R + '.dn-other{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:700;color:' + NAVY + '}',
       R + '.dn-other .dn-in{flex:1}',
-      R + '.dn-mnote{font-size:13.6px;color:#4a5d64;margin-top:10px}',
+      R + '.dn-mnote{font-size:13.6px;color:#4a5d64;margin-top:10px;text-wrap:balance}',
       /* "Apply my gift to": matching and "needed most" always shown (full width), then a button that opens the
          programs: a grid of equal boxes (4 across, 2 up to 640px wide), text centered, long labels wrap inside */
       R + '.dn-funds{display:grid;grid-template-columns:minmax(0,1fr)}' + R + '.dn-funds>.dn-wide,' + R + '.dn-funds>.dn-more{margin-top:8px}',
@@ -214,8 +224,20 @@
       R + '.dn-fund.dn-feat{grid-column:1/-1;padding:13px 16px;border:2px solid ' + GOLD + ';background:#fff8e6;font-weight:700;font-size:16px;letter-spacing:.01em}',
       R + '.dn-fund.dn-feat:hover{border-color:#d9a32c}',
       R + '.dn-fund.dn-feat.on{background:' + NAVY + ';border-color:' + GOLD + ';color:#fff;box-shadow:0 0 0 2px ' + GOLD + '}',
-      R + '.dn-ded{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}',
-      R + '.dn-dedname{margin-top:4px}',
+      /* dedication: one checkbox; checked, it opens In honor / In memory (two equal segments) and the name */
+      R + '.dn-chk{display:flex;align-items:center;gap:12px;margin-top:22px;padding:13px 16px;border:1.5px solid #d5e2e6;border-radius:12px;background:#fff;cursor:pointer;font-weight:600;color:' + NAVY + ';font-size:15.2px;line-height:1.35}',
+      R + '.dn-chk span{text-wrap:balance}',
+      R + '.dn-chk:hover{border-color:' + TEAL + '}',
+      R + '.dn-chk.on{border-color:' + NAVY + ';border-bottom-left-radius:0;border-bottom-right-radius:0;border-bottom-color:#e6eef0;background:#f6fafb}',
+      R + '.dn-chk input{flex:none;width:22px;height:22px;margin:0;accent-color:' + NAVY + ';cursor:pointer}',
+      R + '.dn-chk input:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:2px}',
+      R + '.dn-dedbox{border:1.5px solid ' + NAVY + ';border-top:0;border-radius:0 0 12px 12px;padding:14px 16px 16px;background:#f6fafb}',
+      R + '.dn-dedbox[hidden]{display:none}',
+      R + '.dn-dedbox .dn-seg{margin-bottom:12px;background:#e4edf0}',
+      R + '.dn-seg button:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:1px}',
+      /* monthly: the yearly total under the amounts */
+      R + '.dn-yearly{margin-top:12px;padding:10px 14px;border-radius:10px;background:#fff8e6;border:1px solid #f1d58f;color:' + NAVY + ';font-weight:700;font-size:15.2px;text-align:center;text-wrap:balance}',
+      R + '.dn-yearly:empty{display:none}',
       R + '.dn-grid{display:flex;flex-wrap:wrap;gap:12px}',
       R + '.dn-fld{display:flex;flex-direction:column;gap:5px;flex:1 1 100%;min-width:0}',
       R + '.dn-fld.half{flex:1 1 calc(50% - 6px)}',
@@ -254,8 +276,41 @@
         'background:radial-gradient(circle at 50% 44px,rgba(233,185,73,.2),rgba(233,185,73,0) 120px),linear-gradient(160deg,#123140,' + DEEP + ' 75%)}' +
         R + '.dn-hd img{width:150px;margin:0 auto}' + R + '.dn-hd>div{width:100%}' + R + '.dn-hd span{max-width:300px;margin:0 auto;text-wrap:balance}' + R + '.dn-hd i{text-wrap:balance;line-height:1.5;margin-bottom:6px}' +
         R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
-        R + '.dn-pgrid .dn-fund{min-height:66px}' + R + '.dn-ded{gap:6px}' + R + '.dn-ded .dn-fund{white-space:nowrap;font-size:13.2px;letter-spacing:-.01em;padding:6px 2px;min-height:48px}}' +
-      '@media (max-width:374px){' + R + '.dn-ded .dn-fund{font-size:12.2px}}'
+        R + '.dn-pgrid .dn-fund{min-height:66px}' + R + '.dn-chk{padding:12px 14px;font-size:14.7px}' + R + '.dn-dedbox{padding:12px 14px 14px}}',
+      /* "Complete your gift" bar (outside #dn26, fixed to the bottom of the window) */
+      '#dn26-nudge{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;font-family:' + BODY + ';color:#fff;background:' + NAVY + ';border-top:3px solid ' + GOLD + ';' +
+        'box-shadow:0 -10px 30px rgba(11,31,39,.25);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));text-align:left;line-height:1.4;font-size:15.2px}',
+      '#dn26-nudge[hidden]{display:none}',
+      '#dn26-nudge *{box-sizing:border-box}',
+      '#dn26-nudge .dn-nin{position:relative;max-width:720px;margin:0 auto;display:flex;align-items:center;gap:14px;padding-right:34px}',
+      '#dn26-nudge .dn-nmsg{flex:1;margin:0;font-weight:600}',
+      '#dn26-nudge .dn-nmsg b{color:' + GOLD + '}',
+      '#dn26-nudge .dn-nbtns{display:flex;gap:10px;flex:none}',
+      '#dn26-nudge button{font:inherit;cursor:pointer;margin:0;border:0;border-radius:999px;padding:11px 20px;font-weight:700;font-size:15.2px;line-height:1.2;white-space:nowrap}',
+      '#dn26-nudge button:focus-visible,#dn26-nudge input:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:2px}',
+      '#dn26-nudge .dn-nyes{background:' + GOLD + ';color:' + DEEP + '}',
+      '#dn26-nudge .dn-nno{background:transparent;color:#fff;border:1.5px solid rgba(255,255,255,.55)}',
+      '#dn26-nudge .dn-nx{position:absolute;top:50%;right:0;transform:translateY(-50%);width:30px;height:30px;padding:0;background:transparent;color:' + MUTED + ';font-size:22px;line-height:30px;text-align:center;border-radius:50%}',
+      '#dn26-nudge .dn-npanel{flex:1;min-width:0}',
+      '#dn26-nudge h4{margin:0 0 4px;font-family:' + DISP + ';font-size:19.2px;line-height:1.25;color:#fff}',
+      '#dn26-nudge p{margin:0}',
+      '#dn26-nudge .dn-nsub{color:' + MUTED + ';font-size:14.4px;margin-bottom:10px}',
+      '#dn26-nudge .dn-nrow{display:flex;gap:10px;align-items:stretch;flex-wrap:wrap}',
+      '#dn26-nudge label.dn-nlab{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}',
+      '#dn26-nudge input[type=email]{flex:1 1 220px;min-width:0;padding:11px 13px;font:inherit;font-size:16px;color:' + NAVY + ';background:#fff;border:1.5px solid #d5e2e6;border-radius:10px;margin:0;height:auto}',
+      '#dn26-nudge .dn-ntrap{position:absolute;left:-10000px;width:1px;height:1px;overflow:hidden}',
+      '#dn26-nudge .dn-nerr{color:#ffd9d3;font-size:14.4px;margin-top:8px}',
+      '#dn26-nudge .dn-nerr:empty{display:none}',
+      '#dn26-nudge .dn-ndone{flex:1;margin:0;font-weight:700;font-size:16px}',
+      '@media (max-width:620px){#dn26-nudge{padding:12px 14px calc(12px + env(safe-area-inset-bottom,0px))}' +
+        '#dn26-nudge .dn-nin{flex-direction:column;align-items:stretch;gap:10px;text-align:center;padding-right:0}' +
+        '#dn26-nudge .dn-nmsg{padding:0 30px;text-wrap:balance}' +
+        '#dn26-nudge .dn-nx{top:-4px;transform:none}' +
+        '#dn26-nudge .dn-nbtns{display:grid;grid-template-columns:1fr 1fr}' +
+        '#dn26-nudge .dn-npanel{text-align:center}#dn26-nudge h4{padding:0 30px}#dn26-nudge .dn-nsub{text-wrap:balance}' +
+        '#dn26-nudge .dn-nrow{flex-direction:column}#dn26-nudge .dn-nrow .dn-nbtns{display:grid;grid-template-columns:1fr 1fr}' +
+        '#dn26-nudge input[type=email]{flex:none;width:100%}#dn26-nudge .dn-ndone{padding:0 30px}}' +
+      '@media (max-width:374px){#dn26-nudge button{padding:11px 10px;font-size:14.4px}}'
     ];
     var st = document.createElement('style');
     st.id = 'dn26-css';
@@ -422,7 +477,17 @@
     add(seg, bOnce, bMon);
     var mNote = el('p', 'dn-mnote', 'A monthly gift helps us plan for the future. You can change or stop it any time.');
     mNote.style.display = 'none';
-    function setMonthly(on) { st.monthly = on; bOnce.className = on ? '' : 'on'; bMon.className = on ? 'on' : ''; mNote.style.display = on ? '' : 'none'; sumLine(); }
+    bOnce.setAttribute('aria-pressed', 'true'); bMon.setAttribute('aria-pressed', 'false');
+    /* monthly with an amount: "$36/month = $432 a year of impact" (live with Other amount) */
+    var yearly = el('p', 'dn-yearly'); yearly.id = 'dn26-yearly'; yearly.setAttribute('aria-live', 'polite');
+    function yearLine() {
+      yearly.textContent = st.monthly && st.amount > 0 ? money(st.amount) + '/month = ' + money(Math.round(st.amount * 1200) / 100) + ' a year of\u00a0impact' : '';   /* no lone last word */
+    }
+    function setMonthly(on) {
+      st.monthly = on; bOnce.className = on ? '' : 'on'; bMon.className = on ? 'on' : '';
+      bOnce.setAttribute('aria-pressed', on ? 'false' : 'true'); bMon.setAttribute('aria-pressed', on ? 'true' : 'false');
+      mNote.style.display = on ? '' : 'none'; sumLine();
+    }
     bOnce.addEventListener('click', function () { setMonthly(false); });
     bMon.addEventListener('click', function () { setMonthly(true); });
 
@@ -487,26 +552,45 @@
     });
     add(funds, more, progs);
 
-    var ded = el('div', 'dn-ded');
+    /* dedication: one real checkbox. Checked: In honor / In memory (In honor first) and the name.
+       st.ded is what the Apps Script and ChabadOne get, exactly as before: '' (none), 'honor' or 'memory'. */
+    var dedChk = document.createElement('input');
+    dedChk.type = 'checkbox'; dedChk.id = 'dn26-dedchk';
+    var chkW = add(el('label', 'dn-chk'), dedChk, el('span', null, 'Dedicate this gift in honor or in\u00a0memory'));
+    chkW.setAttribute('for', dedChk.id);
+    var dedBox = el('div', 'dn-dedbox'); dedBox.id = 'dn26-dedbox'; dedBox.hidden = true;
+    dedChk.setAttribute('aria-controls', dedBox.id); dedChk.setAttribute('aria-expanded', 'false');
+    var dSeg = el('div', 'dn-seg'); dSeg.setAttribute('role', 'group'); dSeg.setAttribute('aria-label', 'Dedication');
+    var dedType = 'honor';
+    var dBtns = [['honor', 'In honor'], ['memory', 'In memory']].map(function (d) {
+      var b = el('button', null, d[1]); b.type = 'button'; b.setAttribute('data-d', d[0]);
+      b.addEventListener('click', function () { dedType = d[0]; pickDed(d[0]); try { dedName.focus(); } catch (e) {} });
+      dSeg.appendChild(b); return b;
+    });
     var dedName = document.createElement('input');
-    dedName.className = 'dn-in'; dedName.id = 'dn26-dedname'; dedName.maxLength = 120;
-    var dedW = add(el('label', 'dn-fld dn-dedname'), el('span', null, 'Name'), dedName);
+    dedName.className = 'dn-in'; dedName.id = 'dn26-dedname'; dedName.maxLength = 120; dedName.autocomplete = 'off';
+    var dedLab = el('span', null, 'In honor of *');
+    var dedW = add(el('label', 'dn-fld dn-dedname'), dedLab, dedName);
+    dedW.setAttribute('for', dedName.id);
+    add(dedBox, dSeg, dedW);
     function pickDed(t) {
       st.ded = t;
-      [].forEach.call(ded.children, function (b) { b.className = 'dn-fund' + (b.getAttribute('data-d') === t ? ' on' : ''); });
-      dedW.style.display = t ? '' : 'none';
-      dedName.placeholder = t === 'memory' ? 'In memory of…' : 'In honor of…';
-      if (t) setTimeout(function () { try { dedName.focus(); } catch (e) {} }, 30);
+      dedChk.checked = !!t; dedChk.setAttribute('aria-expanded', t ? 'true' : 'false');
+      chkW.className = 'dn-chk' + (t ? ' on' : '');
+      dedBox.hidden = !t;
+      dBtns.forEach(function (b) { var on = b.getAttribute('data-d') === (t || dedType); b.className = on ? 'on' : ''; b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+      dedLab.textContent = (t === 'memory' ? 'In memory of' : 'In honor of') + ' *';
+      dedName.placeholder = 'Full name';
+      sumLine();
     }
-    [['', 'No dedication'], ['honor', 'In honor of'], ['memory', 'In memory of']].forEach(function (d) {
-      var b = el('button', 'dn-fund', d[1]); b.type = 'button'; b.setAttribute('data-d', d[0]);
-      b.addEventListener('click', function () { pickDed(d[0]); });
-      ded.appendChild(b);
+    dedChk.addEventListener('change', function () {
+      pickDed(dedChk.checked ? dedType : '');
+      if (dedChk.checked) setTimeout(function () { try { dedName.focus(); } catch (e) {} }, 30);
     });
 
-    add(p1, el('h3', null, 'Choose your gift'), seg, chips, otherW, mNote,
+    add(p1, el('h3', null, 'Choose your gift'), seg, chips, otherW, yearly, mNote,
       el('h3', 'dn-sp', 'Apply my gift to'), funds,
-      el('h3', 'dn-sp', 'Dedicate this gift (optional)'), ded, dedW);
+      chkW, dedBox);
 
     /* --- step 2: details --- */
     var p2 = el('div', 'dn-pane');
@@ -554,6 +638,8 @@
 
     function giftLine() { return st.amount > 0 ? money(st.amount) + (st.monthly ? ' / month' : '') : ''; }
     function sumLine() {
+      yearLine();
+      if (nudge) nudge.update();
       sum.textContent = giftLine();
       if (st.step === 3) next.textContent = st.amount > 0 ? 'Give ' + giftLine() : 'Give';
       var t = giftLine() + (st.fund && st.fund !== 'General' ? ' · ' + fundLabel(st.fund) : '');
@@ -571,6 +657,7 @@
       next.textContent = 'Continue';
       sumLine();
       if (n > 1) { try { root.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {} }
+      if (nudge && n !== 1) nudge.close();
     }
     function busy(on, label) {
       st.busy = on;
@@ -704,6 +791,8 @@
     /* Payment went through: thank the donor, tell the Apps Script, then send the details to ChabadOne. */
     function completed(pi, g) {
       g.id = pi.id;
+      try { sessionStorage.setItem(CFG.GAVE_KEY, '1'); } catch (e) {}
+      if (nudge) nudge.close();
       thanks(pi.status, g);
       var status = pi.status === 'processing' ? 'Processing (bank payment)' : 'Paid';
       finish(pi.id).then(function (r) {
@@ -736,9 +825,156 @@
       return new Promise(function (res) { setTimeout(function () { res({ paymentIntent: { id: st.start.id, status: 'succeeded' } }); }, 700); });
     }
 
+    var nudge = null;
     setMonthly(false); var pf = presetFund(); st.fund = pf; setProgs(isProg(pf)); pickFund(pf); pickDed('');
     show(1);
-    return { root: root, show: show, setErr: setErr, thanks: thanks, completed: completed, state: st };
+    nudge = makeNudge({ st: st, next: next, giftLine: function () { return st.amount > 0 ? money(st.amount) + (st.monthly ? '/month' : '') : ''; } });
+    return { root: root, show: show, setErr: setErr, thanks: thanks, completed: completed, state: st, nudge: nudge };
+  }
+
+  /* ---------- "Complete your gift" bar and "Maybe next time?" ---------- */
+  function sget(k) { try { return sessionStorage.getItem(k); } catch (e) { return null; } }
+  function sset(k) { try { sessionStorage.setItem(k, '1'); } catch (e) {} }
+  function makeNudge(o) {
+    var st = o.st, next = o.next;
+    var idleMs = PV && PV.nudgeIdleMs ? Number(PV.nudgeIdleMs) : CFG.NUDGE_IDLE_MS;
+    var bar = null, msg = null, open = false, armed = false, seen = false, timer = null, padWas = null, lastFocus = null;
+    function allowed() {
+      if (open || bar) return false;                                     /* already shown in this page view */
+      if (sget(CFG.NUDGE_KEY) || sget(CFG.GAVE_KEY)) return false;       /* once per session; never after a gift */
+      if (window.top !== window) return false;                           /* never inside a frame (the hidden ChabadOne copy) */
+      return st.step === 1 && st.amount > 0 && !st.busy;
+    }
+    function inView(e) {
+      var r = e.getBoundingClientRect(), h = window.innerHeight || document.documentElement.clientHeight;
+      return r.bottom > 0 && r.top < h && (r.width > 0 || r.height > 0);
+    }
+    function arm() {          /* an amount was chosen on step 1: start watching */
+      if (!st.amount || st.step !== 1) { clearTimeout(timer); return; }
+      armed = true;
+      if (inView(next)) seen = true;
+      restart();
+    }
+    function restart() { clearTimeout(timer); if (armed && !open && !bar) timer = setTimeout(function () { if (allowed()) show('idle'); }, idleMs); }
+    function onScroll() {
+      if (!armed || bar) return;
+      if (inView(next)) { seen = true; return; }
+      if (seen && allowed()) show('scroll');
+    }
+    function onActivity() { if (armed) restart(); }
+    function pad() {
+      if (!bar) return;
+      if (padWas === null) padWas = document.body.style.paddingBottom || '';
+      document.body.style.paddingBottom = (bar.offsetHeight + 16) + 'px';
+    }
+    function btn(cls, text) { var b = el('button', cls, text); b.type = 'button'; return b; }
+    function show(why) {
+      sset(CFG.NUDGE_KEY);
+      open = true; clearTimeout(timer);
+      lastFocus = document.activeElement;
+      bar = el('div'); bar.id = 'dn26-nudge';
+      bar.setAttribute('role', 'region'); bar.setAttribute('aria-label', 'Complete your gift'); bar.setAttribute('aria-live', 'polite');
+      bar.setAttribute('data-why', why);
+      document.body.appendChild(bar);
+      barView();
+      window.addEventListener('resize', pad);
+      document.addEventListener('keydown', onKey);
+      log('complete-your-gift bar shown (' + why + ')');
+    }
+    function inner() { bar.innerHTML = ''; var d = el('div', 'dn-nin'); bar.appendChild(d); var x = btn('dn-nx', '×'); x.setAttribute('aria-label', 'Close'); x.addEventListener('click', function () { close(true); }); return [d, x]; }
+    function barView() {
+      var r = inner(), d = r[0];
+      msg = el('p', 'dn-nmsg');
+      update();
+      var yes = btn('dn-nyes', 'I’m ready'), no = btn('dn-nno', 'Not today');
+      yes.addEventListener('click', ready);
+      no.addEventListener('click', panelView);
+      add(d, msg, add(el('div', 'dn-nbtns'), yes, no), r[1]);
+      pad();
+    }
+    function update() {
+      if (!msg || !bar) return;
+      var g = o.giftLine();
+      msg.textContent = '';
+      add(msg, document.createTextNode('Complete your '), el('b', null, g), document.createTextNode(' gift to make a difference'));
+    }
+    function ready() {
+      close(false);
+      try { next.scrollIntoView({ block: 'center', behavior: 'smooth' }); } catch (e) {}
+      try { next.focus({ preventScroll: true }); } catch (e) { try { next.focus(); } catch (e2) {} }
+    }
+    function panelView() {
+      var r = inner(), d = r[0];
+      msg = null;
+      var pnl = el('div', 'dn-npanel');
+      var em = document.createElement('input'); em.type = 'email'; em.id = 'dn26-remind-email'; em.autocomplete = 'email'; em.placeholder = 'Your email'; em.maxLength = 120;
+      var lab = el('label', 'dn-nlab', 'Your email'); lab.setAttribute('for', em.id);
+      var trap = el('div', 'dn-ntrap'); var tIn = document.createElement('input'); tIn.type = 'text'; tIn.tabIndex = -1; tIn.autocomplete = 'off'; tIn.setAttribute('aria-hidden', 'true'); trap.appendChild(tIn);
+      var go = btn('dn-nyes', 'Remind me later'), nah = btn('dn-nno', 'No, thanks');
+      var er = el('p', 'dn-nerr'); er.setAttribute('role', 'alert');
+      var h = el('h4', null, 'Maybe next time?');
+      add(pnl, h, el('p', 'dn-nsub', 'Leave your email and we’ll send you a gentle reminder.'),
+        add(el('div', 'dn-nrow'), lab, em, add(el('div', 'dn-nbtns'), go, nah)), er, trap);
+      add(d, pnl, r[1]);
+      bar.setAttribute('aria-label', 'Maybe next time?');
+      nah.addEventListener('click', function () { close(true); });
+      function send() {
+        var e = String(em.value || '').trim();
+        er.textContent = '';
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) { er.textContent = 'Please check your email address.'; em.focus(); return; }
+        go.disabled = true; nah.disabled = true; go.textContent = 'One moment…';
+        remindReq(e, tIn.value).then(function (res) {
+          if (res && res.ok) return doneView();
+          /* the live Apps Script (before remindLater is deployed) answers { ok:false, error:'Unknown request.' }: gentle message */
+          return fail(res && res.error && /email/i.test(res.error) ? res.error : '');
+        }, function () { fail(''); });
+        function fail(m) {
+          go.disabled = false; nah.disabled = false; go.textContent = 'Remind me later';
+          er.textContent = m || 'Sorry, we couldn’t save that just now. Please try again later, or call us at ' + CFG.PHONE + '.';
+        }
+      }
+      go.addEventListener('click', send);
+      em.addEventListener('keydown', function (ev) { if (ev.key === 'Enter') { ev.preventDefault(); send(); } });
+      pad();
+      setTimeout(function () { try { em.focus({ preventScroll: true }); } catch (e) {} }, 30);
+    }
+    function remindReq(email, website) {
+      return api({ action: 'remindLater', site: 'jr', email: email, amount: st.amount, monthly: !!st.monthly, fund: st.fund,
+        page: location.href.split('#')[0].slice(0, 300), website: website || '' });
+    }
+    function doneView() {
+      var r = inner(), d = r[0];
+      var t = el('p', 'dn-ndone', 'Thank you. We’ll be in touch.');
+      add(d, t, r[1]);
+      bar.setAttribute('aria-label', 'Thank you');
+      pad();
+      try { r[1].focus({ preventScroll: true }); } catch (e) {}
+    }
+    function onKey(ev) { if (ev.key === 'Escape' && bar) close(true); }
+    function close(restoreFocus) {
+      open = false; clearTimeout(timer); armed = false;
+      window.removeEventListener('resize', pad);
+      document.removeEventListener('keydown', onKey);
+      var hadFocus = bar && bar.contains(document.activeElement);
+      if (bar && bar.parentNode) bar.parentNode.removeChild(bar);
+      if (bar) bar = 'closed';                  /* stays truthy: never again in this page view */
+      if (padWas !== null) { document.body.style.paddingBottom = padWas; padWas = null; }
+      if (restoreFocus && hadFocus) {
+        var f = lastFocus && lastFocus !== document.body && document.contains(lastFocus) ? lastFocus : next;
+        try { f.focus({ preventScroll: true }); } catch (e) {}
+      }
+    }
+    if (window.top === window) {
+      window.addEventListener('scroll', onScroll, { passive: true });
+      ['keydown', 'pointerdown', 'touchstart', 'input'].forEach(function (t) { document.addEventListener(t, onActivity, { passive: true, capture: true }); });
+      next.addEventListener('click', function () { clearTimeout(timer); armed = false; seen = false; });
+    }
+    return {
+      update: function () { if (bar && bar !== 'closed' && msg) update(); if (!bar && st.step === 1 && st.amount > 0 && !armed) arm(); if (!(st.amount > 0)) { armed = false; clearTimeout(timer); } },
+      close: function () { if (bar && bar !== 'closed') close(false); clearTimeout(timer); armed = false; },
+      el: function () { return bar && bar !== 'closed' ? bar : null; },
+      show: function () { if (allowed()) show('test'); }
+    };
   }
 
   /* Donor came back from Cash App or a bank window. Stripe adds ?payment_intent=...; ChabadOne may
@@ -781,6 +1017,7 @@
       setTimeout(function () {
         if (b.action === 'start') return res({ ok: true, clientSecret: 'pi_demo_secret', id: 'pi_3Q' + rid().slice(0, 12).toUpperCase(), mode: b.mode, live: false });
         if (b.action === 'finish') return res({ ok: true, status: 'succeeded', receipt: true, method: 'Visa ending 4242' });
+        if (b.action === 'remindLater') return res({ ok: true });
         res({ ok: false });
       }, 400);
     });

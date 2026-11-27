@@ -59,9 +59,15 @@ function page(url, opts) {
   w.console.error = function () { T.errors.push([].join.call(arguments, ' ')); };
   w.addEventListener('error', function (e) { T.errors.push(e.message); });
   w.HTMLElement.prototype.scrollIntoView = function () {};
+  if (opts.pv) w.CFDONATE_PREVIEW = opts.pv;
   w.fetch = function (u, o) {
     var b = JSON.parse(o.body);
     T.posts.push({ url: u, body: b });
+    if (b.action === 'remindLater') {
+      if (opts.remind === 'network') return Promise.reject(new TypeError('Failed to fetch'));
+      var rr = opts.remind === 'live' ? { ok: false, error: 'Unknown request.' } : opts.remind === 'bademail' ? { ok: false, error: 'Please enter a valid email address.' } : { ok: true };
+      return Promise.resolve({ json: function () { return Promise.resolve(rr); } });
+    }
     if (b.action === 'start') return Promise.resolve({ json: function () { return Promise.resolve({ ok: true, id: 'pi_T1', clientSecret: 'pi_T1_secret_x', mode: b.mode }); } });
     return Promise.resolve({ json: function () { return Promise.resolve({ ok: true, status: 'succeeded', receipt: true, method: 'Visa ending 4242' }); } });
   };
@@ -200,7 +206,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26e$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26g$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -240,8 +246,7 @@ function headerOnly(url) {
   ok(/\.dn-fund\.dn-feat\{grid-column:1\/-1;[^}]*border:2px solid #e9b949/.test(css), 'featured choice: its own full-width row with a gold border');
   ok(/\.dn-pgrid\{display:grid;grid-template-columns:repeat\(4,minmax\(0,1fr\)\);grid-auto-rows:1fr/.test(css) && /max-width:640px\)\{[^@]*\.dn-pgrid\{grid-template-columns:repeat\(2,minmax\(0,1fr\)\)\}/.test(css), 'programs: equal boxes, 4 across, 2 across up to 640px (phones)');
   ok(/\.dn-fund\{display:flex;align-items:center;justify-content:center;text-align:center;min-height:54px/.test(css), 'choices: same height, text centered');
-  ok(/\.dn-ded\{display:grid;grid-template-columns:repeat\(3,minmax\(0,1fr\)\)/.test(css), 'dedication choices: 3 equal boxes');
-  ok(/max-width:480px\)\{[^@]*\.dn-ded \.dn-fund\{white-space:nowrap/.test(css), 'phones: each dedication label stays on one line');
+  ok(!a.d.querySelector('#dn26 .dn-ded') && !/No dedication/.test(a.d.getElementById('dn26').textContent), 'old 3 dedication boxes are gone');
   ok(a.d.querySelectorAll('#dn26 .dn-fund.dn-wide').length === 1 && a.d.querySelector('#dn26 .dn-fund.dn-wide').getAttribute('data-f') === 'General', 'Where it’s needed most has its own row');
   ok(/max-width:480px\)\{[^@]*\.dn-hd\{flex-direction:column;text-align:center/.test(css), 'phones: header logo centered above the heading');
   ok(chosen(a) === 'General', 'default choice on Donate 2.0: Where it’s needed most (General)');
@@ -375,6 +380,232 @@ function headerOnly(url) {
   var m2b = startOf(m2).body;
   ok(m2b.fund === 'Youth Programs' && m2b.note === '' && m2b.tag === 'matching-2026', 'another fund picked on the matching page still carries tag matching-2026');
 
+
+  console.log('dedication: one checkbox');
+  var dd = await page(DONATE);
+  var chk = dd.d.getElementById('dn26-dedchk'), dbox = dd.d.getElementById('dn26-dedbox');
+  var chkLab = chk && chk.closest('label');
+  ok(chk && chk.type === 'checkbox' && !chk.checked && chkLab && chkLab.getAttribute('for') === 'dn26-dedchk' && chkLab.textContent.replace(/\u00a0/g, ' ') === 'Dedicate this gift in honor or in memory',
+    'a real <input type=checkbox>, unchecked, with its label "Dedicate this gift in honor or in memory"');
+  ok(dbox.hidden && chk.getAttribute('aria-expanded') === 'false' && chk.getAttribute('aria-controls') === 'dn26-dedbox', 'unchecked: toggle and name hidden (aria-expanded=false, aria-controls)');
+  ok(dd.d.getElementById('dn26-dedbox').compareDocumentPosition(dd.d.querySelector('#dn26 .dn-funds')) & 2, 'checkbox comes after "Apply my gift to"');
+  chk.click();
+  var dSegBtns = [].slice.call(dbox.querySelectorAll('.dn-seg button'));
+  ok(chk.checked && !dbox.hidden && chk.getAttribute('aria-expanded') === 'true', 'checking it reveals the box (aria-expanded=true)');
+  ok(dSegBtns.map(function (b) { return b.textContent; }).join('|') === 'In honor|In memory' && dSegBtns.every(function (b) { return b.type === 'button'; }), 'In honor / In memory: two buttons in one segmented control');
+  ok(/\bon\b/.test(dSegBtns[0].className) && dSegBtns[0].getAttribute('aria-pressed') === 'true' && dSegBtns[1].getAttribute('aria-pressed') === 'false', 'In honor is the default (aria-pressed)');
+  ok(dd.d.getElementById('dn26-dedname') && dbox.contains(dd.d.getElementById('dn26-dedname')), 'the name field is inside the box');
+  var dLab = dd.d.querySelector('#dn26 .dn-dedname span');
+  ok(dLab.textContent === 'In honor of *' && dd.d.querySelector('#dn26 .dn-dedname').getAttribute('for') === 'dn26-dedname', 'name label "In honor of *" tied to the field');
+  dSegBtns[1].click();
+  ok(dLab.textContent === 'In memory of *' && dSegBtns[1].getAttribute('aria-pressed') === 'true' && dSegBtns[0].getAttribute('aria-pressed') === 'false', 'In memory selected: label "In memory of *"');
+  var dcss = dd.d.getElementById('dn26-css').textContent;
+  ok(/\.dn-seg\{display:flex/.test(dcss) && /\.dn-seg button\{flex:1/.test(dcss), 'segments are equal (flex:1 each)');
+  btn(dd, '$36').click();
+  btn(dd, 'Continue').click();
+  ok(/name for your dedication/.test(dd.d.querySelector('#dn26 .dn-err').textContent) && dd.d.querySelector('#dn26 .dn-pane.on') === dd.d.querySelector('#dn26 .dn-pane'), 'checked with no name: "Please enter the name for your dedication." and stays on step 1');
+  chk.click();
+  ok(!chk.checked && dbox.hidden, 'unchecking hides the box again');
+  chk.click();
+  ok(dSegBtns[1].getAttribute('aria-pressed') === 'true', 'checking again remembers In memory');
+  chk.click();
+  /* keyboard: Space on the focused checkbox (jsdom: the label/checkbox toggles via click) */
+  chk.focus();
+  ok(dd.d.activeElement === chk, 'checkbox can take keyboard focus');
+
+  async function giveDed(kind, name, url, o) {
+    var p = await page(url || DONATE, o);
+    var c = p.d.getElementById('dn26-dedchk');
+    if (kind) {
+      c.click();
+      if (kind === 'memory') [].filter.call(p.d.querySelectorAll('#dn26-dedbox .dn-seg button'), function (b) { return b.textContent === 'In memory'; })[0].click();
+      p.d.getElementById('dn26-dedname').value = name;
+      p.d.getElementById('dn26-dedname').dispatchEvent(new p.w.Event('input', { bubbles: true }));
+    }
+    await give(p);
+    return p;
+  }
+  var NONE = await giveDed('', ''), HON = await giveDed('honor', 'Sarah Levi'), MEM = await giveDed('memory', 'Malka bas Yosef');
+  var bN = startOf(NONE).body, bH = startOf(HON).body, bM = startOf(MEM).body;
+  ok(bN.ded === '' && bN.dedname === '', 'none: Apps Script gets ded "" and dedname "" (as before)');
+  ok(bH.ded === 'honor' && bH.dedname === 'Sarah Levi', 'honor: ded "honor", dedname "Sarah Levi"');
+  ok(bM.ded === 'memory' && bM.dedname === 'Malka bas Yosef', 'memory: ded "memory", dedname "Malka bas Yosef"');
+  ok(Object.keys(bH).sort().join(',') === Object.keys(bN).sort().join(','), 'same request fields as before (' + Object.keys(bH).sort().join(',') + ')');
+  ok(NONE.T.frames[0].sent.input_9 === '' && HON.T.frames[0].sent.input_9 === 'In honor of Sarah Levi' && MEM.T.frames[0].sent.input_9 === 'In memory of Malka bas Yosef',
+    'ChabadOne input_9: "", "In honor of Sarah Levi", "In memory of Malka bas Yosef"');
+  ok(/in memory of Malka bas Yosef/.test(MEM.d.querySelector('#dn26 .dn-done').textContent), 'thank-you mentions the dedication');
+  var UNC = await page(DONATE);
+  UNC.d.getElementById('dn26-dedchk').click();
+  UNC.d.getElementById('dn26-dedname').value = 'Typed then unchecked';
+  UNC.d.getElementById('dn26-dedchk').click();
+  await give(UNC);
+  ok(startOf(UNC).body.ded === '' && startOf(UNC).body.dedname === '' && UNC.T.frames[0].sent.input_9 === '', 'typed a name, then unchecked: no dedication is sent');
+  var SOC = await giveDed('honor', 'Dovid', DONATE + '?designation=social', { fundSelect: true });
+  ok(SOC.T.frames[0].sent.input_9 === 'Fund: Social Services. In honor of Dovid', 'fund list without the fund: "Fund: Social Services. In honor of Dovid" (unchanged rule)');
+
+  console.log('monthly: yearly total');
+  var mo = await page(DONATE);
+  var yl = mo.d.getElementById('dn26-yearly');
+  function ylt() { return yl.textContent.replace(/\u00a0/g, ' '); }
+  ok(yl && yl.textContent === '' && yl.getAttribute('aria-live') === 'polite', 'one time (default): no yearly line; the line is aria-live polite');
+  ok(btn(mo, 'One time').getAttribute('aria-pressed') === 'true', 'One time is still the default');
+  btn(mo, '$36').click();
+  ok(yl.textContent === '', 'one time with $36: still no yearly line');
+  btn(mo, 'Monthly').click();
+  ok(ylt() === '$36/month = $432 a year of impact', 'Monthly + $36: "' + yl.textContent + '"');
+  ok(yl.compareDocumentPosition(mo.d.querySelector('#dn26 .dn-chips')) & 2, 'the line sits under the amounts');
+  btn(mo, '$500').click();
+  ok(ylt() === '$500/month = $6,000 a year of impact', '$500: "' + yl.textContent + '"');
+  var oth = mo.d.getElementById('dn26-other');
+  oth.value = '18.50'; oth.dispatchEvent(new mo.w.Event('input', { bubbles: true }));
+  ok(ylt() === '$18.50/month = $222 a year of impact', 'Other 18.50: "' + yl.textContent + '"');
+  oth.value = '7.33'; oth.dispatchEvent(new mo.w.Event('input', { bubbles: true }));
+  ok(ylt() === '$7.33/month = $87.96 a year of impact', 'Other 7.33: "' + yl.textContent + '"');
+  oth.value = '1250'; oth.dispatchEvent(new mo.w.Event('input', { bubbles: true }));
+  ok(ylt() === '$1,250/month = $15,000 a year of impact', 'Other 1250: "' + yl.textContent + '"');
+  oth.value = ''; oth.dispatchEvent(new mo.w.Event('input', { bubbles: true }));
+  ok(yl.textContent === '', 'Other cleared: line hidden');
+  btn(mo, '$100').click(); btn(mo, 'One time').click();
+  ok(yl.textContent === '', 'back to One time: line hidden');
+  ok(!/[–—]/.test('$36/month = $432 a year of impact'), 'no dashes in the wording');
+
+  console.log('"Complete your gift" bar');
+  var IDLE = 120;
+  function inViewStub(p, visible) { var n = btn(p, 'Continue'); n.getBoundingClientRect = function () { return visible() ? { top: 500, bottom: 548, left: 0, right: 100, width: 100, height: 48 } : { top: -300, bottom: -252, left: 0, right: 100, width: 100, height: 48 }; }; }
+  function bar(p) { return p.d.getElementById('dn26-nudge'); }
+  function scroll(p) { p.w.dispatchEvent(new p.w.Event('scroll')); }
+  var n0 = await page(DONATE, { pv: { nudgeIdleMs: IDLE } });
+  await wait(IDLE * 2);
+  ok(!bar(n0), 'no amount chosen: no bar after the idle time');
+  scroll(n0);
+  ok(!bar(n0), 'no amount chosen: no bar on scroll');
+
+  var n1 = await page(DONATE, { pv: { nudgeIdleMs: IDLE } });
+  btn(n1, '$36').click();
+  await wait(IDLE / 2);
+  ok(!bar(n1), 'amount chosen: not yet before the idle time');
+  await wait(IDLE + 40);
+  var b1 = bar(n1);
+  ok(b1 && b1.getAttribute('data-why') === 'idle', 'idle after choosing an amount: bar appears');
+  ok(b1 && b1.getAttribute('role') === 'region' && b1.getAttribute('aria-live') === 'polite' && b1.getAttribute('aria-label') === 'Complete your gift', 'role=region, aria-live=polite, aria-label');
+  ok(b1 && b1.querySelector('.dn-nmsg').textContent === 'Complete your $36 gift to make a difference', 'text: "' + (b1 && b1.querySelector('.dn-nmsg').textContent) + '"');
+  btn(n1, 'Monthly').click();
+  ok(b1.querySelector('.dn-nmsg').textContent === 'Complete your $36/month gift to make a difference', 'monthly: "' + b1.querySelector('.dn-nmsg').textContent + '"');
+  ok(n1.d.body.style.paddingBottom !== '' && n1.w.sessionStorage.getItem('dn26-nudge') === '1', 'page gets bottom padding while shown (Continue never under the bar); marked shown for the session');
+  var bcss = n1.d.getElementById('dn26-css').textContent;
+  ok(/#dn26-nudge\{position:fixed;left:0;right:0;bottom:0;[^}]*env\(safe-area-inset-bottom/.test(bcss), 'fixed to the bottom, with the safe-area inset');
+  var yes = [].filter.call(b1.querySelectorAll('button'), function (b) { return b.textContent === 'I’m ready'; })[0];
+  ok(yes && [].some.call(b1.querySelectorAll('button'), function (b) { return b.textContent === 'Not today'; }) && b1.querySelector('button[aria-label="Close"]'), 'buttons: I’m ready, Not today, and Close (×)');
+  var scrolled = false; btn(n1, 'Continue').scrollIntoView = function () { scrolled = true; };
+  yes.click();
+  ok(!bar(n1) && n1.d.activeElement === btn(n1, 'Continue') && scrolled, 'I’m ready: bar gone, Continue scrolled to and focused');
+  ok(n1.d.body.style.paddingBottom === '', 'padding removed when the bar goes');
+  await wait(IDLE * 2);
+  ok(!bar(n1), 'does not come back on the same page');
+
+  var n2 = await page(DONATE, { pv: { nudgeIdleMs: IDLE } });
+  ok(n2.w.sessionStorage.getItem('dn26-nudge') === null, '(fresh session)');
+  n2.w.sessionStorage.setItem('dn26-nudge', '1');
+  btn(n2, '$50').click();
+  await wait(IDLE * 2);
+  ok(!bar(n2), 'once per session: already shown this session, so not again');
+
+  var vis = true, n3 = await page(DONATE, { pv: { nudgeIdleMs: 100000 } });
+  inViewStub(n3, function () { return vis; });
+  btn(n3, '$100').click();
+  scroll(n3);
+  ok(!bar(n3), 'scroll with Continue still in view: no bar');
+  vis = false; scroll(n3);
+  var b3 = bar(n3);
+  ok(b3 && b3.getAttribute('data-why') === 'scroll' && /\$100 gift/.test(b3.textContent), 'Continue scrolled out of view: bar appears ($100)');
+  var no3 = [].filter.call(b3.querySelectorAll('button'), function (b) { return b.textContent === 'Not today'; })[0];
+  no3.click();
+  var b3b = bar(n3);
+  ok(b3b && b3b.querySelector('h4').textContent === 'Maybe next time?' && b3b.getAttribute('aria-label') === 'Maybe next time?', 'Not today: panel "Maybe next time?"');
+  var em3 = n3.d.getElementById('dn26-remind-email');
+  ok(em3 && em3.type === 'email' && n3.d.querySelector('label[for="dn26-remind-email"]') && /Remind me later/.test(b3b.textContent) && /No, thanks/.test(b3b.textContent), 'email field with a label, Remind me later, No, thanks');
+  await wait(60);
+  ok(n3.d.activeElement === em3, 'focus moves to the email field');
+  ok(!/[–—]/.test(b3b.textContent), 'no dashes in the panel text');
+  [].filter.call(b3b.querySelectorAll('button'), function (b) { return b.textContent === 'Remind me later'; })[0].click();
+  ok(/check your email/.test(b3b.querySelector('.dn-nerr').textContent) && !n3.T.posts.some(function (x) { return x.body.action === 'remindLater'; }), 'empty email: "Please check your email address.", nothing sent');
+  btn(n3, '$36').click(); btn(n3, 'Monthly').click();
+  em3.value = 'friend@example.com';
+  [].filter.call(b3b.querySelectorAll('button'), function (b) { return b.textContent === 'Remind me later'; })[0].click();
+  await wait(30);
+  var rq = n3.T.posts.filter(function (x) { return x.body.action === 'remindLater'; });
+  var rb = rq[0] && rq[0].body;
+  ok(rq.length === 1 && rq[0].url === 'https://script.google.com/macros/s/TESTDEPLOY/exec', 'one remindLater request to the same Apps Script ENDPOINT');
+  ok(rb && rb.site === 'jr' && rb.email === 'friend@example.com' && rb.amount === 36 && rb.monthly === true && rb.fund === 'General' && /7643000/.test(rb.page) && rb.website === '',
+    'request body: ' + JSON.stringify(rb));
+  ok(Object.keys(rb || {}).sort().join(',') === 'action,amount,email,fund,monthly,page,site,website', 'only these fields: action, site, email, amount, monthly, fund, page, website');
+  ok(bar(n3) && bar(n3).textContent.indexOf('Thank you. We’ll be in touch.') > -1, 'success: "Thank you. We’ll be in touch."');
+  bar(n3).querySelector('button[aria-label="Close"]').click();
+  ok(!bar(n3) && n3.d.body.style.paddingBottom === '', 'Close removes it and the padding');
+
+  async function remindWith(mode) {
+    var p = await page(DONATE, { pv: { nudgeIdleMs: 60 }, remind: mode });
+    btn(p, '$18').click();
+    await wait(140);
+    [].filter.call(bar(p).querySelectorAll('button'), function (b) { return b.textContent === 'Not today'; })[0].click();
+    p.d.getElementById('dn26-remind-email').value = 'x@example.com';
+    [].filter.call(bar(p).querySelectorAll('button'), function (b) { return b.textContent === 'Remind me later'; })[0].click();
+    await wait(30);
+    return p;
+  }
+  var lv = await remindWith('live');
+  var lvb = bar(lv);
+  ok(lvb && /couldn’t save that just now/.test(lvb.querySelector('.dn-nerr').textContent) && !/Unknown request/.test(lvb.textContent), 'live Apps Script (unknown action, ok:false "Unknown request."): gentle message, no raw error');
+  var lvGo = [].filter.call(lvb.querySelectorAll('button'), function (b) { return /Remind me later/.test(b.textContent); })[0];
+  ok(lvGo && !lvGo.disabled && lv.d.getElementById('dn26-remind-email').value === 'x@example.com' && lv.T.errors.length === 0, 'the panel still works after it (button enabled, email kept, no script errors)');
+  var nw = await remindWith('network');
+  ok(/couldn’t save that just now/.test(bar(nw).querySelector('.dn-nerr').textContent) && nw.T.errors.length === 0, 'network error: the same gentle message');
+  var be = await remindWith('bademail');
+  ok(bar(be).querySelector('.dn-nerr').textContent === 'Please enter a valid email address.', 'server says the email is not valid: shows that');
+  ok(!/[–—]/.test(bar(lv).textContent), 'no dashes in the error text');
+
+  var nt = await page(DONATE, { pv: { nudgeIdleMs: 60 } });
+  btn(nt, '$36').click();
+  await wait(140);
+  [].filter.call(bar(nt).querySelectorAll('button'), function (b) { return b.textContent === 'Not today'; })[0].click();
+  [].filter.call(bar(nt).querySelectorAll('button'), function (b) { return b.textContent === 'No, thanks'; })[0].click();
+  ok(!bar(nt) && !nt.T.posts.some(function (x) { return x.body.action === 'remindLater'; }), 'No, thanks: closes, nothing sent');
+  var ne = await page(DONATE, { pv: { nudgeIdleMs: 60 } });
+  btn(ne, '$36').click();
+  await wait(140);
+  ne.d.dispatchEvent(new ne.w.KeyboardEvent('keydown', { key: 'Escape', bubbles: true }));
+  ok(!bar(ne), 'Escape closes the bar');
+
+  var s2b = await page(DONATE, { pv: { nudgeIdleMs: IDLE } });
+  btn(s2b, '$36').click();
+  btn(s2b, 'Continue').click();
+  await wait(IDLE * 2);
+  ok(!bar(s2b), 'pressed Continue (step 2): no bar');
+  var sh2 = await page(DONATE, { pv: { nudgeIdleMs: 100000 } });
+  inViewStub(sh2, function () { return false; });
+  btn(sh2, '$36').click(); btn(sh2, 'Continue').click();
+  scroll(sh2);
+  ok(!bar(sh2), 'step 2: scrolling never shows it');
+  var bk = await page(DONATE, { pv: { nudgeIdleMs: 60 } });
+  btn(bk, '$36').click();
+  await wait(140);
+  ok(bar(bk), '(bar showing on step 1)');
+  btn(bk, 'Continue').click();
+  ok(!bar(bk) && bk.d.body.style.paddingBottom === '', 'moving to step 2 takes the bar away');
+  var gv = await page(DONATE, { pv: { nudgeIdleMs: 60 } });
+  await give(gv);
+  ok(gv.w.sessionStorage.getItem('dn26-gave') === '1', 'a gift marks the session (dn26-gave)');
+  gv.UI = gv.w.CFDonate.ui; gv.UI.show(1);
+  btn(gv, '$36').click();
+  await wait(140);
+  ok(!bar(gv), 'after a gift: never shown');
+  var gv2 = await page(DONATE, { pv: { nudgeIdleMs: 60 } });
+  gv2.w.sessionStorage.setItem('dn26-gave', '1');
+  btn(gv2, '$36').click();
+  await wait(140);
+  ok(!bar(gv2), 'gift made earlier this session: not shown');
+  ok(/if \(window\.top !== window\) return false;/.test(SRC) && /window\.top !== window && \/cf-sync\/\.test\(window\.location\.hash\)\) \{ uncover\(\); return; \}/.test(SRC), 'never inside a frame: the #cf-sync copy exits before drawing, and the bar checks window.top');
+
   console.log('other pages');
   ok(!(await page('https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join.htm')).d.getElementById('dn26'), 'not shown on other pages');
   ok(!(await page(DONATE.replace('articlecco_cdo', 'ArticleCcoResponse'))).d.getElementById('dn26'), 'not shown on ChabadOne’s response page');
@@ -382,7 +613,7 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26e'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-26g'/.test(SRC), 'donate-2026.js VERSION bumped');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 
