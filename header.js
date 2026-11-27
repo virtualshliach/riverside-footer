@@ -19,6 +19,11 @@
   /* ChabadOne short addresses on jewishriverside.com that show a page without its id in the address.
      Also matched with /designation/x, /fund/x or /payment_intent/... after them (ChabadOne turns ?a=b into /a/b). */
   var PATHS = { '/donation': '7643000' };
+  /* Old links: /donate as Donate 2.0, only once /donate is pointed at /donation (REDIRECT-PLAN.md). Same flag in donate-2026.js and footer.js.
+     Here it only puts up the white cover. Never turn it on while /donate still shows the old form page, or that page
+     sits covered until the 8-second safety drops the cover. */
+  var REDIRECT_READY = false;
+  if (REDIRECT_READY) PATHS['/donate'] = '7643000';
 
   /* The bare chanukahfestival.org homepage is forwarded by the domain settings to jewishriverside.com's
      "Page Not Found" page (tagged utm_campaign=chanukahfestival.org). Until that forwarding is fixed at

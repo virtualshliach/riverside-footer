@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-27g';
+  var V = '2026-11-27h';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -46,6 +46,10 @@
   /* ChabadOne short addresses on jewishriverside.com that show a page without its id in the address
      (same list as header.js). Also matched with /designation/x, /fund/x or /payment_intent/... after them. */
   var PATHS = { '/donation': '7643000' };
+  /* Old links: /donate as Donate 2.0, only once /donate is pointed at /donation (REDIRECT-PLAN.md). Same flag in donate-2026.js and header.js.
+     The page's own id (Co.ArticleId) still comes first, so the old form page is never taken over. */
+  var REDIRECT_READY = false;
+  if (REDIRECT_READY) PATHS['/donate'] = '7643000';
 
   /* Google Analytics 4 for the pages listed above. ON
      (GA4 property "Chanukah Festival", set up Nov 18 2026). Project files send

@@ -40,13 +40,38 @@
    "Make it monthly": after a one-time gift, the thank-you offers once to start the same gift monthly. Yes opens the
    payment step again, prefilled and labeled "every month, starting today"; nothing is charged until the donor confirms.
 
+   Nov 27, 2026 (Donate 2.0 switch fixes, needs Apps Script stripe-backend 2026-11-27a for the fee; the rest also
+   works with the older script):
+   - Your details: billing address (street, city, state, ZIP, country; US first), "Add a note (optional)" (250), and
+     "Send me the weekly newsletter" (unchecked). The address also goes to Stripe as the billing address.
+   - Payment: "Add $X.XX to cover processing fees" (unchecked; card 2.2% + $0.30, bank 0.8% up to $5; monthly uses the card
+     rate and adds it to each month). Shown only when the Apps Script says it supports the fee (start answers
+     features: ['fee', ...]). One-time: the fee is set on the payment at Give (action 'fee'); monthly: checking it makes
+     the monthly gift again with the fee. "Prefer PayPal? Give with PayPal" opens the old ChabadOne form (4968536).
+   - CO_SYNC (default true): the hidden ChabadOne copy of each gift. Turn it off once the CRM gets gifts from the
+     Apps Script (Plan A) or the office routine (Plan B), or gifts are entered twice.
+   - REDIRECT_READY (default false): when true, jewishriverside.com/donate (and /donate/designation/x) count as
+     Donate 2.0 in PATHS, here and in header.js and footer.js. Only after /donate is pointed at /donation.
+
+   Nov 27, 2026, round 2 (2026-11-27c; the Kiddush fields need Apps Script stripe-backend 2026-11-27b, older scripts get
+   them in the note):
+   - "Sponsor a Kiddush" replaces the "Shabbat & Holidays" chip (same slot). Old links: kiddush, sponsor-a-kiddush and
+     shabbat open Sponsor a Kiddush; holidays and shabbat-holidays (also "Shabbat & Holidays") open General.
+   - Picking it shows a panel under the funds: the tiers in CFG.KIDDUSH.TIERS ("Kiddush Co-Sponsor · $360",
+     "Kiddush Sponsor · $500"; a tier sets the amount, another amount un-highlights it) and "Which Shabbat / in honor of"
+     (optional, 120). Sent as kiddush_tier ('' for another amount) and kiddush_note, and in the note and the ChabadOne
+     copy as "Kiddush Sponsor ($500). Shabbat / in honor of: ...". Another fund hides the panel and sends neither.
+
+   Nov 27, 2026, round 3 (2026-11-27e, same change as main 2026-11-27d): "across Riverside and beyond" (was "far
+   beyond"); under the site header logo the card has no second logo; headline 32px (28 phones, 26 small phones).
+
    No flash of the old page: header.js hides these pages (#dn26-cover) before they are drawn.
    This file removes every #dn26-cover once its form is on the page, or as soon as it knows it
    can't draw it. header.js and footer.js each also drop the cover after 8 seconds no matter what. */
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-27d';
+  var VERSION = 'donate-2026 2026-11-27h';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -61,6 +86,9 @@
   };
   /* ChabadOne short addresses on jewishriverside.com with no page id in them. Same list as header.js and footer.js. */
   var PATHS = { '/donation': '7643000' };
+  /* Old links: /donate as Donate 2.0, only once /donate is pointed at /donation (REDIRECT-PLAN.md). Same flag in header.js and footer.js. */
+  var REDIRECT_READY = false;
+  if (REDIRECT_READY) PATHS['/donate'] = '7643000';
 
   /* Remove the cover that header.js (a <style>) and footer.js (a <div>) put up. Both use the same id. */
   function uncover() {
@@ -101,8 +129,11 @@
       ['Social Services', 'Social Services'],
       ['Chanukah Festival', 'Chanukah Festival'],
       ['Riverside Mikvah', 'Riverside Mikvah'],
-      ['Shabbat & Holidays', 'Shabbat & Holidays']
+      ['Sponsor a Kiddush', 'Sponsor a Kiddush']
     ],
+    /* Sponsor a Kiddush (Nov 27, 2026): the tiers offered under the chip, [name, dollars], from the live Sponsor-a-Kiddush
+       page (ChabadOne form 3377827). Keep the same list in the Apps Script (CFG.GEN.KIDDUSH_TIERS). */
+    KIDDUSH: { FUND: 'Sponsor a Kiddush', TIERS: [['Kiddush Co-Sponsor', 360], ['Kiddush Sponsor', 500]], NOTE_MAX: 120 },
     /* the first two are always shown; the rest are the programs, behind "Choose a specific program" */
     TOP_FUNDS: 2,
     /* The funds the LIVE Apps Script knows (its GEN.FUNDS, Nov 26 2026). Any other fund is recorded there as
@@ -113,7 +144,9 @@
     FUND_ALIAS: { matching: MATCH, match: MATCH, 'annual-matching': MATCH, general: 'General', college: 'College Programs',
       youth: 'Youth Programs', social: 'Social Services', 'social-services': 'Social Services', visitation: 'Social Services',
       chanukah: 'Chanukah Festival', festival: 'Chanukah Festival', mikvah: 'Riverside Mikvah', 'riverside-mikvah': 'Riverside Mikvah',
-      shabbat: 'Shabbat & Holidays', holidays: 'Shabbat & Holidays', 'shabbat-holidays': 'Shabbat & Holidays' },
+      kiddush: 'Sponsor a Kiddush', 'sponsor-a-kiddush': 'Sponsor a Kiddush', shabbat: 'Sponsor a Kiddush',
+      /* the old "Shabbat & Holidays" fund (Nov 27, 2026: replaced by Sponsor a Kiddush): General */
+      holidays: 'General', 'shabbat-holidays': 'General' },
     MIN: 5,
     NUDGE_IDLE_MS: 20000,          /* "Complete your gift" bar: idle time on step 1 after choosing an amount */
     NUDGE_KEY: 'dn26-nudge',       /* sessionStorage: the bar was shown this session */
@@ -121,6 +154,16 @@
     MM_KEY: 'dn26-mm',             /* sessionStorage: the "make it monthly" card was shown this session */
     MAX: 25000,
     BANK_DAYS: '4 business days',
+    /* the hidden ChabadOne copy of each gift (sendToChabadOne). Keep true until the CRM gets gifts another way (Plan A or B), then false. */
+    CO_SYNC: true,
+    /* Cover the fee: what the checkbox offers (the Apps Script accepts up to 5% + $1) */
+    FEE: { CARD_PCT: 2.2, CARD_FIXED: 0.30, BANK_PCT: 0.8, BANK_CAP: 5 },
+    /* "Prefer PayPal?": the old ChabadOne donate form (has PayPal, syncs to the CRM, sends the CRM receipt). It takes no amount or fund in the link. */
+    PAYPAL_URL: 'https://www.jewishriverside.com/4968536',
+    NOTE_MAX: 250,
+    COUNTRIES: [['US', 'United States'], ['CA', 'Canada'], ['IL', 'Israel'], ['GB', 'United Kingdom'], ['AU', 'Australia'], ['MX', 'Mexico'],
+      ['FR', 'France'], ['DE', 'Germany'], ['BE', 'Belgium'], ['NL', 'Netherlands'], ['CH', 'Switzerland'], ['AR', 'Argentina'], ['BR', 'Brazil'],
+      ['ZA', 'South Africa'], ['RU', 'Russia'], ['UA', 'Ukraine'], ['IT', 'Italy'], ['ES', 'Spain'], ['NZ', 'New Zealand'], ['IN', 'India']],
     /* ChabadOne form fields on page 7643000 (read from the live page, Nov 25 2026) */
     CO: { first: 'input_1', last: 'input_3', email: 'input_4', phone: 'input_5', amount: 'input_6', frequency: 'input_7',
       fund: 'input_8', dedication: 'input_9', method: 'input_10', stripeId: 'input_11', status: 'input_12', submit: 'input_2' }
@@ -251,6 +294,21 @@
       R + '.dn-dedbox[hidden]{display:none}',
       R + '.dn-dedbox .dn-seg{margin-bottom:12px;background:#e4edf0}',
       R + '.dn-seg button:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:1px}',
+      /* Sponsor a Kiddush panel (under the funds, only when that fund is picked) */
+      R + '.dn-kidbox{margin-top:14px;border:1.5px solid ' + NAVY + ';border-radius:12px;padding:14px 16px 16px;background:#f6fafb;display:flex;flex-direction:column;gap:12px}',
+      R + '.dn-kidbox[hidden]{display:none}',
+      R + '.dn-kidbox h4{margin:0;font-size:14.7px;font-weight:700;color:' + NAVY + '}',
+      R + '.dn-tiers{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}',
+      R + '.dn-tier{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;min-height:62px;padding:8px 10px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:600;font-size:14.7px;line-height:1.25;text-wrap:balance}',
+      R + '.dn-tier b{font-size:16px;font-weight:700;margin-top:2px}',
+      R + '.dn-tier:hover{border-color:' + TEAL + '}',
+      R + '.dn-tier.on{border-color:' + NAVY + ';background:' + NAVY + ';color:#fff}',
+      R + '.dn-tier:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:2px}',
+      R + '.dn-vh{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}',
+      /* phones: one tier per row, "Kiddush Co-Sponsor · $360" on one line */
+      '@media (max-width:480px){' + R + '.dn-tiers{grid-template-columns:1fr}' + R + '.dn-tier{flex-direction:row;min-height:50px;flex-wrap:wrap}' +
+        R + '.dn-tier b{margin-top:0}' + R + '.dn-tier .dn-vh{position:static;width:auto;height:auto;overflow:visible;clip:auto;padding:0 .4em}}',
+      R + '.dn-kidcount{align-self:flex-end;font-size:12.5px;color:#6b7f86;margin-top:-6px;font-variant-numeric:tabular-nums}',
       /* monthly: the yearly total under the amounts */
       R + '.dn-yearly{margin-top:12px;padding:10px 14px;border-radius:10px;background:#fff8e6;border:1px solid #f1d58f;color:' + NAVY + ';font-weight:700;font-size:15.2px;text-align:center;text-wrap:balance}',
       R + '.dn-yearly:empty{display:none}',
@@ -332,6 +390,25 @@
       '@media (max-width:480px){' + R + '.dn-hd.dn-hxA{flex-direction:column;text-align:left;background:#fbf8f1}' + R + '.dn-hd.dn-hxA span{max-width:none;margin:0;font-size:15.2px}}',
       /* small phones (360): headline on two lines, not three */
       '@media (max-width:379px){' + R + '.dn-hd.dn-hxA h2{font-size:26px}}',
+      /* Nov 27, 2026: billing address, note, newsletter opt-in, cover the fee, PayPal link */
+      R + 'select.dn-in{appearance:auto;-webkit-appearance:menulist;padding:11px 10px;cursor:pointer}',
+      R + '.dn-in.bad{border-color:#c0392b;box-shadow:0 0 0 3px rgba(192,57,43,.14)}',
+      R + 'h4.dn-sub{margin:20px 0 10px;font-size:13.6px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#4a5d64}',
+      R + '.dn-fld.third{flex:1 1 calc(33.33% - 8px)}',
+      R + '.dn-notecount{align-self:flex-end;font-size:12.5px;color:#6b7f86;margin-top:-6px;font-variant-numeric:tabular-nums}',
+      R + '.dn-opt{display:flex;align-items:center;gap:10px;margin-top:16px;cursor:pointer;font-weight:600;color:' + NAVY + ';font-size:15.2px;line-height:1.35}',
+      R + '.dn-opt input{flex:none;width:20px;height:20px;margin:0;accent-color:' + NAVY + ';cursor:pointer}',
+      R + '.dn-opt input:focus-visible,' + R + '.dn-fee input:focus-visible{outline:3px solid ' + TEAL + ';outline-offset:2px}',
+      R + '.dn-fee{display:flex;align-items:flex-start;gap:12px;margin:0 0 14px;padding:12px 14px;border:1.5px solid #d5e2e6;border-radius:12px;background:#fff;cursor:pointer;color:' + NAVY + ';font-weight:600;font-size:15.2px;line-height:1.35}',
+      R + '.dn-fee[hidden]{display:none}',
+      R + '.dn-fee:hover{border-color:' + TEAL + '}',
+      R + '.dn-fee.on{border-color:' + GOLD + ';background:#fff8e6}',
+      R + '.dn-fee input{flex:none;width:20px;height:20px;margin:1px 0 0;accent-color:' + NAVY + ';cursor:pointer}',
+      R + '.dn-fee small{display:block;font-size:13.1px;font-weight:400;color:#5b6e75;margin-top:2px;text-wrap:balance}',
+      R + '.dn-pp{font-size:13.6px;color:#4a5d64;margin-top:10px}',
+      R + '.dn-pp a{color:#0A5769;font-weight:700}',
+      '@media (max-width:620px){' + R + '.dn-fld.third{flex:1 1 calc(50% - 6px)}' + R + '.dn-fld.third.dn-city{flex:1 1 100%}}',
+      '@media (max-width:480px){' + R + '.dn-fee{padding:11px 12px;font-size:14.7px}}',
       /* "Complete your gift" bar (outside #dn26, fixed to the bottom of the window) */
       '#dn26-nudge{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;font-family:' + BODY + ';color:#fff;background:' + NAVY + ';border-top:3px solid ' + GOLD + ';' +
         'box-shadow:0 -10px 30px rgba(11,31,39,.25);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));text-align:left;line-height:1.4;font-size:15.2px}',
@@ -407,9 +484,17 @@
     return {
       first: g.first, last: g.last, email: g.email, phone: g.phone || '',
       amount: Number(g.amount).toFixed(2), frequency: g.monthly ? 'Monthly' : 'One-time', fund: g.fund || 'General',
-      dedication: g.ded && g.dedname ? (g.ded === 'memory' ? 'In memory of ' : 'In honor of ') + g.dedname + (g.tr && g.tr.email ? '. eCard to ' + g.tr.email : '') : '',
+      dedication: [g.ded && g.dedname ? (g.ded === 'memory' ? 'In memory of ' : 'In honor of ') + g.dedname + (g.tr && g.tr.email ? '. eCard to ' + g.tr.email : '') : '',
+        kidText(g.kiddush), g.note ? 'Note: ' + g.note : '', g.fee > 0 ? 'Fee covered: ' + Number(g.fee).toFixed(2) : ''].filter(Boolean).join('. '),
       method: method || '', stripeId: g.id, status: status
     };
+  }
+  /* "Kiddush Sponsor ($500). Shabbat / in honor of: ..." (only the parts present), the same words as the Apps Script's CRM memo */
+  function kidText(k) {
+    if (!k) return '';
+    var amt = 0;
+    CFG.KIDDUSH.TIERS.forEach(function (t) { if (t[0] === k.tier) amt = t[1]; });
+    return [k.tier && amt ? k.tier + ' (' + money(amt) + ')' : '', k.note ? 'Shabbat / in honor of: ' + k.note : ''].filter(Boolean).join('. ');
   }
   function setField(doc, id, val) {
     var f = doc.getElementById(id);
@@ -505,7 +590,7 @@
 
   function build(host) {
     css();
-    var st = { step: 1, amount: 0, monthly: false, fund: 'General', ded: '', busy: false, sig: '', start: null, attempt: '' };
+    var st = { step: 1, amount: 0, monthly: false, fund: 'General', ded: '', busy: false, sig: '', start: null, attempt: '', feeOn: false, pm: 'card' };
     var root = el('div'); root.id = 'dn26';
     var card = el('div', 'dn-card');
 
@@ -557,6 +642,7 @@
       st.amount = a;
       [].forEach.call(chips.querySelectorAll('button'), function (b) { b.className = 'dn-chip' + (b === btn ? ' on' : ''); });
       if (btn) other.value = '';
+      kidSync();
       sumLine();
     }
     CFG.AMOUNTS.forEach(function (a) {
@@ -581,7 +667,9 @@
     function isProg(f) { for (var i = CFG.TOP_FUNDS; i < CFG.FUNDS.length; i++) if (CFG.FUNDS[i][0] === f) return true; return false; }
     function moreText() {
       var open = more.getAttribute('aria-expanded') === 'true', sel = !open && isProg(st.fund);
-      moreT.textContent = sel ? 'Program: ' + fundLabel(st.fund) : 'Choose a specific program';
+      /* a short program name never breaks inside ("Program:" / "Sponsor a Kiddush", not "... Sponsor a" / "Kiddush") */
+      var lab = fundLabel(st.fund);
+      moreT.textContent = sel ? 'Program: ' + (lab.length <= 20 ? lab.replace(/ /g, '\u00a0') : lab) : 'Choose a specific program';
       more.className = 'dn-more' + (sel ? ' sel' : '');
     }
     function setProgs(open) {
@@ -597,6 +685,7 @@
       st.fund = f;
       [].forEach.call(funds.querySelectorAll('.dn-fund'), function (b) { b.className = 'dn-fund' + (b.getAttribute('data-feat') ? ' dn-feat' : '') + (b.getAttribute('data-wide') ? ' dn-wide' : '') + (b.getAttribute('data-f') === f ? ' on' : ''); });
       moreText();
+      if (typeof kidSync === 'function') kidSync();
       sumLine();
     }
     CFG.FUNDS.forEach(function (f, i) {
@@ -609,6 +698,48 @@
       (i < CFG.TOP_FUNDS ? funds : pgrid).appendChild(b);
     });
     add(funds, more, progs);
+
+    /* Sponsor a Kiddush: tiers (each sets the amount; the tier is simply the one whose amount is the gift amount,
+       so typing another amount un-highlights it) and "Which Shabbat / in honor of". Only shown for that fund. */
+    var K = CFG.KIDDUSH;
+    var kidBox = el('div', 'dn-kidbox'); kidBox.id = 'dn26-kidbox'; kidBox.hidden = true;
+    var kidH = el('h4', null, 'Kiddush sponsorship'); kidH.id = 'dn26-kidh';
+    var kSeg = el('div', 'dn-tiers'); kSeg.setAttribute('role', 'group'); kSeg.setAttribute('aria-labelledby', kidH.id);
+    var kBtns = K.TIERS.map(function (t) {
+      var b = el('button', 'dn-tier'); b.type = 'button'; b.setAttribute('data-t', t[0]); b.setAttribute('aria-pressed', 'false');
+      add(b, el('span', null, t[0]), el('span', 'dn-vh', ' · '), el('b', null, money(t[1])));
+      b.addEventListener('click', function () {
+        var chip = null;
+        [].forEach.call(chips.querySelectorAll('button'), function (c) { if (c.textContent === money(t[1])) chip = c; });
+        pickAmt(t[1], chip);
+        if (!chip) other.value = String(t[1]);
+      });
+      kSeg.appendChild(b); return b;
+    });
+    var kidNote = document.createElement('input');
+    kidNote.type = 'text'; kidNote.className = 'dn-in'; kidNote.id = 'dn26-kidnote'; kidNote.maxLength = K.NOTE_MAX; kidNote.autocomplete = 'off';
+    kidNote.placeholder = 'e.g. Shabbat, Dec 12, in honor of Mom’s birthday';
+    var kidW = add(el('label', 'dn-fld'), el('span', null, 'Which Shabbat / in honor of'), kidNote); kidW.setAttribute('for', kidNote.id);
+    var kidCount = el('p', 'dn-kidcount', '0/' + K.NOTE_MAX); kidCount.id = 'dn26-kidcount';
+    kidCount.setAttribute('aria-live', 'polite'); kidNote.setAttribute('aria-describedby', kidCount.id);
+    kidNote.addEventListener('input', function () { kidCount.textContent = kidNote.value.length + '/' + K.NOTE_MAX; });
+    add(kidBox, kidH, kSeg, kidW, kidCount);
+    function kidTier() {
+      if (st.fund !== K.FUND) return '';
+      for (var i = 0; i < K.TIERS.length; i++) if (K.TIERS[i][1] === st.amount) return K.TIERS[i][0];
+      return '';
+    }
+    function kidSync() {
+      if (!kidBox) return;
+      var t = kidTier();
+      kidBox.hidden = st.fund !== K.FUND;
+      kBtns.forEach(function (b) { var on = b.getAttribute('data-t') === t; b.className = 'dn-tier' + (on ? ' on' : ''); b.setAttribute('aria-pressed', on ? 'true' : 'false'); });
+    }
+    /* what is sent: only while Sponsor a Kiddush is the fund (the typed text stays in the box, unsent, otherwise) */
+    function kidVal() {
+      if (st.fund !== K.FUND) return null;
+      return { tier: kidTier(), note: String(kidNote.value || '').replace(/\s+/g, ' ').trim().slice(0, K.NOTE_MAX) };
+    }
 
     /* dedication: one real checkbox. Checked: In honor / In memory (In honor first) and the name.
        st.ded is what the Apps Script and ChabadOne get, exactly as before: '' (none), 'honor' or 'memory'. */
@@ -683,18 +814,22 @@
     });
 
     add(p1, el('h3', null, 'Choose your gift'), seg, chips, otherW, yearly, mNote,
-      el('h3', 'dn-sp', 'Apply my gift to'), funds,
+      el('h3', 'dn-sp', 'Apply my gift to'), funds, kidBox,
       chkW, dedBox);
 
     /* --- step 2: details --- */
     var p2 = el('div', 'dn-pane');
     var inputs = {};
     function field(key, label, type, half, req, ac) {
-      var w = el('label', 'dn-fld' + (half ? ' half' : ''));
+      var w = el('label', 'dn-fld' + (half === true ? ' half' : half ? ' ' + half : ''));
       var i = document.createElement('input');
       i.type = type; i.className = 'dn-in'; i.id = 'dn26-' + key; i.autocomplete = ac || 'on';
       add(w, el('span', null, label + (req ? ' *' : '')), i);
       inputs[key] = { el: i, req: req, label: label };
+      /* the field check2() flagged: once it is valid, drop the red border and the banner at once */
+      i.addEventListener('input', function () {
+        if (/\bbad\b/.test(i.className) && fieldOk(key)) { i.className = 'dn-in'; i.removeAttribute('aria-invalid'); if (st.step === 2) setErr(''); }
+      });
       return w;
     }
     var grid = el('div', 'dn-grid');
@@ -702,7 +837,39 @@
       field('email', 'Email', 'email', true, true, 'email'), field('phone', 'Phone', 'tel', true, false, 'tel'));
     var trap = add(el('div', 'dn-trap'), el('span', null, 'Leave this empty'));
     var trapIn = document.createElement('input'); trapIn.type = 'text'; trapIn.tabIndex = -1; trapIn.autocomplete = 'off'; trap.appendChild(trapIn);
-    add(p2, el('h3', null, 'Your details'), grid, trap, el('p', 'dn-secure', 'We’ll email your tax receipt to this address.'));
+    /* billing address (Nov 27, 2026): required; also Stripe's billing address and the CRM address */
+    var agrid = el('div', 'dn-grid');
+    var country = document.createElement('select');
+    country.className = 'dn-in'; country.id = 'dn26-country'; country.autocomplete = 'country';
+    CFG.COUNTRIES.forEach(function (c) { var o = document.createElement('option'); o.value = c[0]; o.textContent = c[1]; country.appendChild(o); });
+    country.value = 'US';
+    var countryW = add(el('label', 'dn-fld'), el('span', null, 'Country'), country); countryW.setAttribute('for', country.id);
+    add(agrid, field('addr1', 'Street address', 'text', false, true, 'address-line1'), field('addr2', 'Apt, suite (optional)', 'text', false, false, 'address-line2'),
+      field('city', 'City', 'text', 'third dn-city', true, 'address-level2'), field('state', 'State', 'text', 'third', true, 'address-level1'),
+      field('zip', 'ZIP code', 'text', 'third dn-zip', true, 'postal-code'), countryW);
+    inputs.addr2.label = 'Apt, suite';
+    inputs.zip.el.setAttribute('inputmode', 'numeric'); inputs.zip.el.maxLength = 12; inputs.state.el.maxLength = 40;
+    function zipMode() {
+      var us = country.value === 'US';
+      inputs.zip.el.setAttribute('inputmode', us ? 'numeric' : 'text');
+      inputs.zip.el.previousSibling.textContent = (us ? 'ZIP code' : 'Postal code') + ' *';
+      inputs.state.el.previousSibling.textContent = (us ? 'State' : 'State or province') + ' *';
+    }
+    country.addEventListener('change', zipMode);
+    /* "Add a note (optional)": 250 characters, to Stripe, the Sheet, the emails and the CRM memo */
+    var note = document.createElement('textarea');
+    note.className = 'dn-in'; note.id = 'dn26-note'; note.maxLength = CFG.NOTE_MAX; note.rows = 3; note.autocomplete = 'off';
+    note.placeholder = 'For example, a dedication detail or a message for us';
+    var noteCount = el('p', 'dn-notecount', '0/' + CFG.NOTE_MAX); noteCount.id = 'dn26-notecount'; noteCount.setAttribute('aria-live', 'polite');
+    note.setAttribute('aria-describedby', noteCount.id);
+    note.addEventListener('input', function () { noteCount.textContent = note.value.length + '/' + CFG.NOTE_MAX; });
+    var noteW = add(el('label', 'dn-fld'), el('span', null, 'Add a note (optional)'), note, noteCount); noteW.setAttribute('for', note.id);
+    noteW.style.marginTop = '16px';
+    /* "Send me the weekly newsletter": stored only; the office adds people by hand */
+    var optin = document.createElement('input'); optin.type = 'checkbox'; optin.id = 'dn26-optin';
+    var optW = add(el('label', 'dn-opt'), optin, el('span', null, 'Send me the weekly newsletter')); optW.setAttribute('for', optin.id);
+    add(p2, el('h3', null, 'Your details'), grid, el('h4', 'dn-sub', 'Billing address'), agrid, noteW, optW, trap,
+      el('p', 'dn-secure', 'We’ll email your confirmation and tax receipt to this address.'));
     function v(k) { return String(inputs[k].el.value || '').trim(); }
 
     /* --- step 3: payment --- */
@@ -710,7 +877,15 @@
     var sum3 = el('div', 'dn-sum3');
     var peHost = el('div', 'dn-pe');
     var mon3 = el('p', 'dn-mon3', 'You can change or stop it any time.'); mon3.hidden = true;
-    add(p3, el('h3', null, 'Payment'), sum3, mon3, peHost, el('p', 'dn-secure', '🔒 Secure payment by Stripe. Your card or bank details go straight to Stripe and are never stored by us.'));
+    /* "Add $X.XX to cover processing fees" (Nov 27, 2026): unchecked; shown once the Apps Script says it takes a fee */
+    var feeChk = document.createElement('input'); feeChk.type = 'checkbox'; feeChk.id = 'dn26-fee';
+    var feeT = el('span', null, '');
+    var feeW = add(el('label', 'dn-fee'), feeChk, add(el('span'), feeT, el('small', null, 'So your whole gift goes to our\u00a0work.')));
+    feeW.setAttribute('for', feeChk.id); feeW.hidden = true;
+    var pp = el('p', 'dn-pp');
+    var ppA = el('a', null, 'Give with PayPal'); ppA.href = CFG.PAYPAL_URL; ppA.id = 'dn26-paypal';
+    add(pp, document.createTextNode('Prefer PayPal? '), ppA);
+    add(p3, el('h3', null, 'Payment'), sum3, mon3, feeW, peHost, el('p', 'dn-secure', '🔒 Secure payment by Stripe. Your card or bank details go straight to Stripe and are never stored by us.'), pp);
 
     /* --- step 4: thank you --- */
     var p4 = el('div', 'dn-pane dn-done');
@@ -732,11 +907,30 @@
     host.parentNode.insertBefore(root, host);
 
     function giftLine() { return st.amount > 0 ? money(st.amount) + (st.monthly ? ' / month' : '') : ''; }
+    /* the fee for this gift: monthly uses the card rate; one-time follows the method picked in Stripe's box */
+    function feeFor(amount, bank) {
+      var F = CFG.FEE;
+      if (!(amount > 0)) return 0;
+      if (bank) return Math.min(Math.round(amount * F.BANK_PCT) / 100, F.BANK_CAP);
+      return Math.round(amount * F.CARD_PCT + F.CARD_FIXED * 100) / 100;
+    }
+    function feeOffered() { return !!(st.start && st.start.features && st.start.features.indexOf('fee') > -1); }
+    function feeWanted() { return st.feeOn ? feeFor(st.amount, !st.monthly && st.pm === 'us_bank_account') : 0; }
+    function totalLine() {
+      var t = st.amount + (feeOffered() || st.monthly ? feeWanted() : 0);
+      return t > 0 ? money(Math.round(t * 100) / 100) + (st.monthly ? ' / month' : '') : '';
+    }
+    function feeLine() {
+      var f = feeFor(st.amount, !st.monthly && st.pm === 'us_bank_account');
+      feeT.textContent = 'Add ' + money(f) + (st.monthly ? ' a month' : '') + ' to cover processing\u00a0fees';
+      feeW.className = 'dn-fee' + (st.feeOn ? ' on' : '');
+    }
     function sumLine() {
       yearLine();
       if (nudge) nudge.update();
       sum.textContent = giftLine();
-      if (st.step === 3) next.textContent = st.amount > 0 ? 'Give ' + giftLine() : 'Give';
+      if (st.step === 3) next.textContent = st.amount > 0 ? 'Give ' + totalLine() : 'Give';
+      feeLine();
       var t = giftLine() + (st.fund && st.fund !== 'General' ? ' · ' + fundLabel(st.fund) : '');
       if (st.ded && v2('dedname')) t += ' · ' + (st.ded === 'memory' ? 'In memory of ' : 'In honor of ') + v2('dedname');
       mon3.hidden = !st.monthly;
@@ -746,6 +940,10 @@
         sum3.textContent = money(st.amount) + ' every month, starting\u00a0today';
         if (extra) sum3.appendChild(el('span', 'dn-sum3x', ' ' + extra));
       } else sum3.textContent = t;
+      if (st.feeOn && feeOffered() && st.amount > 0) {
+        var fx = feeWanted();
+        sum3.appendChild(el('span', 'dn-sum3x', ' + ' + money(fx.toFixed(2)) + ' processing fee' + (st.monthly ? ' each month' : '') + ' = ' + totalLine()));
+      }
     }
     function v2() { return String(dedName.value || '').trim(); }
     function show(n) {
@@ -777,20 +975,43 @@
       if (tv && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(tv.email)) { trE[1].focus(); return 'Please check their email address.'; }
       return '';
     }
+    /* same rules as check2(), for one field */
+    function fieldOk(k) {
+      var val = String(inputs[k].el.value || '').trim();
+      if (inputs[k].req && !val) return false;
+      if (k === 'email') return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val);
+      if (k === 'zip' && country.value === 'US') return /^\d{5}(-?\d{4})?$/.test(val);
+      return true;
+    }
     function check2() {
-      for (var k in inputs) if (inputs[k].req && !v(k)) { inputs[k].el.focus(); return 'Please fill in ' + inputs[k].label.toLowerCase() + '.'; }
-      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('email'))) { inputs.email.el.focus(); return 'Please check your email address.'; }
+      for (var j in inputs) inputs[j].el.className = 'dn-in';
+      function bad(k, m) { inputs[k].el.className = 'dn-in bad'; inputs[k].el.setAttribute('aria-invalid', 'true'); inputs[k].el.focus(); return m; }
+      for (var k in inputs) {
+        inputs[k].el.removeAttribute('aria-invalid');
+        if (inputs[k].req && !v(k)) {
+          var lab = k === 'addr1' ? 'your street address' : k === 'zip' ? (country.value === 'US' ? 'your ZIP code' : 'your postal code') : k === 'state' ? 'your state' : k === 'city' ? 'your city' : inputs[k].label.toLowerCase();
+          return bad(k, 'Please fill in ' + lab + '.');
+        }
+      }
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v('email'))) return bad('email', 'Please check your email address.');
+      if (country.value === 'US' && !/^\d{5}(-?\d{4})?$/.test(v('zip'))) return bad('zip', 'Please check your ZIP code (5 digits).');
       return '';
+    }
+    function addr() {
+      return { line1: v('addr1'), line2: v('addr2'), city: v('city'), state: v('state'), zip: v('zip'), country: country.value || 'US' };
     }
     function gift() {
       return { amount: st.amount, monthly: st.monthly, fund: st.fund, ded: st.ded, dedname: st.ded ? v2() : '', tr: trVal(),
-        first: v('first'), last: v('last'), email: v('email'), phone: v('phone') };
+        first: v('first'), last: v('last'), email: v('email'), phone: v('phone'), addr: addr(),
+        note: String(note.value || '').replace(/\s+/g, ' ').trim().slice(0, CFG.NOTE_MAX), optin: !!optin.checked, fee: feeWanted(), kiddush: kidVal() };
     }
 
     var stripe = null, elements = null, pe = null;
     function prepare() {
       var g = gift();
-      var sig = [g.amount, g.monthly ? 'm' : 'o', g.fund, g.ded, g.dedname, g.first, g.last, g.email, g.phone, g.tr ? [g.tr.email, g.tr.name, g.tr.msg].join('/') : ''].join('|');
+      var sig = [g.amount, g.monthly ? 'm' : 'o', g.fund, g.ded, g.dedname, g.first, g.last, g.email, g.phone, g.tr ? [g.tr.email, g.tr.name, g.tr.msg].join('/') : '',
+        [g.addr.line1, g.addr.line2, g.addr.city, g.addr.state, g.addr.zip, g.addr.country].join('/'), g.note, g.optin ? 1 : 0, g.monthly ? g.fee : '',
+        g.kiddush ? g.kiddush.tier + '/' + g.kiddush.note : ''].join('|');
       if (st.start && st.sig === sig && (pe || DEMO)) { show(3); return; }
       if (st.sig !== sig) st.attempt = rid();
       peHost.innerHTML = '';
@@ -799,14 +1020,21 @@
       var ff = fundFields(g.fund);
       var req = { action: 'start', site: 'jr', amount: g.amount, mode: g.monthly ? 'monthly' : 'once', attempt: st.attempt,
         fund: ff.fund, ded: g.ded, dedname: g.dedname,
-        first: g.first, last: g.last, email: g.email, phone: g.phone, note: ff.note, website: trapIn.value,
+        first: g.first, last: g.last, email: g.email, phone: g.phone,
+        /* note: the "Applied to:" line (older scripts) and the donor's note after it; donor_note on its own for the new script */
+        note: [ff.note, kidText(g.kiddush), g.note].filter(Boolean).join('. ').slice(0, 400), donor_note: g.note, website: trapIn.value,
+        addr1: g.addr.line1, addr2: g.addr.line2, city: g.addr.city, state: g.addr.state, zip: g.addr.zip, country: g.addr.country,
+        optin: g.optin, fee: g.monthly ? g.fee : 0,
         page: location.href.split('#')[0].slice(0, 300) };
       if (ff.tag) req.tag = ff.tag;
+      if (g.kiddush) { req.kiddush_tier = g.kiddush.tier; req.kiddush_note = g.kiddush.note; }
       /* tribute eCard: only when "Let them know" is on (the live Apps Script ignores these fields) */
       if (g.tr) { req.tribute_email = g.tr.email; req.tribute_name = g.tr.name; req.tribute_msg = g.tr.msg; }
       api(req).then(function (r) {
         if (!r || !r.ok) throw new Error((r && r.error) || 'Something went wrong. Please try again.');
         st.start = r; st.sig = sig;
+        if (!feeOffered()) st.feeOn = false;   /* an older Apps Script: no fee offered */
+        feeW.hidden = !feeOffered(); feeChk.checked = !!st.feeOn;
         return mountPayment(r, g);
       }).then(function () { busy(false); }, function (e) {
         busy(false);
@@ -832,7 +1060,14 @@
         pe = elements.create('payment', {
           layout: { type: 'accordion', defaultCollapsed: false, radios: true, spacedAccordionItems: true },
           defaultValues: { billingDetails: { name: g.first + ' ' + g.last, email: g.email, phone: g.phone } },
+          /* the address was asked on "Your details"; it goes in with confirmPayment (billing_details) */
+          fields: { billingDetails: { address: 'never' } },
           business: { name: CFG.ORG }
+        });
+        st.pm = 'card';
+        pe.on('change', function (ev) {
+          var t = ev && ev.value && ev.value.type;
+          if (t && t !== st.pm) { st.pm = t; sumLine(); }
         });
         return new Promise(function (res, rej) {
           var done = false;
@@ -853,8 +1088,23 @@
       setErr('');
       busy(true, 'Processing…');
       var g = gift(); g.id = st.start.id;
+      if (!feeOffered()) g.fee = 0;
       store('dn26-pending', { g: g, t: Date.now() });
-      var p = DEMO ? demoConfirm() : stripe.confirmPayment({ elements: elements, confirmParams: { return_url: returnUrl() }, redirect: 'if_required' });
+      var a = g.addr;
+      var confirmParams = { return_url: returnUrl(),
+        payment_method_data: { billing_details: { address: { line1: a.line1, line2: a.line2 || '', city: a.city, state: a.state, postal_code: a.zip, country: a.country } } } };
+      /* one-time: the fee follows the method picked, so it is set on the payment now (monthly already has it) */
+      var feeCents = Math.round((g.fee || 0) * 100);
+      var feeStep = !g.monthly && feeOffered() && feeCents !== Number(st.start.fee || 0)
+        ? api({ action: 'fee', id: st.start.id, fee: feeCents / 100 }).then(function (r) {
+          if (!r || !r.ok) throw new Error((r && r.error) || 'fee');
+          st.start.fee = r.fee;
+          return DEMO || !elements.fetchUpdates ? null : elements.fetchUpdates();
+        }).then(null, function (e) { var x = new Error('fee'); x.fee = true; x.msg = e && e.message; throw x; })
+        : Promise.resolve();
+      var p = feeStep.then(function () {
+        return DEMO ? demoConfirm() : stripe.confirmPayment({ elements: elements, confirmParams: confirmParams, redirect: 'if_required' });
+      });
       p.then(function (res) {
         if (res.error) {
           busy(false);
@@ -869,11 +1119,18 @@
           busy(false);
           setErr('Your payment wasn’t completed. Please try again or use another payment method.');
         }
-      }, function () {
+      }, function (e) {
         busy(false);
+        if (e && e.fee) return setErr('We couldn’t add the processing fee just now. Please uncheck it and press Give again, or try again in a moment.');
         setErr('We couldn’t reach the payment system. Please check your connection and try again.');
       });
     }
+    /* checking or unchecking "cover the fee": one-time just updates the total; monthly makes the monthly gift again with it */
+    feeChk.addEventListener('change', function () {
+      st.feeOn = !!feeChk.checked;
+      sumLine();
+      if (st.monthly && st.step === 3 && !st.busy) { st.sig = 'fee-changed'; prepare(); }
+    });
 
     function thanks(status, g) {
       p4.innerHTML = '';
@@ -889,6 +1146,7 @@
         el('p', null, bank
           ? 'Your bank payment is processing. A confirmation has been emailed to you.'
           : 'A confirmation has been emailed to you.'));
+      if (g.fee > 0) p4.appendChild(el('p', null, 'Thank you for also covering the ' + money(g.fee) + ' processing fee' + (g.monthly ? ' each month.' : '.')));
       if (g.tr && g.tr.email) {
         var who = g.tr.name || g.tr.email;
         p4.appendChild(el('p', 'dn-trdone', bank ? 'Your card to ' + who + ' will be emailed once your bank payment\u00a0clears.' : 'We’re emailing your card to ' + who + '.'));
@@ -922,6 +1180,7 @@
       st.amount = g.amount; setMonthly(true);
       pickFund(g.fund || st.fund);
       setTribute(false);
+      st.feeOn = false; feeChk.checked = false;   /* cover the fee starts unchecked for the new monthly gift */
       st.start = null; st.sig = '';
       try { root.scrollIntoView({ block: 'start', behavior: 'smooth' }); } catch (e) {}
       prepare();
@@ -935,7 +1194,8 @@
       var status = pi.status === 'processing' ? 'Processing (bank payment)' : 'Paid';
       finish(pi.id).then(function (r) {
         var method = (r && r.method) || (pi.status === 'processing' ? 'Bank account' : 'Online payment');
-        return sendToChabadOne(g, method, status);
+        /* CO_SYNC off: the CRM gets the gift from the Apps Script (Plan A) or the office routine (Plan B) instead */
+        return CFG.CO_SYNC ? sendToChabadOne(g, method, status) : null;
       }).then(function () { store('dn26-pending', null); });
     }
 
@@ -1153,7 +1413,9 @@
   function demoApi(b) {
     return new Promise(function (res) {
       setTimeout(function () {
-        if (b.action === 'start') return res({ ok: true, clientSecret: 'pi_demo_secret', id: 'pi_3Q' + rid().slice(0, 12).toUpperCase(), mode: b.mode, live: false });
+        if (b.action === 'start') return res({ ok: true, clientSecret: 'pi_demo_secret', id: 'pi_3Q' + rid().slice(0, 12).toUpperCase(), mode: b.mode, live: false,
+          fee: Math.round(Number(b.fee || 0) * 100), features: ['fee', 'address', 'note', 'optin'] });
+        if (b.action === 'fee') return res({ ok: true, fee: Math.round(Number(b.fee || 0) * 100) });
         if (b.action === 'finish') return res({ ok: true, status: 'succeeded', receipt: true, method: 'Visa ending 4242' });
         if (b.action === 'remindLater') return res({ ok: true });
         res({ ok: false });

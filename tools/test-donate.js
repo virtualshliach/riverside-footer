@@ -27,9 +27,9 @@ var MATCHP = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/76425
 var PAGES_INTRO = 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.';
 var OLD6 = ['General', 'Adult Education', 'College Programs', 'Synagogue', 'Visitation', 'Youth Programs'];
 var LABELS = ['Annual Matching Campaign', 'Where it’s needed most', 'Adult Education', 'College Programs (Chabad at UCR)',
-  'Synagogue', 'Youth Programs', 'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Shabbat & Holidays'];
+  'Synagogue', 'Youth Programs', 'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Sponsor a Kiddush'];
 var VALUES = ['Annual Matching Campaign', 'General', 'Adult Education', 'College Programs', 'Synagogue', 'Youth Programs',
-  'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Shabbat & Holidays'];
+  'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Sponsor a Kiddush'];
 
 /* a ChabadOne-shaped form; fundSelect: input_8 is a list of the 6 old funds (worst case) */
 function coForm(id, fundSelect) {
@@ -66,19 +66,24 @@ function page(url, opts) {
   w.fetch = function (u, o) {
     var b = JSON.parse(o.body);
     T.posts.push({ url: u, body: b });
+    T.order = (T.order || []).concat([b.action]);
     if (b.action === 'remindLater') {
       if (opts.remind === 'network') return Promise.reject(new TypeError('Failed to fetch'));
       var rr = opts.remind === 'live' ? { ok: false, error: 'Unknown request.' } : opts.remind === 'bademail' ? { ok: false, error: 'Please enter a valid email address.' } : { ok: true };
       return Promise.resolve({ json: function () { return Promise.resolve(rr); } });
     }
-    if (b.action === 'start') return Promise.resolve({ json: function () { return Promise.resolve({ ok: true, id: 'pi_T1', clientSecret: 'pi_T1_secret_x', mode: b.mode }); } });
+    if (b.action === 'start') return Promise.resolve({ json: function () { return Promise.resolve(opts.features
+      ? { ok: true, id: 'pi_T1', clientSecret: 'pi_T1_secret_x', mode: b.mode, fee: Math.round(Number(b.fee || 0) * 100), features: ['fee', 'address', 'note', 'optin'] }
+      : { ok: true, id: 'pi_T1', clientSecret: 'pi_T1_secret_x', mode: b.mode }); } });
+    if (b.action === 'fee') return Promise.resolve({ json: function () { return Promise.resolve(opts.feeFail ? { ok: false, error: 'Unknown request.' } : { ok: true, fee: Math.round(Number(b.fee) * 100) }); } });
     return Promise.resolve({ json: function () { return Promise.resolve({ ok: true, status: 'succeeded', receipt: true, method: 'Visa ending 4242' }); } });
   };
   w.Stripe = function (pk) {
     T.pk = pk;
     return {
-      elements: function () { return { create: function () { var h = {}; return { on: function (ev, fn) { h[ev] = fn; }, mount: function () { setTimeout(function () { h.ready && h.ready(); }, 5); }, destroy: function () {} }; } }; },
-      confirmPayment: function () { return Promise.resolve({ paymentIntent: { id: 'pi_T1', status: 'succeeded' } }); }
+      elements: function () { return { fetchUpdates: function () { T.fetchUpdates = (T.fetchUpdates || 0) + 1; T.order = (T.order || []).concat(['fetchUpdates']); return Promise.resolve({}); },
+        create: function (kind, o) { var h = {}; T.peOpts = o; T.pe = h; return { on: function (ev, fn) { h[ev] = fn; }, mount: function () { setTimeout(function () { h.ready && h.ready(); }, 5); }, destroy: function () {} }; } }; },
+      confirmPayment: function (o) { T.confirm = o; T.order = (T.order || []).concat(['confirm']); return Promise.resolve({ paymentIntent: { id: 'pi_T1', status: 'succeeded' } }); }
     };
   };
   /* catch the hidden ChabadOne frame, give it a ChabadOne-shaped form and "load" it */
@@ -107,7 +112,7 @@ function page(url, opts) {
     var dv = w.document.createElement('div'); dv.id = 'dn26-cover'; w.document.body.appendChild(dv);
   }
   var s = w.document.createElement('script');
-  s.textContent = SRC;
+  s.textContent = opts.src || SRC;
   w.document.body.appendChild(s);
   return wait(40).then(function () { return { w: w, d: w.document, T: T }; });
 }
@@ -120,16 +125,20 @@ function tog(p) { return p.d.querySelector('#dn26 .dn-funds button.dn-more'); }
 function progs(p) { return p.d.getElementById('dn26-progs'); }
 function isOpen(p) { var t = tog(p), g = progs(p); return t.getAttribute('aria-expanded') === 'true' && /\bopen\b/.test(g.className) && !g.hasAttribute('inert') && !g.hasAttribute('aria-hidden'); }
 function isShut(p) { var t = tog(p), g = progs(p); return t.getAttribute('aria-expanded') === 'false' && !/\bopen\b/.test(g.className) && g.hasAttribute('inert') && g.getAttribute('aria-hidden') === 'true'; }
-function togText(p) { return tog(p).querySelector('span').textContent; }
+function togText(p) { return tog(p).querySelector('span').textContent.replace(/\u00a0/g, ' '); }   /* short names are kept together with no-break spaces */
 function btn(p, text) { return [].filter.call(p.d.querySelectorAll('#dn26 button'), function (b) { return b.textContent.trim() === text; })[0]; }
 async function give(p) {
   btn(p, '$100').click();
   btn(p, 'Continue').click();
   [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { p.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  fillAddr(p);                                          /* billing address, required since Nov 27, 2026 */
   p.d.querySelector('#dn26 .dn-gold').click();          /* Continue: starts the payment */
   await wait(80);
   p.d.querySelector('#dn26 .dn-gold').click();          /* Give $100 */
   await wait(400);
+}
+function fillAddr(p) {
+  [['addr1', '123 Main St'], ['city', 'Riverside'], ['state', 'CA'], ['zip', '92507']].forEach(function (f) { var x = p.d.getElementById('dn26-' + f[0]); if (x) x.value = f[1]; });
 }
 function startOf(p) { return p.T.posts.filter(function (x) { return x.body.action === 'start'; })[0]; }
 
@@ -209,7 +218,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-27g$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-27h$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -291,8 +300,8 @@ function headerOnly(url) {
   ok(togText(g) === 'Program: College Programs (Chabad at UCR)', 'closed with College Programs: "' + togText(g) + '"');
   pick(g, 'Annual Matching Campaign');
   ok(togText(g) === 'Choose a specific program' && chosen(g) === 'Annual Matching Campaign', 'pick Annual Matching Campaign: toggle text back');
-  gt.click(); pick(g, 'Shabbat & Holidays'); gt.click();
-  ok(togText(g) === 'Program: Shabbat & Holidays', '"&" shows as is: "' + togText(g) + '"');
+  gt.click(); pick(g, 'Sponsor a Kiddush'); gt.click();
+  ok(togText(g) === 'Program: Sponsor a Kiddush', 'closed with Sponsor a Kiddush: "' + togText(g) + '"');
   var gk = await page(DONATE + '?designation=mikvah');
   ok(isOpen(gk) && chosen(gk) === 'Riverside Mikvah', '?designation=mikvah: starts open, Riverside Mikvah selected');
   ok(isShut(await page(MATCHP)), 'matching page 7642564 (preset matching): starts closed');
@@ -336,8 +345,9 @@ function headerOnly(url) {
     'annual-matching-campaign': 'Annual Matching Campaign', general: 'General', college: 'College Programs', 'college-programs': 'College Programs',
     'college-programs-chabad-at-ucr': 'College Programs', youth: 'Youth Programs', 'youth-programs': 'Youth Programs', social: 'Social Services',
     'social-services': 'Social Services', visitation: 'Social Services', chanukah: 'Chanukah Festival', festival: 'Chanukah Festival',
-    'chanukah-festival': 'Chanukah Festival', mikvah: 'Riverside Mikvah', 'riverside-mikvah': 'Riverside Mikvah', shabbat: 'Shabbat & Holidays',
-    holidays: 'Shabbat & Holidays', 'shabbat-holidays': 'Shabbat & Holidays', 'shabbat-%26-holidays': 'Shabbat & Holidays', 'Shabbat+%26+Holidays': 'Shabbat & Holidays',
+    'chanukah-festival': 'Chanukah Festival', mikvah: 'Riverside Mikvah', 'riverside-mikvah': 'Riverside Mikvah', shabbat: 'Sponsor a Kiddush',
+    kiddush: 'Sponsor a Kiddush', 'sponsor-a-kiddush': 'Sponsor a Kiddush', 'Sponsor+a+Kiddush': 'Sponsor a Kiddush',
+    holidays: 'General', 'shabbat-holidays': 'General', 'shabbat-%26-holidays': 'General', 'Shabbat+%26+Holidays': 'General',
     'Riverside+Mikvah': 'Riverside Mikvah', 'adult-education': 'Adult Education', synagogue: 'Synagogue', 'Youth+Programs': 'Youth Programs', nonsense: 'General' };
   for (var k in PRE) { var got = chosen(await page(DONATE + '?designation=' + k)); ok(got === PRE[k], '?designation=' + k + ' -> ' + got); }
   ok(chosen(await page(DONATE.replace(/\.htm$/, '.htm/designation/matching'))) === 'Annual Matching Campaign', '/designation/matching (ChabadOne path form)');
@@ -347,7 +357,7 @@ function headerOnly(url) {
   var s5 = await page(DONATE + '?designation=shabbat', { fundSelect: true });
   await give(s5);
   var sent5 = s5.T.frames[0] && s5.T.frames[0].sent;
-  ok(sent5 && sent5.input_8 === 'General' && sent5.input_9 === 'Fund: Shabbat & Holidays', 'Shabbat & Holidays: list set to General, "Fund: Shabbat & Holidays" in input_9 (' + JSON.stringify(sent5 && [sent5.input_8, sent5.input_9]) + ')');
+  ok(sent5 && sent5.input_8 === 'General' && sent5.input_9 === 'Fund: Sponsor a Kiddush', '?designation=shabbat (old link) opens Sponsor a Kiddush: list set to General, "Fund: Sponsor a Kiddush" in input_9 (' + JSON.stringify(sent5 && [sent5.input_8, sent5.input_9]) + ')');
 
   console.log('jewishriverside.com/donation (no page id in the address)');
   var dn = await page(SHORT);
@@ -674,12 +684,13 @@ function headerOnly(url) {
   ok(startOf(T6).body.mode === 'monthly' && startOf(T6).body.tribute_email === 'rachel@example.com' && startOf(T6).body.ded === 'memory', 'monthly gift in memory with a card: mode monthly, tribute fields sent');
   var T7 = await giveTr({ msg: 'x'.repeat(300) });
   ok(startOf(T7).body.tribute_msg.length <= 250, 'message never over 250 characters');
-  ok(/tribute_email/.test(SRC) && !/postal|mail them a printed|by mail/i.test(SRC.replace(/no postal card/, '')), 'email only: no postal option anywhere');
+  ok(/tribute_email/.test(SRC) && !/postal|mail them a printed|by mail/i.test(SRC.replace(/no postal card/, '').replace(/postal[-_ ]?code/gi, '')), 'email only: no postal option anywhere');
 
   console.log('payment step: monthly label');
   var pl = await page(DONATE);
   btn(pl, '$36').click(); btn(pl, 'Monthly').click(); btn(pl, 'Continue').click();
   [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { pl.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  fillAddr(pl);
   pl.d.querySelector('#dn26 .dn-gold').click(); await wait(80);
   ok(pl.d.querySelector('#dn26 .dn-sum3').textContent.replace(/ /g, ' ') === '$36 every month, starting today', 'monthly summary: "$36 every month, starting today"');
   var m3 = pl.d.querySelector('#dn26 .dn-mon3');
@@ -687,6 +698,7 @@ function headerOnly(url) {
   var po = await page(DONATE);
   btn(po, '$36').click(); btn(po, 'Continue').click();
   [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { po.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  fillAddr(po);
   po.d.querySelector('#dn26 .dn-gold').click(); await wait(80);
   ok(po.d.querySelector('#dn26 .dn-sum3').textContent === '$36' && po.d.querySelector('#dn26 .dn-mon3').hidden && btn(po, 'Give $36'), 'one time unchanged: "$36", no monthly note, button "Give $36"');
 
@@ -756,11 +768,226 @@ function headerOnly(url) {
   ok(!(await page('https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join.htm')).d.getElementById('dn26'), 'not shown on other pages');
   ok(!(await page(DONATE.replace('articlecco_cdo', 'ArticleCcoResponse'))).d.getElementById('dn26'), 'not shown on ChabadOne’s response page');
 
+  /* ---------- Nov 27, 2026: Donate 2.0 switch fixes ---------- */
+  function q(p, sel) { return p.d.querySelector(sel); }
+  async function toPay(p, o) {
+    o = o || {};
+    btn(p, o.amt || '$100').click();
+    if (o.monthly) btn(p, 'Monthly').click();
+    if (o.fund) { var t = tog(p); if (t.getAttribute('aria-expanded') !== 'true') t.click(); pick(p, o.fund); }
+    btn(p, 'Continue').click();
+    [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { p.d.getElementById('dn26-' + f[0]).value = f[1]; });
+    if (!o.noAddr) fillAddr(p);
+    if (o.note) p.d.getElementById('dn26-note').value = o.note;
+    if (o.optin) p.d.getElementById('dn26-optin').click();
+    q(p, '#dn26 .dn-gold').click();
+    await wait(80);
+  }
+  function gold(p) { return q(p, '#dn26 .dn-gold'); }
+
+  console.log('your details: billing address, note, newsletter opt-in');
+  var a1 = await page(DONATE);
+  btn(a1, '$100').click(); btn(a1, 'Continue').click();
+  var ids = ['dn26-addr1', 'dn26-addr2', 'dn26-city', 'dn26-state', 'dn26-zip', 'dn26-country', 'dn26-note', 'dn26-optin'];
+  ok(ids.every(function (i) { return a1.d.getElementById(i); }), 'step 2 has street, apt, city, state, ZIP, country, note and opt-in');
+  var cs = a1.d.getElementById('dn26-country');
+  ok(cs.tagName === 'SELECT' && cs.options[0].value === 'US' && cs.value === 'US', 'country is a list, United States first and chosen');
+  ok(a1.d.getElementById('dn26-addr1').autocomplete === 'address-line1' && a1.d.getElementById('dn26-zip').autocomplete === 'postal-code', 'browser autofill names on the address');
+  var nt = a1.d.getElementById('dn26-note');
+  ok(nt.tagName === 'TEXTAREA' && nt.maxLength === 250 && /Add a note \(optional\)/.test(nt.parentNode.textContent), 'note: "Add a note (optional)", 250 characters');
+  nt.value = 'abc'; nt.dispatchEvent(new a1.w.Event('input'));
+  ok(a1.d.getElementById('dn26-notecount').textContent === '3/250', 'note counter counts');
+  var oi = a1.d.getElementById('dn26-optin');
+  ok(oi.type === 'checkbox' && !oi.checked && /Send me the weekly newsletter/.test(oi.parentNode.textContent), 'opt-in: "Send me the weekly newsletter", unchecked');
+  ok(/We’ll email your confirmation and tax receipt to this address\./.test(q(a1, '#dn26 .dn-pane.on').textContent) && !/We’ll email your tax receipt to this address/.test(SRC), 'step 2 line: "We’ll email your confirmation and tax receipt to this address."');
+
+  console.log('address validation');
+  var a2 = await page(DONATE);
+  await toPay(a2, { noAddr: true });
+  ok(!startOf(a2) && /Please fill in your street address\./.test(q(a2, '#dn26 .dn-err').textContent), 'no street: "Please fill in your street address.", no payment started');
+  ok(/\bbad\b/.test(a2.d.getElementById('dn26-addr1').className) && a2.d.getElementById('dn26-addr1').getAttribute('aria-invalid') === 'true', 'the street box is marked (red border, aria-invalid)');
+  var s1 = a2.d.getElementById('dn26-addr1');
+  s1.value = '  '; s1.dispatchEvent(new a2.w.Event('input'));
+  ok(/your street address/.test(q(a2, '#dn26 .dn-err').textContent) && /\bbad\b/.test(s1.className), 'spaces only: banner and red border stay');
+  s1.value = '1 A St'; s1.dispatchEvent(new a2.w.Event('input'));
+  ok(q(a2, '#dn26 .dn-err').textContent === '' && !/\bbad\b/.test(s1.className) && !s1.hasAttribute('aria-invalid'), 'typing a street clears the banner and the red border at once (no Continue click)');
+  gold(a2).click(); await wait(20);
+  ok(/your city/.test(q(a2, '#dn26 .dn-err').textContent), 'then: city');
+  a2.d.getElementById('dn26-city').value = 'Riverside'; gold(a2).click(); await wait(20);
+  ok(/your state/.test(q(a2, '#dn26 .dn-err').textContent), 'then: state');
+  a2.d.getElementById('dn26-state').value = 'CA'; a2.d.getElementById('dn26-zip').value = '925'; gold(a2).click(); await wait(20);
+  ok(/Please check your ZIP code/.test(q(a2, '#dn26 .dn-err').textContent) && !startOf(a2), 'short US ZIP: "Please check your ZIP code (5 digits)."');
+  var z1 = a2.d.getElementById('dn26-zip');
+  z1.value = '9250'; z1.dispatchEvent(new a2.w.Event('input'));
+  ok(/Please check your ZIP code/.test(q(a2, '#dn26 .dn-err').textContent), 'ZIP still short (4 digits): banner stays');
+  z1.value = '92507'; z1.dispatchEvent(new a2.w.Event('input'));
+  ok(q(a2, '#dn26 .dn-err').textContent === '' && !/\bbad\b/.test(z1.className), 'valid ZIP typed: banner clears at once');
+  z1.value = '925';
+  a2.d.getElementById('dn26-country').value = 'CA'; a2.d.getElementById('dn26-country').dispatchEvent(new a2.w.Event('change'));
+  ok(/Postal code/.test(a2.d.getElementById('dn26-zip').parentNode.textContent), 'another country: "Postal code"');
+  a2.d.getElementById('dn26-zip').value = 'K1A 0B1'; gold(a2).click(); await wait(80);
+  ok(startOf(a2) && startOf(a2).body.country === 'CA' && startOf(a2).body.zip === 'K1A 0B1', 'non-US postal code accepted');
+
+  console.log('what goes to the Apps Script and to Stripe');
+  var a3 = await page(DONATE);
+  await toPay(a3, { fund: 'Social Services', note: 'Refuah shlema', optin: true });
+  var b3 = startOf(a3).body;
+  ok(b3.addr1 === '123 Main St' && b3.city === 'Riverside' && b3.state === 'CA' && b3.zip === '92507' && b3.country === 'US' && b3.addr2 === '', 'start: addr1, addr2, city, state, zip, country');
+  ok(b3.donor_note === 'Refuah shlema' && b3.note === 'Applied to: Social Services. Refuah shlema', 'start: donor_note, and the "Applied to:" note kept first (' + b3.note + ')');
+  ok(b3.optin === true && b3.fee === 0, 'start: optin true, fee 0');
+  ok(a3.T.peOpts && a3.T.peOpts.fields && a3.T.peOpts.fields.billingDetails.address === 'never', 'Stripe box does not ask for the address again (fields.billingDetails.address never)');
+  ok(q(a3, '#dn26-paypal') && q(a3, '#dn26-paypal').href === 'https://www.jewishriverside.com/4968536' && /Prefer PayPal\? Give with PayPal/.test(q(a3, '#dn26-paypal').parentNode.textContent), 'payment step: "Prefer PayPal? Give with PayPal" to the old form 4968536');
+  ok(!/paypal\.com\/sdk|client-id/i.test(SRC), 'no PayPal SDK or client id');
+  ok(q(a3, '#dn26 .dn-fee').hidden, 'older Apps Script (no features): the fee box stays hidden');
+  gold(a3).click(); await wait(300);
+  var bd = a3.T.confirm && a3.T.confirm.confirmParams.payment_method_data.billing_details.address;
+  ok(bd && bd.line1 === '123 Main St' && bd.city === 'Riverside' && bd.state === 'CA' && bd.postal_code === '92507' && bd.country === 'US' && bd.line2 === '', 'confirmPayment gets the billing address');
+  ok(!a3.T.posts.some(function (x) { return x.body.action === 'fee'; }), 'no fee request to an older script');
+  var s3 = a3.T.frames[0] && a3.T.frames[0].sent;
+  ok(s3 && /Note: Refuah shlema/.test(s3.input_9), 'ChabadOne copy carries the note in input_9 (' + (s3 && s3.input_9) + ')');
+  var a3b = await page(DONATE);
+  await toPay(a3b, {});
+  ok(startOf(a3b).body.optin === false && startOf(a3b).body.donor_note === '' && startOf(a3b).body.note === '', 'opt-in off and no note: optin false, notes empty');
+
+  console.log('cover the fee');
+  var f1 = await page(DONATE, { features: true });
+  await toPay(f1, {});
+  var fw = q(f1, '#dn26 .dn-fee'), fc = f1.d.getElementById('dn26-fee');
+  ok(!fw.hidden && !fc.checked, 'new Apps Script: fee box shown, unchecked');
+  ok(fw.textContent.replace(/ /g, ' ').indexOf('Add $2.50 to cover processing fees') === 0, 'card: "Add $2.50 to cover processing fees" (2.2% + $0.30 of $100)');
+  ok(gold(f1).textContent === 'Give $100', 'unchecked: Give $100');
+  fc.click();
+  ok(gold(f1).textContent === 'Give $102.50' && /\+ \$2\.50 processing fee = \$102\.50/.test(q(f1, '#dn26 .dn-sum3').textContent), 'checked: Give $102.50, summary "+ $2.50 processing fee = $102.50"');
+  f1.T.pe.change({ value: { type: 'us_bank_account' } });
+  ok(fw.textContent.replace(/ /g, ' ').indexOf('Add $0.80 to cover processing fees') === 0 && gold(f1).textContent === 'Give $100.80', 'bank picked: "Add $0.80" (0.8%), Give $100.80');
+  f1.T.pe.change({ value: { type: 'card' } });
+  gold(f1).click(); await wait(300);
+  var fp = f1.T.posts.filter(function (x) { return x.body.action === 'fee'; });
+  ok(fp.length === 1 && fp[0].body.fee === 2.5 && fp[0].body.id === 'pi_T1', 'Give: fee 2.50 set on the payment first (action fee)');
+  ok(f1.T.order.join(',').indexOf('fee,fetchUpdates,confirm') > -1, 'order: fee, then Stripe fetchUpdates, then confirm (' + f1.T.order.join(',') + ')');
+  ok(/Thank you for also covering the \$2\.50 processing fee\./.test(q(f1, '#dn26 .dn-done').textContent), 'thank-you thanks them for the fee');
+  var s4 = f1.T.frames[0] && f1.T.frames[0].sent;
+  ok(s4 && /Fee covered: 2\.50/.test(s4.input_9), 'ChabadOne copy notes the fee');
+  var f2 = await page(DONATE, { features: true });
+  await toPay(f2, {});
+  f2.T.pe.change({ value: { type: 'us_bank_account' } });
+  f2.d.getElementById('dn26-fee').click();
+  gold(f2).click(); await wait(300);
+  ok(f2.T.posts.filter(function (x) { return x.body.action === 'fee'; })[0].body.fee === 0.8, 'bank: fee 0.80 sent');
+  var f3 = await page(DONATE, { features: true });
+  await toPay(f3, {});
+  gold(f3).click(); await wait(300);
+  ok(!f3.T.posts.some(function (x) { return x.body.action === 'fee'; }) && f3.T.confirm, 'unchecked: no fee request, straight to confirm');
+  var f4 = await page(DONATE, { features: true, feeFail: true });
+  await toPay(f4, {});
+  f4.d.getElementById('dn26-fee').click();
+  gold(f4).click(); await wait(300);
+  ok(!f4.T.confirm && /couldn’t add the processing fee/.test(q(f4, '#dn26 .dn-err').textContent), 'fee request fails: no charge, a clear message');
+  var f5 = await page(DONATE, { features: true });
+  await toPay(f5, { amt: '$36', monthly: true });
+  ok(q(f5, '#dn26 .dn-fee').textContent.replace(/ /g, ' ').indexOf('Add $1.09 a month to cover processing fees') === 0, 'monthly: "Add $1.09 a month" (card rate)');
+  f5.d.getElementById('dn26-fee').click(); await wait(120);
+  var st5 = f5.T.posts.filter(function (x) { return x.body.action === 'start'; });
+  ok(st5.length === 2 && st5[1].body.fee === 1.09 && st5[1].body.mode === 'monthly' && st5[1].body.attempt !== st5[0].body.attempt, 'monthly: checking it makes the monthly gift again with fee 1.09');
+  ok(gold(f5).textContent === 'Give $37.09 / month', 'monthly: Give $37.09 / month (' + gold(f5).textContent + ')');
+  gold(f5).click(); await wait(300);
+  ok(!f5.T.posts.some(function (x) { return x.body.action === 'fee'; }), 'monthly: no separate fee request (it is in the monthly gift)');
+  var f6 = await page(DONATE, { features: true });
+  await toPay(f6, { amt: '$500' });
+  ok(q(f6, '#dn26 .dn-fee').textContent.indexOf('$11.30') > -1, '$500 card: $11.30');
+  f6.T.pe.change({ value: { type: 'us_bank_account' } });
+  ok(q(f6, '#dn26 .dn-fee').textContent.indexOf('$4') > -1, '$500 bank: $4 (0.8%)');
+  var f7 = await page(DONATE, { features: true });
+  btn(f7, '$18').click(); var oth = f7.d.getElementById('dn26-other'); oth.value = '1000'; oth.dispatchEvent(new f7.w.Event('input'));
+  btn(f7, 'Continue').click(); [['first', 'T'], ['last', 'D'], ['email', 't@example.com']].forEach(function (f) { f7.d.getElementById('dn26-' + f[0]).value = f[1]; }); fillAddr(f7);
+  gold(f7).click(); await wait(80);
+  f7.T.pe.change({ value: { type: 'us_bank_account' } });
+  ok(q(f7, '#dn26 .dn-fee').textContent.indexOf('$5 ') > -1, '$1,000 bank: capped at $5');
+
+  console.log('flags: CO_SYNC and REDIRECT_READY');
+  ok(/CO_SYNC: true,/.test(SRC), 'CO_SYNC defaults to true (the ChabadOne copy stays on)');
+  var c0 = await page(DONATE, { src: SRC.replace('CO_SYNC: true,', 'CO_SYNC: false,') });
+  await toPay(c0, {}); gold(c0).click(); await wait(400);
+  ok(c0.T.frames.length === 0 && /Thank you, Test!/.test(q(c0, '#dn26 .dn-done').textContent), 'CO_SYNC false: no hidden ChabadOne frame, the gift still completes');
+  var rr = /var REDIRECT_READY = (\w+);/;
+  ok([SRC, HEADER, FOOTER].every(function (x) { return rr.exec(x) && rr.exec(x)[1] === 'false' && /if \(REDIRECT_READY\) PATHS\['\/donate'\] = '7643000';/.test(x); }), 'REDIRECT_READY = false in donate-2026.js, header.js and footer.js, same /donate line');
+  var r0 = await page('https://www.jewishriverside.com/donate');
+  ok(!q(r0, '#dn26'), 'flag off: nothing changes on /donate');
+  var dsrc = SRC.replace('var REDIRECT_READY = false;', 'var REDIRECT_READY = true;');
+  ok(/if \(REDIRECT_READY\) PATHS\['\/donate'\] = '7643000';/.test(dsrc) && /var REDIRECT_READY = true;/.test(dsrc), 'flag on: donate-2026.js adds /donate to PATHS');
+  var Wn = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://www.jewishriverside.com/donate/designation/youth', runScripts: 'dangerously' }).window;
+  var hs = Wn.document.createElement('script'); hs.textContent = HEADER.replace('var REDIRECT_READY = false;', 'var REDIRECT_READY = true;'); Wn.document.head.appendChild(hs);
+  ok(!!Wn.document.getElementById('dn26-cover'), 'flag on: header.js covers /donate/designation/youth like /donation');
+  var Wf = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://www.jewishriverside.com/donate', runScripts: 'dangerously' }).window;
+  var hs2 = Wf.document.createElement('script'); hs2.textContent = HEADER; Wf.document.head.appendChild(hs2);
+  ok(!Wf.document.getElementById('dn26-cover'), 'flag off: header.js leaves /donate alone');
+
+  console.log('Sponsor a Kiddush (replaces Shabbat & Holidays)');
+  var kp = await page(DONATE);
+  var kb = kp.d.getElementById('dn26-kidbox');
+  ok(kb && kb.hidden, 'Kiddush panel exists and is hidden for General');
+  ok(!labels(kp).some(function (l) { return /Shabbat & Holidays/.test(l); }), 'no "Shabbat & Holidays" chip');
+  tog(kp).click(); pick(kp, 'Sponsor a Kiddush');
+  ok(!kb.hidden, 'picking Sponsor a Kiddush shows the panel');
+  var p1el = kp.d.querySelector('#dn26 .dn-pane');
+  ok(p1el.contains(kb) && kb.previousElementSibling === kp.d.querySelector('#dn26 .dn-funds'), 'panel sits in step 1, right below the chip list');
+  var tiers = [].slice.call(kb.querySelectorAll('button.dn-tier'));
+  ok(tiers.length === 2 && tiers.map(function (b) { return b.textContent; }).join('|') === 'Kiddush Co-Sponsor · $360|Kiddush Sponsor · $500', 'two tier buttons: "Kiddush Co-Sponsor · $360", "Kiddush Sponsor · $500" (' + tiers.map(function (b) { return b.textContent; }).join('|') + ')');
+  ok(tiers.every(function (b) { return b.type === 'button' && b.getAttribute('aria-pressed') === 'false'; }), 'tier buttons: type button, aria-pressed false');
+  var grp = kb.querySelector('[role="group"]');
+  ok(grp && kp.d.getElementById(grp.getAttribute('aria-labelledby')).textContent === 'Kiddush sponsorship', 'tiers are a labelled group ("Kiddush sponsorship")');
+  var kn = kp.d.getElementById('dn26-kidnote');
+  var kl = kp.d.querySelector('label[for="dn26-kidnote"]');
+  ok(kn && kn.maxLength === 120 && kl && kl.contains(kn) && kl.querySelector('span').textContent === 'Which Shabbat / in honor of' && /^e\.g\. Shabbat/.test(kn.placeholder), 'text field: label "Which Shabbat / in honor of" tied to it, max 120, placeholder');
+  tiers[1].click();
+  ok(/\bon\b/.test(tiers[1].className) && tiers[1].getAttribute('aria-pressed') === 'true' && tiers[0].getAttribute('aria-pressed') === 'false', 'Kiddush Sponsor picked: highlighted, aria-pressed true');
+  ok(/\bon\b/.test(btn(kp, '$500').className) && kp.d.querySelector('#dn26 .dn-sum').textContent === '$500', 'it sets the amount to $500 (chip highlighted, summary $500)');
+  var oth2 = kp.d.getElementById('dn26-other'); oth2.value = '250'; oth2.dispatchEvent(new kp.w.Event('input'));
+  ok(tiers.every(function (b) { return b.getAttribute('aria-pressed') === 'false' && !/\bon\b/.test(b.className); }), 'typing another amount ($250) un-highlights the tier');
+  tiers[0].click();
+  ok(tiers[0].getAttribute('aria-pressed') === 'true' && oth2.value === '' && /\bon\b/.test(btn(kp, '$360').className), 'Co-Sponsor: $360 chip, the typed amount cleared');
+  kn.value = 'Shabbat, Dec 12, in honor of Mom’s birthday'; kn.dispatchEvent(new kp.w.Event('input'));
+  ok(kp.d.getElementById('dn26-kidcount').textContent === String(kn.value.length) + '/120', 'counter ' + kp.d.getElementById('dn26-kidcount').textContent);
+  pick(kp, 'Youth Programs');
+  ok(kb.hidden && tiers.every(function (b) { return b.getAttribute('aria-pressed') === 'false'; }) && kn.value.length > 0, 'another fund: panel hidden, tier cleared, typed text kept in the box');
+  pick(kp, 'Sponsor a Kiddush');
+  ok(!kb.hidden && tiers[0].getAttribute('aria-pressed') === 'true', 'back to Kiddush: panel again, $360 still matches Co-Sponsor');
+  /* send: start body, note, ChabadOne copy */
+  var kq = await page(DONATE + '?designation=kiddush');
+  ok(chosen(kq) === 'Sponsor a Kiddush' && !kq.d.getElementById('dn26-kidbox').hidden, '?designation=kiddush: Sponsor a Kiddush with the panel open');
+  [].slice.call(kq.d.querySelectorAll('#dn26 .dn-tier'))[1].click();
+  kq.d.getElementById('dn26-kidnote').value = '  Shabbat, Dec 12,   in honor of Mom  ';
+  btn(kq, 'Continue').click();
+  [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { kq.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  fillAddr(kq);
+  kq.d.querySelector('#dn26 .dn-gold').click(); await wait(80);
+  kq.d.querySelector('#dn26 .dn-gold').click(); await wait(400);
+  var kbody = startOf(kq) && startOf(kq).body;
+  ok(kbody && kbody.fund === 'Sponsor a Kiddush' && kbody.amount === 500 && kbody.kiddush_tier === 'Kiddush Sponsor' && kbody.kiddush_note === 'Shabbat, Dec 12, in honor of Mom', 'start: kiddush_tier "Kiddush Sponsor", kiddush_note trimmed (' + JSON.stringify(kbody && [kbody.kiddush_tier, kbody.kiddush_note]) + ')');
+  ok(kbody && kbody.note === 'Applied to: Sponsor a Kiddush. Kiddush Sponsor ($500). Shabbat / in honor of: Shabbat, Dec 12, in honor of Mom', 'start note: "Applied to: ... Kiddush Sponsor ($500). Shabbat / in honor of: ..." (' + (kbody && kbody.note) + ')');
+  var ksent = kq.T.frames[0] && kq.T.frames[0].sent;
+  ok(ksent && ksent.input_8 === 'Sponsor a Kiddush' && ksent.input_9 === 'Kiddush Sponsor ($500). Shabbat / in honor of: Shabbat, Dec 12, in honor of Mom', 'ChabadOne copy: input_9 "Kiddush Sponsor ($500). Shabbat / in honor of: ..." (' + (ksent && ksent.input_9) + ')');
+  var kr = await page(DONATE + '?designation=sponsor-a-kiddush');
+  var ko = kr.d.getElementById('dn26-other'); ko.value = '180'; ko.dispatchEvent(new kr.w.Event('input'));
+  btn(kr, 'Continue').click();
+  [['first', 'Test'], ['last', 'Donor'], ['email', 'test@example.com']].forEach(function (f) { kr.d.getElementById('dn26-' + f[0]).value = f[1]; });
+  fillAddr(kr);
+  kr.d.querySelector('#dn26 .dn-gold').click(); await wait(80);
+  var kb2 = startOf(kr) && startOf(kr).body;
+  ok(kb2 && kb2.kiddush_tier === '' && kb2.kiddush_note === '' && kb2.note === 'Applied to: Sponsor a Kiddush', 'custom amount $180: kiddush_tier "" and kiddush_note "" (' + JSON.stringify(kb2 && [kb2.kiddush_tier, kb2.kiddush_note, kb2.note]) + ')');
+  var kx = await page(DONATE + '?designation=kiddush');
+  kx.d.getElementById('dn26-kidnote').value = 'typed then left';
+  tog(kx).click(); pick(kx, 'Synagogue');
+  await give(kx);
+  var kb3 = startOf(kx) && startOf(kx).body;
+  ok(kb3 && kb3.fund === 'Synagogue' && !('kiddush_tier' in kb3) && !('kiddush_note' in kb3) && !/typed then left/.test(JSON.stringify(kb3)) && !/typed then left/.test(JSON.stringify(kx.T.frames[0] && kx.T.frames[0].sent)), 'another fund: the Kiddush fields and typed text are not sent');
+  ok(/KIDDUSH: \{ FUND: 'Sponsor a Kiddush', TIERS: \[\['Kiddush Co-Sponsor', 360\], \['Kiddush Sponsor', 500\]\]/.test(SRC), 'tiers come from one CFG array (CFG.KIDDUSH.TIERS)');
+
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-27d'/.test(SRC), 'donate-2026.js VERSION 2026-11-27d');
-  ok(V === '2026-11-27g', 'footer.js V 2026-11-27g');
+  ok(/VERSION = 'donate-2026 2026-11-27h'/.test(SRC), 'donate-2026.js VERSION 2026-11-27h');
+  ok(V === '2026-11-27h', 'footer.js V 2026-11-27h');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 
