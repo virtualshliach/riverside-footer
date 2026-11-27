@@ -46,7 +46,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26k';
+  var VERSION = 'donate-2026 2026-11-27d';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -54,9 +54,9 @@
   /* Pages that show this form. fund: the preset choice. co: path of the page whose ChabadOne form records the gift
      (empty: this page's own). tag: the Stripe tag every gift from this page carries. */
   var PAGES = {
-    '7643000': { key: 'donate', fund: 'General', h2: 'Invest in a Vibrant Jewish Future', intro: 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
+    '7643000': { key: 'donate', fund: 'General', h2: 'Invest in a Vibrant Jewish Future', intro: 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.',
       h1From: /donate 2\.0/i, h1: 'Donate', docTitle: 'Donate', co: '', tag: '' },
-    '7642564': { key: 'matching', fund: MATCH, h2: 'Invest in a Vibrant Jewish Future', intro: 'Give now to our 2026 Annual Matching Campaign. Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
+    '7642564': { key: 'matching', fund: MATCH, h2: 'Invest in a Vibrant Jewish Future', intro: 'Give now to our 2026 Annual Matching Campaign. Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.',
       h1From: /./, h1: '2026 Annual Matching Campaign', docTitle: '2026 Annual Matching Campaign', co: DONATE20, tag: MATCH_TAG }
   };
   /* ChabadOne short addresses on jewishriverside.com with no page id in them. Same list as header.js and footer.js. */
@@ -159,6 +159,9 @@
   }
   var LOGO = asset('chabad-jcc-logo-white-gold.png');
   var LOGO_NAVY = asset('chabad-jcc-logo-navy-gold.png');   /* the light header (option A, chosen Nov 26, 2026) */
+  /* The jewishriverside.com site header's own logo. Where it is on the page, the card leaves out its smaller
+     second logo and leads with the headline (Nov 27, 2026); elsewhere the card keeps its own logo, a little larger. */
+  var SITE_LOGO = '#header_branding .site-logo-wrapper img, #header_branding img, .site-logo-wrapper img';
 
   /* ---------- styles ---------- */
   function css() {
@@ -320,13 +323,15 @@
       R + '.dn-hd.dn-hx h2::after{content:"";display:block;width:44px;height:3px;border-radius:2px;background:' + GOLD + ';margin:16px 0 14px}',
       R + '.dn-hd.dn-hx span{text-wrap:pretty;line-height:1.55}',
       R + '.dn-hd.dn-hxA{background:#fbf8f1;color:' + NAVY + ';padding:30px 34px 28px;text-align:left;border-bottom:1px solid #efe6d2}',
-      R + '.dn-hd.dn-hxA img{width:110px;margin:0 0 22px}',
-      R + '.dn-hd.dn-hxA h2{font-size:36px;line-height:1.15;color:' + NAVY + ';margin:0}',
+      R + '.dn-hd.dn-hxA img{width:156px;margin:0 0 22px}',
+      R + '.dn-hd.dn-hxA h2{font-size:32px;line-height:1.15;color:' + NAVY + ';margin:0}',
+      /* no card logo (the site header shows it): the headline leads, with top space that matches the side padding */
+      R + '.dn-hd.dn-hxA.dn-nologo{padding-top:34px}',
       R + '.dn-hd.dn-hxA span{font-size:16px;color:#55686f;max-width:520px;margin:0}',
-      '@media (max-width:620px){' + R + '.dn-hd.dn-hxA{padding:24px 20px 22px}' + R + '.dn-hd.dn-hxA img{width:104px;margin:0 0 18px}' + R + '.dn-hd.dn-hxA h2{font-size:30px}}',
+      '@media (max-width:620px){' + R + '.dn-hd.dn-hxA{padding:24px 20px 22px}' + R + '.dn-hd.dn-hxA.dn-nologo{padding-top:24px}' + R + '.dn-hd.dn-hxA img{width:136px;margin:0 0 18px}' + R + '.dn-hd.dn-hxA h2{font-size:28px}}',
       '@media (max-width:480px){' + R + '.dn-hd.dn-hxA{flex-direction:column;text-align:left;background:#fbf8f1}' + R + '.dn-hd.dn-hxA span{max-width:none;margin:0;font-size:15.2px}}',
       /* small phones (360): headline on two lines, not three */
-      '@media (max-width:379px){' + R + '.dn-hd.dn-hxA h2{font-size:26.5px}}',
+      '@media (max-width:379px){' + R + '.dn-hd.dn-hxA h2{font-size:26px}}',
       /* "Complete your gift" bar (outside #dn26, fixed to the bottom of the window) */
       '#dn26-nudge{position:fixed;left:0;right:0;bottom:0;z-index:2147483000;font-family:' + BODY + ';color:#fff;background:' + NAVY + ';border-top:3px solid ' + GOLD + ';' +
         'box-shadow:0 -10px 30px rgba(11,31,39,.25);padding:14px 16px calc(14px + env(safe-area-inset-bottom,0px));text-align:left;line-height:1.4;font-size:15.2px}',
@@ -505,9 +510,11 @@
     var card = el('div', 'dn-card');
 
     var hd = el('div', 'dn-hd dn-hx dn-hxA');
-    var logo = el('img'); logo.src = LOGO_NAVY; logo.alt = CFG.ORG;
-    /* no gold kicker line: the logo says it, and its alt text keeps the full name for screen readers */
-    add(hd, logo, add(el('div'), el('h2', null, PAGE.h2),
+    /* no gold kicker line: the logo says it, and its alt text keeps the full name for screen readers.
+       Under the site header (which already shows the full logo) the card leaves its own logo out. */
+    if (document.querySelector(SITE_LOGO)) hd.className += ' dn-nologo';
+    else { var logo = el('img'); logo.src = LOGO_NAVY; logo.alt = CFG.ORG; hd.appendChild(logo); }
+    add(hd, add(el('div'), el('h2', null, PAGE.h2),
       el('span', null, PAGE.intro)));
 
     var steps = el('div', 'dn-steps');

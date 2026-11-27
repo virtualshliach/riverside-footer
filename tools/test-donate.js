@@ -24,7 +24,7 @@ function wait(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 var DONATE = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7643000/jewish/Donate-20.htm';
 var SHORT = 'https://www.jewishriverside.com/donation';
 var MATCHP = 'https://www.jewishriverside.com/templates/articlecco_cdo/aid/7642564/jewish/2026-Matching-Campaign-Give-Now.htm';
-var PAGES_INTRO = 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.';
+var PAGES_INTRO = 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.';
 var OLD6 = ['General', 'Adult Education', 'College Programs', 'Synagogue', 'Visitation', 'Youth Programs'];
 var LABELS = ['Annual Matching Campaign', 'Where it’s needed most', 'Adult Education', 'College Programs (Chabad at UCR)',
   'Synagogue', 'Youth Programs', 'Social Services', 'Chanukah Festival', 'Riverside Mikvah', 'Shabbat & Holidays'];
@@ -45,7 +45,9 @@ function aidOf(url) { return /7642564/.test(url) ? '7642564' : /7643000|\/donati
 function shell(url, opts) {
   opts = opts || {};
   var aid = aidOf(url), withForm = aid === '7643000';
-  return '<!doctype html><html><head>' + (opts.head || '') + '</head><body><div id="co_content_container"><h1 class="article-header__title">' +
+  return '<!doctype html><html><head>' + (opts.head || '') + '</head><body>' +
+    (opts.siteLogo ? '<div class="clearfix branding-search"><div id="header_branding" class="no_outline logo"><div class="float_left site-logo-wrapper"><a href="https://www.jewishriverside.com/"><img src="https://w2.chabad.org/media/images/1260/cpkJ12604262.svg" alt="Chabad Jewish Community Center"></a></div></div></div>' : '') +
+    '<div id="co_content_container"><h1 class="article-header__title">' +
     (withForm ? 'Donate 2.0' : aid === '7642564' ? '2026 Matching Campaign Give Now' : 'Join') + '</h1>' + (withForm ? coForm('7643000') : '<p>Old page text</p>') +
     '</div><form class="userform-form" id="newsletter-footer"><input id="nl"></form>' +
     '<script>window.Co = { ArticleId: ' + aid + ' };</script>' + (opts.tail || '') + '</body></html>';
@@ -54,7 +56,7 @@ function shell(url, opts) {
 /* Unit page: donate-2026.js injected straight in (fake Stripe, Apps Script and ChabadOne frame). */
 function page(url, opts) {
   opts = opts || {};
-  var dom = new JSDOM(shell(url), { url: url, runScripts: 'dangerously', pretendToBeVisual: true });
+  var dom = new JSDOM(shell(url, { siteLogo: opts.siteLogo }), { url: url, runScripts: 'dangerously', pretendToBeVisual: true });
   var w = dom.window, T = { posts: [], errors: [], logs: [], frames: [] };
   w.console.log = function () { T.logs.push([].join.call(arguments, ' ')); };
   w.console.error = function () { T.errors.push([].join.call(arguments, ' ')); };
@@ -207,7 +209,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26k$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-27d$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -254,7 +256,7 @@ function headerOnly(url) {
   ok(labels(a).indexOf('Visitation') < 0, 'Visitation no longer shown (Social Services replaces it)');
   ok(!labels(a).some(function (t) { return /[–—]| - /.test(t); }), 'no dashes in the labels');
   ok(a.d.querySelector('#dn26 .dn-hd h2').textContent === 'Invest in a Vibrant Jewish Future' && a.d.querySelector('h1').textContent === 'Donate', 'heading Invest in a Vibrant Jewish Future; page title "Donate 2.0" shows as Donate');
-  ok(a.d.querySelector('#dn26 .dn-hd span').textContent === 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.', 'subtitle: the ripple sentence (' + a.d.querySelector('#dn26 .dn-hd span').textContent + ')');
+  ok(a.d.querySelector('#dn26 .dn-hd span').textContent === 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.', 'subtitle: the ripple sentence (' + a.d.querySelector('#dn26 .dn-hd span').textContent + ')');
   ok(!/Jewish life growing|for every age/.test(a.d.querySelector('#dn26 .dn-hd').textContent), 'subtitle: old "Jewish life growing" sentence gone');
   ok(/dn26-park/.test(a.d.getElementById('formContainer').className) && !/dn26-park/.test(a.d.getElementById('newsletter-footer').className), 'its ChabadOne form is parked off-screen; other forms untouched');
   pick(a, 'Annual Matching Campaign');
@@ -367,7 +369,7 @@ function headerOnly(url) {
   ok(chosen(m) === 'Annual Matching Campaign', 'preset fund: Annual Matching Campaign');
   ok(labels(m).join('|') === LABELS.join('|'), 'same 10 choices');
   ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign', 'page title: 2026 Annual Matching Campaign');
-  ok(m.d.querySelector('#dn26 .dn-hd span').textContent === 'Give now to our 2026 Annual Matching Campaign. ' + 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.', 'matching subtitle: campaign lead-in, then the ripple sentence');
+  ok(m.d.querySelector('#dn26 .dn-hd span').textContent === 'Give now to our 2026 Annual Matching Campaign. ' + 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.', 'matching subtitle: campaign lead-in, then the ripple sentence');
   ok(!/Jewish life growing|for every age/.test(m.d.querySelector('#dn26 .dn-hd').textContent), 'matching subtitle: old sentence gone');
   ok(m.d.title === '2026 Annual Matching Campaign - Chabad Jewish Community Center of Riverside', 'browser tab title');
   ok(!/\d+\s*(x|:1|%)|match(es|ed)? (by|up to)|\$\d/i.test(m.d.querySelector('#dn26 .dn-hd').textContent), 'no match ratio or dollar amount in the header');
@@ -737,6 +739,19 @@ function headerOnly(url) {
   ok(/\bdn-hxA\b/.test(hMA.d.querySelector('#dn26 .dn-hd').className) && hMA.d.querySelector('h1').textContent === '2026 Annual Matching Campaign' && /^Give now to our 2026 Annual Matching Campaign\./.test(hMA.d.querySelector('#dn26 .dn-hd span').textContent), 'matching page: light header, H1 above the card kept, subtitle starts "Give now to our 2026 Annual Matching Campaign."');
   ok(/\bdn-hxA\b/.test(hQ.d.querySelector('#dn26 .dn-hd').className) && !/dn-hxB/.test(hQ.d.querySelector('#dn26 .dn-hd').className), 'an old ?dnhdr=B link is harmless: still the light header');
 
+  console.log('header polish (Nov 27, 2026): wording, card logo vs. site logo, headline size');
+  var RIPPLE = 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and beyond.';
+  ok(a.d.querySelector('#dn26 .dn-hd span').textContent === RIPPLE, 'Donate page: new sentence exactly ("Riverside and beyond.")');
+  ok(m.d.querySelector('#dn26 .dn-hd span').textContent === 'Give now to our 2026 Annual Matching Campaign. ' + RIPPLE, 'Matching page: new sentence exactly');
+  ok(!/far beyond/.test(SRC) && !/far beyond/.test(a.d.body.textContent + m.d.body.textContent), '"far beyond" is gone from the file and both pages');
+  var sa = await page(DONATE, { siteLogo: true }), sm = await page(MATCHP, { siteLogo: true });
+  ok([sa, sm].every(function (p) { var h = p.d.querySelector('#dn26 .dn-hd'); return !h.querySelector('img') && /\bdn-nologo\b/.test(h.className) && h.querySelector('h2').textContent === 'Invest in a Vibrant Jewish Future' && h.firstElementChild === h.querySelector('h2').parentNode; }), 'under the site header logo (both pages): no second logo in the card, the headline leads');
+  ok([sa, sm].every(function (p) { return p.d.querySelectorAll('#header_branding img').length === 1; }), 'the site header logo itself is left alone');
+  ok([a, m].every(function (p) { var h = p.d.querySelector('#dn26 .dn-hd'); return h.firstElementChild.tagName === 'IMG' && !/\bdn-nologo\b/.test(h.className); }), 'no site logo on the page (other embeds): the card keeps its own logo');
+  var hcss = [].map.call(a.d.querySelectorAll('style'), function (s) { return s.textContent; }).join('\n');
+  ok(/\.dn-hd\.dn-hxA img\{width:156px;/.test(hcss) && /max-width:620px\)\{[^@]*\.dn-hd\.dn-hxA img\{width:136px;/.test(hcss), 'fallback card logo larger: 156px desktop, 136px phones (was 110 and 104)');
+  ok(/\.dn-hd\.dn-hxA h2\{font-size:32px;/.test(hcss) && /max-width:620px\)\{[^@]*\.dn-hd\.dn-hxA h2\{font-size:28px\}/.test(hcss) && /max-width:379px\)\{[^@]*\.dn-hd\.dn-hxA h2\{font-size:26px\}/.test(hcss), 'headline 32px desktop, 28px phones, 26px small phones (was 36, 30, 26.5)');
+  ok(/\.dn-hd\.dn-hxA\.dn-nologo\{padding-top:34px\}/.test(hcss) && /max-width:620px\)\{[^@]*\.dn-hd\.dn-hxA\.dn-nologo\{padding-top:24px\}/.test(hcss), 'no card logo: top padding 34px desktop, 24px phones');
   console.log('other pages');
   ok(!(await page('https://www.jewishriverside.com/templates/articlecco_cdo/aid/5333083/jewish/Join.htm')).d.getElementById('dn26'), 'not shown on other pages');
   ok(!(await page(DONATE.replace('articlecco_cdo', 'ArticleCcoResponse'))).d.getElementById('dn26'), 'not shown on ChabadOne’s response page');
@@ -744,7 +759,8 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26k'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-27d'/.test(SRC), 'donate-2026.js VERSION 2026-11-27d');
+  ok(V === '2026-11-27d', 'footer.js V 2026-11-27d');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 
