@@ -206,7 +206,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26g$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26h$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -252,7 +252,7 @@ function headerOnly(url) {
   ok(chosen(a) === 'General', 'default choice on Donate 2.0: Where it’s needed most (General)');
   ok(labels(a).indexOf('Visitation') < 0, 'Visitation no longer shown (Social Services replaces it)');
   ok(!labels(a).some(function (t) { return /[–—]| - /.test(t); }), 'no dashes in the labels');
-  ok(a.d.querySelector('#dn26 .dn-hd h2').textContent === 'Make a Donation' && a.d.querySelector('h1').textContent === 'Donate', 'heading Make a Donation; page title "Donate 2.0" shows as Donate');
+  ok(a.d.querySelector('#dn26 .dn-hd h2').textContent === 'Invest in a Vibrant Jewish Future' && a.d.querySelector('h1').textContent === 'Donate', 'heading Invest in a Vibrant Jewish Future; page title "Donate 2.0" shows as Donate');
   ok(a.d.querySelector('#dn26 .dn-hd span').textContent === 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.', 'subtitle: the ripple sentence (' + a.d.querySelector('#dn26 .dn-hd span').textContent + ')');
   ok(!/Jewish life growing|for every age/.test(a.d.querySelector('#dn26 .dn-hd').textContent), 'subtitle: old "Jewish life growing" sentence gone');
   ok(/dn26-park/.test(a.d.getElementById('formContainer').className) && !/dn26-park/.test(a.d.getElementById('newsletter-footer').className), 'its ChabadOne form is parked off-screen; other forms untouched');
@@ -360,6 +360,7 @@ function headerOnly(url) {
   console.log('2026 Matching Campaign page (7642564)');
   var m = await page(MATCHP);
   ok(m.d.getElementById('co_content_container').contains(m.d.getElementById('dn26')), 'form sits inside the article');
+  ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign' && m.d.querySelector('#dn26 .dn-hd h2').textContent === 'Invest in a Vibrant Jewish Future', 'matching page: H1 2026 Annual Matching Campaign, H2 Invest in a Vibrant Jewish Future');
   ok(chosen(m) === 'Annual Matching Campaign', 'preset fund: Annual Matching Campaign');
   ok(labels(m).join('|') === LABELS.join('|'), 'same 10 choices');
   ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign', 'page title: 2026 Annual Matching Campaign');
@@ -451,7 +452,9 @@ function headerOnly(url) {
   ok(btn(mo, 'One time').getAttribute('aria-pressed') === 'true', 'One time is still the default');
   btn(mo, '$36').click();
   ok(yl.textContent === '', 'one time with $36: still no yearly line');
+  ok(/dn-mon/.test(btn(mo, 'Monthly').className) && /\.dn-seg button\.dn-mon::before\{content:"\\\\2665"/.test(SRC), 'Monthly tab has the small heart (CSS ::before, text stays "Monthly")');
   btn(mo, 'Monthly').click();
+  ok(btn(mo, 'Monthly').className === 'dn-mon on', 'Monthly keeps its heart class when picked');
   ok(ylt() === '$36/month = $432 a year of impact', 'Monthly + $36: "' + yl.textContent + '"');
   ok(yl.compareDocumentPosition(mo.d.querySelector('#dn26 .dn-chips')) & 2, 'the line sits under the amounts');
   btn(mo, '$500').click();
@@ -613,7 +616,7 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26g'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-26h'/.test(SRC), 'donate-2026.js VERSION bumped');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 

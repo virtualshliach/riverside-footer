@@ -36,7 +36,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26g';
+  var VERSION = 'donate-2026 2026-11-26h';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -44,9 +44,9 @@
   /* Pages that show this form. fund: the preset choice. co: path of the page whose ChabadOne form records the gift
      (empty: this page's own). tag: the Stripe tag every gift from this page carries. */
   var PAGES = {
-    '7643000': { key: 'donate', fund: 'General', h2: 'Make a Donation', intro: 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
+    '7643000': { key: 'donate', fund: 'General', h2: 'Invest in a Vibrant Jewish Future', intro: 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
       h1From: /donate 2\.0/i, h1: 'Donate', docTitle: 'Donate', co: '', tag: '' },
-    '7642564': { key: 'matching', fund: MATCH, h2: 'Make a Donation', intro: 'Give now to our 2026 Annual Matching Campaign. Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
+    '7642564': { key: 'matching', fund: MATCH, h2: 'Invest in a Vibrant Jewish Future', intro: 'Give now to our 2026 Annual Matching Campaign. Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
       h1From: /./, h1: '2026 Annual Matching Campaign', docTitle: '2026 Annual Matching Campaign', co: DONATE20, tag: MATCH_TAG }
   };
   /* ChabadOne short addresses on jewishriverside.com with no page id in them. Same list as header.js and footer.js. */
@@ -170,7 +170,7 @@
         'background:radial-gradient(circle at 90px 50%,rgba(233,185,73,.2),rgba(233,185,73,0) 140px),linear-gradient(120deg,#123140,' + DEEP + ' 70%)}',
       R + '.dn-hd img{width:118px;height:auto;flex:none;display:block}',
       R + '.dn-hd i{display:block;font-style:normal;font-size:11.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:' + GOLD + ';margin-bottom:4px}',
-      R + '.dn-hd h2{font-family:' + DISP + ';font-size:28px;line-height:1.15;color:#fff;margin-bottom:4px}',
+      R + '.dn-hd h2{font-family:' + DISP + ';font-size:28px;line-height:1.15;color:#fff;margin-bottom:4px;text-wrap:balance}',
       R + '.dn-hd span{display:block;font-size:15.2px;color:' + MUTED + '}',
       R + '.dn-steps{display:flex;gap:6px;padding:12px 26px;border-bottom:1px solid #e6eef0;background:#f6fafb}',
       R + '.dn-st{display:flex;align-items:center;gap:8px;flex:1;font-size:13.1px;font-weight:600;color:#7a8d93}',
@@ -188,6 +188,7 @@
       R + '.dn-seg{display:flex;background:#eef4f6;border-radius:999px;padding:4px;margin-bottom:16px}',
       R + '.dn-seg button{flex:1;padding:10px 12px;border-radius:999px;font-weight:700;color:#4a5d64;font-size:15.2px}',
       R + '.dn-seg button.on{background:#fff;color:' + NAVY + ';box-shadow:0 2px 8px rgba(15,39,48,.15)}',
+      R + '.dn-seg button.dn-mon::before{content:"\\2665";color:#d4626a;margin-right:6px;font-size:.95em}',   /* small heart on Monthly (CSS only, so button text stays "Monthly") */
       R + '.dn-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}',
       R + '.dn-chip{padding:16px 8px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:700;font-size:18.4px}',
       R + '.dn-chip:hover{border-color:' + TEAL + '}',
@@ -473,7 +474,7 @@
     var p1 = el('div', 'dn-pane');
     var seg = el('div', 'dn-seg');
     var bOnce = el('button', 'on', 'One time'); bOnce.type = 'button';
-    var bMon = el('button', null, 'Monthly'); bMon.type = 'button';
+    var bMon = el('button', 'dn-mon', 'Monthly'); bMon.type = 'button';
     add(seg, bOnce, bMon);
     var mNote = el('p', 'dn-mnote', 'A monthly gift helps us plan for the future. You can change or stop it any time.');
     mNote.style.display = 'none';
@@ -484,7 +485,7 @@
       yearly.textContent = st.monthly && st.amount > 0 ? money(st.amount) + '/month = ' + money(Math.round(st.amount * 1200) / 100) + ' a year of\u00a0impact' : '';   /* no lone last word */
     }
     function setMonthly(on) {
-      st.monthly = on; bOnce.className = on ? '' : 'on'; bMon.className = on ? 'on' : '';
+      st.monthly = on; bOnce.className = on ? '' : 'on'; bMon.className = on ? 'dn-mon on' : 'dn-mon';
       bOnce.setAttribute('aria-pressed', on ? 'false' : 'true'); bMon.setAttribute('aria-pressed', on ? 'true' : 'false');
       mNote.style.display = on ? '' : 'none'; sumLine();
     }
