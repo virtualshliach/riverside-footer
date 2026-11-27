@@ -29,7 +29,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26c';
+  var VERSION = 'donate-2026 2026-11-26d';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -230,7 +230,8 @@
         'background:radial-gradient(circle at 50% 44px,rgba(233,185,73,.2),rgba(233,185,73,0) 120px),linear-gradient(160deg,#123140,' + DEEP + ' 75%)}' +
         R + '.dn-hd img{width:150px;margin:0 auto}' + R + '.dn-hd>div{width:100%}' + R + '.dn-hd span{max-width:300px;margin:0 auto;text-wrap:balance}' + R + '.dn-hd i{text-wrap:balance;line-height:1.5;margin-bottom:6px}' +
         R + '.dn-funds{grid-template-columns:repeat(2,minmax(0,1fr))}' + R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
-        R + '.dn-funds .dn-fund:not(.dn-feat):not(.dn-wide){min-height:66px}' + R + '.dn-ded .dn-fund{font-size:13.6px;padding:6px 4px}}'
+        R + '.dn-funds .dn-fund:not(.dn-feat):not(.dn-wide){min-height:66px}' + R + '.dn-ded{gap:6px}' + R + '.dn-ded .dn-fund{white-space:nowrap;font-size:13.2px;letter-spacing:-.01em;padding:6px 2px;min-height:48px}}' +
+      '@media (max-width:374px){' + R + '.dn-ded .dn-fund{font-size:12.2px}}'
     ];
     var st = document.createElement('style');
     st.id = 'dn26-css';
