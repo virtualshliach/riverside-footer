@@ -29,7 +29,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26a';
+  var VERSION = 'donate-2026 2026-11-26b';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -37,9 +37,9 @@
   /* Pages that show this form. fund: the preset choice. co: path of the page whose ChabadOne form records the gift
      (empty: this page's own). tag: the Stripe tag every gift from this page carries. */
   var PAGES = {
-    '7643000': { key: 'donate', fund: 'General', h2: 'Make a Donation', intro: 'Your gift keeps Jewish life growing in Riverside, for every age.',
+    '7643000': { key: 'donate', fund: 'General', h2: 'Make a Donation', intro: 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
       h1From: /donate 2\.0/i, h1: 'Donate', docTitle: 'Donate', co: '', tag: '' },
-    '7642564': { key: 'matching', fund: MATCH, h2: 'Make a Donation', intro: 'Give now to our 2026 Annual Matching Campaign. Your gift keeps Jewish life growing in Riverside, for every age.',
+    '7642564': { key: 'matching', fund: MATCH, h2: 'Make a Donation', intro: 'Give now to our 2026 Annual Matching Campaign. Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.',
       h1From: /./, h1: '2026 Annual Matching Campaign', docTitle: '2026 Annual Matching Campaign', co: DONATE20, tag: MATCH_TAG }
   };
   /* ChabadOne short addresses on jewishriverside.com with no page id in them. Same list as header.js and footer.js. */

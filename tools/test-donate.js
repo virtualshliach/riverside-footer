@@ -195,7 +195,7 @@ function headerOnly(url) {
   var f1 = await full(SHORT);
   ok(f1.before && f1.before.style && f1.before.op === '0', 'jewishriverside.com/donation: old page hidden before footer.js runs (body opacity ' + (f1.before && f1.before.op) + ')');
   ok(f1.d.getElementById('dn26') && f1.covers === 0 && f1.opacity !== '0', 'form drawn, every cover removed, page visible');
-  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26a$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
+  ok(f1.requests.some(function (u) { return /donate-2026\.js\?v=2026-11-26b$/.test(u); }), 'footer.js loads donate-2026.js with the new version stamp');
   ok(f1.errors.length === 0, 'no script errors (' + f1.errors.join('; ') + ')');
   var f2 = await full(MATCHP);
   ok(f2.before.op === '0' && f2.d.getElementById('dn26') && f2.covers === 0 && f2.opacity !== '0', 'matching page 7642564: hidden first, then drawn and uncovered');
@@ -237,6 +237,8 @@ function headerOnly(url) {
   ok(labels(a).indexOf('Visitation') < 0, 'Visitation no longer shown (Social Services replaces it)');
   ok(!labels(a).some(function (t) { return /[–—]| - /.test(t); }), 'no dashes in the labels');
   ok(a.d.querySelector('#dn26 .dn-hd h2').textContent === 'Make a Donation' && a.d.querySelector('h1').textContent === 'Donate', 'heading Make a Donation; page title "Donate 2.0" shows as Donate');
+  ok(a.d.querySelector('#dn26 .dn-hd span').textContent === 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.', 'subtitle: the ripple sentence (' + a.d.querySelector('#dn26 .dn-hd span').textContent + ')');
+  ok(!/Jewish life growing|for every age/.test(a.d.querySelector('#dn26 .dn-hd').textContent), 'subtitle: old "Jewish life growing" sentence gone');
   ok(/dn26-park/.test(a.d.getElementById('formContainer').className) && !/dn26-park/.test(a.d.getElementById('newsletter-footer').className), 'its ChabadOne form is parked off-screen; other forms untouched');
   pick(a, 'Annual Matching Campaign');
   ok(chosen(a) === 'Annual Matching Campaign' && /\bdn-feat\b/.test(first.className) && /\bon\b/.test(first.className), 'the featured choice can be selected like the others');
@@ -302,6 +304,8 @@ function headerOnly(url) {
   ok(chosen(m) === 'Annual Matching Campaign', 'preset fund: Annual Matching Campaign');
   ok(labels(m).join('|') === LABELS.join('|'), 'same 8 choices');
   ok(m.d.querySelector('h1').textContent === '2026 Annual Matching Campaign', 'page title: 2026 Annual Matching Campaign');
+  ok(m.d.querySelector('#dn26 .dn-hd span').textContent === 'Give now to our 2026 Annual Matching Campaign. ' + 'Every act of goodness and kindness starts a ripple. Yours will touch lives across Riverside and far beyond.', 'matching subtitle: campaign lead-in, then the ripple sentence');
+  ok(!/Jewish life growing|for every age/.test(m.d.querySelector('#dn26 .dn-hd').textContent), 'matching subtitle: old sentence gone');
   ok(m.d.title === '2026 Annual Matching Campaign - Chabad Jewish Community Center of Riverside', 'browser tab title');
   ok(!/\d+\s*(x|:1|%)|match(es|ed)? (by|up to)|\$\d/i.test(m.d.querySelector('#dn26 .dn-hd').textContent), 'no match ratio or dollar amount in the header');
   ok(!/[–—]| - /.test(m.d.querySelector('#dn26 .dn-hd').textContent), 'no dashes in the header text');
@@ -324,7 +328,7 @@ function headerOnly(url) {
   console.log('versions and keys');
   var V = /var V = '([^']+)'/.exec(FOOTER)[1];
   ok(/^\d{4}-\d{2}-\d{2}[a-z]$/.test(V) && V > '2026-11-25b', 'footer.js V bumped (' + V + ')');
-  ok(/VERSION = 'donate-2026 2026-11-26a'/.test(SRC), 'donate-2026.js VERSION bumped');
+  ok(/VERSION = 'donate-2026 2026-11-26b'/.test(SRC), 'donate-2026.js VERSION bumped');
   var live = fs.readFileSync(path.join(ROOT, 'donate-2026.js'), 'utf8');
   ok(/PUBLISHABLE_KEY: 'pk_live_/.test(live) && !/sk_live_|sk_test_|rk_live_/.test(live), 'only a publishable key in the file, no secret key');
 
