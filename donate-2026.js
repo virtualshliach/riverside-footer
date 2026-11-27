@@ -29,7 +29,7 @@
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-26b';
+  var VERSION = 'donate-2026 2026-11-26c';
   var MATCH = 'Annual Matching Campaign';
   var MATCH_TAG = 'matching-2026';
   var COVER_ID = 'dn26-cover';
@@ -180,15 +180,18 @@
       R + '.dn-other{display:flex;align-items:center;gap:8px;margin-top:12px;font-weight:700;color:' + NAVY + '}',
       R + '.dn-other .dn-in{flex:1}',
       R + '.dn-mnote{font-size:13.6px;color:#4a5d64;margin-top:10px}',
-      R + '.dn-funds{display:flex;flex-wrap:wrap;gap:8px}',
-      R + '.dn-fund{padding:9px 14px;border-radius:999px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:600;font-size:14.7px}',
+      /* "Apply my gift to" and the dedication: grids of equal boxes (3 across, 2 on phones), text centered, long labels wrap inside */
+      R + '.dn-funds{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}',
+      R + '.dn-fund{display:flex;align-items:center;justify-content:center;text-align:center;min-height:54px;padding:8px 10px;border-radius:12px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:600;font-size:14.7px;line-height:1.25}',
+      R + '.dn-fund.dn-wide{grid-column:1/-1}',
+      R + '.dn-fund{flex-direction:column}' + R + '.dn-fund small{display:block;font-size:12.5px;font-weight:600;opacity:.8;margin-top:1px}',
       R + '.dn-fund:hover{border-color:' + TEAL + '}',
       R + '.dn-fund.on{border-color:' + NAVY + ';background:' + NAVY + ';color:#fff}',
       /* Annual Matching Campaign: its own full-width row, gold */
-      R + '.dn-fund.dn-feat{flex:1 1 100%;padding:13px 16px;border:2px solid ' + GOLD + ';background:#fff8e6;font-weight:700;font-size:16px;letter-spacing:.01em}',
+      R + '.dn-fund.dn-feat{grid-column:1/-1;padding:13px 16px;border:2px solid ' + GOLD + ';background:#fff8e6;font-weight:700;font-size:16px;letter-spacing:.01em}',
       R + '.dn-fund.dn-feat:hover{border-color:#d9a32c}',
       R + '.dn-fund.dn-feat.on{background:' + NAVY + ';border-color:' + GOLD + ';color:#fff;box-shadow:0 0 0 2px ' + GOLD + '}',
-      R + '.dn-ded{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}',
+      R + '.dn-ded{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:10px}',
       R + '.dn-dedname{margin-top:4px}',
       R + '.dn-grid{display:flex;flex-wrap:wrap;gap:12px}',
       R + '.dn-fld{display:flex;flex-direction:column;gap:5px;flex:1 1 100%;min-width:0}',
@@ -222,7 +225,12 @@
       R + '.dn-demo-note{font-size:12.5px;color:#7a8d93;margin-top:10px}',
       '@media (max-width:620px){#dn26{margin:0 auto 24px}' + R + '.dn-card{border-radius:14px}' + R + '.dn-hd{gap:14px;padding:18px 16px}' + R + '.dn-hd img{width:78px}' +
         R + '.dn-hd h2{font-size:22.4px}' + R + '.dn-steps{padding:10px 16px}' + R + '.dn-st span{display:none}' + R + '.dn-st.on span{display:inline}' +
-        R + '.dn-body{padding:18px 16px 20px}' + R + '.dn-ft{padding:12px 14px}' + R + '.dn-btn{padding:12px 18px}' + R + '.dn-fld.half{flex:1 1 100%}}'
+        R + '.dn-body{padding:18px 16px 20px}' + R + '.dn-ft{padding:12px 14px}' + R + '.dn-btn{padding:12px 18px}' + R + '.dn-fld.half{flex:1 1 100%}}',
+      '@media (max-width:480px){' + R + '.dn-hd{flex-direction:column;text-align:center;gap:14px;padding:22px 18px;' +
+        'background:radial-gradient(circle at 50% 44px,rgba(233,185,73,.2),rgba(233,185,73,0) 120px),linear-gradient(160deg,#123140,' + DEEP + ' 75%)}' +
+        R + '.dn-hd img{width:150px;margin:0 auto}' + R + '.dn-hd>div{width:100%}' + R + '.dn-hd span{max-width:300px;margin:0 auto;text-wrap:balance}' + R + '.dn-hd i{text-wrap:balance;line-height:1.5;margin-bottom:6px}' +
+        R + '.dn-funds{grid-template-columns:repeat(2,minmax(0,1fr))}' + R + '.dn-fund{font-size:14.2px;padding:6px 6px}' +
+        R + '.dn-funds .dn-fund:not(.dn-feat):not(.dn-wide){min-height:66px}' + R + '.dn-ded .dn-fund{font-size:13.6px;padding:6px 4px}}'
     ];
     var st = document.createElement('style');
     st.id = 'dn26-css';
@@ -414,12 +422,15 @@
     var funds = el('div', 'dn-funds');
     function pickFund(f) {
       st.fund = f;
-      [].forEach.call(funds.children, function (b) { b.className = 'dn-fund' + (b.getAttribute('data-feat') ? ' dn-feat' : '') + (b.getAttribute('data-f') === f ? ' on' : ''); });
+      [].forEach.call(funds.children, function (b) { b.className = 'dn-fund' + (b.getAttribute('data-feat') ? ' dn-feat' : '') + (b.getAttribute('data-wide') ? ' dn-wide' : '') + (b.getAttribute('data-f') === f ? ' on' : ''); });
       sumLine();
     }
     CFG.FUNDS.forEach(function (f, i) {
-      var b = el('button', 'dn-fund', f[1]); b.type = 'button'; b.setAttribute('data-f', f[0]);
+      var sub = / \(([^)]+)\)$/.exec(f[1]);   /* "College Programs (Chabad at UCR)": the part in brackets on its own smaller line */
+      var b = el('button', 'dn-fund', sub ? f[1].slice(0, sub.index) : f[1]); b.type = 'button'; b.setAttribute('data-f', f[0]);
+      if (sub) b.appendChild(el('small', null, ' (' + sub[1] + ')'));
       if (i === 0) b.setAttribute('data-feat', '1');
+      if (f[0] === 'General') b.setAttribute('data-wide', '1');   /* own row: the other 6 fill even rows of 3 (2 on phones) */
       b.addEventListener('click', function () { pickFund(f[0]); });
       funds.appendChild(b);
     });
