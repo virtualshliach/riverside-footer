@@ -391,7 +391,7 @@
       el('h2', null, 'Menorah Contest'),
       whenLine(),
       chips,
-      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. The best menorah wins the festival trophy, and everyone who enters gets a Chanukah gift!'),
+      el('p', 'mh-p', 'Build a menorah at home and bring it to the festival. Guests vote, the favorite in each age group wins a festival trophy, and everyone who enters gets a Chanukah\u00a0gift!'),
       more);
     return h;
   }

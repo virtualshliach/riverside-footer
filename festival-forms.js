@@ -49,14 +49,14 @@
   var FORMS = {
     menorah: {
       title: 'Menorah Contest', sub: 'All ages. Free to enter. Register By Dec 4.', button: 'Register',
-      banner: { kick: '22nd Annual Chanukah Festival', tag: 'Trophy and prizes · Everyone who enters gets a gift' },
+      banner: { kick: '22nd Annual Chanukah Festival', tag: 'Guest vote · Trophy for each age group · Gift\u00a0for\u00a0every\u00a0entry' },
       rules: ['Open to all ages, in two groups: 12 and under, and 13 and up',
         'Free to enter. Register By Friday, Dec 4',
         'Nine branches including the shamash: eight in a straight line at an even height, with the shamash higher or lower',
         'No food. Bring a wax candle or oil',
         'It must stand on its own and must not break, fall or melt when lit',
         'One entry per person. Kids are the main builders of their menorah (adult help for safety is OK)',
-        'Prizes: the best menorah wins the festival trophy, and the runners-up get great prizes, announced at the festival at 8:00 PM. Everyone who enters gets a Chanukah gift',
+        'Prizes: the guests’ favorite in each age group wins a festival trophy, and the runners-up get great prizes, announced at the festival at 8:00\u00a0PM. Everyone who enters gets a Chanukah gift',
         'Drop Off Monday, Dec 7, 5:45–6:15 PM at the Menorah Contest table (#15 on the festival map)']
     },
     dreidel: {
