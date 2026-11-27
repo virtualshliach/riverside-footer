@@ -15,17 +15,56 @@
    ChabadOne: the page's own ChabadOne form (fields input_1 ... input_12) is filled in and
    submitted inside a hidden copy of this page, so ChabadOne records the submission while
    the donor stays on the thank-you screen. The visible ChabadOne form is moved off-screen
-   (never display:none), and comes back if this file can't run. */
+   (never display:none), and comes back if this file can't run.
+
+   The same form also runs on the hidden 2026 Matching Campaign page (7642564), preset to
+   "Annual Matching Campaign". That page has no ChabadOne form of its own, so its gifts are sent
+   to Donate 2.0's ChabadOne form (PAGES[...].co). Either page takes ?designation=matching (or
+   /designation/matching) to preset the fund. Donate 2.0 is also at jewishriverside.com/donation
+   (a ChabadOne short address with no page id in it, see PATHS).
+
+   No flash of the old page: header.js hides these pages (#dn26-cover) before they are drawn.
+   This file removes every #dn26-cover once its form is on the page, or as soon as it knows it
+   can't draw it. header.js and footer.js each also drop the cover after 8 seconds no matter what. */
 (function () {
   'use strict';
 
-  var VERSION = 'donate-2026 2026-11-25b';
-  var AID = '7643000';
+  var VERSION = 'donate-2026 2026-11-26a';
+  var MATCH = 'Annual Matching Campaign';
+  var MATCH_TAG = 'matching-2026';
+  var COVER_ID = 'dn26-cover';
+  var DONATE20 = '/templates/articlecco_cdo/aid/7643000/jewish/Donate-20.htm';
+  /* Pages that show this form. fund: the preset choice. co: path of the page whose ChabadOne form records the gift
+     (empty: this page's own). tag: the Stripe tag every gift from this page carries. */
+  var PAGES = {
+    '7643000': { key: 'donate', fund: 'General', h2: 'Make a Donation', intro: 'Your gift keeps Jewish life growing in Riverside, for every age.',
+      h1From: /donate 2\.0/i, h1: 'Donate', docTitle: 'Donate', co: '', tag: '' },
+    '7642564': { key: 'matching', fund: MATCH, h2: 'Make a Donation', intro: 'Give now to our 2026 Annual Matching Campaign. Your gift keeps Jewish life growing in Riverside, for every age.',
+      h1From: /./, h1: '2026 Annual Matching Campaign', docTitle: '2026 Annual Matching Campaign', co: DONATE20, tag: MATCH_TAG }
+  };
+  /* ChabadOne short addresses on jewishriverside.com with no page id in them. Same list as header.js and footer.js. */
+  var PATHS = { '/donation': '7643000' };
+
+  /* Remove the cover that header.js (a <style>) and footer.js (a <div>) put up. Both use the same id. */
+  function uncover() {
+    var c;
+    while ((c = document.getElementById(COVER_ID))) { if (c.parentNode) c.parentNode.removeChild(c); else break; }
+  }
+  function pathAid() {
+    if (!/(^|\.)jewishriverside\.com$/i.test(window.location.hostname || '')) return '';
+    var pm = /^(\/[a-z0-9-]+)(?:\/(?:designation|fund|payment_intent)\/.*)?\/?$/i.exec(window.location.pathname || '');
+    var k = pm ? pm[1].toLowerCase() : '';
+    return k && Object.prototype.hasOwnProperty.call(PATHS, k) ? PATHS[k] : '';
+  }
   var href = window.location.href;
-  if (href.indexOf(AID) < 0) return;
-  if (href.indexOf('ArticleCcoResponse') > -1) return;               /* ChabadOne's own response page */
-  if (window.top !== window && /cf-sync/.test(window.location.hash)) return; /* the hidden ChabadOne copy */
-  if (window.CFDonate) return;
+  var am = /\/aid\/(\d+)(?:[\/.]|$)/i.exec(window.location.pathname) || /[?&]aid=(\d+)(?:&|$)/i.exec(window.location.search);
+  var aidNow = am ? am[1] : (window.Co && window.Co.ArticleId ? String(window.Co.ArticleId) : '') || pathAid();   /* same lookup as footer.js */
+  var AID = Object.prototype.hasOwnProperty.call(PAGES, aidNow) ? aidNow : null;
+  if (!AID) return;
+  var PAGE = PAGES[AID];
+  if (href.indexOf('ArticleCcoResponse') > -1) { uncover(); return; }  /* ChabadOne's own response page */
+  if (window.top !== window && /cf-sync/.test(window.location.hash)) { uncover(); return; } /* the hidden ChabadOne copy */
+  if (window.CFDonate) { uncover(); return; }
 
   var CFG = {
     ENDPOINT: 'https://script.google.com/macros/s/AKfycbxJDFJg_llgI5vqnwbIlStreWtDEL_4q4SG3joSWfXL9lbsn7ogu1XqjVEh4kTPkrHcGg/exec',
@@ -33,8 +72,26 @@
     ORG: 'Chabad Jewish Community Center of Riverside',
     PHONE: '951-222-2005',
     AMOUNTS: [18, 36, 50, 100, 360, 500],
-    /* Same list as "Apply Donation To" on jewishriverside.com/donate (and the Apps Script's GEN.FUNDS) */
-    FUNDS: ['General', 'Adult Education', 'College Programs', 'Synagogue', 'Visitation', 'Youth Programs'],
+    /* "Apply my gift to", in this order: [fund value, label shown]. The value is what the Apps Script,
+       Stripe, the Sheet and ChabadOne get; the label is only what the donor sees. The first one is featured. */
+    FUNDS: [
+      [MATCH, 'Annual Matching Campaign'],
+      ['General', 'Where it’s needed most'],
+      ['Adult Education', 'Adult Education'],
+      ['College Programs', 'College Programs (Chabad at UCR)'],
+      ['Synagogue', 'Synagogue'],
+      ['Youth Programs', 'Youth Programs'],
+      ['Social Services', 'Social Services'],
+      ['Chanukah Festival', 'Chanukah Festival']
+    ],
+    /* The funds the LIVE Apps Script knows (its GEN.FUNDS, Nov 26 2026). Any other fund is recorded there as
+       General, so for those the choice also goes in the note ("Applied to: ..."), which reaches Stripe, the Sheet
+       and the receipt. Once the new Apps Script is live this changes nothing: it records the fund itself. */
+    BACKEND_FUNDS: ['General', 'Adult Education', 'College Programs', 'Synagogue', 'Visitation', 'Youth Programs'],
+    /* short names for ?designation=... (any fund also works as its value or label in dashes, e.g. youth-programs) */
+    FUND_ALIAS: { matching: MATCH, match: MATCH, 'annual-matching': MATCH, general: 'General', college: 'College Programs',
+      youth: 'Youth Programs', social: 'Social Services', 'social-services': 'Social Services', visitation: 'Social Services',
+      chanukah: 'Chanukah Festival', festival: 'Chanukah Festival' },
     MIN: 5,
     MAX: 25000,
     BANK_DAYS: '4 business days',
@@ -127,6 +184,10 @@
       R + '.dn-fund{padding:9px 14px;border-radius:999px;border:1.5px solid #d5e2e6;background:#fff;color:' + NAVY + ';font-weight:600;font-size:14.7px}',
       R + '.dn-fund:hover{border-color:' + TEAL + '}',
       R + '.dn-fund.on{border-color:' + NAVY + ';background:' + NAVY + ';color:#fff}',
+      /* Annual Matching Campaign: its own full-width row, gold */
+      R + '.dn-fund.dn-feat{flex:1 1 100%;padding:13px 16px;border:2px solid ' + GOLD + ';background:#fff8e6;font-weight:700;font-size:16px;letter-spacing:.01em}',
+      R + '.dn-fund.dn-feat:hover{border-color:#d9a32c}',
+      R + '.dn-fund.dn-feat.on{background:' + NAVY + ';border-color:' + GOLD + ';color:#fff;box-shadow:0 0 0 2px ' + GOLD + '}',
       R + '.dn-ded{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}',
       R + '.dn-dedname{margin-top:4px}',
       R + '.dn-grid{display:flex;flex-wrap:wrap;gap:12px}',
@@ -251,6 +312,12 @@
             return setTimeout(fill, 250);
           }
           for (var k in vals) setField(d, CFG.CO[k], vals[k]);
+          /* if the fund field is a list without this choice: General there, and the real fund in the dedication field */
+          var ff = d.getElementById(CFG.CO.fund);
+          if (ff && vals.fund && String(ff.value) !== String(vals.fund)) {
+            if (ff.tagName === 'SELECT') setField(d, CFG.CO.fund, 'General');
+            setField(d, CFG.CO.dedication, 'Fund: ' + fundLabel(vals.fund) + (vals.dedication ? '. ' + vals.dedication : ''));
+          }
           submitted = true;
           btn.click();
           /* forms may also post by AJAX: watch for the form leaving or an error */
@@ -264,9 +331,30 @@
           })();
         })();
       };
-      fr.src = window.location.pathname + '#cf-sync';
+      fr.src = (PAGE.co || window.location.pathname) + '#cf-sync';
       document.body.appendChild(fr);
     });
+  }
+
+  /* ---------- funds ---------- */
+  function slug(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''); }
+  function fundLabel(f) { for (var i = 0; i < CFG.FUNDS.length; i++) if (CFG.FUNDS[i][0] === f) return CFG.FUNDS[i][1]; return f; }
+  /* which fund to preset: ?designation=x or /designation/x (also fund=), else the page's own */
+  function presetFund() {
+    var m = /[?&](?:designation|fund)=([^&#]*)/i.exec(window.location.search) || /\/(?:designation|fund)\/([^\/?#]+)/i.exec(window.location.pathname);
+    var want = '';
+    try { want = m ? slug(decodeURIComponent(m[1].replace(/\+/g, ' '))) : ''; } catch (e) {}
+    if (want) {
+      if (Object.prototype.hasOwnProperty.call(CFG.FUND_ALIAS, want)) return CFG.FUND_ALIAS[want];
+      for (var i = 0; i < CFG.FUNDS.length; i++) if (slug(CFG.FUNDS[i][0]) === want || slug(CFG.FUNDS[i][1]) === want) return CFG.FUNDS[i][0];
+    }
+    return PAGE.fund;
+  }
+  /* what goes to the Apps Script with the gift: the real fund, a note when the live script doesn't know it, the tag */
+  function fundFields(fund) {
+    var o = { fund: fund, note: CFG.BACKEND_FUNDS.indexOf(fund) < 0 ? 'Applied to: ' + fundLabel(fund) : '' };
+    if (fund === MATCH || PAGE.tag) o.tag = MATCH_TAG;
+    return o;
   }
 
   /* ---------- the page ---------- */
@@ -280,8 +368,8 @@
 
     var hd = el('div', 'dn-hd');
     var logo = el('img'); logo.src = LOGO; logo.alt = CFG.ORG;
-    add(hd, logo, add(el('div'), el('i', null, CFG.ORG), el('h2', null, 'Make a Donation'),
-      el('span', null, 'Your gift keeps Jewish life growing in Riverside, for every age.')));
+    add(hd, logo, add(el('div'), el('i', null, CFG.ORG), el('h2', null, PAGE.h2),
+      el('span', null, PAGE.intro)));
 
     var steps = el('div', 'dn-steps');
     var stepEls = ['Your gift', 'Your details', 'Payment'].map(function (t, i) {
@@ -326,11 +414,13 @@
     var funds = el('div', 'dn-funds');
     function pickFund(f) {
       st.fund = f;
-      [].forEach.call(funds.children, function (b) { b.className = 'dn-fund' + (b.getAttribute('data-f') === f ? ' on' : ''); });
+      [].forEach.call(funds.children, function (b) { b.className = 'dn-fund' + (b.getAttribute('data-feat') ? ' dn-feat' : '') + (b.getAttribute('data-f') === f ? ' on' : ''); });
+      sumLine();
     }
-    CFG.FUNDS.forEach(function (f) {
-      var b = el('button', 'dn-fund', f === 'General' ? 'Where it’s needed most' : f); b.type = 'button'; b.setAttribute('data-f', f);
-      b.addEventListener('click', function () { pickFund(f); });
+    CFG.FUNDS.forEach(function (f, i) {
+      var b = el('button', 'dn-fund', f[1]); b.type = 'button'; b.setAttribute('data-f', f[0]);
+      if (i === 0) b.setAttribute('data-feat', '1');
+      b.addEventListener('click', function () { pickFund(f[0]); });
       funds.appendChild(b);
     });
 
@@ -403,7 +493,7 @@
     function sumLine() {
       sum.textContent = giftLine();
       if (st.step === 3) next.textContent = st.amount > 0 ? 'Give ' + giftLine() : 'Give';
-      var t = giftLine() + (st.fund && st.fund !== 'General' ? ' · ' + st.fund : '');
+      var t = giftLine() + (st.fund && st.fund !== 'General' ? ' · ' + fundLabel(st.fund) : '');
       if (st.ded && v2('dedname')) t += ' · ' + (st.ded === 'memory' ? 'In memory of ' : 'In honor of ') + v2('dedname');
       sum3.textContent = t;
     }
@@ -451,10 +541,12 @@
       peHost.innerHTML = '';
       add(peHost, add(el('div', 'dn-wait'), el('div', 'dn-spin'), el('span', null, 'Preparing secure payment…')));
       show(3); busy(true, 'One moment…');
+      var ff = fundFields(g.fund);
       var req = { action: 'start', site: 'jr', amount: g.amount, mode: g.monthly ? 'monthly' : 'once', attempt: st.attempt,
-        fund: g.fund, ded: g.ded, dedname: g.dedname,
-        first: g.first, last: g.last, email: g.email, phone: g.phone, note: '', website: trapIn.value,
+        fund: ff.fund, ded: g.ded, dedname: g.dedname,
+        first: g.first, last: g.last, email: g.email, phone: g.phone, note: ff.note, website: trapIn.value,
         page: location.href.split('#')[0].slice(0, 300) };
+      if (ff.tag) req.tag = ff.tag;
       api(req).then(function (r) {
         if (!r || !r.ok) throw new Error((r && r.error) || 'Something went wrong. Please try again.');
         st.start = r; st.sig = sig;
@@ -544,7 +636,7 @@
       p4.appendChild(homeA);
       st.start = null; st.sig = '';
       show(4);
-      try { if (window.gtag) window.gtag('event', 'donation', { value: Number(g.amount), currency: 'USD', monthly: !!g.monthly, page: 'donate' }); } catch (e) {}
+      try { if (window.gtag) window.gtag('event', 'donation', { value: Number(g.amount), currency: 'USD', monthly: !!g.monthly, page: PAGE.key, fund: g.fund }); } catch (e) {}
     }
     /* Payment went through: thank the donor, tell the Apps Script, then send the details to ChabadOne. */
     function completed(pi, g) {
@@ -581,7 +673,7 @@
       return new Promise(function (res) { setTimeout(function () { res({ paymentIntent: { id: st.start.id, status: 'succeeded' } }); }, 700); });
     }
 
-    setMonthly(false); pickFund('General'); pickDed('');
+    setMonthly(false); pickFund(presetFund()); pickDed('');
     show(1);
     return { root: root, show: show, setErr: setErr, thanks: thanks, completed: completed, state: st };
   }
@@ -634,16 +726,19 @@
   /* ---------- start ---------- */
   function boot() {
     if (UI) return;
-    var form = document.getElementById(AID) || document.querySelector('form.userform-form');
+    /* a page that borrows another page's form (7642564) never parks a form of its own */
+    var form = document.getElementById(AID) || (PAGE.co ? null : document.querySelector('form.userform-form'));
     var host = (form && (form.closest('#formContainer') || form)) || document.getElementById('co_content_container');
-    if (!host || !host.parentNode) return;
-    UI = build(host);
+    if (!host || !host.parentNode) { uncover(); log('no place for the form on this page'); return; }
+    if (!form) { var spot = el('div'); host.appendChild(spot); host = spot; }   /* no ChabadOne form (7642564): the form goes inside the article */
+    try { UI = build(host); } catch (e) { uncover(); throw e; }
     /* park the ChabadOne form off-screen: it stays rendered, so it comes back if this file fails */
     if (form) (form.closest('#formContainer') || form).classList.add('dn26-park');
     var title = document.querySelector('h1.article-header__title, .article-header h1, #co_content_container h1');
-    if (title && /donate 2\.0/i.test(title.textContent)) title.textContent = 'Donate';
-    document.title = 'Donate - ' + CFG.ORG;
-    window.CFDonate = { version: VERSION, ui: UI };
+    if (title && PAGE.h1From.test(title.textContent)) title.textContent = PAGE.h1;
+    document.title = PAGE.docTitle + ' - ' + CFG.ORG;
+    window.CFDonate = { version: VERSION, ui: UI, aid: AID };
+    uncover();                                     /* the form is drawn: show the page */
     log('ready' + (DEMO ? ' (preview demo)' : ''));
     if (!DEMO) handleReturn();
   }

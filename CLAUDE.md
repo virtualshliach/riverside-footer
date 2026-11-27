@@ -17,7 +17,9 @@ who owns this repository.
   `<script src="https://virtualshliach.github.io/riverside-footer/header.js"></script>`
   It hides the original page until a custom design is ready (no flash of the old page).
   Never rename or move `header.js`. When you add, move or remove a page with a `cover` in
-  `PAGES`, or change `HOSTS`, make the same change in `header.js` (the tests check this).
+  `PAGES`, or change `HOSTS` or `PATHS`, make the same change in `header.js` (the tests check this).
+  `PATHS` lists ChabadOne short addresses with no page id in them (jewishriverside.com/donation is
+  Donate 2.0, 7643000), so header.js can cover those too before the page is drawn.
 - `footer.js` is the loader. Its `PAGES` map lists which page id (aid) loads which
   project file. Pages not listed load nothing.
 - Each `*.js` project file in the root is one page's custom design. Each also checks
@@ -35,6 +37,7 @@ who owns this repository.
 | `festival-forms.js` | Our own Menorah Contest, Dreidel Contest and Mailing List forms, sending to the same Apps Script (one Sheet tab each; contests get a confirmation email). Loaded by the festival page (draft and live) when `OWN_FORMS` is on, and by the Guess page (`dreidel-2026.js`). `chanukahfestival.org/?guess` opens the Dreidel form | **Live** |
 | `volunteer-2026.js` | Hidden volunteer sign-up at chanukahfestival.org/volunteer and `/?volunteer` (noindex, community emails only) | **Live** |
 | `ignite-2026.js` + `ignite/` | 7621668 Ignite Riverside year-end campaign. Shows the client-review mockup `ignite/index.html` (dummy data, no payments, preview switcher bar) full screen | **Mockup** (replace with the real build before launch) |
+| `donate-2026.js` | 7643000 Donate 2.0, also at jewishriverside.com/donation (step-by-step Stripe donate form; each gift also goes to the page's ChabadOne form) and 7642564 2026 Matching Campaign Give Now (same form, preset to "Annual Matching Campaign", gifts go to 7643000's ChabadOne form). "Apply my gift to": Annual Matching Campaign (featured, first), Where it's needed most (default), Adult Education, College Programs (Chabad at UCR), Synagogue, Youth Programs, Social Services, Chanukah Festival. `?designation=matching` (also college, youth, social, chanukah, ...) presets the fund. White no-flash cover `dn26-cover` on both pages and /donation (`PATHS` in header.js and footer.js). Backend: the same Apps Script (`site: 'jr'`); funds the live script doesn't know also go in the note ("Applied to: ..."). Tests: `node tools/test-donate.js` | **Live** (both pages) |
 | `text-share-2026.js` | Hidden SMS share page at chanukahfestival.org/?text (noindex). Opens Messages with the festival invitation; fallback: "Tap to text a friend", "Copy message", and a link back to the festival page. Used by the Text button in festival emails, because Gmail on Android strips `sms:` links | **Live** |
 
 ## Working together (two people push to this repository)
@@ -60,7 +63,8 @@ sure nobody's work is overwritten or published by surprise:
 2. Bump `V` in `footer.js` (format `YYYY-MM-DD` plus a letter) in the same commit, so
    browsers fetch the new copy.
 3. Run the tests: `cd tools && npm install` (once), then `node tools/test.js` from the
-   repo root (and `node tools/test-stripe.js` when the Stripe pop-up or forms change). All must pass.
+   repo root (and `node tools/test-stripe.js` when the Stripe pop-up or forms change, `node tools/test-donate.js`
+   when the Donate page, header.js or footer.js change). All must pass.
 4. Show the person a preview of the change (a rendered page they can look at) and get
    their OK before pushing.
 5. Commit with a plain-English message saying what changed on the site, then push.

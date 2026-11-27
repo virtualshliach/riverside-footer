@@ -12,6 +12,7 @@ ChabadOne footer:
 | `sukkot-5787.js` | Sukkot & Simchat Torah (7457011) | On (past event) |
 | `chanukah-2026.js` | Chanukah Festival 2026 (4949424, chanukahfestival.org) | Live |
 | `ignite-2026.js` + `ignite/` | Ignite Riverside year-end campaign (7621668) | Client-review mockup |
+| `donate-2026.js` | Donate 2.0 (7643000, also jewishriverside.com/donation) and 2026 Matching Campaign Give Now (7642564) | Live |
 
 Changes pushed to `main` show on the site within about 10 minutes. See `CLAUDE.md`
 for the rules every change follows.

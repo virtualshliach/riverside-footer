@@ -425,6 +425,14 @@ var SITES = {
     ok(JSON.stringify(fCov) === JSON.stringify(hCov) && Object.keys(fCov).length >= 2, 'header.js covers the same pages as footer.js ' + JSON.stringify(hCov));
     var fh = /var HOSTS = \{([^}]*)\}/.exec(fsrc)[1].replace(/\/\*[\s\S]*?\*\//g, '').replace(/\s/g, ''), hh = /var HOSTS = \{([^}]*)\}/.exec(hsrc)[1].replace(/\s/g, '');
     ok(fh === hh, 'header.js and footer.js list the same domains (' + hh + ')');
+    var fpth = /var PATHS = \{([^}]*)\}/.exec(fsrc), hpth = /var PATHS = \{([^}]*)\}/.exec(hsrc);
+    ok(fpth && hpth && fpth[1].replace(/\s/g, '') === hpth[1].replace(/\s/g, ''), 'header.js and footer.js list the same short addresses (' + (hpth && hpth[1].trim()) + ')');
+    var hjd = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://www.jewishriverside.com/Donation/', runScripts: 'outside-only' });
+    hjd.window.eval(hsrc);
+    ok(hjd.window.document.querySelector('style#dn26-cover'), 'header.js hides jewishriverside.com/donation (Donate 2.0) before it is drawn');
+    var hjn = new JSDOM('<!doctype html><html><head></head><body></body></html>', { url: 'https://www.jewishriverside.com/donate', runScripts: 'outside-only' });
+    hjn.window.eval(hsrc);
+    ok(!hjn.window.document.querySelector('style'), 'header.js leaves jewishriverside.com/donate alone');
     var hj = new JSDOM('<!doctype html><html><head></head><body><h1>old</h1></body></html>', { url: 'https://www.jewishriverside.com/templates/section_cdo/aid/4949424/jewish/x.htm', runScripts: 'outside-only' });
     hj.window.eval(hsrc);
     var hs = hj.window.document.getElementById('cf26-cover');

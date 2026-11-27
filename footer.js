@@ -7,7 +7,7 @@
 (function () {
   'use strict';
   var SITE = 'riverside-footer';
-  var V = '2026-11-25b';
+  var V = '2026-11-26a';
 
   /* page id (aid) -> project. file: name in this folder.
      cover: background color to hold the page while the project loads (optional).
@@ -28,8 +28,12 @@
     '5333083': { file: 'mailing-list.js' },
     /* Ignite Riverside year-end campaign - client-review MOCKUP (dummy data, no payments). */
     '7621668': { file: 'ignite-2026.js', cover: '#042a34', coverId: 'ig26-cover' },
-    /* Donate page ("Donate 2.0"): step-by-step Stripe donate form; each gift is also sent to the page's ChabadOne form. */
-    '7643000': { file: 'donate-2026.js' }
+    /* Donate page ("Donate 2.0", also jewishriverside.com/donation): step-by-step Stripe donate form;
+       each gift is also sent to the page's ChabadOne form. White cover: no flash of the old page. */
+    '7643000': { file: 'donate-2026.js', cover: '#ffffff', coverId: 'dn26-cover' },
+    /* 2026 Matching Campaign "Give Now" (hidden page): the same donate form, preset to "Annual Matching Campaign".
+       No ChabadOne form of its own; gifts go to the Donate 2.0 page's ChabadOne form. */
+    '7642564': { file: 'donate-2026.js', cover: '#ffffff', coverId: 'dn26-cover' }
   };
 
   /* domain roots that should load a project without an aid in the URL */
@@ -38,6 +42,10 @@
     /* the festival's own ChabadOne site until its DNS moves to chanukahfestival.org */
     '12899.centers.clhosting.org': '4949424'
   };
+
+  /* ChabadOne short addresses on jewishriverside.com that show a page without its id in the address
+     (same list as header.js). Also matched with /designation/x, /fund/x or /payment_intent/... after them. */
+  var PATHS = { '/donation': '7643000' };
 
   /* Google Analytics 4 for the pages listed above. ON
      (GA4 property "Chanukah Festival", set up Nov 18 2026). Project files send
@@ -55,6 +63,12 @@
     var path = window.location.pathname;
     if (HOSTS[host] && (path === '/' || path === '')) return HOSTS[host];
     if (window.Co && window.Co.ArticleId) return String(window.Co.ArticleId);
+    /* ChabadOne's own page id comes first; the short-address list is the backup */
+    if (/(^|\.)jewishriverside\.com$/.test(host)) {
+      var pm = /^(\/[a-z0-9-]+)(?:\/(?:designation|fund|payment_intent)\/.*)?\/?$/i.exec(path);
+      var pk = pm ? pm[1].toLowerCase() : '';
+      if (pk && Object.prototype.hasOwnProperty.call(PATHS, pk)) return PATHS[pk];
+    }
     return null;
   }
 
@@ -126,12 +140,22 @@
   }
 
   var page = isText ? TEXT : aid && Object.prototype.hasOwnProperty.call(PAGES, aid) ? PAGES[aid] : null;
+  /* nothing to draw here: if header.js covered this page anyway (for example a short address that turned out
+     to be another page), take its cover off now instead of after 8 seconds */
+  if (!page || (isResponse && !page.onResponse)) {
+    var ids = {};
+    ids[TEXT.coverId] = 1;
+    for (var pk2 in PAGES) if (PAGES[pk2].coverId) ids[PAGES[pk2].coverId] = 1;
+    for (var cid in ids) { var ce; while ((ce = document.getElementById(cid)) && ce.parentNode) ce.parentNode.removeChild(ce); }
+  }
   if (!page) return;
   if (isResponse && !page.onResponse) return;
   if (!/^[a-z0-9][a-z0-9-]*\.js$/.test(page.file)) return;
 
+  /* the Donate page's hidden copy of itself (#cf-sync, in a frame) is never drawn: no cover there */
+  var syncCopy = framed && /cf-sync/.test(window.location.hash);
   var coverId = page.coverId || 'fc-cover';
-  if (page.cover && !isResponse && !document.getElementById(coverId)) {
+  if (page.cover && !isResponse && !syncCopy && !document.getElementById(coverId)) {
     var c = document.createElement('div');
     c.id = coverId;
     c.setAttribute('style', 'position:fixed;top:0;left:0;right:0;bottom:0;z-index:2147481000;background:' + page.cover);
@@ -139,8 +163,9 @@
     setTimeout(uncover, 8000);
   }
   function uncover() {
-    var el = document.getElementById(coverId);
-    if (el && el.parentNode) el.parentNode.removeChild(el);
+    /* header.js's <style> and this file's <div> can share the id: remove every one */
+    var el;
+    while ((el = document.getElementById(coverId)) && el.parentNode) el.parentNode.removeChild(el);
   }
 
   /* ChabadOne pages already run their own Google tag (another GA4 ID). Ours is added next to it:

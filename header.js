@@ -5,15 +5,20 @@
    page (shows only the background color) until the design is ready, so visitors never see
    the old page flash first. The design file removes the cover by its id when it's done.
    KEEP IN SYNC with footer.js: every PAGES entry that has a `cover` must be listed here with
-   the same coverId and color, and HOSTS must match. (tools/test.js checks this.) */
+   the same coverId and color, and HOSTS and PATHS must match. (tools/test.js checks this.) */
 (function () {
   var COVERS = {
     '7457011': { coverId: 'hh26-cover', cover: '#F5EBDF', onResponse: true },   /* Sukkot & Simchat Torah (was the HH 5787 preboot in the header) */
     '4949424': { coverId: 'cf26-cover', cover: '#0f2936' },   /* Chanukah Festival 2026 (live) */
     '7553387': { coverId: 'cf26-cover', cover: '#0f2936' },   /* Chanukah Festival 2026 (draft page) */
-    '7621668': { coverId: 'ig26-cover', cover: '#042a34' }    /* Ignite Riverside year-end campaign mockup */
+    '7621668': { coverId: 'ig26-cover', cover: '#042a34' },   /* Ignite Riverside year-end campaign mockup */
+    '7643000': { coverId: 'dn26-cover', cover: '#ffffff' },   /* Donate 2.0 (also jewishriverside.com/donation, see PATHS) */
+    '7642564': { coverId: 'dn26-cover', cover: '#ffffff' }    /* 2026 Matching Campaign Give Now (same donate form) */
   };
   var HOSTS = { 'chanukahfestival.org': '4949424', '12899.centers.clhosting.org': '4949424' };
+  /* ChabadOne short addresses on jewishriverside.com that show a page without its id in the address.
+     Also matched with /designation/x, /fund/x or /payment_intent/... after them (ChabadOne turns ?a=b into /a/b). */
+  var PATHS = { '/donation': '7643000' };
 
   /* The bare chanukahfestival.org homepage is forwarded by the domain settings to jewishriverside.com's
      "Page Not Found" page (tagged utm_campaign=chanukahfestival.org). Until that forwarding is fixed at
@@ -64,6 +69,14 @@
   if (!aid && (l.pathname === '/' || l.pathname === '')) {
     aid = HOSTS[l.hostname.toLowerCase().replace(/^www\./, '')] || null;
   }
+  if (!aid && /(^|\.)jewishriverside\.com$/i.test(l.hostname)) {
+    var pm = /^(\/[a-z0-9-]+)(?:\/(?:designation|fund|payment_intent)\/.*)?\/?$/i.exec(l.pathname);
+    var pk = pm ? pm[1].toLowerCase() : '';
+    if (pk && Object.prototype.hasOwnProperty.call(PATHS, pk)) aid = PATHS[pk];
+  }
+  /* The Donate page loads a hidden copy of itself (#cf-sync) to send each gift to ChabadOne.
+     That copy is never drawn, so it is never covered. */
+  if (/cf-sync/.test(l.hash)) return;
   var p = aid && Object.prototype.hasOwnProperty.call(COVERS, aid) ? COVERS[aid] : null;
   if (!p || document.getElementById(p.coverId)) return;
   if (isResponse && !p.onResponse) return;
